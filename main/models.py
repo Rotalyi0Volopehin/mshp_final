@@ -1,11 +1,10 @@
 import datetime
 
 from django.contrib.auth.models import User
-from django.contrib.auth.models import AnonymousUser
 from django.db import models
 
 
-# TODO: to document all these models
+# TODO: задокументировать модели
 
 
 # class User:
@@ -27,8 +26,9 @@ class UserData(models.Model):
 
 class UserStats(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    coins = models.IntegerField(default=0)
+    coins = models.IntegerField(default=42)
     exp = models.IntegerField(default=0)
+    coins_per_hour = models.IntegerField(default=1)
 
 
 class PressureToolSet(models.Model):
