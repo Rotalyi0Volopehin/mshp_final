@@ -5,6 +5,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from simple_votings.settings import AUTO_USER_ACTIVATION
+from main.db_tools.db_user_error_messages import DB_UserErrorMessages
 
 
 # TODO: задокументировать код
@@ -25,9 +26,9 @@ class DB_UserTools:
             raise exceptions.ArgumentValueException("Логин не должен принимать значение '$_del'!")
         # vvv проверка согласованности аргументов с данными БД vvv
         if len(User.objects.filter(username=login)) > 0:
-            return False, "Пользователь с данным логином уже существует!"
+            return False, DB_UserErrorMessages.login_is_already_in_use
         if len(User.objects.filter(email=email)) > 0:
-            return False, "Пользователь с указанным E-mail уже существует!"
+            return False, DB_UserErrorMessages.email_is_already_in_use
         # vvv запись в БД vvv
         user = User(username=login, email=email, date_joined=datetime.datetime.now())
         user.set_password(password)
