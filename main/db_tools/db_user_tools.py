@@ -4,7 +4,7 @@ import re
 import datetime
 
 from django.contrib.auth.models import User
-from simple_votings.settings import AUTO_USER_ACTIVATION
+from adventures_web.settings import AUTO_USER_ACTIVATION
 from main.db_tools.db_user_error_messages import DB_UserErrorMessages
 
 
