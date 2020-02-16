@@ -1,3 +1,6 @@
+# TODO: задокументировать типы
+
+
 class ArgumentTypeException(Exception):
     pass
 
