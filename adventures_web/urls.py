@@ -1,4 +1,4 @@
-"""simple_votings URL Configuration
+"""adventures_web URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -24,7 +24,11 @@ from main.views import get_menu_context
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index_page, name='index'),
-    path('time/', views.time_page, name='time'),
+    path('darknet/', views.darknet_page, name='darknet'),
+    path('forum/', views.forum_page, name='forum'),
+    path('chat/', views.chat_page, name='chat'),
+    path('profile/', views.profile_page, name='profile'),
+
     path(
         'login/',
         auth_views.LoginView.as_view(
