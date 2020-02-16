@@ -42,6 +42,32 @@ class DB_UserTools:
         user_stats.save()
         return True, None
 
+    @staticmethod # инструмент удаления из БД
+    def delete_user(user):
+        # vvv проверка аргумента vvv
+        if not isinstance(user, User):
+            raise exceptions.ArgumentTypeException()
+        # vvv удаление из БД vvv
+        user_data = main.models.UserData.objects.filter(user=user)
+        if len(user_data) > 0:
+            user_data.delete()
+        user_stats = main.models.UserStats.objects.filter(user=user)
+        if len(user_stats) > 0:
+            user_stats.delete()
+        user.delete()
+
+    @staticmethod # инструмент проверки валидности
+    def is_user_configuration_correct(user) -> bool:
+        # vvv проверка аргумента vvv
+        if not isinstance(user, User):
+            raise exceptions.ArgumentTypeException()
+        # vvv проверка валидности vvv
+        user_data = main.models.UserData.objects.filter(user=user)
+        if len(user_data) != 1:
+            return False
+        user_stats = main.models.UserStats.objects.filter(user=user)
+        return len(user_stats) == 1
+
 
 __email_re = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
