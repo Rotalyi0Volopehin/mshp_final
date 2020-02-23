@@ -1,4 +1,4 @@
-"""simple_votings URL Configuration
+"""adventures_web URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -13,7 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.urls import path
 
 from main import views
@@ -24,7 +26,10 @@ from main.views import get_menu_context
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index_page, name='index'),
-    path('time/', views.time_page, name='time'),
+    path('darknet/', views.darknet_page, name='darknet'),
+    path('forum/', views.forum_page, name='forum'),
+    path('chat/', views.chat_page, name='chat'),
+    path('profile/', views.profile_page, name='profile'),
     path(
         'login/',
         auth_views.LoginView.as_view(
@@ -37,3 +42,8 @@ urlpatterns = [
     ),
     path('logout/', auth_views.LogoutView.as_view(), name='logout')
 ]
+
+url(r'^dialogs/$', login_required(views.DialogsView.as_view()), name='dialogs'),
+url(r'^dialogs/create/(?P<user_id>\d+)/$', login_required(views.CreateDialogView.as_view()), name='create_dialog'),
+url(r'^dialogs/(?P<chat_id>\d+)/$', login_required(views.MessagesView.as_view()), name='messages'),
+
