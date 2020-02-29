@@ -1,11 +1,11 @@
 import main.models
-import exceptions
 import re
 import datetime
 
 from django.contrib.auth.models import User
 from adventures_web.settings import AUTO_USER_ACTIVATION
 from main.db_tools.db_user_error_messages import DB_UserErrorMessages
+from external_modules import exceptions
 
 
 # TODO: задокументировать код
