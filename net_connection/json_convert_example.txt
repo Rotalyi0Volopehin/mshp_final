@@ -1,0 +1,40 @@
+
+
+﻿#   Пример конвертации переменных встроенных типов:
+
+import json
+
+# объект у отправителя
+var_in = [1, "2", (None, -0)]
+
+# json, содержащий все данные
+json_ = json.dumps(var_in)
+
+# пересылка json
+
+# получение объекта получателем
+var_out = json.loads(json_)
+
+#-------------------------------------------------
+
+
+#   Пример конвертации объектов собственных типов:
+
+class K:
+    @JSONConverter.json_init # Эта строчка делает возможным создание объектов этого типа из json
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+from net_connection.json_converter import JSONConverter
+
+# объект у отправителя
+k_in = K(10, 98)
+
+# json, содержащий все данные
+json = JSONConverter.object_to_json(k_in)
+
+# пересылка json
+
+# получение объекта получателем
+k_out = K(JSONInitTrojan(json))
