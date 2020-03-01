@@ -6,7 +6,7 @@
     </content>
     <content url="file://$MODULE_DIR$/../src/core" />
     <content url="file://$MODULE_DIR$/../src/web" />
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.6 (project)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">
