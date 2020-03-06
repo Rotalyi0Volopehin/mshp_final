@@ -1,6 +1,7 @@
 links.txt
 docs/
-
+project/venv
+project/.idea
 # Created by https://www.gitignore.io/api/linux,macos,python,django,windows,virtualenv,pycharm
 # Edit at https://www.gitignore.io/?templates=linux,macos,python,django,windows,virtualenv,pycharm
 
