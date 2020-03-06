@@ -4,14 +4,14 @@ import datetime
 
 from django.contrib.auth.models import User
 from adventures_web.settings import AUTO_USER_ACTIVATION
-from main.db_tools.db_user_error_messages import DB_UserErrorMessages
+from main.db_tools.db_user_error_messages import DBUserErrorMessages
 import exceptions
 
 
 # TODO: задокументировать код
 
 
-class DB_UserTools:
+class DBUserTools:
     # TODO: добавить механизм верификации пользователей
     @staticmethod # инструмент записи в БД
     def try_register(login, password, email, team) -> (bool, str):
@@ -26,9 +26,9 @@ class DB_UserTools:
             raise exceptions.ArgumentValueException("Логин не должен принимать значение '$_del'!")
         # vvv проверка согласованности аргументов с данными БД vvv
         if len(User.objects.filter(username=login)) > 0:
-            return False, DB_UserErrorMessages.login_is_already_in_use
+            return False, DBUserErrorMessages.login_is_already_in_use
         if len(User.objects.filter(email=email)) > 0:
-            return False, DB_UserErrorMessages.email_is_already_in_use
+            return False, DBUserErrorMessages.email_is_already_in_use
         # vvv запись в БД vvv
         user = User(username=login, email=email, date_joined=datetime.datetime.now())
         user.set_password(password)

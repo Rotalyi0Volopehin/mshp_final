@@ -1,7 +1,7 @@
 # TODO: задокументировать код
 
 
-class DB_UserErrorMessages:
+class DBUserErrorMessages:
     login_is_already_in_use = "Пользователь с данным логином уже существует!"
     email_is_already_in_use = "Пользователь с указанным E-mail уже существует!"
     invalid_user_configuration = "Некорректная конфигурация пользовательских данных!"
