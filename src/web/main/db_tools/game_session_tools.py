@@ -2,6 +2,8 @@ import main.models
 import exceptions
 import os
 
+from main.db_tools.game_session_error_messages import DBGameSessionErrorMessages
+
 
 # TODO: задокументировать код
 
@@ -20,7 +22,7 @@ class DBGameSessionTools:
             raise exceptions.ArgumentValueException()
         # vvv проверка согласованности аргументов с данными БД vvv
         if len(main.models.GameSession.objects.filter(title=title)) > 0:
-            return False, "Игровая сессия с указанным названием уже существует!"
+            return False, DBGameSessionErrorMessages.title_is_already_in_use
         # vvv запись в БД vvv
         session = main.models.GameSession(title=title, turn_period=turn_period, user_limit=user_limit,
                                           user_lowest_level=user_lowest_level, user_highest_level=user_highest_level)
