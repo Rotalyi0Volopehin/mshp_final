@@ -1,11 +1,11 @@
 import main.models
 import re
 import datetime
+import exceptions
 
 from django.contrib.auth.models import User
 from adventures_web.settings import AUTO_USER_ACTIVATION
 from main.db_tools.db_user_error_messages import DBUserErrorMessages
-import exceptions
 
 
 # TODO: задокументировать код
@@ -13,7 +13,7 @@ import exceptions
 
 class DBUserTools:
     # TODO: добавить механизм верификации пользователей
-    @staticmethod # инструмент записи в БД
+    @staticmethod  # инструмент записи в БД
     def try_register(login, password, email, team) -> (bool, str):
         # vvv первичная проверка аргументов vvv
         if not (isinstance(login, str) and isinstance(password, str) and isinstance(email, str)) and isinstance(team, int):
@@ -37,13 +37,13 @@ class DBUserTools:
         if AUTO_USER_ACTIVATION:
             user_data.activated = True
         else:
-            pass # здесь отсылается письмо с ссылкой для верификации
+            pass  # здесь отсылается письмо с ссылкой для верификации
         user_data.save()
         user_stats = main.models.UserStats(user=user)
         user_stats.save()
         return True, None
 
-    @staticmethod # инструмент удаления из БД
+    @staticmethod  # инструмент удаления из БД
     def delete_user(user):
         # vvv проверка аргумента vvv
         if not isinstance(user, User):
@@ -57,7 +57,7 @@ class DBUserTools:
             user_stats.delete()
         user.delete()
 
-    @staticmethod # инструмент проверки валидности
+    @staticmethod  # инструмент проверки валидности
     def is_user_configuration_correct(user) -> bool:
         # vvv проверка аргумента vvv
         if not isinstance(user, User):

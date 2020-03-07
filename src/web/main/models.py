@@ -20,37 +20,37 @@ class UserData(models.Model):
     activated = models.BooleanField(default=False)
     victories_count = models.IntegerField(default=0)
     played_games_count = models.IntegerField(default=0)
-    team = models.IntegerField(default=0) # фракция
-    extra_info = models.TextField(default='')
-
-
-class UserStats(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    coins = models.IntegerField(default=42)
+    team = models.IntegerField(default=0)  # фракция
     exp = models.IntegerField(default=0)
-    coins_per_hour = models.IntegerField(default=1)
+    extra_info = models.TextField(default='')
 
 
 class PressureToolSet(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     count = models.IntegerField(default=0)
-    type = models.TextField(default='') # имя класса, отнаследованного от базового PressureTool
+    type = models.TextField(default='')  # имя класса, отнаследованного от базового PressureTool
 
 
 class GameSession(models.Model):
-    started = models.BooleanField(default=False)
-    stopped = models.BooleanField(default=False)
-    date_created = models.DateTimeField(default=datetime.datetime.now())
-    date_started = models.DateTimeField(default=datetime.datetime.now())
-    date_stopped = models.DateTimeField(default=datetime.datetime.now())
-    turn_period = models.IntegerField(default=0) # период времени, выделенный под ход одной фракции
-    team_count = models.IntegerField(default=0)
-    user_lowest_level = models.IntegerField(default=-1) # нижний предел уровня игроков; -1 -- без предела
-    user_highest_level = models.IntegerField(default=-1) # верхний предел уровня игроков; -1 -- без предела
-    winning_team = models.IntegerField(default=-1) # победившая фракция; -1 -- неизвестно/ничья
-    # путь до файла сессии должен быть "GameSessions\{id}_gs"
+    title = models.TextField(default='')  # название; уникально
+    phase = models.IntegerField(default=0)  # фаза; 0 -- набор игроков, 1 -- основные действия, 2 -- readonly
+    date_created = models.DateTimeField(default=datetime.datetime.now())  # дата вступления в фазу #0
+    date_started = models.DateTimeField(default=datetime.datetime.now())  # дата вступления в фазу #1
+    date_stopped = models.DateTimeField(default=datetime.datetime.now())  # дата вступления в фазу #2
+    turn_of_team = models.IntegerField(default=0)  # фракция, совершающая ход
+    turn_period = models.IntegerField(default=0)  # период времени в секундах, выделенный под ход одной фракции
+    user_lowest_level = models.IntegerField(default=-1)  # нижний предел уровня игроков; -1 -- без предела
+    user_highest_level = models.IntegerField(default=-1)  # верхний предел уровня игроков; -1 -- без предела
+    user_limit = models.IntegerField(default=3)  # лимит общего числа игроков сессии
+    winning_team = models.IntegerField(default=-1)  # победившая фракция; -1 -- неизвестно/ничья
+    # путь до файла сессии должен быть "GameSessions/{id}.gses"
 
 
-class GameSessionInvolvementFact(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True)
+class UserStats(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     game_session = models.ForeignKey(to=GameSession, on_delete=models.CASCADE)
+    coins = models.IntegerField(default=42)
+    income = models.IntegerField(default=1)
+    # эти данные уникальны для пары игрок-сессия
+    # для каждого игрока может быть не более одной такой сущности
+    # игрок может участвовать не более, чем в одной, сессии за раз
