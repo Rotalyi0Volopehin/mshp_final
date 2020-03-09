@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'main',
     'bootstrap4',
     'django.db.models',
+    'permalinks',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'permalinks.middleware.main.PermalinksMiddleware',
 ]
 
 ROOT_URLCONF = 'adventures_web.urls'

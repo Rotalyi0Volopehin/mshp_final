@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from main import models
+from src.web.main import models
 
 
 class ChatAdmin(admin.ModelAdmin):

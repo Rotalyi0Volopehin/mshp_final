@@ -16,14 +16,18 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
-from django.urls import path
+from django.urls import path, include
 
-from main import views
+from src.web.main import views
 from django.contrib.auth import views as auth_views
 
-from main.views import get_menu_context
+from src.web.main.views import get_menu_context
 
 urlpatterns = [
+    path(r'^dialogs/$', login_required(views.DialogsView.as_view()), name='dialogs'),
+    path(r'^dialogs/create/(?P<user_id>\d+)/$', login_required(views.CreateDialogView.as_view()), name='create_dialog'),
+    path(r'^dialogs/(?P<chat_id>\d+)/$', login_required(views.MessagesView.as_view()), name='messages'),
+    path('', include('permalinks.urls')),
     path('admin/', admin.site.urls),
     path('', views.index_page, name='index'),
     path('darknet/', views.darknet_page, name='darknet'),
@@ -43,7 +47,4 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout')
 ]
 
-url(r'^dialogs/$', login_required(views.DialogsView.as_view()), name='dialogs'),
-url(r'^dialogs/create/(?P<user_id>\d+)/$', login_required(views.CreateDialogView.as_view()), name='create_dialog'),
-url(r'^dialogs/(?P<chat_id>\d+)/$', login_required(views.MessagesView.as_view()), name='messages'),
 

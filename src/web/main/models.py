@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from permalinks.models import Permalinks
 
 
 class ChatManager(models.Manager):
@@ -35,18 +36,17 @@ class Chat(models.Model):
                                      on_delete=models.SET_NULL)
     objects = ChatManager()
 
-
+    @Permalinks
     def get_absolute_url(self):
         return reverse('users:messages', (), {'chat_id': self.pk})
 
 
 class Message(models.Model):
-    chat = models.ForeignKey(Chat, verbose_name=_("Чат"))
-    author = models.ForeignKey(User, verbose_name=_("Пользователь"))
+    chat = models.ForeignKey(Chat, verbose_name=_("Чат"), on_delete=models.CASCADE)
+    author = models.ForeignKey(User, verbose_name=_("Пользователь"), on_delete=models.CASCADE)
     message = models.TextField(_("Сообщение"))
     pub_date = models.DateTimeField(_('Дата сообщения'), default=timezone.now)
     is_readed = models.BooleanField(_('Прочитано'), default=False)
-
     class Meta:
         ordering = ['pub_date']
 
