@@ -45,7 +45,7 @@ class TextInput:
         self.antialias = antialias
         self.text_color = text_color
         self.font_size = font_size
-        self.max_string_length = max_string_length
+        self.max_string_length = 17 # костыль
         self.input_string = initial_string  # Inputted text
 
         if not os.path.isfile(font_family):

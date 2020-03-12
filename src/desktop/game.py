@@ -182,10 +182,10 @@ class GIFImage(object):
 
 
 class Button:
-    def __init__(self, x, y, text):
+    def __init__(self, x, y, text, image_press, image_unpress):
 
         self.size = [190, 45]  # Размер кнопки
-        self.image_button = pygame.image.load("button_pressed.png")  # Загружаем изображение исходной кнопки
+        self.image_button = pygame.image.load(image_press)  # Загружаем изображение исходной кнопки
         self.text = text  # Текст кнопки
         self.x = x  # Позиция х кнопки
         self.y = y  # Позиция у кнопки
@@ -194,8 +194,8 @@ class Button:
                                        self.size[1])  # Прямоугольник для создания коллизии с курсором
         self.rect_image_button = self.image_button.get_rect()
         """Создание кнопки при нажатии на нее"""
-        self.image_click = pygame.image.load("button_pressed.png")
-        self.image_put_on_button = pygame.image.load("button_not_pressed.png")
+        self.image_click = pygame.image.load(image_press)
+        self.image_put_on_button = pygame.image.load(image_unpress)
 
     def create_button(self):
         """Создает кнопку на экране"""
@@ -221,30 +221,31 @@ class Game:
         self.height = height
         self.size = self.width, self.height
         self.game_over = False
-        self.login = TextInput(antialias=False, text_color=(0, 0, 255), cursor_color=(0, 255, 0))
-        self.password = TextInput(antialias=False)
+        self.login = TextInput(antialias=False, cursor_color=(0, 255, 0))
+        self.password = TextInput(antialias=False, cursor_color=(255, 112, 184))
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.clock = pygame.time.Clock()
 
         self.trailer = GIFImage("backimage.gif")
 
 
-        self.enter = Button(200, 200, "Войти")
+        self.enter = Button(200, 150, "Войти", "button_pressed.png", "button_not_pressed.png")
         self.enter.create_button()
-        self.register = Button(250, 250, "Регистрация")
+        self.register = Button(167, 200, "Регистрация", "button_pressed_2.png", "button_not_pressed_2.png")
         self.register.create_button()
 
         self.font = pygame.font.Font(None, 36)
-        self.textl = self.font.render("Логин", 1, (255, 255, 100))
+        self.textl = self.font.render("Логин", 1, (143, 254, 9))
         self.placel = self.textl.get_rect(center=(125, 30))
 
         self.font = pygame.font.Font(None, 36)
-        self.textp = self.font.render("Пароль", 1, (255, 255, 100))
+        self.textp = self.font.render("Пароль", 1, (9, 254, 243))
         self.placep = self.textp.get_rect(center=(125, 90))
 
     def main_loop(self):
         pygame.init()
         pygame.mixer.music.load('soundtrack.mp3')
+        pygame.display.set_caption("Войти/выйти")
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play(-1)
         while True:
@@ -284,6 +285,8 @@ class Game:
 
                 if event.type == pygame.MOUSEBUTTONUP and self.enter.rect_button.collidepoint(event.pos[0],event.pos[1]):
                     self.enter.clicked = False
+                if event.type == pygame.MOUSEBUTTONUP and self.register.rect_button.collidepoint(event.pos[0],event.pos[1]):
+                    self.register.clicked = False
 
 
 
@@ -296,8 +299,10 @@ class Game:
                     print(self.password.get_text())
             # Blit its surface onto the screen
             self.trailer.render(self.screen, (0, 0))
+            pygame.draw.rect(self.screen, [244, 255, 89], [100,50, 250,25], 0)
             self.screen.blit(self.login.get_surface(), (100, 50))
-            self.screen.blit(self.password.get_surface(), (100, 100))
+            pygame.draw.rect(self.screen, [244, 255, 89], [100, 103, 250, 25], 0)
+            self.screen.blit(self.password.get_surface(), (100, 103))
             self.screen.blit(self.textl, self.placel)
             self.screen.blit(self.textp, self.placep)
             self.enter.drawbutton(self.screen)
