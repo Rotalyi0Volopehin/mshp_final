@@ -20,12 +20,13 @@ class TextInput:
     """
     def __init__(
             self,
+            game,
             initial_string="",
             font_family="",
             font_size=35,
             antialias=True,
-            text_color=(0, 0, 0),
-            cursor_color=(0, 0, 1),
+            text_color=(123, 231, 0),
+            cursor_color=(0, 123, 132),
             repeat_keys_initial_ms=400,
             repeat_keys_interval_ms=35,
             max_string_length=-1):
@@ -72,59 +73,59 @@ class TextInput:
 
         self.clock = pygame.time.Clock()
 
-    def update(self, events):
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                self.cursor_visible = True  # So the user sees where he writes
+    def update(self, event):
+        #for event in events:
+        if event.type == pygame.KEYDOWN:
+            self.cursor_visible = True  # So the user sees where he writes
 
-                # If none exist, create counter for that key:
-                if event.key not in self.keyrepeat_counters:
-                    self.keyrepeat_counters[event.key] = [0, event.unicode]
+            # If none exist, create counter for that key:
+            if event.key not in self.keyrepeat_counters:
+                self.keyrepeat_counters[event.key] = [0, event.unicode]
 
-                if event.key == pl.K_BACKSPACE:
-                    self.input_string = (
-                        self.input_string[:max(self.cursor_position - 1, 0)]
-                        + self.input_string[self.cursor_position:]
-                    )
+            if event.key == pl.K_BACKSPACE:
+                self.input_string = (
+                    self.input_string[:max(self.cursor_position - 1, 0)]
+                    + self.input_string[self.cursor_position:]
+                )
 
-                    # Subtract one from cursor_pos, but do not go below zero:
-                    self.cursor_position = max(self.cursor_position - 1, 0)
-                elif event.key == pl.K_DELETE:
-                    self.input_string = (
-                        self.input_string[:self.cursor_position]
-                        + self.input_string[self.cursor_position + 1:]
-                    )
+                # Subtract one from cursor_pos, but do not go below zero:
+                self.cursor_position = max(self.cursor_position - 1, 0)
+            elif event.key == pl.K_DELETE:
+                self.input_string = (
+                    self.input_string[:self.cursor_position]
+                    + self.input_string[self.cursor_position + 1:]
+                )
 
-                elif event.key == pl.K_RETURN:
-                    return True
+            elif event.key == pl.K_RETURN:
+                return True
 
-                elif event.key == pl.K_RIGHT:
-                    # Add one to cursor_pos, but do not exceed len(input_string)
-                    self.cursor_position = min(self.cursor_position + 1, len(self.input_string))
+            elif event.key == pl.K_RIGHT:
+                # Add one to cursor_pos, but do not exceed len(input_string)
+                self.cursor_position = min(self.cursor_position + 1, len(self.input_string))
 
-                elif event.key == pl.K_LEFT:
-                    # Subtract one from cursor_pos, but do not go below zero:
-                    self.cursor_position = max(self.cursor_position - 1, 0)
+            elif event.key == pl.K_LEFT:
+                # Subtract one from cursor_pos, but do not go below zero:
+                self.cursor_position = max(self.cursor_position - 1, 0)
 
-                elif event.key == pl.K_END:
-                    self.cursor_position = len(self.input_string)
+            elif event.key == pl.K_END:
+                self.cursor_position = len(self.input_string)
 
-                elif event.key == pl.K_HOME:
-                    self.cursor_position = 0
+            elif event.key == pl.K_HOME:
+                self.cursor_position = 0
 
-                elif len(self.input_string) < self.max_string_length or self.max_string_length == -1:
-                    # If no special key is pressed, add unicode of key to input_string
-                    self.input_string = (
-                        self.input_string[:self.cursor_position]
-                        + event.unicode
-                        + self.input_string[self.cursor_position:]
-                    )
-                    self.cursor_position += len(event.unicode)  # Some are empty, e.g. K_UP
+            elif len(self.input_string) < self.max_string_length or self.max_string_length == -1:
+                # If no special key is pressed, add unicode of key to input_string
+                self.input_string = (
+                    self.input_string[:self.cursor_position]
+                    + event.unicode
+                    + self.input_string[self.cursor_position:]
+                )
+                self.cursor_position += len(event.unicode)  # Some are empty, e.g. K_UP
 
-            elif event.type == pl.KEYUP:
-                # *** Because KEYUP doesn't include event.unicode, this dict is stored in such a weird way
-                if event.key in self.keyrepeat_counters:
-                    del self.keyrepeat_counters[event.key]
+        elif event.type == pl.KEYUP:
+            # *** Because KEYUP doesn't include event.unicode, this dict is stored in such a weird way
+            if event.key in self.keyrepeat_counters:
+                del self.keyrepeat_counters[event.key]
 
         # Update key counters:
         for key in self.keyrepeat_counters:

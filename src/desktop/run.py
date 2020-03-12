@@ -1,4 +1,4 @@
-from game import Game
+from network_confrontation.src.desktop.game import Game
 
 if __name__ == '__main__':
     g = Game()

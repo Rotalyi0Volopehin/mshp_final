@@ -1,18 +1,21 @@
-from pygame_textinput import TextInput
-from PIL import Image
+import sys
 import pygame
 from pygame.locals import *
 import json
 import time
 import socket
+from network_confrontation.src.desktop.pygame_textinput import TextInput
+from PIL import Image
+
 
 class GIFImage(object):
-    def __init__(self, filename):
+    def __init__(self, filename, game):
         self.filename = filename
         self.image = Image.open(filename)
         self.frames = []
         self.get_frames()
-
+        self.game = game
+        self.screen = self.game.screen
         self.cur = 0
         self.ptime = time.time()
 
@@ -20,6 +23,15 @@ class GIFImage(object):
         self.breakpoint = len(self.frames) - 1
         self.startpoint = 0
         self.reversed = False
+
+    def process_logic(self):
+        pass
+
+    def process_draw(self):
+        self.render(self.screen, (150,150))
+
+    def process_event(self, event):
+        pass
 
     def get_rect(self):
         print(self.image.size)
@@ -214,19 +226,32 @@ class Button:
             screen.blit(self.image_put_on_button, (self.x, self.y))
 
 
-class Game:
+from network_confrontation.src.desktop.scenes.final import FinalScene
+from network_confrontation.src.desktop.scenes.main import MainScene
+from network_confrontation.src.desktop.scenes.menu import MenuScene
+from network_confrontation.src.desktop.scenes.map import MapScene
+from network_confrontation.src.desktop.scenes.quests import QuestScene
+from network_confrontation.src.desktop.scenes.login import LoginScene
 
-    def __init__(self, width=500, height=300):
+class Game:
+    MENU_SCENE_INDEX = 0
+    MAIN_SCENE_INDEX = 1
+    GAMEOVER_SCENE_INDEX = 2
+    QUESTS_SCENE_INDEX = 3
+    MAP_SCENE_INDEX = 4
+    LOGIN_SCENE_INDEX = 5
+
+    def __init__(self, width=800, height=600):
         self.width = width
         self.height = height
         self.size = self.width, self.height
         self.game_over = False
-        self.login = TextInput(antialias=False, cursor_color=(0, 255, 0))
-        self.password = TextInput(antialias=False, cursor_color=(255, 112, 184))
+        self.login = TextInput(self, antialias=False, cursor_color=(0, 255, 0))
+        self.password = TextInput(self, antialias=False, cursor_color=(255, 112, 184))
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.clock = pygame.time.Clock()
 
-        self.trailer = GIFImage("backimage.gif")
+        #self.trailer = GIFImage("backimage.gif")
 
 
         self.enter = Button(200, 150, "Войти", "button_pressed.png", "button_not_pressed.png")
@@ -244,15 +269,36 @@ class Game:
 
     def main_loop(self):
         pygame.init()
-        pygame.mixer.music.load('soundtrack.mp3')
         pygame.display.set_caption("Войти/выйти")
-        pygame.mixer.music.set_volume(0.5)
-        pygame.mixer.music.play(-1)
-        while True:
-            self.screen.fill((225, 225, 225))
 
-            events = pygame.event.get()
-            for event in events:
+
+
+
+        self.create_window()
+        self.game_over = False
+        self.wall_collision_count = 0
+        self.ticks = 0
+        self.scenes = [MenuScene(self), MainScene(self), FinalScene(self), QuestScene(self), MapScene(self), LoginScene(self)]
+        self.current_scene = 5
+        while True:
+            eventlist = pygame.event.get()
+            for event in eventlist:
+                if event.type == pygame.QUIT:
+                    exit()
+            self.scenes[self.current_scene].process_frame(eventlist)
+            #self.clock.tick(30)
+
+
+    def create_window(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
+
+"""
+    def main_loop(self):
+
+        while not self.game_over:
+            eventlist = pygame.event.get()
+            for event in eventlist:
                 if event.type == pygame.QUIT:
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -309,3 +355,12 @@ class Game:
             self.register.drawbutton(self.screen)
             pygame.display.update()
             self.clock.tick(30)
+
+
+
+                    print('Пользователь нажал крестик')
+                    self.game_over = True
+            self.scenes[self.current_scene].process_frame(eventlist)
+        sys.exit(0)
+>>>>>>> 0d54502591f2b4a8665436b7974164972f530837
+"""

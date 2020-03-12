@@ -1,6 +1,6 @@
-from constants import Color
-from objects.text import Text
-from scenes.base import Scene
+from network_confrontation.src.desktop.constants import Color
+from network_confrontation.src.desktop.objects.text import Text
+from network_confrontation.src.desktop.scenes.base import Scene
 
 
 class FinalScene(Scene):

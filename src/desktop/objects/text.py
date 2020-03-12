@@ -22,4 +22,4 @@ class Text(DrawObject):
         self.text_surface = self.font.render(self.text, True, self.color)
 
     def process_draw(self):
-        self.game.screen.blit(self.text_surface, [self.x, self.y])
+        self.game.screen.blit(self.text_surface, self.text_surface.get_rect(center=(self.x, self.y)))
