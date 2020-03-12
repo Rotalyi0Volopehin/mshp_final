@@ -28,7 +28,7 @@ class GIFImage(object):
         pass
 
     def process_draw(self):
-        self.render(self.screen, (150,150))
+        self.render(self.screen, (125,70))
 
     def process_event(self, event):
         pass
@@ -286,7 +286,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     exit()
             self.scenes[self.current_scene].process_frame(eventlist)
-            #self.clock.tick(30)
+            self.clock.tick(30)
 
 
     def create_window(self):
