@@ -41,4 +41,5 @@ class Game:
                     print('Пользователь нажал крестик')
                     self.game_over = True
             self.scenes[self.current_scene].process_frame(eventlist)
+
         sys.exit(0)

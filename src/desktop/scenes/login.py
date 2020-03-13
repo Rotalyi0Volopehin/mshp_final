@@ -38,8 +38,9 @@ class LoginScene(Scene):
 
 
     def lg_on_click(self):
-        #TODO проверка сервера...
-        # TODO:
+        pass
+        #тODO проверка сервера...
+        #TODO:
         # DATA = {"data":
         #            {"hostname":"localhost",
         #             "ipaddress":"serverhost",
@@ -56,8 +57,9 @@ class LoginScene(Scene):
         self.set_menu_scene() # если авторизировался выполнить
 
     def rg_on_click(self):
-        # TODO зарегистрировать на сервере...
-        # TODO:
+        pass
+        # ODO зарегистрировать на сервере...
+        #TODO:
         # DATA = {"data":
         #            {"hostname":"localhost",
         #             "ipaddress":"serverhost",

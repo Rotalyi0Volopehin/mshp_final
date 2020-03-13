@@ -1,13 +1,14 @@
 import pygame
 from random import randint
 from constants import Color
-
+from network_confrontation.src.desktop.objects.text import Text
 from objects.base import DrawObject
 
 
 class Hex(DrawObject):
-    def __init__(self, game, x=0, y=0, side=100, args=None):       # param -> переименовать
+    def __init__(self, game, x=0, y=0,  side=100, number=0, args=None):       # param -> переименовать
         super().__init__(game)
+
         self.x = x
         self.y = y
         self.side = side
@@ -22,6 +23,7 @@ class Hex(DrawObject):
                            (0, self.sq * self.side / 2)]
         self.surface = pygame.Surface((2 * self.side, 2 * self.side))
         self.surface.set_colorkey(Color.BLACK)
+        self.number = Text(game=self.game, text=number, font_size=25, x=x+19, y=y+18)
 
     def process_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -31,11 +33,14 @@ class Hex(DrawObject):
 
     def process_draw(self):
         pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
+        self.number.process_draw()
         self.game.screen.blit(self.surface, (self.x, self.y))
 
     def on_click(self, event):
         if pygame.draw.polygon(self.surface, self.color, self.hex_points, 5).collidepoint(event.pos):
             self.color = Color.RED
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        print("NO")
 
     def on_release(self, event):
         pass

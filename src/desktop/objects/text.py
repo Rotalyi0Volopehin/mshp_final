@@ -18,7 +18,7 @@ class Text(DrawObject):
         self.update_text(text)
 
     def update_text(self, text):
-        self.text = text
+        self.text = str(text)
         self.text_surface = self.font.render(self.text, True, self.color)
 
     def process_draw(self):
