@@ -6,9 +6,10 @@ from objects.base import DrawObject
 
 
 class Hex(DrawObject):
-    def __init__(self, game, x=0, y=0,  side=100, number=0, args=None):       # param -> переименовать
+    def __init__(self, game, x=0, y=0,  side=100, number=0, args=None, nx = 0, even = False):       # param -> переименовать
         super().__init__(game)
-
+        self.even = even # чет нечет строчка
+        self.nx = nx # номер
         self.x = x
         self.y = y
         self.side = side
@@ -23,7 +24,8 @@ class Hex(DrawObject):
                            (0, self.sq * self.side / 2)]
         self.surface = pygame.Surface((2 * self.side, 2 * self.side))
         self.surface.set_colorkey(Color.BLACK)
-        self.number = Text(game=self.game, text=number, font_size=25, x=x+19, y=y+18)
+        self.NUM = number # число юнитов
+        self.number = Text(game=self.game, text=self.nx, font_size=25, x=x+19, y=y+18) # TEXT NUMBER
 
     def process_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -36,11 +38,28 @@ class Hex(DrawObject):
         self.number.process_draw()
         self.game.screen.blit(self.surface, (self.x, self.y))
 
+    def inPolygon(self,x, y):
+        c = 0
+        if (y >= self.y) and (y<=self.y + self.sq * self.side)\
+                and (x >=self.x) and (x <=self.x + 1.5 * self.side):
+            c = 1 - c
+        return c
+
     def on_click(self, event):
-        if pygame.draw.polygon(self.surface, self.color, self.hex_points, 5).collidepoint(event.pos):
+        if self.inPolygon(event.pos[0], event.pos[1]) == 1:
             self.color = Color.RED
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-        print("NO")
+
+    def get_number(self):
+        return self.NUM
+
+    def is_red_color(self):
+        return True if self.color == Color.RED else False
+
+    def get_even(self):
+        return self.even
+
+    def make_possible(self):
+        self.color = Color.GREEN
 
     def on_release(self, event):
         pass

@@ -32,22 +32,29 @@ class Grid(DrawObject):
             self.zoom_in(-2)
         """
     def set_grid(self):
+        j = 0
+        i = 0
         for row in range(self.height):
             for obj in range(self.width):
-                i = randint(0,60)
+                j = randint(0,60)
+                i += 1
                 if row % 2 == 0:
                     self.hexes_array.append(Hex(self.game,
                                                 3*obj*self.hex_side,
                                                 row * self.sq * self.hex_side / 2,
                                                 self.hex_side,
-                                                i)
+                                                i,
+                                                nx=j,
+                                                even=True)
                                                 )
                 else:
                     self.hexes_array.append(Hex(self.game,
                                                 1.5 * self.hex_side + 3 * self.hex_side * obj,
                                                 self.sq * self.hex_side / 2 + (row - 1) * self.sq * self.hex_side / 2,
                                                 self.hex_side,
-                                                i)
+                                                i,
+                                                nx=j,
+                                                even=False)
                                                 )
         print(len(self.hexes_array))
 
@@ -69,7 +76,42 @@ class Grid(DrawObject):
     def on_click(self, event):
         print(event.pos)
         for item in self.hexes_array:
+            item.color = Color.WHITE
+
+        for item in self.hexes_array:
             item.process_event(event)
+
+            if item.is_red_color() == True:
+                current_number_hex = item.get_number()-1
+                even = self.hexes_array[current_number_hex].get_even()
+                print(current_number_hex)
+                print(even)
+                top = item.get_number() - 17
+                right_top = (item.get_number() - 10) if even else (item.get_number() - 9)
+                left_top = (item.get_number() - 9) if even else (item.get_number() - 8)
+                left_bot = (item.get_number() + 6) if even else (item.get_number() + 8)
+                right_bot = (item.get_number() + 7) if even else (item.get_number() + 7)
+                bot = item.get_number() + 15
+                print(top+1, right_top+1, left_top+1, right_bot+1, left_bot+1, bot+1)
+                if len(self.hexes_array)-1 >=top>=0:
+                    self.hexes_array[top].make_possible()
+
+                if len(self.hexes_array)-1 >=right_top>=0:
+                    self.hexes_array[right_top].make_possible()
+
+                if len(self.hexes_array)-1 >=left_top>=0:
+                    self.hexes_array[left_top].make_possible()
+
+                if len(self.hexes_array)-1 >=right_bot>=0:
+                    self.hexes_array[right_bot].make_possible()
+
+                if len(self.hexes_array)-1 >=left_bot>=0:
+                    self.hexes_array[left_bot].make_possible()
+
+                if len(self.hexes_array)-1 >= bot >=0:
+                    self.hexes_array[bot].make_possible()
+                    print(self.hexes_array[bot].color)
+
 
     def on_release(self, event):
         pass

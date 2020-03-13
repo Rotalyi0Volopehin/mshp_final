@@ -7,7 +7,6 @@ class MapScene(Scene):
     def create_objects(self):
         self.map = Grid(self.game,20,8,8,2000)
         self.objects = [self.map]
-        print("LOX")
 
     def set_main_scene(self):
         self.set_next_scene(self.game.MAIN_SCENE_INDEX)
