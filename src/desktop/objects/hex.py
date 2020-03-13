@@ -6,10 +6,11 @@ from objects.base import DrawObject
 
 
 class Hex(DrawObject):
-    def __init__(self, game, x=0, y=0,  side=100, number=0, args=None, nx = 0, even = False):       # param -> переименовать
+    def __init__(self, game, x=0, y=0,  side=100, number=0, args=None, nx = 0, even = False, grid=object):       # param -> переименовать
         super().__init__(game)
+        self.grid = grid
         self.even = even # чет нечет строчка
-        self.nx = nx # номер
+        self.nx = nx # ранд количество юнитов
         self.x = x
         self.y = y
         self.side = side
@@ -24,8 +25,9 @@ class Hex(DrawObject):
                            (0, self.sq * self.side / 2)]
         self.surface = pygame.Surface((2 * self.side, 2 * self.side))
         self.surface.set_colorkey(Color.BLACK)
-        self.NUM = number # число юнитов
+        self.NUM = number # номер
         self.number = Text(game=self.game, text=self.nx, font_size=25, x=x+19, y=y+18) # TEXT NUMBER
+        #self.important_flag = False # Чтобы при клике, на уже красную клетку, зеленые клетки становились обратно белыми
 
     def process_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -45,9 +47,24 @@ class Hex(DrawObject):
             c = 1 - c
         return c
 
+    def make_possible(self):
+        self.color = Color.GREEN
+
     def on_click(self, event):
         if self.inPolygon(event.pos[0], event.pos[1]) == 1:
-            self.color = Color.RED
+            if self.color == Color.WHITE:
+                self.color = Color.RED
+            elif self.color == Color.GREEN:
+                self.color = Color.ORANGE
+            elif self.color == Color.RED:
+                self.color = Color.WHITE
+                self.grid.erase_green() # класс, в классе, вызывает метод другого класса, я ООП МАСТЕР, ПАТТЕРНЫ НЕ РОБЯТ
+        else:
+            if self.color == Color.RED:
+                self.grid.last_red = self.grid.find_red() # GRID запоминает номер последней красной клетки
+                self.color = Color.WHITE
+            if self.color == Color.ORANGE:
+                self.color = Color.GREEN
 
     def get_number(self):
         return self.NUM
@@ -57,9 +74,6 @@ class Hex(DrawObject):
 
     def get_even(self):
         return self.even
-
-    def make_possible(self):
-        self.color = Color.GREEN
 
     def on_release(self, event):
         pass
