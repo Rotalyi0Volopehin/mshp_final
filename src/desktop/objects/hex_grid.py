@@ -26,10 +26,8 @@ class Grid(DrawObject):
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             self.on_release(event)
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 4:
-            print("YES")
             self.add_units(1)
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 5:
-            print("YES", "YES")
             self.add_units(-1)
 
     def set_grid(self):
@@ -124,9 +122,10 @@ class Grid(DrawObject):
                 return item.get_number() - 1
 
     def change_num(self, adress1,adress2, number):
-        if self.hexes_array[adress1].nx+number>=0 and self.hexes_array[adress2].nx-number>=0:
-            self.hexes_array[adress1].nx += number
-            self.hexes_array[adress2].nx -= number
+        if adress1!=None and adress2!=None:
+            if self.hexes_array[adress1].nx+number>=0 and self.hexes_array[adress2].nx-number>=0:
+                self.hexes_array[adress1].nx += number
+                self.hexes_array[adress2].nx -= number
 
     def change_text(self, adress, number):
         self.hexes_array[adress].number = Text(game=self.game, text=number, font_size=25, x=self.hexes_array[adress].x+19, y=self.hexes_array[adress].y+18) # TEXT NUMBER
@@ -136,8 +135,8 @@ class Grid(DrawObject):
         for item in self.hexes_array:
             if item.color == Color.ORANGE:
                 orange_adress = item.get_number() - 1
-        print(orange_adress)
         red_adress = self.last_red
-        self.change_num(orange_adress,red_adress, units)
-        self.change_text(orange_adress, self.hexes_array[orange_adress].nx)
-        self.change_text(red_adress, self.hexes_array[red_adress].nx)
+        if orange_adress != None and red_adress != None:
+            self.change_num(orange_adress,red_adress, units)
+            self.change_text(orange_adress, self.hexes_array[orange_adress].nx)
+            self.change_text(red_adress, self.hexes_array[red_adress].nx)
