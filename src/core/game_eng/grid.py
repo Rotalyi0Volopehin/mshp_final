@@ -1,13 +1,14 @@
 import exceptions
 
 from game_eng.grid_tile import GridTile
+from game_eng.game_object_model import GameObjectModel
 
 
 # TODO: задокументировать
 
 
 # хексагональная сетка для карты; поле tiles содержит клетки (None -- дыра)
-class Grid:
+class Grid(GameObjectModel):
     def __init__(self, width: int, height: int):
         # vvv проверка параметров vvv
         if not (isinstance(width, int) and isinstance(height, int)):
@@ -56,3 +57,10 @@ class Grid:
         x = tile.__loc_x - 1 if (tile.__loc_y & 1) == 0 else tile.__loc_x + 1
         try_add_tile_neighbour(x, tile.__loc_y - 1)
         try_add_tile_neighbour(x, tile.__loc_y + 1)
+
+    # нужно вызывать в начале каждого хода
+    def process_logic(self):
+        for column in self._tiles:
+            for tile in column:
+                if tile is not None:
+                    tile.process_logic()
