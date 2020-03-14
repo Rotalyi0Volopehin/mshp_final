@@ -44,10 +44,14 @@ class Player(GameObjectModel):
 
     # необходимо выполнять в конце каждого хода
     # выполнять по очереди для каждого члена фракции, пока все не выдатут False
-    def try_execute_order(self) -> bool:
+    # параметр exec_fail_handler - это обработчик невыполненных запросов; аргументом принимает невыполненный запрос
+    def try_execute_order(self, exec_fail_handler=None) -> bool:
         if self.__order_exec_index >= len(self.__turn_orders_stack):
             return False
-        self.__turn_orders_stack[self.__order_exec_index].execute()
+        order = self.__turn_orders_stack[self.__order_exec_index]
+        if not order.try_execute():
+            if exec_fail_handler is not None:
+                exec_fail_handler(order)
         self.__order_exec_index += 1
         return True
 
