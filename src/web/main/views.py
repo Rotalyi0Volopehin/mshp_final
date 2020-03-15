@@ -20,6 +20,14 @@ def index_page(request):
     return render(request, 'pages/index.html', context)
 
 
+def registration_page(request):
+    context = {
+        'pagename': 'Registration',
+        'menu': get_menu_context()
+    }
+    return render(request, 'registration/registration.html', context)
+
+
 def time_page(request):
     context = {
         'pagename': 'Текущее время',
