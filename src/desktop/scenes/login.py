@@ -10,15 +10,15 @@ import socket
 from objects.text_input import Txtinput
 from objects.button import Btn
 from objects.text import Text
-
-
+from objects.gifimg import GIFImage
 
 class LoginScene(Scene):
     def create_objects(self):
         self.login = Txtinput(self.game, False, 170, 20)
         self.password = Txtinput(self.game, False, 180, 80)
+        self.trailer = GIFImage("backimage.gif", self.game)
 
-        #TODO self.trailer = GIFImage("backimage.gif")
+        # TODO self.trailer = GIFImage("backimage.gif")
 
         self.button_enter = Btn(self.game, (350, 350, 100, 40), Color.WHITE, "Войти", self.lg_on_click)
         self.button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.rg_on_click)
@@ -26,21 +26,23 @@ class LoginScene(Scene):
                                is_italic=False, text='Логин:',
                                color=(255, 255, 100), x=125, y=30)
         self.text_reg = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False,
-                        is_italic=False, text='Пароль:',
-                        color=(255, 255, 100), x=125, y=90)
+                             is_italic=False, text='Пароль:',
+                             color=(255, 255, 100), x=125, y=90)
 
-        self.objects = [self.login, self.password,
-                        self.button_enter, self.button_register,
-                        self.text_login, self.text_reg
+        self.objects = [
+                    self.trailer, self.password,
+                    self.button_enter, self.button_register,
+                    self.text_login, self.text_reg,
+                    self.login
                         ]
-    def set_menu_scene(self):
-         self.set_next_scene(self.game.MENU_SCENE_INDEX)
 
+    def set_menu_scene(self):
+        self.set_next_scene(self.game.MENU_SCENE_INDEX)
 
     def lg_on_click(self):
         pass
-        #тODO проверка сервера...
-        #TODO:
+        # тODO проверка сервера...
+        # TODO:
         # DATA = {"data":
         #            {"hostname":"localhost",
         #             "ipaddress":"serverhost",
@@ -54,12 +56,12 @@ class LoginScene(Scene):
         # Server responses us
         # IF DATA.ISVALID == TRUE -> THEN GO PLAY CS:GO
 
-        self.set_menu_scene() # если авторизировался выполнить
+        self.set_menu_scene()  # если авторизировался выполнить
 
     def rg_on_click(self):
         pass
         # ODO зарегистрировать на сервере...
-        #TODO:
+        # TODO:
         # DATA = {"data":
         #            {"hostname":"localhost",
         #             "ipaddress":"serverhost",
