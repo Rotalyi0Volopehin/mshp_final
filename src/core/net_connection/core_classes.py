@@ -2,8 +2,11 @@ import os
 import importlib.util
 
 
+# TODO: задокументировать
+
+
 class CoreClasses:
-    core_classes = {}
+    classes = {}
 
     @staticmethod
     def reg_core_classes():
@@ -12,7 +15,7 @@ class CoreClasses:
             if file_name.endswith(".py"):
                 module_name = file_name[:-3]
                 module = CoreClasses.__load_module(module_name, file_path)
-                CoreClasses.core_classes[module_name] = CoreClasses.__get_classes_of_module(module)
+                CoreClasses.classes[module_name] = CoreClasses.__get_classes_of_module(module)
         CoreClasses.__list_files("..", file_handler)
 
     @staticmethod
