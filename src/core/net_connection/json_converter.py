@@ -31,11 +31,13 @@ class JSONConverter:
     def json_init(init):
         if str(type(init)) != "<class 'function'>":
             raise exceptions.ArgumentTypeException()
+
         def inner(*args, **kwargs):
+            self = args[0]
             if (len(args) == 2) and (len(kwargs) == 0) and isinstance(args[1], JSONInitTrojan):
-                self = args[0]
                 trojan = args[1]
                 JSONConverter.object_from_json(trojan.json, self)
                 return
+            self.___json_serializable = None
             init(*args, **kwargs)
         return inner
