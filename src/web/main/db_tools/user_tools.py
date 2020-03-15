@@ -5,7 +5,7 @@ import exceptions
 
 from django.contrib.auth.models import User
 from adventures_web.settings import AUTO_USER_ACTIVATION
-from main.db_tools.db_user_error_messages import DBUserErrorMessages
+from main.db_tools.user_error_messages import DBUserErrorMessages
 
 
 # TODO: задокументировать код
