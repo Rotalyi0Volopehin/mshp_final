@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from src.web.main import models
+from src.web.main.models import Chat, Message
 
 
 class ChatAdmin(admin.ModelAdmin):
@@ -23,5 +23,5 @@ class MessageAdmin(admin.ModelAdmin):
     list_display = ('chat', 'author', 'message', 'pub_date', 'is_readed')
 
 
-admin.site.register(models.Chat, ChatAdmin)
-admin.site.register(models.Message, MessageAdmin)
+admin.site.register(Chat, ChatAdmin)
+admin.site.register(Message, MessageAdmin)
