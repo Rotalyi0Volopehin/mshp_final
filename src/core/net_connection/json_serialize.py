@@ -13,10 +13,11 @@ class CoreJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if type(obj) in CoreJSONEncoder.__default_json_serializable_types:
             return super().encode(obj)
-        obj_module = obj.__module__
+        obj_module = str(obj.__module__)
+        obj_module = obj_module[obj_module.rfind('.') + 1:]
         obj_name = type(obj).__name__
-        obj_dict = super().encode(obj.__dict__)
-        encoded = "~$#{}.{}:{}".format(str(obj_module), str(obj_name), str(obj_dict))
+        obj_dict = str(super().encode(obj.__dict__))
+        encoded = "~$#{}.{}:{}".format(obj_module, obj_name, obj_dict)
         return encoded
 
 
@@ -33,7 +34,8 @@ class JSONInitTrojan:
             raise exceptions.ArgumentTypeException()
 
         def inner(*args, **kwargs):
-            if (len(args) == 2) and (len(kwargs) == 0) and isinstance(args[1], JSONInitTrojan):
+            # TODO: понять, почему isinstance(args[1], JSONInitTrojan) не работает
+            if (len(args) == 2) and (len(kwargs) == 0) and (type(args[1]).__name__ == "JSONInitTrojan"):
                 self = args[0]
                 trojan = args[1]
                 self.__dict__.update(trojan.fields)
@@ -48,15 +50,15 @@ class CoreJSONDecoder:
         if not isinstance(json_, str):
             raise exceptions.ArgumentTypeException()
         decoded = json.loads(json_)
-        if CoreJSONDecoder.__is_encoded_core_object(decoded):
+        if CoreJSONDecoder.__is_encoded_core_object(decoded):  # decode для str
             return CoreJSONDecoder.__decode_core_object(decoded)
         if isinstance(decoded, list):
-            for i in range(len(decoded)):
+            for i in range(len(decoded)):  # decode для list
                 item = decoded[i]
                 if CoreJSONDecoder.__is_encoded_core_object(item):
                     decoded[i] = CoreJSONDecoder.__decode_core_object(item)
             return decoded
-        if isinstance(decoded, dict):
+        if isinstance(decoded, dict):  # decode для dict
             copy = {}
             for key, value in decoded.items():
                 if CoreJSONDecoder.__is_encoded_core_object(key):
@@ -72,11 +74,11 @@ class CoreJSONDecoder:
 
     @staticmethod
     def __decode_core_object(encoded: str):
-        module_end = encoded.find('.', 3) - 1
+        module_end = encoded.find('.', 3)
         obj_module = encoded[3:module_end]
-        class_origin = module_end + 2
-        class_end = encoded.find(':', class_origin) - 1
+        class_origin = module_end + 1
+        class_end = encoded.find(':', class_origin)
         obj_class = encoded[class_origin:class_end]
-        fields_origin = class_end + 2
+        fields_origin = class_end + 1
         obj_fields = CoreJSONDecoder.decode_json(encoded[fields_origin:])
         return CoreClasses.classes[obj_module][obj_class](JSONInitTrojan(obj_fields))
