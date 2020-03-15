@@ -11,7 +11,7 @@ from objects.text_input import Txtinput
 from objects.button import Btn
 from objects.text import Text
 
-from network_confrontation.src.desktop.game import GIFImage
+from network_confrontation.src.desktop.objects.gifimage import GIFImage
 
 
 class LoginScene(Scene):
