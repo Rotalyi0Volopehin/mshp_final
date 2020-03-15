@@ -16,7 +16,6 @@ class GridTile(GameObjectModel):
         if (team < -1) or (team > 2):
             raise exceptions.ArgumentValueException()
         # vvv инициализация vvv
-        self.grid = grid
         self.team = team  # может принимать значения от -1 до 2 (-1 -- нейтральная клетка)
         self.__loc_x = loc_x
         self.__loc_y = loc_y
@@ -29,5 +28,5 @@ class GridTile(GameObjectModel):
     def loc_y(self):
         return self.__loc_y
 
-    def get_neighbours(self):
-        return self.grid.get_tile_neighbours(self)
+    def get_neighbours(self, grid):
+        return grid.get_tile_neighbours(self)
