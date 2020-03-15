@@ -19,3 +19,6 @@ json = net_connection.json_serialize.CoreJSONEncoder().encode(k_in)
 
 # получение объекта получателем
 k_out = net_connection.json_serialize.CoreJSONDecoder.decode_json(json)
+
+
+# Не конвертировать системы объектов с циклами!
