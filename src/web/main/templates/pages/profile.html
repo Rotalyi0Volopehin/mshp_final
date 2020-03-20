@@ -1,7 +1,33 @@
 {% extends 'base/base.html' %}
 
 {% load static %}
+<script>
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+    })
+</script>
+
 {% block content %}
+
+<script>
+    function clear_pw_change_form() {
+        OldPassword.value = "";
+        NewPassword.value = "";
+        NewPassword2.value = "";
+    }
+    function check_pw_change() {
+        if (NewPassword.value != NewPassword2.value) {
+            save_pw_tag.disabled = true;
+            change_pw_button_footer.hidden = true;
+            change_pw_warning_footer.hidden = false;
+        }
+    }
+    function close_pw_warning() {
+        save_pw_tag.disabled = false;
+        change_pw_warning_footer.hidden = true;
+        change_pw_button_footer.hidden = false;
+    }
+</script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
@@ -11,6 +37,25 @@
 <br><br><br>
 
 <style>
+.pwdbtn{
+margin-left: 2%
+}
+
+.deletebtn{
+margin-left: 2%
+}
+
+.savebtn{
+margin-left: 50%
+}
+
+.info{
+    border: none;
+    margin-top: 2%;
+    margin-left: 23.5%;
+    font-size: 101%;
+}
+
 .profile-header {
     transform: translateY(5rem);
 }
@@ -49,14 +94,17 @@ body {
 }
 </style>
 
-<div class="row py-5 px-4">
+{% if error %} <div class="text-center alert alert-danger" role="alert">{{ error }}</div> {% else %}
+
+<div class="row py-5 px-4 " method="post"> {% csrf_token %}
     <div class="col-xl-10 col-md-10 col-sm-10 mx-auto">
 
         <div class="bg-white shadow rounded_border overflow-hidden">
             <img src="{% static '/profilepic.png' %}" alt="..." width="130"
                  class="profile_pic rounded-circle mb-2 img-thumbnail">
             <div class="px-4 pt-0 pb-4 bg-dark">
-                <h1 class="text-white mb-1 pt-3 name">Sample Text</h1>
+                <h1 class="text-white mb-1 pt-3 name">{{ login }}</h1>
+                <input type="text" class="info form-control bg-dark col-sm-9 text-white-50" {% if not self %} readonly {% endif %} value="{{ about }}" name="about">
             </div>
 
             <div class="bg-light p-4">
@@ -68,76 +116,105 @@ body {
                 </div>
 
                 <div class="form-group pt-3 row">
-                    <div class="col-sm-5">
-                        <label class="mb-1">Money:</label>
-                        <label class="text-right mb-1 pr-5">{{ coins }}</label>
+                     <div class="col-sm-4">
+                        <label class="mb-1">Team: </label>
+                        <label class="text-right mb-1">{{ team }}</label>
                     </div>
-                    <div class="col-sm-4">
-                        <label class="mb-1">Money per hour:</label>
-                        <label class="text-right mb-1">{{ coins_per_hour }}</label>
-                    </div>
+                </div>
+
+                <div class="form-group row">
                     <div class="col-sm-5">
                         <label class="mb-1">Games played:</label>
-                        <label class="text-right mb-1 pr-5">{{ played_games_count }}</label>
+                        <label class="text-right mb-1 pr-5">{{ played_games }}</label>
                     </div>
                     <div class="col-sm-4">
                         <label class="mb-1">Victories:</label>
-                        <label class="text-right mb-1">{{ victories_count }}</label>
+                        <label class="text-right mb-1">{{ victories }}</label>
+                    </div>
+                </div>
+                {% if self %}
+            <div class="form-group row">
+                <button type="button" class="pwdbtn btn btn-primary col-sm-2" data-toggle="modal" data-target="#changePassword">Сменить пароль</button>
+            </div>
+            <div class="form-group row">
+                <button type="button" class="deletebtn btn btn-secondary col-sm-2" style="height: 42px;" data-toggle="modal"
+                        data-target="#deleteAccount">Удалить аккаунт</button>
+                <button type="submit" class="savebtn btn btn-primary btn-lg" onclick="action_tag.value = 'save-chan'"
+                    style="">Сохранить изменения</button>
+            </div>
+            {% endif %}
+            </div>
+        </div>
+        <input type="hidden" name="action" id="action_tag">
+    <script> action_tag.value = ""; </script>
+
+    <div class="modal fade" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="changePasswordLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordLabel">Сменить пароль</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="OldPassword">Введите старый пароль</label>
+                        <input type="password" class="form-control" id="OldPassword" name="password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="NewPassword">Введите новый пароль</label>
+                        <input type="password" class="form-control" id="NewPassword" name="new_password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="NewPassword2">Введите новый пароль повторно</label>
+                        <input type="password" class="form-control" id="NewPassword2">
                     </div>
                 </div>
 
+                <div class="modal-footer" id="change_pw_button_footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clear_pw_change_form()">Отмена</button>
+                    <button type="submit" class="btn btn-primary" onclick="action_tag.value = 'save-pass'; check_pw_change()" id="save_pw_tag">Сменить</button>
+                </div>
+
+                <div class="modal-footer" id="change_pw_warning_footer" hidden>
+                    <div class="alert alert-danger w-100" role="alert">
+                        Пароли не совпадают!
+                        <button type="button" class="close" aria-label="Close" onclick="close_pw_warning()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div class="modal fade" id="deleteAccount" tabindex="-1" role="dialog" aria-labelledby="deleteAccountLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteAccountLabel">Удалить аккаунт</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Это действие приведёт к необратимым последствиям. Желаете продолжить?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="delete_cancel">Отмена</button>
+                    <button type="submit" class="btn btn-danger" onclick="action_tag.value = 'del'">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <div class="row row-cols-1 row-cols-md-3 py-5">
-            <div class="col mb-4">
-                <div class="card">
-                    <svg class="bd-placeholder-img card-img-top" width="100%" height="180"
-                         xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false"
-                         role="img" aria-label="Placeholder: Изображение"><title>Placeholder</title>
-                        <rect width="100%" height="100%" fill="#868e96"></rect>
-                        <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Изображение</text>
-                    </svg>
-                    <div class="card-body">
-                        <h5 class="card-title">Название карточки</h5>
-                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col mb-4">
-                <div class="card">
-                    <svg class="bd-placeholder-img card-img-top" width="100%" height="180"
-                         xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false"
-                         role="img" aria-label="Placeholder: Изображение"><title>Placeholder</title>
-                        <rect width="100%" height="100%" fill="#868e96"></rect>
-                        <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Изображение</text>
-                    </svg>
-                    <div class="card-body">
-                        <h5 class="card-title">Название карточки</h5>
-                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col mb-4">
-                <div class="card">
-                    <svg class="bd-placeholder-img card-img-top" width="100%" height="180"
-                         xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false"
-                         role="img" aria-label="Placeholder: Изображение"><title>Placeholder</title>
-                        <rect width="100%" height="100%" fill="#868e96"></rect>
-                        <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Изображение</text>
-                    </svg>
-                    <div class="card-body">
-                        <h5 class="card-title">Название карточки</h5>
-                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row row-cols-1 row-cols-md-3 pb-5">
             <div class="col mb-4">
                 <div class="card">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="180"
@@ -188,5 +265,5 @@ body {
     </div>
 </div>
 
-
+{% endif %}
 {% endblock %}

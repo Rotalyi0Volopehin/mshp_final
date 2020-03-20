@@ -27,7 +27,9 @@ urlpatterns = [
     path('darknet/', views.darknet_page, name='darknet'),
     path('forum/', views.forum_page, name='forum'),
     path('chat/', views.chat_page, name='chat'),
-    path('profile/', views.profile_page, name='profile'),
+    path('profile/<int:id>/', views.profile_page),
+    path('my_profile/', views.my_profile_page),
+    path('registration/', views.registration_page),
 
     path(
         'login/',

@@ -6,7 +6,7 @@ import exceptions
 from django.contrib.auth.models import User
 from adventures_web.settings import AUTO_USER_ACTIVATION
 from main.db_tools.user_error_messages import DBUserErrorMessages
-
+from main.models import UserData
 
 # TODO: задокументировать код
 
@@ -16,14 +16,14 @@ class DBUserTools:
     @staticmethod  # инструмент записи в БД
     def try_register(login, password, email, team) -> (bool, str):
         # vvv первичная проверка аргументов vvv
-        if not (isinstance(login, str) and isinstance(password, str) and isinstance(email, str)) and isinstance(team, int):
-            raise exceptions.ArgumentTypeException()
-        if not ((0 < len(login) <= 64) and (0 < len(email) <= 64) and (0 < len(password) <= 64) and (0 <= team < 3)):
-            raise exceptions.ArgumentValueException()
-        if not is_email_valid(email):
-            raise exceptions.ArgumentValueException("E-mail некорректен!")
-        if login == "$_del":
-            raise exceptions.ArgumentValueException("Логин не должен принимать значение '$_del'!")
+            # if not (isinstance(login, str) and isinstance(password, str) and isinstance(email, str)) and isinstance(team, int):
+            #     raise exceptions.ArgumentTypeException()
+            # if not ((0 < len(login) <= 64) and (0 < len(email) <= 64) and (0 < len(password) <= 64) and (0 <= team < 3)):
+            #     raise exceptions.ArgumentValueException()
+            # if not is_email_valid(email):
+            #     raise exceptions.ArgumentValueException("E-mail некорректен!")
+            # if login == "$_del":
+            #     raise exceptions.ArgumentValueException("Логин не должен принимать значение '$_del'!")
         # vvv проверка согласованности аргументов с данными БД vvv
         if len(User.objects.filter(username=login)) > 0:
             return False, DBUserErrorMessages.login_is_already_in_use
@@ -39,8 +39,8 @@ class DBUserTools:
         else:
             pass  # здесь отсылается письмо с ссылкой для верификации
         user_data.save()
-        user_stats = main.models.UserStats(user=user)
-        user_stats.save()
+        #user_stats = main.models.UserStats(user=user)
+        #user_stats.save()
         return True, None
 
     @staticmethod  # инструмент удаления из БД
@@ -53,8 +53,8 @@ class DBUserTools:
         if len(user_data) > 0:
             user_data.delete()
         user_stats = main.models.UserStats.objects.filter(user=user)
-        if len(user_stats) > 0:
-            user_stats.delete()
+        #if len(user_stats) > 0:
+        #    user_stats.delete()
         user.delete()
 
     @staticmethod  # инструмент проверки валидности
@@ -68,6 +68,20 @@ class DBUserTools:
             return False
         user_stats = main.models.UserStats.objects.filter(user=user)
         return len(user_stats) == 1
+
+    @staticmethod
+    def try_find_user_with_id(id) -> (User, str):
+        user = User.objects.filter(id=id)
+        if len(user) == 0:
+            return None, "Пользователь не найден!"
+        return user[0], None
+
+    @staticmethod
+    def try_get_user_data(user) -> (UserData, str):
+        user_data = UserData.objects.filter(user=user)
+        if len(user_data) != 1:
+            return None, "Некорректная конфигурация пользовательских данных!"
+        return user_data[0], None
 
 
 __email_re = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
