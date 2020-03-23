@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'main',
     'bootstrap4',
     'channels',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
