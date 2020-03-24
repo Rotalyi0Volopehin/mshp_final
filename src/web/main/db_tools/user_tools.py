@@ -70,7 +70,7 @@ class DBUserTools:
         return len(user_stats) == 1
 
     @staticmethod  # инструмент проверки существования пары логин-пароль
-    def check_user_login_and_password(login: str, password: str) -> bool:
+    def check_user_existence(login: str, password: str) -> bool:
         # vvv проверка аргументов vvv
         if not (isinstance(login, str) and isinstance(password, str)):
             raise exceptions.ArgumentTypeException()
