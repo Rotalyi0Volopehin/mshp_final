@@ -2,16 +2,14 @@ from pygame_textinput import TextInput
 from PIL import Image
 import pygame
 from pygame.locals import *
-import json
 import time
 from constants import Color
 from scenes.base import Scene
-import socket
 from objects.text_input import Txtinput
 from objects.button import Btn
 from objects.text import Text
 
-from network_confrontation.src.desktop.objects.gifimage import GIFImage
+from objects.gifimage import GIFImage
 
 
 class LoginScene(Scene):

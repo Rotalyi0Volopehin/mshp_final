@@ -1,10 +1,8 @@
-import sys
 import pygame
-from pygame.locals import *
-import json
 import time
-import socket
-from network_confrontation.src.desktop.pygame_textinput import TextInput
+
+from pygame.locals import *
+from pygame_textinput import TextInput
 from PIL import Image
 
 
@@ -123,10 +121,6 @@ class GIFImage(object):
                     self.cur += 1
                     if self.cur > self.breakpoint:
                         self.cur = self.startpoint
-
-
-
-
         screen.blit(self.frames[self.cur][0], pos)
 
     def seek(self, num):
@@ -226,12 +220,12 @@ class Button:
             screen.blit(self.image_put_on_button, (self.x, self.y))
 
 
-from network_confrontation.src.desktop.scenes.final import FinalScene
-from network_confrontation.src.desktop.scenes.main import MainScene
-from network_confrontation.src.desktop.scenes.menu import MenuScene
-from network_confrontation.src.desktop.scenes.map import MapScene
-from network_confrontation.src.desktop.scenes.quests import QuestScene
-from network_confrontation.src.desktop.scenes.login import LoginScene
+from scenes.final import FinalScene
+from scenes.main import MainScene
+from scenes.menu import MenuScene
+from scenes.map import MapScene
+from scenes.quests import QuestScene
+from scenes.login import LoginScene
 
 class Game:
     MENU_SCENE_INDEX = 0
@@ -253,7 +247,6 @@ class Game:
 
         #self.trailer = GIFImage("backimage.gif")
 
-
         self.enter = Button(200, 150, "Войти", "button_pressed.png", "button_not_pressed.png")
         self.enter.create_button()
         self.register = Button(167, 200, "Регистрация", "button_pressed_2.png", "button_not_pressed_2.png")
@@ -270,9 +263,6 @@ class Game:
     def main_loop(self):
         pygame.init()
         pygame.display.set_caption("Войти/выйти")
-
-
-
 
         self.create_window()
         self.game_over = False

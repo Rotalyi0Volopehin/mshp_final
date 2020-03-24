@@ -1,3 +1,6 @@
+import pygame
+
+
 class Button:
     def __init__(self, x, y, text, image_press, image_unpress):
 

@@ -180,7 +180,6 @@ class TextInput:
         self.cursor_position = 0
 
 
-
 if __name__ == "__main__":
     pygame.init()
 

@@ -1,7 +1,7 @@
 import pygame
 
-from network_confrontation.src.desktop.constants import Color
-from network_confrontation.src.desktop.game import GIFImage
+from constants import Color
+from game import GIFImage
 
 
 class Scene:

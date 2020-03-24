@@ -1,6 +1,6 @@
-from network_confrontation.src.desktop.constants import Color
-from network_confrontation.src.desktop.objects.button import Btn
-from network_confrontation.src.desktop.scenes.base import Scene
+from constants import Color
+from objects.button import Btn
+from scenes.base import Scene
 
 
 class QuestScene(Scene):

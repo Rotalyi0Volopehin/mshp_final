@@ -1,13 +1,14 @@
-
 import pygame
 import sys
 import pygame
-from pygame.locals import *
 import json
 import time
 import socket
-from network_confrontation.src.desktop.pygame_textinput import TextInput
+
+from pygame.locals import *
+from pygame_textinput import TextInput
 from PIL import Image
+
 
 class GIFImage(object):
     def __init__(self, filename, game):
