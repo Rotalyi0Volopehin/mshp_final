@@ -66,7 +66,7 @@ class WebsocketRequestHandler(WebsocketConsumer):
         if request_id not in RequestParcelHandlers._handlers:
             exception = exceptions.NotImplementedException("Request parcel handler is not implemented!")
             return exception, [ResponseID.FAIL]
-        response_parcel = RequestParcelHandlers._handlers[parcel]()
+        response_parcel = RequestParcelHandlers._handlers[parcel](self, parcel)
         if not WebsocketRequestHandler.__is_parcel_format_correct(response_parcel):
             exception = exceptions.InvalidReturnException("Request parcel handler must return response parcel!")
             return exception, [ResponseID.FAIL]
