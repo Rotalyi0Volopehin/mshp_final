@@ -5,7 +5,7 @@ import exceptions
 
 from django.contrib.auth.models import User
 from adventures_web.settings import AUTO_USER_ACTIVATION
-from main.db_tools.db_user_error_messages import DBUserErrorMessages
+from main.db_tools.user_error_messages import DBUserErrorMessages
 
 
 # TODO: задокументировать код
@@ -14,7 +14,7 @@ from main.db_tools.db_user_error_messages import DBUserErrorMessages
 class DBUserTools:
     # TODO: добавить механизм верификации пользователей
     @staticmethod  # инструмент записи в БД
-    def try_register(login, password, email, team) -> (bool, str):
+    def try_register(login: str, password: str, email: str, team: int) -> (bool, str):
         # vvv первичная проверка аргументов vvv
         if not (isinstance(login, str) and isinstance(password, str) and isinstance(email, str)) and isinstance(team, int):
             raise exceptions.ArgumentTypeException()
@@ -44,7 +44,7 @@ class DBUserTools:
         return True, None
 
     @staticmethod  # инструмент удаления из БД
-    def delete_user(user):
+    def delete_user(user: User):
         # vvv проверка аргумента vvv
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
@@ -58,7 +58,7 @@ class DBUserTools:
         user.delete()
 
     @staticmethod  # инструмент проверки валидности
-    def is_user_configuration_correct(user) -> bool:
+    def is_user_configuration_correct(user: User) -> bool:
         # vvv проверка аргумента vvv
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
@@ -68,6 +68,18 @@ class DBUserTools:
             return False
         user_stats = main.models.UserStats.objects.filter(user=user)
         return len(user_stats) == 1
+
+    @staticmethod  # инструмент проверки существования пары логин-пароль
+    def check_user_login_and_password(login: str, password: str) -> bool:
+        # vvv проверка аргументов vvv
+        if not (isinstance(login, str) and isinstance(password, str)):
+            raise exceptions.ArgumentTypeException()
+        # vvv проверка данных по БД vvv
+        user = User.objects.filter(login=login)
+        if len(user) != 1:
+            return False
+        user = user[0]
+        return user.check_password(password)
 
 
 __email_re = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
