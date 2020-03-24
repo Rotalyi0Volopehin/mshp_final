@@ -11,3 +11,11 @@ class ArgumentValueException(Exception):
 
 class InvalidOperationException(Exception):
     pass
+
+
+class NotImplementedException(Exception):
+    pass
+
+
+class InvalidReturnException(Exception):
+    pass
