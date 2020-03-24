@@ -7,6 +7,8 @@ from net_connection.json_serialize import CoreJSONDecoder
 from .request_parcel_handlers import RequestParcelHandlers
 from net_connection.response_ids import ResponseID
 from net_connection.request_ids import RequestID
+# vvv import для инициализации request parcel handlers vvv
+from . import logged_in_sockets
 
 
 # TODO: задокументировать
@@ -47,7 +49,7 @@ class WebsocketRequestHandler(WebsocketConsumer):
             return True, parcel
         except:
             error_response = err_resp.ErrorResponse(err_resp.ErrorResponseID.JSON_FORMAT_REQUIRED)
-            self.send(error_response)
+            self.send(json.dumps(error_response))
             return False, None
 
     @staticmethod
@@ -57,7 +59,7 @@ class WebsocketRequestHandler(WebsocketConsumer):
     def check_parcel_format(self, parcel) -> bool:
         if not WebsocketRequestHandler.__is_parcel_format_correct(parcel):
             error_response = err_resp.ErrorResponse(err_resp.ErrorResponseID.WRONG_PARCEL_FORMAT)
-            self.send(error_response)
+            self.send(json.dumps(error_response))
             return False
         return True
 

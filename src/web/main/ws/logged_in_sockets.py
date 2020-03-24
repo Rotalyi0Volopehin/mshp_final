@@ -5,6 +5,8 @@ from channels.generic.websocket import WebsocketConsumer
 from main.ws.request_parcel_handlers import RequestParcelHandlers
 from net_connection.request_ids import RequestID
 from net_connection.response_ids import ResponseID
+from main.db_tools.user_tools import DBUserTools
+from main.models import User
 
 
 # TODO: задокументировать
@@ -18,7 +20,10 @@ class LoggedInSockets:
         if not (isinstance(socket, WebsocketConsumer) and
                 isinstance(user_login, str) and isinstance(user_password, str)):
             raise exceptions.ArgumentTypeException()
-        return False  # TODO: закончить
+        user_exists = DBUserTools.check_user_existence(user_login, user_password)
+        if user_exists:
+            LoggedInSockets._users_of_sockets[socket] = User.objects.get(login=user_login)
+        return user_exists
 
     @staticmethod
     def try_logout_socket(socket: WebsocketConsumer) -> bool:
