@@ -21,9 +21,13 @@ class LoggedInSockets:
                 isinstance(user_login, str) and isinstance(user_password, str)):
             raise exceptions.ArgumentTypeException()
         user_exists = DBUserTools.check_user_existence(user_login, user_password)
-        if user_exists:
-            LoggedInSockets._users_of_sockets[socket] = User.objects.get(login=user_login)
-        return user_exists
+        if not user_exists:
+            return False
+        user = User.objects.get(login=user_login)
+        if LoggedInSockets._users_of_sockets.values().__contains__(user):
+            return False
+        LoggedInSockets._users_of_sockets[socket] = user
+        return True
 
     @staticmethod
     def try_logout_socket(socket: WebsocketConsumer) -> bool:
