@@ -1,6 +1,11 @@
-class ResponseIDs:
-    success = 0
-    failed = 1
+from enum import Enum
 
-    return_game_session_data = 2
-    update_money_amount = 3
+
+# TODO: задокументировать
+
+
+class ResponseIDs(Enum):
+    SUCCESS = 0  # parcel[1] { response_id<int> }
+    FAIL = 1  # parcel[1] { response_id<int> }
+    ERROR = 2  # parcel[2] { response_id<int>, error_id<int> }
+    DATA = 3  # parcel[2] { response_id<int>, data<object> }
