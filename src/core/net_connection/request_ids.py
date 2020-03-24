@@ -1,8 +1,9 @@
-class RequestIDs:
-    login = 0
-    logout = 1
+from enum import Enum
 
-    join_game_session = 2
-    leave_game_session = 3
-    connect_to_game_session = 4
-    disconnect_from_game_session = 5
+
+# TODO: задокументировать
+
+
+class RequestIDs(Enum):
+    LOGIN = 0  # parcel[3] { request_id<int>, login<str>, password<str> }
+    LOGOUT = 1  # parcel[1] { request_id<int> }
