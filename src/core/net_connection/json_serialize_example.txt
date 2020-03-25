@@ -1,0 +1,24 @@
+
+#   Пример конвертации объектов собственных типов, содержащихся в core:
+
+import net_connection.json_serialize
+
+class K:
+    @net_connection.json_serialize.JSONInitTrojan.json_init  # Эта строчка делает возможным создание объектов этого типа из json
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+# объект у отправителя
+k_in = K(10, 98)
+
+# json, содержащий все данные
+json = net_connection.json_serialize.CoreJSONEncoder().encode(k_in)
+
+# пересылка json
+
+# получение объекта получателем
+k_out = net_connection.json_serialize.CoreJSONDecoder.decode_json(json)
+
+
+# Не конвертировать системы объектов с циклами!
