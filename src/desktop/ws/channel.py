@@ -36,13 +36,13 @@ class Channel:
 
     @staticmethod
     def __run_channel_async():
-        Channel.sender_thread = Thread(target=Channel.__dequeue_loop(Channel.data_to_send, Channel.__send))
-        Channel.receiver_thread = Thread(target=Channel.__dequeue_loop(Channel.lists_for_receive, Channel.__receive))
+        Channel.sender_thread = Thread(target=Channel.__dequeue_loop(Channel.__data_to_send, Channel.__send))
+        Channel.receiver_thread = Thread(target=Channel.__dequeue_loop(Channel.__receive_handlers, Channel.__receive))
         Channel.sender_thread.start()
         Channel.receiver_thread.start()
 
-    data_to_send = Queue()
-    lists_for_receive = Queue()
+    __data_to_send = Queue()
+    __receive_handlers = Queue()
 
     @staticmethod
     def __dequeue_loop(queue: Queue, item_handler):
@@ -57,17 +57,17 @@ class Channel:
         Channel.socket.send(data)
 
     @staticmethod
-    def __receive(received_data: list):
-        received_data.append(Channel.socket.recv())
+    def __receive(receive_handler):
+        receive_handler(Channel.socket.recv())
 
     @staticmethod
     def send(data: str):
         if not isinstance(data, str):
             raise exceptions.ArgumentTypeException()
-        Channel.data_to_send.put(data)
+        Channel.__data_to_send.put(data)
 
     @staticmethod
-    def receive_async(received_data: list):
-        if not isinstance(received_data, list):
+    def receive_async(receive_handler):
+        if type(receive_handler).__name__ != "function":
             raise exceptions.ArgumentTypeException()
-        Channel.lists_for_receive.put(received_data)
+        Channel.__receive_handlers.put(receive_handler)
