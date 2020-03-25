@@ -7,6 +7,8 @@ from net_connection.json_serialize import CoreJSONDecoder
 from .request_parcel_handlers import RequestParcelHandlers
 from net_connection.response_ids import ResponseID
 from net_connection.request_ids import RequestID
+from net_connection.parcel_check import is_request_parcel_valid
+from net_connection.parcel_check import is_response_parcel_valid
 # vvv import для инициализации request parcel handlers vvv
 from . import logged_in_sockets
 
@@ -52,12 +54,8 @@ class WebsocketRequestHandler(WebsocketConsumer):
             self.send(json.dumps(error_response))
             return False, None
 
-    @staticmethod
-    def __is_parcel_format_correct(parcel) -> bool:
-        return isinstance(parcel, list) and (len(parcel) > 0) and isinstance(parcel[0], err_resp.ErrorResponseID)
-
     def check_parcel_format(self, parcel) -> bool:
-        if not WebsocketRequestHandler.__is_parcel_format_correct(parcel):
+        if not is_request_parcel_valid(parcel):
             error_response = err_resp.ErrorResponse(err_resp.ErrorResponseID.WRONG_PARCEL_FORMAT)
             self.send(json.dumps(error_response))
             return False
@@ -69,7 +67,7 @@ class WebsocketRequestHandler(WebsocketConsumer):
             exception = exceptions.NotImplementedException("Request parcel handler is not implemented!")
             return exception, [ResponseID.FAIL]
         response_parcel = RequestParcelHandlers._handlers[parcel](self, parcel)
-        if not WebsocketRequestHandler.__is_parcel_format_correct(response_parcel):
+        if not is_response_parcel_valid(response_parcel):
             exception = exceptions.InvalidReturnException("Request parcel handler must return response parcel!")
             return exception, [ResponseID.FAIL]
         return None, response_parcel
