@@ -2,6 +2,7 @@ import json
 import exceptions
 
 from net_connection.core_classes import CoreClasses
+from enum import Enum
 
 
 # TODO: задокументировать
@@ -13,12 +14,29 @@ class CoreJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if type(obj) in CoreJSONEncoder.__default_json_serializable_types:
             return super().encode(obj)
+        if isinstance(obj, Enum):
+            return CoreJSONEncoder.__encode_enum(obj)
+        return CoreJSONEncoder.__encode_object_dict(obj)
+
+    @staticmethod
+    def __encode_object_dict(obj):
+        obj_module, obj_type = CoreJSONEncoder.__get_info_module(obj)
+        obj_dict = str(super().encode(obj.__dict__))
+        encoded = "~$#{}.{}:{}".format(obj_module, obj_type, obj_dict)
+        return encoded
+
+    @staticmethod
+    def __encode_enum(obj):
+        obj_module, obj_type = CoreJSONEncoder.__get_info_module(obj)
+        encoded = "~E#{}.{}:{}".format(obj_module, obj_type, obj.value)
+        return encoded
+
+    @staticmethod
+    def __get_info_module(obj) -> (str, str):  # (obj_module, obj_type)
         obj_module = str(obj.__module__)
         obj_module = obj_module[obj_module.rfind('.') + 1:]
-        obj_name = type(obj).__name__
-        obj_dict = str(super().encode(obj.__dict__))
-        encoded = "~$#{}.{}:{}".format(obj_module, obj_name, obj_dict)
-        return encoded
+        obj_type = type(obj).__name__
+        return obj_module, obj_type
 
 
 class JSONInitTrojan:
@@ -50,35 +68,60 @@ class CoreJSONDecoder:
         if not isinstance(json_, str):
             raise exceptions.ArgumentTypeException()
         decoded = json.loads(json_)
-        if CoreJSONDecoder.__is_encoded_core_object(decoded):  # decode для str
-            return CoreJSONDecoder.__decode_core_object(decoded)
+        success, obj = CoreJSONDecoder.__try_special_decoding(decoded)  # decode для str
+        if success:
+            return obj
         if isinstance(decoded, list):
             for i in range(len(decoded)):  # decode для list
-                item = decoded[i]
-                if CoreJSONDecoder.__is_encoded_core_object(item):
-                    decoded[i] = CoreJSONDecoder.__decode_core_object(item)
+                success, obj = CoreJSONDecoder.__try_special_decoding(decoded[i])
+                if success:
+                    decoded[i] = obj
             return decoded
         if isinstance(decoded, dict):  # decode для dict
             copy = {}
             for key, value in decoded.items():
-                if CoreJSONDecoder.__is_encoded_core_object(key):
-                    key = CoreJSONDecoder.__decode_core_object(key)
-                if CoreJSONDecoder.__is_encoded_core_object(value):
-                    value = CoreJSONDecoder.__decode_core_object(value)
+                success, obj = CoreJSONDecoder.__try_special_decoding(key)
+                if success:
+                    key = obj
+                success, obj = CoreJSONDecoder.__try_special_decoding(value)
+                if success:
+                    value = obj
                 copy[key] = value
             return copy
 
     @staticmethod
-    def __is_encoded_core_object(encoded):
+    def __try_special_decoding(encoded) -> (bool, object):
+        if isinstance(encoded, str):
+            if encoded.startswith("~E#"):
+                return True, CoreJSONDecoder.__decode_enum(encoded)
+            if encoded.startswith("~$#"):
+                return True, CoreJSONDecoder.__decode_core_object(encoded)
+        return False, None
+
+    @staticmethod
+    def __is_encoded_core_object(encoded: str):
         return isinstance(encoded, str) and encoded.startswith("~$#")
 
     @staticmethod
+    def __decode_enum(encoded: str):
+        enum_type, enum_value = CoreJSONDecoder.__decode_object_info(encoded)
+        enum = enum_type(enum_value)
+        return enum
+
+    @staticmethod
     def __decode_core_object(encoded: str):
+        obj_type, obj_dict = CoreJSONDecoder.__decode_object_info(encoded)
+        obj = obj_type(JSONInitTrojan(obj_dict))
+        return obj
+
+    @staticmethod
+    def __decode_object_info(encoded: str) -> (type, str):  # (obj_type, obj_data)
         module_end = encoded.find('.', 3)
-        obj_module = encoded[3:module_end]
-        class_origin = module_end + 1
-        class_end = encoded.find(':', class_origin)
-        obj_class = encoded[class_origin:class_end]
-        fields_origin = class_end + 1
-        obj_fields = CoreJSONDecoder.decode_json(encoded[fields_origin:])
-        return CoreClasses.classes[obj_module][obj_class](JSONInitTrojan(obj_fields))
+        obj_module_name = encoded[3:module_end]
+        type_origin = module_end + 1
+        type_end = encoded.find(':', type_origin)
+        obj_type_name = encoded[type_origin:type_end]
+        data_origin = type_end + 1
+        obj_data = CoreJSONDecoder.decode_json(encoded[data_origin:])
+        type_ = CoreClasses.classes[obj_module_name][obj_type_name]
+        return type_, obj_data
