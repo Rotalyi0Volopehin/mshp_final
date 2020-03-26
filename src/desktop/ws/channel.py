@@ -25,8 +25,7 @@ class Channel:
 
     @staticmethod
     async def __connect(uri):
-        async with websockets.connect(uri) as ws:
-            Channel.socket = ws
+        Channel.socket = await websockets.connect(uri)
 
     @staticmethod
     def receive_now() -> str:
@@ -36,9 +35,14 @@ class Channel:
 
     @staticmethod
     def __run_channel_async():
-        Channel.sender_thread = Thread(target=Channel.__dequeue_loop(Channel.__data_to_send, Channel.__send))
-        Channel.receiver_thread = Thread(target=Channel.__dequeue_loop(Channel.__receive_handlers, Channel.__receive))
+        def send_loop():
+            Channel.__dequeue_loop(Channel.__data_to_send, Channel.__send)
+        Channel.sender_thread = Thread(target=send_loop)
         Channel.sender_thread.start()
+
+        def receive_loop():
+            Channel.__dequeue_loop(Channel.__receive_handlers, Channel.__receive)
+        Channel.receiver_thread = Thread(target=receive_loop)
         Channel.receiver_thread.start()
 
     __data_to_send = Queue()
