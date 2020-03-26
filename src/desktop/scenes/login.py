@@ -10,6 +10,7 @@ from objects.text import Text
 from objects.gifimage import GIFImage
 from net_connection.response_ids import ResponseID
 from ws.parcel_manager import ParcelManager
+from ws.channel import Channel
 
 
 class LoginScene(Scene):
@@ -43,6 +44,8 @@ class LoginScene(Scene):
         self.load_sound()
         self.collect_objects()
         pygame.mixer.music.play(-1)
+        if not Channel.try_connect():  # TODO: заменить на сообщение с кнопкой для повторной попытки
+            raise Exception("Cannot connect to server!")
 
     def set_menu_scene(self):
          self.set_next_scene(self.game.MENU_SCENE_INDEX)
