@@ -1,8 +1,8 @@
-import json
 import net_connection.error_response as err_resp
 import exceptions
 
 from channels.generic.websocket import WebsocketConsumer
+from net_connection.json_serialize import CoreJSONEncoder
 from net_connection.json_serialize import CoreJSONDecoder
 from .request_parcel_handlers import RequestParcelHandlers
 from net_connection.response_ids import ResponseID
@@ -21,7 +21,8 @@ class WebsocketRequestHandler(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, code):  # при отключении происходит logout игрока
-        self.receive(text_data=json.dumps(RequestID.LOGOUT))
+        fake_parcel = [RequestID.LOGOUT]
+        self.receive(text_data=CoreJSONEncoder().encode(fake_parcel))
 
     def receive(self, text_data=None, bytes_data=None):
         # vvv первоначальная проверка формата request-а vvv
@@ -41,7 +42,7 @@ class WebsocketRequestHandler(WebsocketConsumer):
     def check_bytes_data_absence(self, bytes_data) -> bool:
         if bytes_data is not None:
             error_response = err_resp.ErrorResponse(err_resp.ErrorResponseID.BYTE_FORMAT_NOT_SUPPORTED)
-            self.send(json.dumps(error_response))
+            self.send(CoreJSONEncoder().encode(error_response))
             return False
         return True
 
@@ -51,13 +52,13 @@ class WebsocketRequestHandler(WebsocketConsumer):
             return True, parcel
         except:
             error_response = err_resp.ErrorResponse(err_resp.ErrorResponseID.JSON_FORMAT_REQUIRED)
-            self.send(json.dumps(error_response))
+            self.send(CoreJSONEncoder().encode(error_response))
             return False, None
 
     def check_parcel_format(self, parcel) -> bool:
         if not is_request_parcel_valid(parcel):
             error_response = err_resp.ErrorResponse(err_resp.ErrorResponseID.WRONG_PARCEL_FORMAT)
-            self.send(json.dumps(error_response))
+            self.send(CoreJSONEncoder().encode(error_response))
             return False
         return True
 
