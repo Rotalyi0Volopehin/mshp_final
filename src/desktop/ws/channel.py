@@ -15,7 +15,7 @@ class Channel:
 
     @staticmethod
     def try_connect(ip="127.0.0.1", port=8000) -> bool:
-        uri = f"ws://{ip}:{port}/ws"
+        uri = f"ws://{ip}:{port}/ws/"
         try:
             asyncio.get_event_loop().run_until_complete(Channel.__connect(uri))
         except:
