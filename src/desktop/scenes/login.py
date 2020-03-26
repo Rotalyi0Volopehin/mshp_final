@@ -39,13 +39,13 @@ class LoginScene(Scene):
                         self.text_login, self.text_reg, ]
 
     def create_objects(self):
+        if not Channel.try_connect():  # TODO: заменить на сообщение с кнопкой для повторной попытки
+            raise Exception("Cannot connect to server!")
         self.init_form()
         self.load_backimage()
         self.load_sound()
         self.collect_objects()
         pygame.mixer.music.play(-1)
-        if not Channel.try_connect():  # TODO: заменить на сообщение с кнопкой для повторной попытки
-            raise Exception("Cannot connect to server!")
 
     def set_menu_scene(self):
          self.set_next_scene(self.game.MENU_SCENE_INDEX)
