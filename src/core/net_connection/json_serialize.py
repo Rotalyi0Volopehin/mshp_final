@@ -52,8 +52,7 @@ class JSONInitTrojan:
             raise exceptions.ArgumentTypeException()
 
         def inner(*args, **kwargs):
-            # TODO: понять, почему isinstance(args[1], JSONInitTrojan) не работает
-            if (len(args) == 2) and (len(kwargs) == 0) and (type(args[1]).__name__ == "JSONInitTrojan"):
+            if (len(args) == 2) and (len(kwargs) == 0) and isinstance(args[1], JSONInitTrojan):
                 self = args[0]
                 trojan = args[1]
                 self.__dict__.update(trojan.fields)
