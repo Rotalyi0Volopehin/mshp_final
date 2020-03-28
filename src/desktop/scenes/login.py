@@ -30,7 +30,7 @@ class LoginScene(Scene):
         self.trailer = GIFImage("backimage.gif", self.game)
 
     def load_sound(self):
-        pygame.mixer.music.load('soundtrack.mp3')
+        pygame.mixer.music.load('soundtrack.wav')
         pygame.mixer.music.set_volume(0.5)
 
     def collect_objects(self):
