@@ -88,6 +88,7 @@ class CoreJSONDecoder:
                     value = obj
                 copy[key] = value
             return copy
+        return decoded
 
     @staticmethod
     def __try_special_decoding(encoded) -> (bool, object):
