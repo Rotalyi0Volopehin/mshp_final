@@ -12,20 +12,25 @@ from threading import Thread
 
 class Channel:
     priority = 2  # соответствует кол-ву прерываний на async send и receive в секунду
+    __connecting_failed = False
+    __server_uri = None
+    socket = None
 
     @staticmethod
     def try_connect(ip="127.0.0.1", port=8000) -> bool:
-        uri = f"ws://{ip}:{port}/ws/"
-        try:
-            asyncio.get_event_loop().run_until_complete(Channel.__connect(uri))
-        except:
-            return False
+        Channel.__server_uri = f"ws://{ip}:{port}/ws/"
+        Channel.__connecting_failed = False
         Channel.__run_channel_async()
-        return True
+        while (Channel.socket is None) and not Channel.__connecting_failed:
+            pass
+        return not Channel.__connecting_failed
 
     @staticmethod
     async def __connect(uri):
-        Channel.socket = await websockets.connect(uri)
+        try:
+            Channel.socket = await websockets.connect(uri)
+        except:
+            Channel.__connecting_failed = True
 
     @staticmethod
     def receive_now() -> str:
@@ -35,34 +40,40 @@ class Channel:
 
     @staticmethod
     def __run_channel_async():
-        def send_loop():
-            Channel.__dequeue_loop(Channel.__data_to_send, Channel.__send)
-        Channel.sender_thread = Thread(target=send_loop)
-        Channel.sender_thread.start()
+        def channel_loop():
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            asyncio.ensure_future(Channel.__connect(Channel.__server_uri))
+            asyncio.ensure_future(Channel.__send_loop())
+            asyncio.ensure_future(Channel.__receive_loop())
+            loop.run_forever()
+        Channel.__channel_thread = Thread(target=channel_loop)
+        Channel.__channel_thread.start()
 
-        def receive_loop():
-            Channel.__dequeue_loop(Channel.__receive_handlers, Channel.__receive)
-        Channel.receiver_thread = Thread(target=receive_loop)
-        Channel.receiver_thread.start()
+    @staticmethod
+    def close_channel_thread():
+        Channel.__channel_thread.join()
+        del Channel.__channel_thread
 
     __data_to_send = Queue()
     __receive_handlers = Queue()
 
     @staticmethod
-    def __dequeue_loop(queue: Queue, item_handler):
+    async def __send_loop():
         while True:
-            while queue.empty():
-                time.sleep(1 / Channel.priority)
-            item = queue.get()
-            item_handler(item)
+            while Channel.__data_to_send.empty():
+                await asyncio.sleep(1 / Channel.priority)
+            data = Channel.__data_to_send.get()
+            await Channel.socket.send(data)
 
     @staticmethod
-    def __send(data: str):
-        Channel.socket.send(data)
-
-    @staticmethod
-    def __receive(receive_handler):
-        receive_handler(Channel.socket.recv())
+    async def __receive_loop():
+        while True:
+            while Channel.__receive_handlers.empty():
+                await asyncio.sleep(1 / Channel.priority)
+            handler = Channel.__receive_handlers.get()
+            data = await Channel.socket.recv()
+            handler(data)
 
     @staticmethod
     def send(data: str):
