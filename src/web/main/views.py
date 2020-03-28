@@ -97,7 +97,6 @@ def profile_page(request, id):
                 if self and (form != None):
                     ok, error, success = post_handler(form, context, user, user_data)
                 context['login'] = user.username
-                #context['name'] = user.first_name
                 context['email'] = user.email
                 context['regdate'] = user.date_joined
                 context['victories'] = user_data.victories_count
@@ -112,21 +111,18 @@ def profile_page(request, id):
         if form is None:
             result.append(None)
         return result
+
+
     def post_handler(form, context, user, user_data):
         success = ferr = False
         error = None
         action = form.data["action"]
         if action == "save-chan":
-            name = form.data["login"]
-            if 0 < len(name) <= 64:
-                about = form.data["about"]
-                #user.first_name = name
-                #user.save()
-                user_data.extra_info = about
-                user_data.save()
-                success = True
-            else:
-                ferr = True
+            about = form.data["about"]
+            user_data.extra_info = about
+            user_data.save()
+            success = True
+
         elif action == "save-pass":
             password = form.data["password"]
             if user.check_password(password):
