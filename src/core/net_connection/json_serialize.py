@@ -22,19 +22,18 @@ class CoreJSONEncoder(json.JSONEncoder):
     def __encode_object_dict(obj):
         obj_module, obj_type = CoreJSONEncoder.__get_info_module(obj)
         obj_dict = str(super().encode(obj.__dict__))
-        encoded = "~$#{}.{}:{}".format(obj_module, obj_type, obj_dict)
+        encoded = "~$#{}^{}:{}".format(obj_module, obj_type, obj_dict)
         return encoded
 
     @staticmethod
     def __encode_enum(obj):
         obj_module, obj_type = CoreJSONEncoder.__get_info_module(obj)
-        encoded = "~E#{}.{}:{}".format(obj_module, obj_type, obj.value)
+        encoded = "~E#{}^{}:{}".format(obj_module, obj_type, obj.value)
         return encoded
 
     @staticmethod
     def __get_info_module(obj) -> (str, str):  # (obj_module, obj_type)
         obj_module = str(obj.__module__)
-        obj_module = obj_module[obj_module.rfind('.') + 1:]
         obj_type = type(obj).__name__
         return obj_module, obj_type
 
@@ -116,7 +115,7 @@ class CoreJSONDecoder:
 
     @staticmethod
     def __decode_object_info(encoded: str) -> (type, str):  # (obj_type, obj_data)
-        module_end = encoded.find('.', 3)
+        module_end = encoded.find('^', 3)
         obj_module_name = encoded[3:module_end]
         type_origin = module_end + 1
         type_end = encoded.find(':', type_origin)
