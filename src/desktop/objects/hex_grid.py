@@ -4,10 +4,11 @@ from constants import Color
 from random import *
 from objects.base import DrawObject
 from objects.hex import Hex
-from network_confrontation.src.desktop.objects.text import Text
+from objects.text import Text
+
 
 class Grid(DrawObject):
-    def __init__(self, game, hex_side=40, width=8, height=10, field_width=2000):
+    def __init__(self, game, hex_side=40, width=8, height=10, field_width=2000, delta = 4):
         super().__init__(game)
         self.game = game
         self.width = width
@@ -16,6 +17,8 @@ class Grid(DrawObject):
         self.hexes_array = []
         self.hex_side = hex_side
         self.sq = 3 ** (1 / 2)
+        self.delta = delta
+        self.extra = self.hex_side / 2 - self.delta * self.sq
         self.set_grid()
         self.last_red = None
 
@@ -39,8 +42,8 @@ class Grid(DrawObject):
                 i += 1
                 if row % 2 == 0:
                     self.hexes_array.append(Hex(self.game,
-                                                3 * obj * self.hex_side,
-                                                row * self.sq * self.hex_side / 2,
+                                                obj * (self.hex_side * 4 - 2 * self.extra),
+                                                row * (self.sq * self.hex_side / 2 + self.delta),
                                                 self.hex_side,
                                                 i,
                                                 nx=j,
@@ -49,8 +52,8 @@ class Grid(DrawObject):
                                             )
                 else:
                     self.hexes_array.append(Hex(self.game,
-                                                1.5 * self.hex_side + 3 * self.hex_side * obj,
-                                                self.sq * self.hex_side / 2 + (row - 1) * self.sq * self.hex_side / 2,
+                                                2 * self.hex_side + (4 * self.hex_side) * obj - (2 * (obj + 1) - 1) * self.extra,
+                                                self.sq * self.hex_side / 2 + (row - 1) * (self.sq * self.hex_side / 2 + self.delta) + self.delta,
                                                 self.hex_side,
                                                 i,
                                                 nx=j,
@@ -112,6 +115,7 @@ class Grid(DrawObject):
         for item in self.hexes_array:
             if item.color == Color.GREEN:
                 item.color = Color.WHITE
+                item.redraw()
 
     def on_release(self, event):
         pass
@@ -128,7 +132,9 @@ class Grid(DrawObject):
                 self.hexes_array[adress2].nx -= number
 
     def change_text(self, adress, number):
-        self.hexes_array[adress].number = Text(game=self.game, text=number, font_size=25, x=self.hexes_array[adress].x+19, y=self.hexes_array[adress].y+18) # TEXT NUMBER
+        self.hexes_array[adress].number = Text(game=self.game, text=number, font_size=25,
+                                               x=self.hexes_array[adress].x+self.hex_side,
+                                               y=self.hexes_array[adress].y+self.sq * self.hex_side / 2) # TEXT NUMBER
 
     def add_units(self, units):
         orange_adress = None

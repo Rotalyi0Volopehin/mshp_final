@@ -1,12 +1,12 @@
-from network_confrontation.src.desktop.constants import Color
-from network_confrontation.src.desktop.objects.button import Btn
-from network_confrontation.src.desktop.scenes.base import Scene
-from network_confrontation.src.desktop.objects.hex_grid import Grid
-from network_confrontation.src.desktop.objects.text import Text
+from constants import Color
+from objects.button import Btn
+from scenes.base import Scene
+from objects.hex_grid import Grid
+from objects.text import Text
 
 class MapScene(Scene):
     def create_objects(self):
-        self.map = Grid(self.game,20,8,8,2000)
+        self.map = Grid(self.game, 30, 8, 8, 2000, 4)
         self.instruction1 = Text(self.game,x=200,y=250, text="Инструкция")
         self.instruction2 = Text(self.game,x=250,y=300, text="1 Выбери клетку кликом мыши")
         self.instruction21 = Text(self.game, x=400, y=350, text="1.1 Красная - твоя выбранная клетка")

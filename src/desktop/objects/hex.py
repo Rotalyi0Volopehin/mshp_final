@@ -1,7 +1,7 @@
 import pygame
 from random import randint
 from constants import Color
-from network_confrontation.src.desktop.objects.text import Text
+from objects.text import Text
 from objects.base import DrawObject
 
 
@@ -26,7 +26,8 @@ class Hex(DrawObject):
         self.surface = pygame.Surface((2 * self.side, 2 * self.side))
         self.surface.set_colorkey(Color.BLACK)
         self.NUM = number # номер
-        self.number = Text(game=self.game, text=self.nx, font_size=25, x=x+19, y=y+18) # TEXT NUMBER
+        pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
+        self.number = Text(game=self.game, text=self.nx, font_size=25, x=x+self.side, y=y+self.sq * self.side / 2)  # TEXT NUMBER
         #self.important_flag = False # Чтобы при клике, на уже красную клетку, зеленые клетки становились обратно белыми
 
     def process_event(self, event):
@@ -36,7 +37,6 @@ class Hex(DrawObject):
             self.on_release(event)
 
     def process_draw(self):
-        pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
         self.number.process_draw()
         self.game.screen.blit(self.surface, (self.x, self.y))
 
@@ -49,22 +49,28 @@ class Hex(DrawObject):
 
     def make_possible(self):
         self.color = Color.GREEN
+        self.redraw()
 
     def on_click(self, event):
         if self.inPolygon(event.pos[0], event.pos[1]) == 1:
             if self.color == Color.WHITE:
                 self.color = Color.RED
+                self.redraw()
             elif self.color == Color.GREEN:
                 self.color = Color.ORANGE
+                self.redraw()
             elif self.color == Color.RED:
                 self.color = Color.WHITE
                 self.grid.erase_green() # класс, в классе, вызывает метод другого класса, я ООП МАСТЕР, ПАТТЕРНЫ НЕ РОБЯТ
+                self.redraw()
         else:
             if self.color == Color.RED:
                 self.grid.last_red = self.grid.find_red() # GRID запоминает номер последней красной клетки
                 self.color = Color.WHITE
+                self.redraw()
             if self.color == Color.ORANGE:
                 self.color = Color.GREEN
+                self.redraw()
 
     def get_number(self):
         return self.NUM
@@ -77,3 +83,6 @@ class Hex(DrawObject):
 
     def on_release(self, event):
         pass
+
+    def redraw(self):
+        pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
