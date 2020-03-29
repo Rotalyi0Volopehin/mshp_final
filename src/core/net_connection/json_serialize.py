@@ -3,6 +3,7 @@ import exceptions
 
 from net_connection.core_classes import CoreClasses
 from enum import Enum
+from types import FunctionType
 
 
 # TODO: задокументировать
@@ -47,7 +48,7 @@ class JSONInitTrojan:
     # decorator
     @staticmethod
     def json_init(init):
-        if type(init).__name__ != "function":
+        if not isinstance(init, FunctionType):
             raise exceptions.ArgumentTypeException()
 
         def inner(*args, **kwargs):
