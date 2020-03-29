@@ -10,7 +10,7 @@ class Hex(DrawObject):
         super().__init__(game)
         self.grid = grid
         self.even = even # чет нечет строчка
-        self.nx = nx # ранд количество юнитов
+        self.nx = number # ранд количество юнитов
         self.x = x
         self.y = y
         self.side = side

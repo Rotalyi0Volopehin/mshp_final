@@ -9,6 +9,7 @@ class Scene:
         self.screen = self.game.screen
         self.objects = []
         self.create_objects()
+        self.clock = pygame.time.Clock()
 
     def create_objects(self):
         pass
@@ -44,7 +45,7 @@ class Scene:
             item.process_draw()
         self.additional_draw()
         pygame.display.flip()  # double buffering
-        pygame.time.wait(10)  # подождать 10 миллисекунд
+        self.clock.tick(30)
 
     def additional_draw(self):
         pass

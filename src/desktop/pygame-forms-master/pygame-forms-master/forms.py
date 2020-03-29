@@ -453,7 +453,7 @@ class Image(FormObject):
 		surf = pygame.Surface((width, height)).convert_alpha()
 		surf.fill(self.style['bg_color'])
 		if self.style['border_width'] > 0:
-			pygame.draw.rect(surf, self.style['border_color'], (0, 0, width-self.style['border_width']//2, height-self.style['border_width']//2), self.style['border_width'])
+			pygame.draw.rect(surf, self.style['border_color'], (0, 0, width - self.style['border_width'] // 2, height - self.style['border_width'] // 2), self.style['border_width'])
 		left = (self._int_align[0],(surf.get_width()-img.get_width())//2)[self._int_align[0]=='center']
 		top = (self._int_align[1],(surf.get_height()-img.get_height())//2)[self._int_align[1]=='center']
 		surf.blit(img, (left, top))
@@ -534,7 +534,7 @@ class Frame(FormObject):
 		surf = pygame.Surface((self.style['width'], self.style['height'])).convert_alpha()
 		surf.fill(self.style['bg_color'])
 		if self.style['border_width'] > 0:
-			pygame.draw.rect(surf, self.style['border_color'], (0, 0, self.style['width']-self.style['border_width']//2, self.style['height']-self.style['border_width']//2), self.style['border_width'])
+			pygame.draw.rect(surf, self.style['border_color'], (0, 0, self.style['width'] - self.style['border_width'] // 2, self.style['height'] - self.style['border_width'] // 2), self.style['border_width'])
 		c_y = self.style['border_width']
 		blit_top, top_o = None, None
 		self._hotspots = []
@@ -755,7 +755,7 @@ class TextInput(FormObject):
 		height = self.style['height'] + self.style['border_width']*2
 		pygame.draw.rect(box, self.style['bg_color'], (0, 0, self.style['width'], self.style['height']))
 		if self.style['border_width'] > 0:
-			pygame.draw.rect(box, self.style['border_color'], (0, 0, self.style['width']-self.style['border_width']//2, self.style['height']-self.style['border_width']//2), self.style['border_width'])
+			pygame.draw.rect(box, self.style['border_color'], (0, 0, self.style['width'] - self.style['border_width'] // 2, self.style['height'] - self.style['border_width'] // 2), self.style['border_width'])
 		# Create text
 		to_cursor = self._font.render(self._value[:self._cursor_pos], True, self._color)
 		full_text = self._font.render(self._value, True, self._color)
@@ -771,7 +771,7 @@ class TextInput(FormObject):
 			self._cursor_reset(False)
 		# Draw cursor
 		if self._has_focus and self._cursor_on:
-			pygame.draw.line(box, self.style['border_color'], (tw+padding-offset,padding//2), (tw+padding-offset,th+padding))
+			pygame.draw.line(box, self.style['border_color'], (tw + padding - offset, padding // 2), (tw + padding - offset, th + padding))
 		return box
 
 	def value(self):
@@ -940,7 +940,7 @@ class Button(FormObject):
 		# Add box
 		box.fill((self.style['bg_color'], self.style['bg_focus_color'])[self._has_focus])
 		if self.style['border_width'] > 0:
-			pygame.draw.rect(box, self.style['border_color'], (0, 0, self.style['width']-self.style['border_width']//2, self.style['height']-self.style['border_width']//2), self.style['border_width'])
+			pygame.draw.rect(box, self.style['border_color'], (0, 0, self.style['width'] - self.style['border_width'] // 2, self.style['height'] - self.style['border_width'] // 2), self.style['border_width'])
 		# Add text to box [centered H & V]
 		box.blit(text, self._padding)
 		return box
@@ -1078,11 +1078,11 @@ class Select(FormObject):
 		if not len(self._options):
 			raise AttributeError('Select has no options.')
 		# Create side-arrow
-		arrow = pygame.Surface((self.style['height']-self.style['border_width'], self.style['height']))
+		arrow = pygame.Surface((self.style['height'] - self.style['border_width'], self.style['height']))
 		# Fill and border
 		arrow.fill((200,200,200))
 		if self.style['border_width'] > 0:
-			pygame.draw.rect(arrow, self.style['border_color'], (-self.style['border_width'], 0, self.style['height']-self.style['border_width']//2, self.style['height']-self.style['border_width']//2), self.style['border_width'])
+			pygame.draw.rect(arrow, self.style['border_color'], (-self.style['border_width'], 0, self.style['height'] - self.style['border_width'] // 2, self.style['height'] - self.style['border_width'] // 2), self.style['border_width'])
 		# The arrow
 		cw, ch = (s//2 for s in arrow.get_size())
 		cw -= self.style['border_width']//2
@@ -1107,14 +1107,14 @@ class Select(FormObject):
 				irange = (self._value-2, self._value+3)
 			# Create box
 			height = (self._font.get_linesize()+self._padding[1]*2)*count - 1
-			box = pygame.Surface((self.style['width']+self.style['height']-self.style['border_width'], height)).convert_alpha()
+			box = pygame.Surface((self.style['width'] + self.style['height'] - self.style['border_width'], height)).convert_alpha()
 			box.fill((0,0,0,0))
 			# Add box
 			pygame.draw.rect(box, self.style['bg_color'], (0, 0, self.style['width'], height))
 			if self.style['border_width'] > 0:
-				pygame.draw.rect(box, self.style['border_color'], (0, 0, self.style['width']-self.style['border_width']//2, height-self.style['border_width']//2), self.style['border_width'])
+				pygame.draw.rect(box, self.style['border_color'], (0, 0, self.style['width'] - self.style['border_width'] // 2, height - self.style['border_width'] // 2), self.style['border_width'])
 			# Create hilight
-			hilight = pygame.Surface((self.style['width']-(3*self.style['border_width']+SCROLL_BAR_WIDTH), self.style['height']))
+			hilight = pygame.Surface((self.style['width'] - (3 * self.style['border_width'] + SCROLL_BAR_WIDTH), self.style['height']))
 			hilight.fill(self.style['bg_focus_color'])
 			# Scroll bar
 			sp = (height - 2.*self.style['border_width'])/len(self._index)
@@ -1122,7 +1122,7 @@ class Select(FormObject):
 			s1 = sp*irange[0]+self.style['border_width']
 			s2 = sp*irange[1]+self.style['border_width'] - s1
 			pygame.draw.rect(box, self.style['border_color'], (lx, 0, self.style['border_width'], box.get_height()))
-			pygame.draw.rect(box, self.style['scroll_color'], (lx+self.style['border_width'], s1, SCROLL_BAR_WIDTH, s2))
+			pygame.draw.rect(box, self.style['scroll_color'], (lx + self.style['border_width'], s1, SCROLL_BAR_WIDTH, s2))
 			# Create text
 			cy = self._padding[1]+self.style['border_width']
 			for i in xrange(*irange):
@@ -1139,11 +1139,11 @@ class Select(FormObject):
 				text = self._options[self._index[self._value]].get_surface()
 			else:
 				text = None
-			box = pygame.Surface((self.style['width']+self.style['height']-self.style['border_width'], self.style['height'])).convert_alpha()
+			box = pygame.Surface((self.style['width'] + self.style['height'] - self.style['border_width'], self.style['height'])).convert_alpha()
 			# Add box
 			box.fill((self.style['bg_color'],self.style['bg_focus_color'])[self._has_focus])
 			if self.style['border_width'] > 0:
-				pygame.draw.rect(box, self.style['border_color'], (0, 0, self.style['width']-self.style['border_width']//2, self.style['height']-self.style['border_width']//2), self.style['border_width'])
+				pygame.draw.rect(box, self.style['border_color'], (0, 0, self.style['width'] - self.style['border_width'] // 2, self.style['height'] - self.style['border_width'] // 2), self.style['border_width'])
 			# Add text to box [centered H & V]
 			if text:
 				box.blit(text, self._padding)
@@ -1180,9 +1180,8 @@ class SelectOption(FormObject):
 
 if __name__ == '__main__':
 	# Run example
-	import sys
-	pygame.init()
-	screen = pygame.display.set_mode((400,300))
+    pygame.init()
+	screen = pygame.display.set_mode((400, 300))
 	# Create form
 	f = Form(False)
 	# Add objects

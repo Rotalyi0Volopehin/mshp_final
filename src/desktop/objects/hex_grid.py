@@ -1,5 +1,4 @@
 import pygame
-from random import randint
 from constants import Color
 from random import *
 from objects.base import DrawObject
@@ -74,6 +73,18 @@ class Grid(DrawObject):
                 left_bot = (item.get_number() + 6) if even else (item.get_number() + 8)
                 right_bot = (item.get_number() + 7) if even else (item.get_number() + 7)
                 bot = item.get_number() + 15
+
+                if item.get_number()==1:
+                    left_bot = right_bot
+                if item.get_number()==len(self.hexes_array):
+                    left_top = right_top
+                if (item.get_number()-1) % 16 == 0:
+                    print(item.get_number())
+                    right_top = left_top
+                    left_bot = right_bot
+                if item.get_number()% 16 == 0:
+                    left_top = right_top
+                    left_bot = right_bot
 
                 self.erase_green()
 
