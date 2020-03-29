@@ -1,5 +1,7 @@
 import os
 
+from types import ModuleType
+
 
 # TODO: задокументировать
 
@@ -15,9 +17,19 @@ class CoreClasses:
                 return
             if file_name.endswith(".py"):
                 module_name = file_name[:-3].replace('\\', '.')
-                module = __import__(module_name)
+                module = CoreClasses.__load_module(module_name)
                 CoreClasses.classes[module_name] = CoreClasses.__get_classes_of_module(module)
         CoreClasses.__list_files(core_dir_path, file_handler)
+
+    @staticmethod
+    def __load_module(name):
+        module = __import__(name)
+        while True:
+            for elem in module.__dict__.values():
+                if isinstance(elem, ModuleType):
+                    module = elem
+                    break
+            return module
 
     @staticmethod
     def __list_files(dir_path, file_handler):

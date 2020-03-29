@@ -4,6 +4,7 @@ import net_connection.json_serialize as json_ser
 from .channel import Channel
 from net_connection.parcel_check import is_request_parcel_valid
 from net_connection.parcel_check import is_response_parcel_valid
+from types import FunctionType
 
 
 class ParcelManager:
@@ -21,7 +22,7 @@ class ParcelManager:
 
     @staticmethod
     def receive_parcel_async(parcel_handler):
-        if type(parcel_handler).__name__ != "function":
+        if not isinstance(parcel_handler, FunctionType):
             raise exceptions.ArgumentTypeException()
 
         def receive_handler(response):
