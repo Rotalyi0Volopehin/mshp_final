@@ -1,10 +1,10 @@
 import exceptions
 import websockets
-import time
 import asyncio
 
 from queue import Queue
 from threading import Thread
+from types import FunctionType
 
 
 # TODO: задокументировать
@@ -83,6 +83,6 @@ class Channel:
 
     @staticmethod
     def receive_async(receive_handler):
-        if type(receive_handler).__name__ != "function":
+        if not isinstance(receive_handler, FunctionType):
             raise exceptions.ArgumentTypeException()
         Channel.__receive_handlers.put(receive_handler)
