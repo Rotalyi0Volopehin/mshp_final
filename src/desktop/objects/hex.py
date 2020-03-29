@@ -1,7 +1,7 @@
 import pygame
 from random import randint
 from constants import Color
-from network_confrontation.src.desktop.objects.text import Text
+from src.desktop.objects.text import Text
 from objects.base import DrawObject
 
 

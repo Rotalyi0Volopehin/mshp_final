@@ -4,7 +4,7 @@ from constants import Color
 from random import *
 from objects.base import DrawObject
 from objects.hex import Hex
-from network_confrontation.src.desktop.objects.text import Text
+from src.desktop.objects.text import Text
 
 class Grid(DrawObject):
     def __init__(self, game, hex_side=40, width=8, height=10, field_width=2000):

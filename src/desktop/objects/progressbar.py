@@ -8,7 +8,7 @@ pygame.init()
 
 class Bar:
     def __init__(self, screen, x=0, y=0, max=100, min=0, height=100, weight=400, bgcolor=(120, 0, 120),
-                 bcolor=(200, 200, 0), function):
+                 bcolor=(200, 200, 0), function=None):
         self.x = x
         self.function = function
         self.y = y
