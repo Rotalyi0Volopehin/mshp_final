@@ -24,12 +24,10 @@ class CoreClasses:
     @staticmethod
     def __load_module(name):
         module = __import__(name)
-        while True:
-            for elem in module.__dict__.values():
-                if isinstance(elem, ModuleType):
-                    module = elem
-                    break
-            return module
+        name_segs = name.split('.')[1:]
+        for name_seg in name_segs:
+            module = module.__dict__[name_seg]
+        return module
 
     @staticmethod
     def __list_files(dir_path, file_handler):
