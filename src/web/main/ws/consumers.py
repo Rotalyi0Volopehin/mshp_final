@@ -35,7 +35,8 @@ class WebsocketRequestHandler(WebsocketConsumer):
             return
         # vvv делегирование к обработчикам (request parcel handler) request-ов в соответствии с id request-ов vvv
         exception, response_parcel = self.try_delegate_parcel(parcel)
-        self.send(response_parcel)
+        response = CoreJSONEncoder().encode(response_parcel)
+        self.send(response)
         if exception is not None:
             raise exception
 
