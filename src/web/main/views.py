@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 
-from src.web.main.models import Chat
-from src.web.main.forms import MessageForm
+from main.models import Chat
+from main.forms import MessageForm
 
 
 def get_menu_context():

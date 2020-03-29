@@ -1,14 +1,16 @@
-from django import forms
+from django import forms, template
 from django.forms import ModelForm
-from src.web.main.models import Message
 
+
+from main.models import Message
+
+register = template.Library()
 
 class MessageForm(ModelForm):
     class Meta:
         model = Message
         fields = ['message']
         labels = {'message': ""}
-
 
     @register.simple_tag
     def get_companion(user, chat):

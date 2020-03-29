@@ -18,15 +18,15 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.urls import path, include
 
-from src.web.main import views
+from main import views
 from django.contrib.auth import views as auth_views
 
-from src.web.main.views import get_menu_context
+from main.views import get_menu_context
 
 urlpatterns = [
-    path(r'^dialogs/$', login_required(views.DialogsView.as_view()), name='dialogs'),
-    path(r'^dialogs/create/(?P<user_id>\d+)/$', login_required(views.CreateDialogView.as_view()), name='create_dialog'),
-    path(r'^dialogs/(?P<chat_id>\d+)/$', login_required(views.MessagesView.as_view()), name='messages'),
+    path('dialogs/', login_required(views.DialogsView.as_view()), name='dialogs'),
+    path('dialogs/create/<int:user_id>/', login_required(views.CreateDialogView.as_view()), name='create_dialog'),
+    path('dialogs/<int:chat_id>/', login_required(views.MessagesView.as_view()), name='messages'),
     path('', include('permalinks.urls')),
     path('admin/', admin.site.urls),
     path('', views.index_page, name='index'),
