@@ -75,7 +75,7 @@ class DBUserTools:
         if not (isinstance(login, str) and isinstance(password, str)):
             raise exceptions.ArgumentTypeException()
         # vvv проверка данных по БД vvv
-        user = User.objects.filter(login=login)
+        user = User.objects.filter(username=login)
         if len(user) != 1:
             return False
         user = user[0]
