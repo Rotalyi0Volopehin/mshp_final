@@ -3,6 +3,8 @@
 import os
 import sys
 
+from core_init import init_core
+
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'adventures_web.settings')
@@ -18,4 +20,5 @@ def main():
 
 
 if __name__ == '__main__':
+    init_core()
     main()
