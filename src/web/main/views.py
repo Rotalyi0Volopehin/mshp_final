@@ -105,6 +105,9 @@ def profile_page(request, id):
                 context['about'] = user_data.extra_info
                 context['team'] = user_data.team
                 context['exp'] = user_data.exp
+                context['level'] = user_data.level
+                context['reputation'] = user_data.reputation
+
         else:
             context["pagename"] = "Профиль"
         result = [ok, error, success]
@@ -112,13 +115,13 @@ def profile_page(request, id):
             result.append(None)
         return result
 
-
     def post_handler(form, context, user, user_data):
         success = ferr = False
         error = None
         action = form.data["action"]
         if action == "save-chan":
             about = form.data["about"]
+            user_data.exp = 50
             user_data.extra_info = about
             user_data.save()
             success = True
