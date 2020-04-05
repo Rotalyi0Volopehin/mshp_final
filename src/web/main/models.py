@@ -36,9 +36,9 @@ class PressureToolSet(models.Model):
 class GameSession(models.Model):
     title = models.TextField(default='')  # название; уникально
     phase = models.IntegerField(default=0)  # фаза; 0 -- набор игроков, 1 -- основные действия, 2 -- readonly
-    date_created = models.DateTimeField(default=datetime.datetime.now())  # дата вступления в фазу #0
-    date_started = models.DateTimeField(default=datetime.datetime.now())  # дата вступления в фазу #1
-    date_stopped = models.DateTimeField(default=datetime.datetime.now())  # дата вступления в фазу #2
+    date_created = models.DateTimeField(default=datetime.datetime.now)  # дата вступления в фазу #0
+    date_started = models.DateTimeField(default=datetime.datetime.now)  # дата вступления в фазу #1
+    date_stopped = models.DateTimeField(default=datetime.datetime.now)  # дата вступления в фазу #2
     turn_of_team = models.IntegerField(default=0)  # фракция, совершающая ход
     turn_period = models.IntegerField(default=0)  # период времени в секундах, выделенный под ход одного игрока
     user_lowest_level = models.IntegerField(default=-1)  # нижний предел уровня игроков; -1 -- без предела
