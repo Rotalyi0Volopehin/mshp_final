@@ -1,13 +1,9 @@
 import datetime
+import main.forms as forms
 
 from django.shortcuts import render
-
-
-def get_menu_context():
-    return [
-        {'url_name': 'index', 'name': 'Главная'},
-        {'url_name': 'time', 'name': 'Текущее время'},
-    ]
+from main.views.form_view import FormView
+from main.views.menu import get_menu_context
 
 
 def index_page(request):
@@ -20,15 +16,6 @@ def index_page(request):
     return render(request, 'pages/index.html', context)
 
 
-def registration_page(request):
-    context = {
-        'pagename': 'Регистрация',
-        'menu': get_menu_context(),
-        'ok': True,
-    }
-    return render(request, 'registration/registration.html', context)
-
-
 def time_page(request):
     context = {
         'pagename': 'Текущее время',
@@ -36,3 +23,13 @@ def time_page(request):
         'menu': get_menu_context(),
     }
     return render(request, 'pages/time.html', context)
+
+
+class RegistrationFormPage(FormView):
+    pagename = "Регистрация"
+    form_class = forms.RegistrationForm
+    template_name = "registration/registration.html"
+
+    def post_handler(self, context: dict, request, form):
+        password = form.data["password1"]
+        login_ = form.data["login"]
