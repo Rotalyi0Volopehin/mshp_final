@@ -1,127 +1,27 @@
 {% extends 'base/base.html' %}
 
-{% load static %}
-<script>
-    $('#myModal').on('shown.bs.modal', function () {
-        $('#myInput').trigger('focus')
-    })
-</script>
-
 {% block content %}
 
-<script>
-    function progress_bar() {
-        document.getElementById('progress-bar').style.width = {{ exp }} + '%';
-    }
-    function clear_pw_change_form() {
-        OldPassword.value = "";
-        NewPassword.value = "";
-        NewPassword2.value = "";
-    }
-    function check_pw_change() {
-        if (NewPassword.value != NewPassword2.value) {
-            save_pw_tag.disabled = true;
-            change_pw_button_footer.hidden = true;
-            change_pw_warning_footer.hidden = false;
-        }
-    }
-    function close_pw_warning() {
-        save_pw_tag.disabled = false;
-        change_pw_warning_footer.hidden = true;
-        change_pw_button_footer.hidden = false;
-    }
-</script>
+{% load static %}
+
+{% block extra_js %}
+    <script src="{% static 'profile.js' %}"></script>
+{% endblock %}
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
-<style>
-.number {
-    font-size: 150%;
-}
-.dark_part {
-    padding-bottom: 5%;
-    min-width: 900px;
-}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+{% endblock %}
 
-.pwdbtn {
-    margin-left: 2%
-}
-
-.deletebtn {
-    margin-left: 2%
-}
-
-.savebtn {
-    margin-left: 50%
-}
-
-.info {
-    position: absolute;
-    border: none;
-    margin-left: 22%;
-    margin-top: -0.5%;
-    font-size: 100.5%;
-    height: 3.5%;
-}
-
-.profile-header {
-    transform: translateY(5rem);
-}
-
-.rounded_border {
-    border-radius: 40px;
-}
-
-.display {
-    display: inline-block;
-}
-
-body {
-    background: #654ea3;
-    background: -webkit-linear-gradient(to right, #654ea3, #eaafc8);
-    background: linear-gradient(to right, #654ea3, #eaafc8);
-    min-height: 100vh;
-}
-
-.profile_pic {
-    position: absolute;
-    margin-top: -7%;
-    margin-left: 7%;
-}
-
-.name {
-    margin-left: 25%;
-}
-
-@font-face {
-    font-family: 'cyberpunk';
-    src: url('src/web/main/fonts/cyberpunk/Eng.ttf');
-    font-style: normal;
-    font-weight: normal;
-}
-
-body {
-    font-family: 'cyberpunk';
-    font-size: 150%;
-}
-
-.progress_bar {
-height: 30px;
-}
-
-.progress_background {
-    background: linear-gradient(to right,#eaafc8, #654ea3);
-
-}
-</style>
 
 {% if error %}
 <div class="text-center alert alert-danger" role="alert">{{ error }}</div> {% else %}
 
-<form class="pt-5" method="post"> {% csrf_token %}
+<form class="form-padding" method="post"> {% csrf_token %}
     <div class="row py-5 px-1"  >
         <div class="col-xl-10 col-md-10 col-sm-10 mx-auto">
             <div class="bg-white shadow rounded_border overflow-hidden">
@@ -260,56 +160,6 @@ height: 30px;
                 </div>
             </div>
 
-            <div class="row row-cols-1 row-cols-md-3 py-5">
-                <div class="col mb-4">
-                    <div class="card">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="180"
-                             xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false"
-                             role="img" aria-label="Placeholder: Изображение"><title>Placeholder</title>
-                            <rect width="100%" height="100%" fill="#868e96"></rect>
-                            <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Изображение</text>
-                        </svg>
-                        <div class="card-body">
-                            <h5 class="card-title">Название карточки</h5>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in
-                                to
-                                additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-4">
-                    <div class="card">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="180"
-                             xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false"
-                             role="img" aria-label="Placeholder: Изображение"><title>Placeholder</title>
-                            <rect width="100%" height="100%" fill="#868e96"></rect>
-                            <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Изображение</text>
-                        </svg>
-                        <div class="card-body">
-                            <h5 class="card-title">Название карточки</h5>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in
-                                to
-                                additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-4">
-                    <div class="card">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="180"
-                             xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false"
-                             role="img" aria-label="Placeholder: Изображение"><title>Placeholder</title>
-                            <rect width="100%" height="100%" fill="#868e96"></rect>
-                            <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Изображение</text>
-                        </svg>
-                        <div class="card-body">
-                            <h5 class="card-title">Название карточки</h5>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in
-                                to
-                                additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         </div>
     </div>
