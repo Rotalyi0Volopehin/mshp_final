@@ -10,6 +10,9 @@
 {% block content %}
 
 <script>
+    function progress_bar() {
+        document.getElementById('progress-bar').style.width = {{ exp }} + '%';
+    }
     function clear_pw_change_form() {
         OldPassword.value = "";
         NewPassword.value = "";
@@ -35,6 +38,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
 <style>
+.number {
+    font-size: 150%;
+}
 .dark_part {
     padding-bottom: 5%;
     min-width: 900px;
@@ -115,8 +121,8 @@ height: 30px;
 {% if error %}
 <div class="text-center alert alert-danger" role="alert">{{ error }}</div> {% else %}
 
-<form class="container pt-5" method="post"> {% csrf_token %}
-    <div class="row py-5 px-1">
+<form class="pt-5" method="post"> {% csrf_token %}
+    <div class="row py-5 px-1"  >
         <div class="col-xl-10 col-md-10 col-sm-10 mx-auto">
             <div class="bg-white shadow rounded_border overflow-hidden">
                 <img src="{% static '/profilepic.png' %}" alt="..." width="130"
@@ -129,28 +135,30 @@ height: 30px;
                 </div>
 
                 <div class="bg-light p-4">
+                    <h3 class="text-center">Level {{ level }}</h3>
                     <div class="progress my-3 progress_bar">
-                        <div class="progress-bar progress_background" role="progressbar"
-                             aria-valuenow="{{ exp }}" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+                        <div class="progress-bar progress_background" id="progress-bar" role="progressbar"
+                             aria-valuenow="{{ exp }}" aria-valuemin="0" aria-valuemax="100">
                         </div>
                     </div>
+
 
                     <div class="form-group pt-3 row" align="center">
                         <div class="col-sm-3 display" >
                             <div class="mb-1">Team</div>
-                            <div class="mb-1">{{ team }}</div>
+                            <div class="mb-1 number">{{ team }}</div>
                         </div>
                         <div class="col-sm-3 display">
                             <div class="mb-1">Reputation</div>
-                            <div class="mb-1" >{{ reputation }}</div>
+                            <div class="mb-1 number">{{ reputation }}</div>
                         </div>
                         <div class="col-sm-3 display">
                             <div class="mb-1 ">Games played</div>
-                            <div class="mb-1">{{ played_games }}</div>
+                            <div class="mb-1 number">{{ played_games }}</div>
                         </div>
                         <div class="col-sm-3 display">
                             <div class="mb-1">Victories</div>
-                            <div class="mb-1">{{ victories }}</div>
+                            <div class="mb-1 number">{{ victories }}</div>
                         </div>
                     </div>
 

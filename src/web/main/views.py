@@ -96,6 +96,12 @@ def profile_page(request, id):
                 context['pagename'] = "Мой профиль" if self else "Профиль"
                 if self and (form != None):
                     ok, error, success = post_handler(form, context, user, user_data)
+
+                user_data.exp = 50  # заглушка для просмотра отображения
+                user_data.reputation = 20
+                user_data.team = 1
+                user_data.played_games_count = 100
+                user_data.level = 11  # end
                 context['login'] = user.username
                 context['email'] = user.email
                 context['regdate'] = user.date_joined
@@ -121,7 +127,6 @@ def profile_page(request, id):
         action = form.data["action"]
         if action == "save-chan":
             about = form.data["about"]
-            user_data.exp = 50
             user_data.extra_info = about
             user_data.save()
             success = True
