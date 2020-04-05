@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 
-from main.models import Chat ,Message
+from .models import Chat ,Message
 
 
 def get_menu_context():
@@ -84,12 +84,12 @@ class MessagesView(View):
             {
                 'user_profile': request.user,
                 'chat': chat,
-                'form': MessageForm()
+                'form': Message()
             }
         )
 
     def post(self, request, chat_id):
-        form = MessageForm(data=request.POST)
+        form = Message(data=request.POST)
         if form.is_valid():
             message = form.save(commit=False)
             message.chat_id = chat_id

@@ -3,7 +3,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from src.web.main.models import Message
+from .models import Message
 
 
 @receiver(post_save, sender=Message)

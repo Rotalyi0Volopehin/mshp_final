@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from main.models import Chat, Message
+from .models import Chat, Message
 
 
 class ChatAdmin(admin.ModelAdmin):
