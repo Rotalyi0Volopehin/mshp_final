@@ -2,6 +2,8 @@
 
     <div class="panel">
             {% load tz %}
+            {% load i18n %}
+            {% load poll_extras %}
             {% if chats.count == 0 %}
                 <div class="panel panel-body">{% trans "Нет ни одного начатого диалога" %}</div>
             {% endif %}
