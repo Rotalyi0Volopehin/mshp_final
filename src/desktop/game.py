@@ -7,6 +7,7 @@ from scenes.menu import MenuScene
 from scenes.map import MapScene
 from scenes.quests import QuestScene
 from scenes.login import LoginScene
+from objects.sfx_player import SoundPlayer
 
 class Game:
     MENU_SCENE_INDEX = 0
@@ -20,6 +21,9 @@ class Game:
         self.width = width
         self.height = height
         self.size = self.width, self.height
+        pygame.mixer.init(22050, -16, 2, 64)
+        self.sfx_player = SoundPlayer
+        self.sfx_player.load()
 
         self.create_window()
         self.game_over = False

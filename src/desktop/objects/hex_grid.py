@@ -5,7 +5,6 @@ from objects.base import DrawObject
 from objects.hex import Hex
 from objects.text import Text
 
-
 class Grid(DrawObject):
     def __init__(self, game, hex_side=40, width=8, height=10, field_width=2000, delta = 4):
         super().__init__(game)
@@ -141,6 +140,7 @@ class Grid(DrawObject):
             if self.hexes_array[adress1].nx+number>=0 and self.hexes_array[adress2].nx-number>=0:
                 self.hexes_array[adress1].nx += number
                 self.hexes_array[adress2].nx -= number
+                self.game.sfx_player.play_sound('HighBeep')
 
     def change_text(self, adress, number):
         self.hexes_array[adress].number = Text(game=self.game, text=number, font_size=25,

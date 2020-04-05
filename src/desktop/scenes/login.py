@@ -36,7 +36,7 @@ class LoginScene(Scene):
         self.set_next_scene(self.game.MENU_SCENE_INDEX)
 
     def lg_on_click(self):
-        pass
+        self.game.sfx_player.play_sound('Beep')
         # тODO проверка сервера...
         # TODO:
         # DATA = {"data":
@@ -55,7 +55,7 @@ class LoginScene(Scene):
         self.set_menu_scene()  # если авторизировался выполнить
 
     def rg_on_click(self):
-        pass
+        self.game.sfx_player.play_sound('Beep')
         # ODO зарегистрировать на сервере...
         # TODO:
         # DATA = {"data":

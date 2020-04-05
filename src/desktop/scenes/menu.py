@@ -13,12 +13,16 @@ class MenuScene(Scene):
 
     def set_main_scene(self):
         self.set_next_scene(self.game.MAIN_SCENE_INDEX)
+        self.game.sfx_player.play_sound('Beep')
 
     def set_map_scene(self):
         self.set_next_scene(self.game.MAP_SCENE_INDEX)
+        self.game.sfx_player.play_sound('Beep')
 
     def set_quest_scene(self):
         self.set_next_scene(self.game.QUESTS_SCENE_INDEX)
+        self.game.sfx_player.play_sound('Beep')
 
     def exit(self):
+        self.game.sfx_player.play_sound('Beep')
         self.game.game_over = True
