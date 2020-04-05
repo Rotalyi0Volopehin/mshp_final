@@ -39,8 +39,6 @@ class DBUserTools:
         else:
             pass  # здесь отсылается письмо с ссылкой для верификации
         user_data.save()
-        user_stats = main.models.UserStats(user=user)
-        user_stats.save()
         return True, None
 
     @staticmethod  # инструмент удаления из БД
@@ -52,9 +50,6 @@ class DBUserTools:
         user_data = main.models.UserData.objects.filter(user=user)
         if len(user_data) > 0:
             user_data.delete()
-        user_stats = main.models.UserStats.objects.filter(user=user)
-        if len(user_stats) > 0:
-            user_stats.delete()
         user.delete()
 
     @staticmethod  # инструмент проверки валидности
@@ -64,10 +59,7 @@ class DBUserTools:
             raise exceptions.ArgumentTypeException()
         # vvv проверка валидности vvv
         user_data = main.models.UserData.objects.filter(user=user)
-        if len(user_data) != 1:
-            return False
-        user_stats = main.models.UserStats.objects.filter(user=user)
-        return len(user_stats) == 1
+        return len(user_data) == 1
 
     @staticmethod  # инструмент проверки существования пары логин-пароль
     def check_user_existence(login: str, password: str) -> bool:
