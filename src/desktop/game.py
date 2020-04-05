@@ -4,6 +4,7 @@ import time
 from pygame.locals import *
 from pygame_textinput import TextInput
 from PIL import Image
+from objects.sfx_player import SoundPlayer
 
 
 class GIFImage(object):
@@ -26,7 +27,7 @@ class GIFImage(object):
         pass
 
     def process_draw(self):
-        self.render(self.screen, (125,70))
+        self.render(self.screen, (125, 70))
 
     def process_event(self, event):
         pass
@@ -246,7 +247,9 @@ class Game:
         self.clock = pygame.time.Clock()
 
         #self.trailer = GIFImage("backimage.gif")
-
+        pygame.mixer.init(22050, -16, 2, 64)
+        self.sfx_player = SoundPlayer
+        self.sfx_player.load()
         self.enter = Button(200, 150, "Войти", "button_pressed.png", "button_not_pressed.png")
         self.enter.create_button()
         self.register = Button(167, 200, "Регистрация", "button_pressed_2.png", "button_not_pressed_2.png")

@@ -10,6 +10,7 @@ from objects.button import Btn
 from objects.text import Text
 
 from objects.gifimage import GIFImage
+from objects.sfx_player import SoundPlayer
 
 
 class LoginScene(Scene):
@@ -34,12 +35,13 @@ class LoginScene(Scene):
                         self.button_enter, self.button_register,
                         self.text_login, self.text_reg,
                         ]
+
     def set_menu_scene(self):
          self.set_next_scene(self.game.MENU_SCENE_INDEX)
 
-
     def lg_on_click(self):
         pass
+        SoundPlayer.play_sound('Beep')
         #TODO проверка сервера...
         # TODO:
         # DATA = {"data":
@@ -58,7 +60,7 @@ class LoginScene(Scene):
         self.set_menu_scene() # если авторизировался выполнить
 
     def rg_on_click(self):
-        pass
+        SoundPlayer.play_sound('Beep')
         # зарегистрировать на сервере...
         #TODO:
         # DATA = {"data":
