@@ -2,21 +2,7 @@
 
 {% block content %}
 
-<!--TODO: починить загрузку static js-->
-<script>
-    function check_pw() {
-        if (id_password1.value != id_password2.value) {
-            reg_button.disabled = true;
-            reg_button.hidden = true;
-            pw_warning.hidden = false;
-        }
-    }
-    function close_pw_warning() {
-        reg_button.disabled = false;
-        pw_warning.hidden = true;
-        reg_button.hidden = false;
-    }
-</script>
+{% load static %}
 
 <div class="card w-50 mt-5 mx-auto">
     <div class="card-header font-weight-bold">{{ pagename }}</div>
@@ -71,4 +57,8 @@
 </div>
 </p>
 
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'main.js' %}"></script>
 {% endblock %}
