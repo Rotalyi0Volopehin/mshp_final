@@ -16,10 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from main import views
+from main.views import views
 from django.contrib.auth import views as auth_views
 
-from main.views import get_menu_context
+from main.views.menu import get_menu_context
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,5 +41,6 @@ urlpatterns = [
         ),
         name='login'
     ),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout')
+    path('registration/', views.RegistrationFormPage.as_view(), name='registration'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
