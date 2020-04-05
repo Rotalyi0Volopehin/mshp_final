@@ -2,67 +2,48 @@
 
 {% block content %}
 
-{% block extra_js %}
-{% load static %}
-<script src="{% static 'main.js' %}"></script>
-{% endblock %}
+<!--TODO: починить загрузку static js-->
+<script>
+    function check_pw() {
+        if (id_password1.value != id_password2.value) {
+            reg_button.disabled = true;
+            reg_button.hidden = true;
+            pw_warning.hidden = false;
+        }
+    }
+    function close_pw_warning() {
+        reg_button.disabled = false;
+        pw_warning.hidden = true;
+        reg_button.hidden = false;
+    }
+</script>
 
-<div class="card w-150 mt-5 mx-auto">
+<div class="card w-50 mt-5 mx-auto">
     <div class="card-header font-weight-bold">{{ pagename }}</div>
     <div class="card-body">
         <form action="/registration/" method="POST">
             {% csrf_token %}
-
-            <form class="mb-5">
-                <div class="row">
-                    <div class="col">
-                        <input type="text" class="form-control" placeholder="Имя">
-                    </div>
-                    <div class="col">
-                        <input type="text" class="form-control" placeholder="Фамилия">
-                    </div>
-                </div>
-            </form>
-            <form class="mt-2">
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputEmail3">
-                    </div>
-                </div>
-            </form>
-            <form class="form-inline">
+            <div class="container">
                 <div class="form-group">
-                    <label for="inputPassword">Password</label>
-                    <input type="password" id="inputPassword" class="form-control mx-sm-3"
-                           aria-describedby="passwordHelpInline">
-                    <small id="passwordHelpInline" class="text-muted">
-                        Must be 8-20 characters long.
-                    </small>
-                </div>
-            </form>
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="inputPassword1">Password</label>
-                    <input type="password" id="inputPassword1" class="form-control mx-sm-3"
-                           aria-describedby="passwordHelpInline">
-                    <small id="passwordHelpInline1" class="text-muted">
-                        Pleace repeat your password.
-                    </small>
-                </div>
-            </form>
-            <div class="row mt-3">
-                <div class="col" align="center">
-                    <button type="submit" class="btn btn-primary" onclick="check_pw()" id="reg_button">
-                        Зарегистрироваться
-                    </button>
-                </div>
+                    {% for item in form %}
+                        <div class="row">
+                            <p class="col-5 mr-4 mt-1 text-right">{{ item.label }}</p>
+                            <div class="col form-group">{{ item }}</div>
+                        </div>
+                    {% endfor %}
 
-                <div class="alert alert-danger w-100" role="alert" hidden id="pw_warning">
-                    Пароли не совпадают!
-                    <button type="button" class="close" aria-label="Close" onclick="close_pw_warning()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <div class="row mt-3">
+                        <div class="col" align="center">
+                            <button type="submit" class="btn btn-primary" onclick="check_pw()" id="reg_button">Зарегистрироваться</button>
+                        </div>
+
+                        <div class="alert alert-danger w-100" role="alert" hidden id="pw_warning">
+                            Пароли не совпадают!
+                            <button type="button" class="close" aria-label="Close" onclick="close_pw_warning()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -82,12 +63,10 @@
     </div>
     {% endif %}
     {% else %}
-    {% if success %}
-    <div class="alert alert-success mt-5 w-50 mx-auto" role="alert">Вы были успешно зарегистрированы</div>
-    <div class="alert alert-secondary w-50 mx-auto" role="alert">На указанный E-mail была отправлена ссылка для
-        верификации
-    </div>
-    {% endif %}
+        {% if success %}
+            <div class="alert alert-success mt-5 w-50 mx-auto" role="alert">Вы были успешно зарегистрированы</div>
+            <div class="alert alert-secondary w-50 mx-auto" role="alert">На указанный E-mail была отправлена ссылка для верификации</div>
+        {% endif %}
     {% endif %}
 </div>
 </p>
