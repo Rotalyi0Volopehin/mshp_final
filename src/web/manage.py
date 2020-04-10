@@ -7,7 +7,7 @@ from core_init import init_core
 
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'adventures_web.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'network_confrontation_web.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

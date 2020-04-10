@@ -5,6 +5,16 @@ from django.forms import Form
 
 
 class FormView(View):
+    """View-класс для страниц с post-формами
+    abstract static class
+
+    Static fields:\n
+    - pagename (str) - имя страницы\n
+    - form_class (type) - тип формы\n
+    - template_name (str) - имя шаблона\n
+    - get_handler - обработчик get-запросов (перегрузка опциональна)\n
+    - set_handler - обработчик post-запросов (перегрузка опциональна)
+    """
     pagename = "NOPAGENAME"
     form_class = Form
     template_name = "pages/index.html"
@@ -13,6 +23,12 @@ class FormView(View):
     post_handler = None
 
     def get(self, request):
+        """Метод, принимающий get-request
+
+        :param request: request на страницу '/time/'
+        :type request: HttpRequest
+        :return:
+        """
         context = self.collect_default_context()
         context["form"] = self.form_class()
         if self.get_handler is not None:
@@ -20,6 +36,12 @@ class FormView(View):
         return render(request, self.template_name, context)
 
     def post(self, request):
+        """Метод, принимающий post-request
+
+        :param request: request на страницу '/time/'
+        :type request: HttpRequest
+        :return:
+        """
         context = self.collect_default_context()
         context["form"] = form = self.form_class(request.POST)
         if not form.is_valid():
@@ -30,6 +52,11 @@ class FormView(View):
         return render(request, self.template_name, context)
 
     def collect_default_context(self) -> dict:
+        """Метод, собирающий контекст по умолчанию
+
+        :return: контекст по умолчанию
+        :rtype: dict
+        """
         return {
             "pagename": self.pagename,
             "menu": get_menu_context(),
