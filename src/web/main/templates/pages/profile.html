@@ -5,7 +5,7 @@
 {% load static %}
 
 {% block extra_js %}
-    <script src="{% static 'profile.js' %}"></script>
+<script src="{% static 'profile.js' %}"></script>
 {% endblock %}
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css"/>
@@ -14,7 +14,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
 {% endblock %}
 
 
@@ -22,7 +22,7 @@
 <div class="text-center alert alert-danger" role="alert">{{ error }}</div> {% else %}
 
 <form class="form-padding" method="post"> {% csrf_token %}
-    <div class="row py-5 px-1"  >
+    <div class="row py-5 px-1">
         <div class="col-xl-10 col-md-10 col-sm-10 mx-auto">
             <div class="bg-white shadow rounded_border overflow-hidden">
                 <img src="{% static '/profilepic.png' %}" alt="..." width="130"
@@ -44,7 +44,7 @@
 
 
                     <div class="form-group pt-3 row" align="center">
-                        <div class="col-sm-3 display" >
+                        <div class="col-sm-3 display">
                             <div class="mb-1">Team</div>
                             <div class="mb-1 number">{{ team }}</div>
                         </div>
@@ -64,17 +64,17 @@
 
                     {% if self %}
                     <div class="form-group row">
-                        <button type="button" class="pwdbtn btn btn-primary col-sm-2" data-toggle="modal"
+                        <button type="button" class="password_button btn btn-primary col-sm-3" data-toggle="modal"
                                 data-target="#changePassword">Сменить пароль
                         </button>
 
                     </div>
                     <div class="form-group row">
-                        <button type="button" class="deletebtn btn btn-secondary col-sm-2" style="height: 42px;"
+                        <button type="button" class="delete_button btn btn-secondary col-sm-3" style="height: 38px;"
                                 data-toggle="modal"
                                 data-target="#deleteAccount">Удалить аккаунт
                         </button>
-                        <button type="submit" class="savebtn btn btn-primary btn-lg"
+                        <button type="submit" class="save_button btn btn-primary btn-lg"
                                 onclick="action_tag.value = 'save-chan'"
                                 style="">Сохранить изменения
                         </button>
@@ -93,7 +93,7 @@
                         <div class="modal-header">
                             <h5 class="modal-title" id="changePasswordLabel">Сменить пароль</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                <span aria-hidden="true">x</span>
                             </button>
                         </div>
 
@@ -128,7 +128,7 @@
                             <div class="alert alert-danger w-100" role="alert">
                                 Пароли не совпадают!
                                 <button type="button" class="close" aria-label="Close" onclick="close_pw_warning()">
-                                    <span aria-hidden="true">&times;</span>
+                                    <span aria-hidden="true">x</span>
                                 </button>
                             </div>
                         </div>
@@ -143,7 +143,7 @@
                         <div class="modal-header">
                             <h5 class="modal-title" id="deleteAccountLabel">Удалить аккаунт</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                <span aria-hidden="true">x</span>
                             </button>
                         </div>
                         <div class="modal-body">

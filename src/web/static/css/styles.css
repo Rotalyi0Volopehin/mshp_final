@@ -10,16 +10,17 @@
     min-width: 900px;
 }
 
-.pwdbtn {
-    margin-left: 2%
+.password_button {
+    margin-left: 2%;
 }
 
-.deletebtn {
-    margin-left: 2%
+.delete_button {
+    margin-left: 2%;
 }
 
-.savebtn {
-    margin-left: 50%
+.save_button {
+    margin-left: 35%;
+    margin-top: -0.5%;
 }
 
 .info {
@@ -62,14 +63,14 @@ body {
 
 @font-face {
     font-family: 'cyberpunk';
-    src: url('src/web/main/fonts/cyberpunk/Eng.ttf');
+    src: url('fonts/Rus.ttf');
     font-style: normal;
     font-weight: normal;
 }
 
 body {
     font-family: 'cyberpunk';
-    font-size: 150%;
+    font-size: 140%;
 }
 
 .progress_bar {
