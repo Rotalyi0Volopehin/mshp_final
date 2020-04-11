@@ -18,7 +18,15 @@
 **********************
 View-функции и -классы
 **********************
+.. automodule:: main.views.menu
+    :members:
+
+,,,,
+
 .. automodule:: main.views.form_view
     :members:
+
+,,,,
+
 .. automodule:: main.views.views
     :members:

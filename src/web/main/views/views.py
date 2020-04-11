@@ -9,7 +9,7 @@ from main.db_tools.user_tools import DBUserTools
 
 
 def index_page(request):
-    """View-функция страницы '/'
+    """**View-функция страницы '/'**
 
     :param request: request на страницу '/'
     :type request: HttpRequest
@@ -26,7 +26,7 @@ def index_page(request):
 
 
 def time_page(request):
-    """View-функция страницы '/time/'
+    """**View-функция страницы '/time/'**
 
     :param request: request на страницу '/time/'
     :type request: HttpRequest
@@ -42,7 +42,8 @@ def time_page(request):
 
 
 class RegistrationFormPage(FormView):
-    """View-класс страницы '/registration/'
+    """**View-класс страницы '/registration/'**\n
+    Наследование от класса :class:`main.views.form_view.FormView`
 
     """
 
@@ -51,11 +52,12 @@ class RegistrationFormPage(FormView):
     template_name = "registration/registration.html"
 
     def post_handler(self, context: dict, request, form):
-        """Обработчик post-request'ов
+        """**Дополнительный обработчик post-запросов**\n
+        Вызывается методом :meth:`main.views.form_view.FormView.post`
 
-        :param context: контекст страницы, содержащий 'pagename', 'menu', 'ok', 'success', 'error', 'form'
+        :param context: контекст страницы
         :type context: dict
-        :param request: request на страницу '/registration/'
+        :param request: запрос на страницу '/registration/'
         :type request: HttpRequest
         :param form: форма, содержащая post-данные
         """
