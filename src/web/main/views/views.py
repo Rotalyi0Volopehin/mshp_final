@@ -107,16 +107,6 @@ def chat_page(request):
     return render(request, 'pages/chat.html', context)
 
 
-def registration_page(request):  #затычка для проверки бд
-    context = {"pagename": "Регистрация"}
-    def post_handler(form, context) -> (bool, str, bool):
-        password = form.data["password1"]
-        login_ = form.data["login"]
-        ok, error = DBUserTools.try_register(login_, password, form.data["email"], form.data['team'])
-        return ok, error, ok
-    return view_func_template(request, "registration/registration.html", main.forms.RegistrationForm, post_handler, context=context)
-
-
 def profile_page(request, id):
     context = {}
     def body(form=None, context=None):
@@ -129,12 +119,6 @@ def profile_page(request, id):
                 context['pagename'] = "Мой профиль" if self else "Профиль"
                 if self and (form != None):
                     ok, error, success = post_handler(form, context, user, user_data)
-
-                user_data.exp = 50  # заглушка для просмотра отображения
-                user_data.reputation = 20
-                user_data.team = 1
-                user_data.played_games_count = 100
-                user_data.level = 11  # end
                 context['login'] = user.username
                 context['email'] = user.email
                 context['regdate'] = user.date_joined

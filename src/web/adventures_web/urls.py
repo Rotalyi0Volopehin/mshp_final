@@ -29,7 +29,6 @@ urlpatterns = [
     path('chat/', views.chat_page, name='chat'),
     path('profile/<int:id>/', views.profile_page),
     path('my_profile/', views.my_profile_page),
-    path('registration/', views.registration_page),
 
     path(
         'login/',
