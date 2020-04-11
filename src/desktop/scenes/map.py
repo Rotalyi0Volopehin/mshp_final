@@ -3,7 +3,7 @@ from objects.button import Btn
 from scenes.base import Scene
 
 
-class MenuScene(Scene):
+class MapScene(Scene):
     def create_objects(self):
         self.button_start = Btn(self.game, (350, 155, 100, 40), Color.WHITE, "Запуск игры", self.set_main_scene)
         self.button_exit = Btn(self.game, (350, 305, 100, 40), Color.WHITE, 'Выход', self.exit)
@@ -18,7 +18,7 @@ class MenuScene(Scene):
         self.set_next_scene(self.game.MAP_SCENE_INDEX)
 
     def set_quest_scene(self):
-        self.set_next_scene(self.game.QUEST_SCENE_INDEX)
+        self.set_next_scene(self.game.QUEST_MENU_SCENE_INDEX)
 
     def exit(self):
         self.game.game_over = True
