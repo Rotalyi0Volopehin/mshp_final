@@ -8,10 +8,10 @@ class FormView(View):
     """**View-класс для страниц с post-формами**\n
     abstract class\n
     Статические поля:\n
-    - pagename (str) - имя страницы\n
-    - form_class (type) - тип формы\n
-    - template_name (str) - имя шаблона\n
-    - get_handler - дополнительный обработчик get-запросов (перегрузка опциональна)\n
+    - pagename (str) - имя страницы
+    - form_class (type) - тип формы
+    - template_name (str) - имя шаблона
+    - get_handler - дополнительный обработчик get-запросов (перегрузка опциональна)
     - set_handler - дополнительный обработчик post-запросов (перегрузка опциональна)
     """
     pagename = "NOPAGENAME"
@@ -24,8 +24,8 @@ class FormView(View):
     def get(self, request, **kwargs):
         """**Обработчик get-запросов**\n
         Вызывает дополнительный обработчик get-запросов со следующими аргументами:\n
-        - context (*dict*) - контекст\n
-        - request (*HttpRequest*) - запрос\n
+        - context (*dict*) - контекст
+        - request (*HttpRequest*) - запрос
         - kwargs (*\\*\\*kwargs*)
 
         :param request: request на страницу
@@ -42,9 +42,9 @@ class FormView(View):
         """**Обработчик post-запросов**\n
         Проверяет валидность пришедшего post-запроса.\n
         Вызывает дополнительный обработчик post-запросов со следующими аргументами:\n
-        - context (*dict*) - контекст\n
-        - request (*HttpRequest*) - запрос\n
-        - form (*Form*) - форма, содержащая post-данные\n
+        - context (*dict*) - контекст
+        - request (*HttpRequest*) - запрос
+        - form (*Form*) - форма, содержащая post-данные
         - kwargs (*\\*\\*kwargs*)
 
         :param request: request на страницу
