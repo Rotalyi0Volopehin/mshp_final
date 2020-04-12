@@ -6,21 +6,44 @@
 
 {% block content %}
 
-    <h1 class="mt-4">Авторизация (vasya-promprog)</h1>
-    <hr>
+  <style>
+  body {
+      background: linear-gradient(to top right, #0000ff, #ffffff);
+  }
 
-    <div class="row">
-        <div class="col-4 offset-4">
-            <form action="{% url 'login' %}" method="POST">
-                {% csrf_token %}
+  .form1 {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      background: linear-gradient(to top right, #ffffff, 0000ff);
 
-                {% bootstrap_form form %}
-                {% buttons %}
-                    <button type="submit" class="btn btn-primary float-right btn-block">Войти</button>
-                {% endbuttons %}
-            </form>
-        </div>
-    </div>
+  }
+
+  .form1 h1 {
+      margin: 30px 100px;
+      padding: 0;
+      text-align: center;
+      color: #000;
+      font-size: 30px;
+      text-transform: uppercase;
+  }
+  </style>
+
+
+  <div class="form1 p-3 rounded-lg">
+      <h1>Вход</h1>
+      <div class="form p-3">
+          <form action="{% url 'login' %}" method="POST">
+              {% csrf_token %}
+
+              {% bootstrap_form form %}
+              {% buttons %}
+                  <button type="submit" class="btn btn-primary float-right btn-block">Войти</button>
+              {% endbuttons %}
+          </form>
+      </div>
+  </div>
 
 {% endblock %}
 
