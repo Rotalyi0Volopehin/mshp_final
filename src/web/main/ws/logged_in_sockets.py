@@ -23,8 +23,8 @@ class LoggedInSockets:
         user_exists = DBUserTools.check_user_existence(user_login, user_password)
         if not user_exists:
             return False
-        user = User.objects.get(login=user_login)
-        if LoggedInSockets._users_of_sockets.values().__contains__(user):
+        user = User.objects.get(username=user_login)
+        if user in LoggedInSockets._users_of_sockets.values():
             return False
         LoggedInSockets._users_of_sockets[socket] = user
         return True
