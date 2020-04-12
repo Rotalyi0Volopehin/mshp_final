@@ -10,7 +10,7 @@ class MenuScene(Scene):
         self.grid_controller = GridTileController(grid_model)
         grid_view = GridTileView(self.game, grid_model, self.grid_controller)
         self.grid_controller.init_view(grid_view)
-        grid_view.sync()
+        grid_view.process_draw()
         self.objects = [grid_view]
 
     def set_main_scene(self):

@@ -43,8 +43,9 @@ class Scene:
         for item in self.objects:
             item.process_draw()
         self.additional_draw()
+
         pygame.display.flip()  # double buffering
-        pygame.time.wait(10)  # подождать 10 миллисекунд
+        pygame.time.wait(30)  # подождать 10 миллисекунд
 
     def additional_draw(self):
         pass
