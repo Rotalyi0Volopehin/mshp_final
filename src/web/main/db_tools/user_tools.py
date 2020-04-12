@@ -1,0 +1,147 @@
+import main.models
+import re
+import datetime
+import exceptions
+
+from django.contrib.auth.models import User
+from network_confrontation_web.settings import AUTO_USER_ACTIVATION
+from main.db_tools.user_error_messages import DBUserErrorMessages
+
+
+# TODO: задокументировать код
+
+
+class DBUserTools:
+    """**Инструменты работы в БД с данными о пользователях**
+    """
+    # TODO: добавить механизм верификации пользователей
+    @staticmethod
+    def try_register(login: str, password: str, email: str, team: int) -> (bool, str):
+        """**Попытка регистрации пользователя**\n
+        Пробует зарегистрировать пользователя.
+        Когда регистрация удаётся, посылает на указанный адрес письмо с ссылкой для верификации.
+        Если в модуле :mod:`network_confrontation_web.settings` флаг 'AUTO_USER_ACTIVATION' имеет значение True,
+        пользователь верифицируется сразу, а письмо не посылается.\n
+        !!!Механизм верификации пользователей не завершён!!!
+
+        Возможные исключения:\n
+        - *ArgumentTypeException*
+        - *ArgumentValueException*
+
+        :param login: Логин (1-64 символа)
+        :type login: str
+        :param password: Пароль (1-64 символа)
+        :type password: str
+        :param email: E-mail (корректный)
+        :type email: str
+        :param team: Номер фракции (0-2)
+        :type team: int
+        :return: (ok, error)
+        :rtype: (bool, str) или (bool, None)
+        """
+        # vvv первичная проверка аргументов vvv
+        if not (isinstance(login, str) and isinstance(password, str) and
+                isinstance(email, str)) and isinstance(team, int):
+            raise exceptions.ArgumentTypeException()
+        if not ((0 < len(login) <= 64) and (0 < len(email) <= 64) and (0 < len(password) <= 64) and (0 <= team < 3)):
+            raise exceptions.ArgumentValueException()
+        if not is_email_valid(email):
+            raise exceptions.ArgumentValueException("E-mail некорректен!")
+        if login == "$_del":
+            raise exceptions.ArgumentValueException("Логин не должен принимать значение '$_del'!")
+        # vvv проверка согласованности аргументов с данными БД vvv
+        if len(User.objects.filter(username=login)) > 0:
+            return False, DBUserErrorMessages.login_is_already_in_use
+        if len(User.objects.filter(email=email)) > 0:
+            return False, DBUserErrorMessages.email_is_already_in_use
+        # vvv запись в БД vvv
+        user = User(username=login, email=email, date_joined=datetime.datetime.now())
+        user.set_password(password)
+        user.save()
+        user_data = main.models.UserData(user=user, team=team)
+        if AUTO_USER_ACTIVATION:
+            user_data.activated = True
+        else:
+            pass  # здесь отсылается письмо с ссылкой для верификации
+        user_data.save()
+        return True, None
+
+    @staticmethod
+    def delete_user(user: User):
+        """**Инструмент удаления пользователя из БД**
+
+        Возможные исключения:\n
+        - *ArgumentTypeException*
+
+        :param user: Пользователь
+        :type user: User
+        """
+        # vvv проверка аргумента vvv
+        if not isinstance(user, User):
+            raise exceptions.ArgumentTypeException()
+        # vvv удаление из БД vvv
+        user_data = main.models.UserData.objects.filter(user=user)
+        if len(user_data) > 0:
+            user_data.delete()
+        user.delete()
+
+    @staticmethod
+    def is_user_configuration_correct(user: User) -> bool:
+        """**Инструмент проверки валидности пользовательских данных**\n
+        Проверяет факт наличия в БД ровно одной записи типа :class:`main.models.UserData`.
+
+        Возможные исключения:\n
+        - *ArgumentTypeException*
+
+        :param user: Пользователь
+        :type user: User
+        :return: Факт валидности пользовательских данных
+        :rtype: bool
+        """
+        # vvv проверка аргумента vvv
+        if not isinstance(user, User):
+            raise exceptions.ArgumentTypeException()
+        # vvv проверка валидности vvv
+        user_data = main.models.UserData.objects.filter(user=user)
+        return len(user_data) == 1
+
+    @staticmethod  # инструмент проверки существования пары логин-пароль
+    def check_user_existence(login: str, password: str) -> bool:
+        """**Инструмент проверки существования пары логин-пароль**\n
+        Возможные исключения:\n
+        - *ArgumentTypeException*
+
+        :param login: Логин
+        :type login: str
+        :param password: Пароль
+        :type password: str
+        :return: Факт существования пары логин-пароль
+        :rtype: bool
+        """
+        # vvv проверка аргументов vvv
+        if not (isinstance(login, str) and isinstance(password, str)):
+            raise exceptions.ArgumentTypeException()
+        # vvv проверка данных по БД vvv
+        user = User.objects.filter(username=login)
+        if len(user) != 1:
+            return False
+        user = user[0]
+        return user.check_password(password)
+
+
+__email_re = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+
+
+def is_email_valid(email: str) -> bool:
+    """**Метод для проверки валидности E-mail адреса**\n
+    Возможные исключения:\n
+    - *ArgumentTypeException*
+
+    :param email: E-mail
+    :type email: str
+    :return: Факт валидности E-mail адреса
+    :rtype: bool
+    """
+    if not isinstance(email, str):
+        raise exceptions.ArgumentTypeException()
+    return __email_re.match(email)

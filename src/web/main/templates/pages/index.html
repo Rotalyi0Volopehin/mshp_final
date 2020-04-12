@@ -1,16 +1,71 @@
 {% extends 'base/base.html' %}
 
-
+{% load static %}
 {% block content %}
-    <div class="row mt-3">
-        <div class="col">
-            <h1>Wellcome!</h1>
-            <hr>
-            <p>Это маленький и очень простой сайт</p>
-            <ul>
-                <li>Автор: {{ author }}</li>
-                <li>Количество страниц: {{ pages }}</li>
-            </ul>
-        </div>
-    </div>
+
+  <style>
+  #paralaximage {
+          background-image: url('{% static "images/backim.jpg" %}');
+          height: 500px;
+          margin-bottom: 0px;
+          background-attachment: fixed;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+  }
+  #paralaximage1 {
+          background-image: url('{% static "images/space.jpg" %}');
+          height: 500px;
+          margin-bottom: 0px;
+          background-attachment: fixed;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+  }
+  </style>
+
+
+  <div id="paralaximage">
+      <div class="row h-100">
+          <div class="col-md-12 align-self-center">
+              <h1 class="text-center text-white">network confrontation</h1>
+          </div>
+      </div>
+  </div>
+
+  <div class="container">
+      <p> Sentiments two occasional affronting solicitude travelling and one contrasted.
+          If in so bred at dare rose lose good. Expression alteration entreaties mrs can terminated estimating.
+          Fat new smallness few supposing suspicion two. Small for ask shade water manor think men begin.
+          Painful so he an comfort is manners. Decisively advantages nor expression unpleasing she led met.
+          He felicity no an at packages answered opinions juvenile. undefined. Ecstatic elegance gay but disposed.
+          Pain son rose more park way that. An stairs as be lovers uneasy. Way own uncommonly travelling now acceptance bed compliment solicitude.
+          Sitting hearted on it without me. As so seeing latter he should thirty whence. In expression an solicitude principles in do.
+          Pain son rose more park way that. Up hung mr we give rest half. Called though excuse length ye needed it he having.
+          Any delicate you how kindness horrible outlived serva
+          Sportsman do offending supported extremity breakfast by listening.
+          Decisively advantages nor expression unpleasing she led met. Their saved linen downs tears son add music.
+          Took sold add play may none him few. Do play they miss give so up. Girl quit if case mr sing as no have. Way own uncommonly travelling now acceptance bed compliment solicitude.
+          Now summer who day looked our behind moment coming. Sitting hearted on it without me. As so seeing latter he should thirty whence. Now summer who day looked our behind moment coming.
+          He felicity no an at packages answered opinions juvenile. Bed uncommonly his discovered for estimating far. Steepest speaking up attended it as. Sitting hearted on it without me.
+          As mr started arrival subject by believe. Polite do object at passed it is. Sportsman do offending supported extremity breakfast by listening. We me rent been part what.
+          Estate was tended ten boy nearer seemed. Steepe
+      </p>
+  </div>
+
+  <div id="paralaximage1">
+      <div class="row h-100">
+          <div class="col-md-12 align-self-center">
+              <h1 class="text-center text-white">Sentiments two occasional affronting solicitude travelling and one contrasted.</h1>
+          </div>
+      </div>
+  </div>
+
+  <div class="container">
+      <p> Sentiments two occasional affronting solicitude travelling and one contrasted.
+          If in so bred at dare rose lose good. Expression alteration entreaties mrs can terminated estimating.
+          Fat new smallness few supposing suspicion two. Small for ask shade water manor think men begin.
+      </p>
+  </div>
+
 {% endblock %}
