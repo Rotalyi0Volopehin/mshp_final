@@ -14,7 +14,3 @@ class GridTileView(DrawObject):
     def process_draw(self):
         self.number.process_draw()
         self.game.screen.blit(self.surface, (self.x, self.y))
-
-
-    def redraw(self):
-        pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
