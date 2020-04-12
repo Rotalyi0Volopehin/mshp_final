@@ -1,12 +1,9 @@
-import pygame
-from random import randint
-from src.desktop.constants import Color
-from src.desktop.objects.text import Text
-from src.desktop.objects.base import DrawObject
+from objects.base import DrawObject
 
 
 class GridTileView(DrawObject):
-    def __init__(self, model, controller):
+    def __init__(self, game, model, controller):
+        super().__init__(game)
         self.model = model
         self.controller = controller
 

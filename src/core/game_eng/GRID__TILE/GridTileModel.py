@@ -1,8 +1,10 @@
-import pygame
 from random import randint
-from src.desktop.constants import Color
-from src.desktop.objects.text import Text
-from src.desktop.objects.base import DrawObject
+
+import pygame
+
+from constants import Color
+from objects.base import DrawObject
+from objects.text import Text
 
 
 class GridTile(DrawObject):

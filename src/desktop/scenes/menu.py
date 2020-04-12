@@ -1,17 +1,14 @@
-from src.desktop.constants import Color
-from src.desktop.objects.button import Btn
-from src.desktop.scenes.base import Scene
-from src.core.game_eng.GRID__TILE.GridTileModel import GridTileModel
+from game_eng.GRID__TILE.GridTileController import GridTileController
+from game_eng.GRID__TILE.GridTileModel import GridTileModel
+from game_eng.GRID__TILE.GridTileView import GridTileView
+from scenes.base import Scene
 
-from src.core.game_eng.GRID__TILE.GridTileController import GridTileController
-
-from src.core.game_eng.GRID__TILE.GridTileView import GridTileView
 
 class MenuScene(Scene):
     def create_objects(self):
         grid_model = GridTileModel(self.game)
         self.grid_controller = GridTileController(grid_model)
-        grid_view = GridTileView(grid_model, self.grid_controller)
+        grid_view = GridTileView(self.game, grid_model, self.grid_controller)
         self.grid_controller.init_view(grid_view)
         grid_view.sync()
         self.objects = [grid_view]

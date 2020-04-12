@@ -1,6 +1,6 @@
 import pygame
 
-from src.desktop.objects.base import DrawObject
+from objects.base import DrawObject
 
 
 class Text(DrawObject):

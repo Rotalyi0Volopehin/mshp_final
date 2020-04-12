@@ -1,6 +1,6 @@
-from src.desktop.constants import Color
-from src.desktop.objects.text import Text
-from src.desktop.scenes.base import Scene
+from constants import Color
+from objects.text import Text
+from scenes.base import Scene
 
 
 class FinalScene(Scene):

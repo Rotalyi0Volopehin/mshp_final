@@ -1,6 +1,6 @@
-from src.desktop.third_party.button import Button
-from src.desktop.constants import Color
-from src.desktop.objects.base import DrawObject
+from constants import Color
+from objects.base import DrawObject
+from third_party.button import Button
 
 
 class Btn(DrawObject):
