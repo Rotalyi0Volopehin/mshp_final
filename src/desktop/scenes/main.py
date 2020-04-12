@@ -1,7 +1,7 @@
-from constants import Color
-from objects.balls import LinearMovingBall
-from objects.text import Text
-from scenes.base import Scene
+from src.desktop.constants import Color
+from src.desktop.objects.balls import LinearMovingBall
+from src.desktop.objects.text import Text
+from src.desktop.scenes.base import Scene
 
 
 class MainScene(Scene):

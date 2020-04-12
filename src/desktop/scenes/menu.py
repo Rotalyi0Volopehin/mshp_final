@@ -1,6 +1,6 @@
-from constants import Color
-from objects.button import Btn
-from scenes.base import Scene
+from src.desktop.constants import Color
+from src.desktop.objects.button import Btn
+from src.desktop.scenes.base import Scene
 
 
 class MenuScene(Scene):

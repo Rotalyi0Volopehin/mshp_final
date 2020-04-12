@@ -1,6 +1,6 @@
 import pygame
 
-from constants import Color
+from src.desktop.constants import Color
 
 
 class Scene:

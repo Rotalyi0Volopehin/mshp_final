@@ -1,9 +1,9 @@
 import sys
 import pygame
 
-from scenes.final import FinalScene
-from scenes.main import MainScene
-from scenes.menu import MenuScene
+from src.desktop.scenes.final import FinalScene
+from src.desktop.scenes.main import MainScene
+from src.desktop.scenes.menu import MenuScene
 
 
 class Game:

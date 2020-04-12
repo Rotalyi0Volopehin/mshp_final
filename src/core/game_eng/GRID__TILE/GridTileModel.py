@@ -1,10 +1,8 @@
 import pygame
 from random import randint
-from constants import Color
-from objects.text import Text
-from objects.base import DrawObject
-import exceptions
-from game_eng.game_object_model import GameObjectModel
+from src.desktop.constants import Color
+from src.desktop.objects.text import Text
+from src.desktop.objects.base import DrawObject
 
 
 class GridTile(DrawObject):
@@ -15,13 +13,16 @@ class GridTile(DrawObject):
     #   green - соседняя с выбранной
     #   orange - та клетка, куда двигаем ОЧКИ ЮНИТЫ ВИРУСЫ БОТНЕТЫ ФАЙРВОЛЛЫ и тд.
 
-    def __init__(self, game, x=0, y=0, side=100, number_units=0, even=False):
+    def __init__(self, game, x, y, side, number_units, even, pos_x, pos_y, wall):
         super().__init__(game)
         self.even = even  # чет нечет строчка
         self.nx = number_units  # ранд количество юнитов
-        self.x = x
+        self.x = x #координаты смещений
         self.y = y
 
+        self.pos_x = pos_x #на экране позиция
+        self.pos_y = pos_y
+        self.color = Color.BLACK
         self.side = side
         self.sq = 3 ** (1 / 2)
         self.hex_points = [(self.side / 2, 0),
@@ -34,25 +35,17 @@ class GridTile(DrawObject):
         self.surface = pygame.Surface((2 * self.side, 2 * self.side))
         self.surface.set_colorkey(Color.BLACK)
         pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
-        self.number = Text(game=self.game, text=self.nx, font_size=25, x=x + self.side,
+        self.number = Text(game=self.game, text=str(self.nx), font_size=25, x=x + self.side,
                            y=y + self.sq * self.side / 2)  # TEXT NUMBER
 
-        self.invisible_black_wall = False
-        self.color = Color.BLACK
+        self.invisible_black_wall = wall
+
         # любой цвет выберем,
         # чтобы сливался с нашим фоном независимо от того какого цвета наш фон: розовый или черный
 
     def process_draw(self):
         self.number.process_draw()
         self.game.screen.blit(self.surface, (self.x, self.y))
-
-    @property
-    def loc_x(self):
-        return self.x
-
-    @property
-    def loc_y(self):
-        return self.y
 
     def get_neighbours(self):
         top_x = self.x
@@ -114,29 +107,29 @@ class GridTileModel(DrawObject):
                 random_unit_count = randint(0, 60)
                 if row == 0 or row == self.height+2 or collumn == 0 or collumn == self.width+2:
                     self.hex_draw_array.append(GridTile(game,
-                                                    collumn * (hex_side * 4 - 2 * extra),
-                                                    row * (self.sq * hex_side / 2 + delta),
-                                                    hex_side,
-                                                    invisible_black_wall = True,
-                                                    number_units=random_unit_count,
-                                                    even = True if row % 2 == 0 else False,
-                                                    x = collumn,           # Координаты смещений x,y
-                                                    y = row,           # https://habr.com/ru/post/319644/
-                                                    )
+                                                        collumn,
+                                                        row,
+                                                        hex_side,
+                                                        random_unit_count,
+                                                        (True if row % 2 == 0 else False),
+                                                        collumn * (hex_side * 4 - 2 * extra),
+                                                        row * (self.sq * hex_side / 2 + delta),
+                                                        True)
                                                 )
                 else:
                     self.hex_draw_array.append(GridTile(game,
+                                                    collumn,
+                                                    row,
+                                                    hex_side,
+                                                    random_unit_count,
+                                                    (True if row % 2 == 0 else False),
                                                     collumn * (hex_side * 4 - 2 * extra),
                                                     row * (self.sq * hex_side / 2 + delta),
-                                                    hex_side,
-                                                    number_units=random_unit_count,
-                                                    even = True if row % 2 == 0 else False,
-                                                    x = collumn,           # Координаты смещений x,y
-                                                    y = row,           # https://habr.com/ru/post/319644/
+                                                    False
                                                     )
                                                 )
 
-        print(len(self.hexes_array))
+        print(len(self.hex_draw_array))
 
     def inPolygon(self,x, y):
         for row in range(1,self.height+1):
@@ -147,7 +140,7 @@ class GridTileModel(DrawObject):
                     return cell
 
     def getCell(self, x, y):
-        if self.x == 0 or self.x == self.width+2 or self.y == 0 or self.y == self.height+2:
+        if self.pos_x == 0 or self.pos_x == self.width+2 or self.pos_y == 0 or self.pos_y == self.height+2:
             return None
         return self.hex_draw_array[y][x]
 

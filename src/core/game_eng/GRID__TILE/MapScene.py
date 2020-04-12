@@ -1,23 +1,20 @@
-from constants import Color
-from objects.button import Btn
-from scenes.base import Scene
-from objects.hex_grid import Grid
-from objects.text import Text
-
-from network_confrontation.src.core.game_eng.GRID__TILE.GridTileModel import GridTileModel
-
-from network_confrontation.src.core.game_eng.GRID__TILE.GridTileController import GridTileController
-
-from network_confrontation.src.core.game_eng.GRID__TILE.GridTileView import GridTileView
 
 
-class MapScene(Scene):
-    def create_objects(self):
-        self.grid_model = GridTileModel(self.game)
-        self.grid_controller = GridTileController(self.grid_model)
-        self.grid_view = GridTileView(self.grid_model,self.grid_controller)
-        self.grid_controller.init_view(self.grid_view)
+from src.core.game_eng.GRID__TILE.GridTileModel import GridTileModel
 
+from src.core.game_eng.GRID__TILE.GridTileController import GridTileController
+
+from src.core.game_eng.GRID__TILE.GridTileView import GridTileView
+from src.desktop.game import Game
+
+
+if __name__ == '__main__':
+    g = Game()
+    grid_model = GridTileModel(g)
+    grid_controller = GridTileController(grid_model)
+    grid_view = GridTileView(grid_model,grid_controller)
+    grid_controller.init_view(grid_view)
+    """
         self.instruction1 = Text(self.game,x=200,y=250, text="Инструкция")
         self.instruction2 = Text(self.game,x=250,y=300, text="1 Выбери клетку кликом мыши")
         self.instruction21 = Text(self.game, x=400, y=350, text="1.1 Красная - твоя выбранная клетка")
@@ -28,16 +25,4 @@ class MapScene(Scene):
         self.instruction5 = Text(self.game, x=390, y=540, text="4 Прокруткой мыши добавляй/убавляй кол-во юнитов")
         self.objects = [self.map,self.instruction1, self.instruction2,self.instruction21,self.instruction22,
                         self.instruction23,self.instruction3, self.instruction4, self.instruction5]
-
-
-    def set_main_scene(self):
-        self.set_next_scene(self.game.MAIN_SCENE_INDEX)
-
-    def set_map_scene(self):
-        self.set_next_scene(self.game.MAP_SCENE_INDEX)
-
-    def set_quest_scene(self):
-        self.set_next_scene(self.game.QUESTS_SCENE_INDEX)
-
-    def exit(self):
-        self.game.game_over = True
+    """
