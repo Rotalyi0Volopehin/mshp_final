@@ -23,11 +23,11 @@ def fix_project_roots(*roots_names):
 
 
 try:
-    from core_init import init_core
+    import exceptions
 except:
     print("Direct import failed. Patching . . . ", end='')
     fix_project_roots("core")
-    from core_init import init_core
+    import exceptions
     print("SUCCESS")
 
 
@@ -45,5 +45,4 @@ def main():
 
 
 if __name__ == '__main__':
-    init_core()
     main()

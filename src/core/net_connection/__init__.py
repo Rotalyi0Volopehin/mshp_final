@@ -1,7 +1,7 @@
-import sys
 import os
+import exceptions
 
 from net_connection.core_classes import CoreClasses
 
 
-CoreClasses.reg_core_classes(os.path.dirname(sys.modules[__name__].__file__))
+CoreClasses.reg_core_classes(os.path.dirname(exceptions.__file__))
