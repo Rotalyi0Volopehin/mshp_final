@@ -4,9 +4,10 @@
     {% load bootstrap4 %}
     {% load static %}
 
+
     <head>
         <meta charset="UTF-8">
-        <title>{{ pagename }} - Simple votings</title>
+        <title>{{ pagename }}</title>
 
         {% bootstrap_css %}
         <link href="https://getbootstrap.com/docs/4.1/examples/sticky-footer-navbar/sticky-footer-navbar.css"
@@ -16,7 +17,9 @@
 
 
     <body onload="progress_bar();">
-
+        {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+        {% endblock %}
         <header>
             {% include 'base/menu.html' %}
         </header>
