@@ -33,7 +33,7 @@ class GridTileController():
             self.model.make_cell_orange(clicked_cell.x,clicked_cell.y)
         elif clicked_cell.return_color() == Color.ORANGE:
             self.model.make_cell_green(clicked_cell)
-
+        print("OK")
         self.view.sync()
 
     def on_scroll(self,value):

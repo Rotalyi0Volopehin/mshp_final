@@ -13,7 +13,7 @@ class GridTile(DrawObject):
     #   green - соседняя с выбранной
     #   orange - та клетка, куда двигаем ОЧКИ ЮНИТЫ ВИРУСЫ БОТНЕТЫ ФАЙРВОЛЛЫ и тд.
 
-    def __init__(self, game, x, y, side, number_units, even, pos_x, pos_y, wall):
+    def __init__(self, game, x, y, side, number_units, even, pos_x, pos_y, wall, color):
         super().__init__(game)
         self.even = even  # чет нечет строчка
         self.nx = number_units  # ранд количество юнитов
@@ -22,7 +22,7 @@ class GridTile(DrawObject):
 
         self.pos_x = pos_x #на экране позиция
         self.pos_y = pos_y
-        self.color = Color.BLACK
+        self.color = color
         self.side = side
         self.sq = 3 ** (1 / 2)
         self.hex_points = [(self.side / 2, 0),
@@ -99,14 +99,14 @@ class GridTileModel(DrawObject):
         random_unit_count = 0
         self.sq = 3 ** (1 / 2)
         extra = hex_side / 2 - delta * self.sq
-        self.hex_draw_array = []
+        self.hex_draw_array = [[0] * (width+2) for i in range(height+2)]
         self.height = height
         self.width = width
         for row in range(self.height+2):
             for collumn in range(self.width+2):
                 random_unit_count = randint(0, 60)
                 if row == 0 or row == self.height+2 or collumn == 0 or collumn == self.width+2:
-                    self.hex_draw_array.append(GridTile(game,
+                    self.hex_draw_array[row][collumn]=(GridTile(game,
                                                         collumn,
                                                         row,
                                                         hex_side,
@@ -114,10 +114,11 @@ class GridTileModel(DrawObject):
                                                         (True if row % 2 == 0 else False),
                                                         collumn * (hex_side * 4 - 2 * extra),
                                                         row * (self.sq * hex_side / 2 + delta),
-                                                        True)
+                                                        True,
+                                                        Color.BLACK)
                                                 )
                 else:
-                    self.hex_draw_array.append(GridTile(game,
+                    self.hex_draw_array[row][collumn]=(GridTile(game,
                                                     collumn,
                                                     row,
                                                     hex_side,
@@ -125,7 +126,8 @@ class GridTileModel(DrawObject):
                                                     (True if row % 2 == 0 else False),
                                                     collumn * (hex_side * 4 - 2 * extra),
                                                     row * (self.sq * hex_side / 2 + delta),
-                                                    False
+                                                    False,
+                                                    Color.WHITE
                                                     )
                                                 )
 
@@ -134,15 +136,18 @@ class GridTileModel(DrawObject):
     def inPolygon(self,x, y):
         for row in range(1,self.height+1):
             for collumn in range(1,self.width+1):
-                if (y >= self.hex_draw_array[row][collumn].y) and (y<=self.hex_draw_array[row][collumn].y + self.sq * self.side)\
-                        and (x >=self.hex_draw_array[row][collumn].x) and (x <=self.hex_draw_array[row][collumn].x + 1.5 * self.side):
+                if (y >= self.hex_draw_array[row][collumn].pos_y) and (y<=self.hex_draw_array[row][collumn].pos_y + self.sq * self.side)\
+                        and (x >=self.hex_draw_array[row][collumn].pos_x) and (x <=self.hex_draw_array[row][collumn].pos_x + 1.5 * self.side):
                     cell = self.hex_draw_array[row][collumn]
                     return cell
 
     def getCell(self, x, y):
-        if self.pos_x == 0 or self.pos_x == self.width+2 or self.pos_y == 0 or self.pos_y == self.height+2:
+        if x == 0 or x == self.width+2 or y == 0 or y == self.height+2:
             return None
-        return self.hex_draw_array[y][x]
+        for row in range(1, self.height + 1):
+            for collumn in range(1, self.width + 1):
+                if self.hex_draw_array[row][collumn].x == x and self.hex_draw_array[row][collumn].y == y:
+                    return self.hex_draw_array[row][collumn]
 
     def getCellByColor(self,color):
         for row in range(1,self.height+1):

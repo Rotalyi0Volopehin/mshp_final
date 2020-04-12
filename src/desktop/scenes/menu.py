@@ -1,16 +1,26 @@
 from src.desktop.constants import Color
 from src.desktop.objects.button import Btn
 from src.desktop.scenes.base import Scene
+from src.core.game_eng.GRID__TILE.GridTileModel import GridTileModel
 
+from src.core.game_eng.GRID__TILE.GridTileController import GridTileController
+
+from src.core.game_eng.GRID__TILE.GridTileView import GridTileView
 
 class MenuScene(Scene):
     def create_objects(self):
-        self.button_start = Btn(self.game, (350, 255, 100, 40), Color.WHITE, "Запуск игры", self.set_main_scene)
-        self.button_exit = Btn(self.game, (350, 305, 100, 40), Color.WHITE, 'Выход', self.exit)
-        self.objects = [self.button_start, self.button_exit]
+        grid_model = GridTileModel(self.game)
+        self.grid_controller = GridTileController(grid_model)
+        grid_view = GridTileView(grid_model, self.grid_controller)
+        self.grid_controller.init_view(grid_view)
+        grid_view.sync()
+        self.objects = [grid_view]
 
     def set_main_scene(self):
         self.set_next_scene(self.game.MAIN_SCENE_INDEX)
+
+    def process_event(self,event):
+        self.grid_controller.process_event(event)
 
     def exit(self):
         self.game.game_over = True

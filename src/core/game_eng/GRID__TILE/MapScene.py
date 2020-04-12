@@ -1,19 +1,14 @@
 
 
-from src.core.game_eng.GRID__TILE.GridTileModel import GridTileModel
 
-from src.core.game_eng.GRID__TILE.GridTileController import GridTileController
-
-from src.core.game_eng.GRID__TILE.GridTileView import GridTileView
 from src.desktop.game import Game
 
 
 if __name__ == '__main__':
     g = Game()
-    grid_model = GridTileModel(g)
-    grid_controller = GridTileController(grid_model)
-    grid_view = GridTileView(grid_model,grid_controller)
-    grid_controller.init_view(grid_view)
+    g.main_loop()
+
+
     """
         self.instruction1 = Text(self.game,x=200,y=250, text="Инструкция")
         self.instruction2 = Text(self.game,x=250,y=300, text="1 Выбери клетку кликом мыши")
