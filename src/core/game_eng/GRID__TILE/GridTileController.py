@@ -6,9 +6,10 @@ from objects.base import DrawObject
 
 
 class GridTileController():
-    def __init__(self, game, model, view):
-        self.game = game
+    def __init__(self, model):
         self.model = model
+
+    def init_view(self,view):
         self.view = view
 
     def process_event(self, event):
@@ -33,5 +34,8 @@ class GridTileController():
         elif clicked_cell.return_color() == Color.ORANGE:
             self.model.make_cell_green(clicked_cell)
 
+        self.view.sync()
+
     def on_scroll(self,value):
         self.model.move_units(self.model.getCellByColor(Color.RED),self.model.getCellByColor(Color.ORANGE),value)
+        self.view.sync()

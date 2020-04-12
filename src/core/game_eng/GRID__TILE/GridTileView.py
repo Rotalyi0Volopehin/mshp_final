@@ -10,7 +10,9 @@ class GridTileView(DrawObject):
         self.model = model
         self.controller = controller
 
-
-    def process_draw(self):
-        self.number.process_draw()
-        self.game.screen.blit(self.surface, (self.x, self.y))
+    def sync(self):
+        for row in range(self.model.height):
+            for column in range(self.model.width):
+                cell = self.model.getCell(row,column)
+                if cell:
+                    cell.process_draw()

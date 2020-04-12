@@ -33,8 +33,7 @@ class GridTile(DrawObject):
 
         self.surface = pygame.Surface((2 * self.side, 2 * self.side))
         self.surface.set_colorkey(Color.BLACK)
-
-        #pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
+        pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
         self.number = Text(game=self.game, text=self.nx, font_size=25, x=x + self.side,
                            y=y + self.sq * self.side / 2)  # TEXT NUMBER
 
@@ -42,6 +41,10 @@ class GridTile(DrawObject):
         self.color = Color.BLACK
         # любой цвет выберем,
         # чтобы сливался с нашим фоном независимо от того какого цвета наш фон: розовый или черный
+
+    def process_draw(self):
+        self.number.process_draw()
+        self.game.screen.blit(self.surface, (self.x, self.y))
 
     @property
     def loc_x(self):
