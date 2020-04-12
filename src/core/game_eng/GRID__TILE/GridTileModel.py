@@ -19,10 +19,10 @@ class GridTile(DrawObject):
         super().__init__(game)
         self.even = even  # чет нечет строчка
         self.nx = number_units  # ранд количество юнитов
-        self.x = x #координаты смещений
+        self.x = x  # координаты смещений
         self.y = y
 
-        self.pos_x = pos_x #на экране позиция
+        self.pos_x = pos_x  # на экране позиция
         self.pos_y = pos_y
         self.color = color
         self.side = side
@@ -34,15 +34,18 @@ class GridTile(DrawObject):
                            (self.side / 2, self.sq * self.side),
                            (0, self.sq * self.side / 2)]
 
-        self.surface = pygame.Surface((2 * self.side, 2 * self.side))
-        self.surface.set_colorkey(Color.BLACK)
-        pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
+        self.update_surface()
         self.number = Text(game=self.game, text=str(self.nx), font_size=25, x=x + self.side,
                            y=y + self.sq * self.side / 2)  # TEXT NUMBER
         self.invisible_black_wall = wall
 
         # любой цвет выберем,
         # чтобы сливался с нашим фоном независимо от того какого цвета наш фон: розовый или черный
+
+    def update_surface(self):
+        self.surface = pygame.Surface((2 * self.side, 2 * self.side))
+        self.surface.set_colorkey(Color.BLACK)
+        pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
 
     def process_draw(self):
         self.number.process_draw()
@@ -67,7 +70,7 @@ class GridTile(DrawObject):
         left_bot_x = self.x + 1
         left_bot_y = self.y + 1
 
-        if not(self.even):
+        if not (self.even):
             right_top_x = self.x - 1
             right_top_y = self.y - 1
 
@@ -81,11 +84,13 @@ class GridTile(DrawObject):
             left_bot_y = self.y
 
         # создадим список а, с коордами всех клеток. Обход с верхней клетки против часовой стрелки
-        a = [ [top_x, top_y], [right_top_x, right_top_y], [right_bot_x, right_bot_y], [bot_x, bot_y], [left_bot_x, left_bot_y], [left_top_x, left_top_y]]
-        return  a
+        a = [[top_x, top_y], [right_top_x, right_top_y], [right_bot_x, right_bot_y], [bot_x, bot_y],
+             [left_bot_x, left_bot_y], [left_top_x, left_top_y]]
+        return a
 
     def set_color(self, color):
         self.color = color
+        self.update_surface()
 
     def return_color(self):
         return self.color
@@ -96,47 +101,52 @@ class GridTile(DrawObject):
 
 
 class GridTileModel(DrawObject):
-    def __init__(self, game, hex_side=40, width=8, height=10, field_width=2000, delta = 4):
+    def __init__(self, game, hex_side=40, width=8, height=10, field_width=2000, delta=4):
+        super().__init__(game)
         print("model added")
-        random_unit_count = 0
         self.sq = 3 ** (1 / 2)
         extra = hex_side / 2 - delta * self.sq
-        self.hex_draw_array = [[0] * (width+2) for i in range(height+2)]
+        self.hex_draw_array = [
+            [0] * (width + 2) for i in range(height + 2)
+        ]
         self.height = height
         self.width = width
-        for row in range(self.height+2):
-            for collumn in range(self.width+2):
+        for row in range(self.height + 2):
+            for collumn in range(self.width + 2):
                 random_unit_count = randint(0, 60)
-                if row == 0 or row == self.height+2 or collumn == 0 or collumn == self.width+2:
+                if row == 0 or row == self.height + 2 or collumn == 0 or collumn == self.width + 2:
                     if row % 2 == 0:
-                        self.hex_draw_array[row][collumn] = (GridTile(game,
-                                                                      collumn,
-                                                                      row,
-                                                                      hex_side,
-                                                                      random_unit_count,
-                                                                      (True if row % 2 == 0 else False),
-                                                                      collumn * (hex_side * 4 - 2 * extra),
-                                                                      row * (self.sq * hex_side / 2 + delta),
-                                                                      True,
-                                                                      Color.BLACK)
-                                                             )
+                        self.hex_draw_array[row][collumn] = \
+                            GridTile(
+                                game,
+                                collumn,
+                                row,
+                                hex_side,
+                                random_unit_count,
+                                (True if row % 2 == 0 else False),
+                                collumn * (hex_side * 4 - 2 * extra),
+                                row * (self.sq * hex_side / 2 + delta),
+                                True,
+                                Color.BLACK
+                            )
+
                     else:
-                        self.hex_draw_array[row][collumn] = (GridTile(game,
+                        self.hex_draw_array[row][collumn] = GridTile(game,
                                                                       collumn,
                                                                       row,
                                                                       hex_side,
                                                                       random_unit_count,
                                                                       (True if row % 2 == 0 else False),
                                                                       2 * hex_side + (4 * hex_side) * collumn - (
-                                                                                  2 * (collumn + 1) - 1) * extra,
+                                                                              2 * (collumn + 1) - 1) * extra,
                                                                       self.sq * hex_side / 2 + (row - 1) * (
-                                                                                  self.sq * hex_side / 2 + delta) + delta,
+                                                                              self.sq * hex_side / 2 + delta) + delta,
                                                                       True,
                                                                       Color.BLACK)
-                                                             )
+
                 else:
                     if row % 2 == 0:
-                        self.hex_draw_array[row][collumn] = (GridTile(game,
+                        self.hex_draw_array[row][collumn] = GridTile(game,
                                                                       collumn,
                                                                       row,
                                                                       hex_side,
@@ -147,28 +157,28 @@ class GridTileModel(DrawObject):
                                                                       False,
                                                                       Color.WHITE
                                                                       )
-                                                             )
+
                     else:
-                        self.hex_draw_array[row][collumn] = (GridTile(game,
+                        self.hex_draw_array[row][collumn] = GridTile(game,
                                                                       collumn,
                                                                       row,
                                                                       hex_side,
                                                                       random_unit_count,
                                                                       (True if row % 2 == 0 else False),
                                                                       2 * hex_side + (4 * hex_side) * collumn - (
-                                                                                  2 * (collumn + 1) - 1) * extra,
+                                                                              2 * (collumn + 1) - 1) * extra,
                                                                       self.sq * hex_side / 2 + (row - 1) * (
-                                                                                  self.sq * hex_side / 2 + delta) + delta,
+                                                                              self.sq * hex_side / 2 + delta) + delta,
                                                                       False,
                                                                       Color.WHITE
                                                                       )
-                                                             )
+
 
         print(self.hex_draw_array)
 
-    def inPolygon(self,x, y):
-        for row in range(1,self.height+1):
-            for collumn in range(1,self.width+1):
+    def inPolygon(self, x, y):
+        for row in range(1, self.height + 1):
+            for collumn in range(1, self.width + 1):
                 if (y >= self.hex_draw_array[row][collumn].pos_y) and (
                         y <= self.hex_draw_array[row][collumn].pos_y + self.hex_draw_array[row][collumn].sq *
                         self.hex_draw_array[row][collumn].side) \
@@ -179,52 +189,52 @@ class GridTileModel(DrawObject):
                     return cell
 
     def getCell(self, x, y):
-        if x == 0 or x == self.width+2 or y == 0 or y == self.height+2:
+        if x == 0 or x == self.width + 2 or y == 0 or y == self.height + 2:
             return None
         for row in range(1, self.height + 1):
             for collumn in range(1, self.width + 1):
                 if self.hex_draw_array[row][collumn].x == x and self.hex_draw_array[row][collumn].y == y:
                     return self.hex_draw_array[row][collumn]
 
-    def getCellByColor(self,color):
-        for row in range(1,self.height+1):
-            for collumn in range(1,self.width+1):
+    def getCellByColor(self, color):
+        for row in range(1, self.height + 1):
+            for collumn in range(1, self.width + 1):
                 cell = self.hex_draw_array[row][collumn]
                 if (cell.return_color() == color):
                     return cell
         return None
 
     def make_cells_white(self):
-        for row in range(1,self.height+1):
-            for collumn in range(1,self.width+1):
+        for row in range(1, self.height + 1):
+            for collumn in range(1, self.width + 1):
                 self.hex_draw_array[row][collumn].set_color(Color.WHITE)
 
     def make_cell_red(self, x, y):
-        cell = self.getCell(x,y)
+        cell = self.getCell(x, y)
         if not cell:
             return
         self.make_cells_white()
         cell.set_color(Color.RED)
 
-    def make_cell_green(self,cell):
+    def make_cell_green(self, cell):
         cell.set_color(Color.GREEN)
 
-    def make_cells_green(self,cell):
+    def make_cells_green(self, cell):
         neightbours = cell.get_neighbours()
         print(neightbours)
         for row in range(6):
             for collumn in range(2):
-                self.hex_draw_array[row][collumn].set_color(Color.GREEN)
+                # self.hex_draw_array[row][collumn].set_color(Color.GREEN)
+                self.make_cell_green(self.hex_draw_array[row][collumn])
 
-    def make_cell_orange(self,x,y):
-        cell = self.getCell(x,y)
+    def make_cell_orange(self, x, y):
+        cell = self.getCell(x, y)
         cell.set_color(Color.ORANGE)
 
-    def move_units(self,redcell,orangecell,value):
+    def move_units(self, redcell, orangecell, value):
         if not redcell:
             return
         if not orangecell:
             return
         redcell.nx -= value
         orangecell.nx += value
-

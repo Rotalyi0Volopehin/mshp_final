@@ -3,7 +3,7 @@ import pygame
 from constants import Color
 
 
-class GridTileController():
+class GridTileController:
     def __init__(self, model):
         print("controller added")
         self.model = model
