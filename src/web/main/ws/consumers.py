@@ -9,8 +9,6 @@ from net_connection.response_ids import ResponseID
 from net_connection.request_ids import RequestID
 from net_connection.parcel_check import is_request_parcel_valid
 from net_connection.parcel_check import is_response_parcel_valid
-# vvv import для инициализации request parcel handlers vvv
-from . import logged_in_sockets
 
 
 # TODO: задокументировать
