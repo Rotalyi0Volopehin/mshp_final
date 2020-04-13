@@ -18,8 +18,10 @@ def get_menu_context() -> list:
 def get_user_menu_context(user: User) -> list:
     """Генератор контекста навигационной панели пользователя
 
-    :param user:
-    :return:
+    :param user: Пользователь, пославший запрос (request.user)
+    :type user: User или AnonymousUser
+    :return: Контекст навигационной панели пользователя
+    :rtype: list
     """
     if not (isinstance(user, User) or isinstance(user, AnonymousUser)):
         raise exceptions.ArgumentTypeException()
