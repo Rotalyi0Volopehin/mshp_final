@@ -37,4 +37,5 @@ urlpatterns = [
     ),
     path('registration/', views.RegistrationFormPage.as_view(), name='registration'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('profile/<int:uid>/', views.profile_page, name='profile'),
 ]
