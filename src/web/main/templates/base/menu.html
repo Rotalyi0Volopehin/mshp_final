@@ -17,13 +17,17 @@
             {% endblock %}
         </ul>
 
-        <a class="navbar-brand d-none d-lg-block"style="font-size: 130%;" href="{% url 'index' %}">HackWorld</a>
+        <a class="navbar-brand d-none d-lg-block" style="font-size: 130%; position: absolute; margin-left: 44%;" href="{% url 'index' %}">HackWorld</a>
 
         <ul class="navbar-nav">
             {% block usermenu %}
             {% if request.user.is_authenticated %}
             <li class="nav-item">
                 <a class="nav-link" href="/my_profile/">Мой профиль</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'registration' %}">Регистрация</a>
             </li>
             {% endif %}
             <li class="nav-item">

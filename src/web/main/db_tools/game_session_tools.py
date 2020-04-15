@@ -5,13 +5,31 @@ import os
 from main.db_tools.game_session_error_messages import DBGameSessionErrorMessages
 
 
-# TODO: задокументировать код
-
-
 class DBGameSessionTools:
+    """**Инструменты работы в БД с данными об игровых сессиях**
+    """
     @staticmethod
     def try_create_new_session(title: str, turn_period: int, user_limit: int,
                                user_lowest_level: int, user_highest_level: int) -> (bool, str):
+        """**Попытка создания новой игровой сессии**
+
+        Возможные исключения:\n
+        - *ArgumentTypeException*
+        - *ArgumentValueException*
+
+        :param title: Название игровой сессии
+        :type title: str
+        :param turn_period: Период хода
+        :type turn_period: int
+        :param user_limit: Предел количества игроков
+        :type user_limit: int
+        :param user_lowest_level: Нижний предел уровня допускаемых игроков
+        :type user_lowest_level: int
+        :param user_highest_level: Верхний предел уровня допускаемых игроков
+        :type user_highest_level: int
+        :return: (ok, error)
+        :rtype: (bool, str) или (bool, None)
+        """
         # vvv первичная проверка аргументов vvv
         if not (isinstance(title, str) and isinstance(turn_period, int) and isinstance(user_limit, int) and
                 isinstance(user_lowest_level, int) and isinstance(user_highest_level, int)):

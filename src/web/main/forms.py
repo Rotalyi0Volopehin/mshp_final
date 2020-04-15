@@ -12,7 +12,7 @@ class CommonFields:
                                required=required, widget=forms.TextInput(attrs=attrs))
 
     @staticmethod
-    def get_name_field(required, label="Имя", attrs=None):
+    def get_name_field(required, label="Псевдоним", attrs=None):
         return forms.CharField(label=label, min_length=1, max_length=64,
                                required=required, widget=forms.TextInput(attrs=attrs))
 
