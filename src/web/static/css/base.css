@@ -10,3 +10,5 @@ body {
     font-size: 140%;
 }
 
+a:hover,
+a { text-decoration: none; }

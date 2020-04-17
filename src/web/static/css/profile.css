@@ -50,8 +50,6 @@ body {
     background: -webkit-linear-gradient(to right, #654ea3, #eaafc8);
     background: linear-gradient(to right, #654ea3, #eaafc8);
     min-height: 100vh;
-    font-family: 'cyberpunk';
-    font-size: 140%;
 }
 
 .profile_pic {
@@ -64,16 +62,8 @@ body {
     margin-left: 25%;
 }
 
-@font-face {
-    font-family: 'cyberpunk';
-    src: url('fonts/Rus.ttf');
-    font-style: normal;
-    font-weight: normal;
-}
-
-
 .progress_bar {
-height: 30px;
+    height: 30px;
 }
 
 .progress_background {

@@ -29,6 +29,7 @@ urlpatterns = [
     path('forum/', views.forum_page, name='forum'),
     path('chat/', views.chat_page, name='chat'),
     path('my_profile/', views.my_profile_page, name='profile'),
+    path('fraction1/', views.fraction1_page, name='fraction1'),
 
     path(
         'login/',

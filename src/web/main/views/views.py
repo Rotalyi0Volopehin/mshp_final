@@ -123,6 +123,12 @@ def chat_page(request):
     }
     return render(request, 'pages/chat.html', context)
 
+def fraction1_page(request):
+    context = {
+        'pagename': 'Фракция1',
+        'menu': get_menu_context()
+    }
+    return render(request, 'pages/fraction1.html', context)
 
 def view_func_template(request, html_path, form_class, post_handler, get_handler=None, context=None):
     if context is None:
