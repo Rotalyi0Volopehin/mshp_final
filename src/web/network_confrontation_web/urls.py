@@ -15,32 +15,30 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
 from main.views import views
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.models import AnonymousUser
+from main.views.menu import get_menu_context, get_user_menu_context
 
-from main.views.menu import get_menu_context
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/', views.index_page, name='index'),
     path('', views.index_page, name='index'),
     path('darknet/', views.darknet_page, name='darknet'),
     path('forum/', views.forum_page, name='forum'),
     path('chat/', views.chat_page, name='chat'),
-    path('my_profile/', views.my_profile_page, name='profile'),
-
+    path('profile/<int:uid>/', views.ProfileFormPage.as_view(), name='profile'),
     path(
         'login/',
         auth_views.LoginView.as_view(
             extra_context={
                 'menu': get_menu_context(),
-                'pagename': 'Авторизация'
+                'uesrmenu': get_user_menu_context(AnonymousUser()),
+                'pagename': 'Авторизация',
             }
         ),
         name='login'
     ),
     path('registration/', views.RegistrationFormPage.as_view(), name='registration'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('profile/<int:uid>/', views.profile_page, name='profile'),
 ]
