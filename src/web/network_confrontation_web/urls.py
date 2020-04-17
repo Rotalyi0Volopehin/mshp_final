@@ -33,7 +33,7 @@ urlpatterns = [
         auth_views.LoginView.as_view(
             extra_context={
                 'menu': get_menu_context(),
-                'uesrmenu': get_user_menu_context(AnonymousUser()),
+                'usermenu': get_user_menu_context(AnonymousUser()),
                 'pagename': 'Авторизация',
             }
         ),
