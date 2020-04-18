@@ -7,6 +7,12 @@ from django.contrib.auth.models import User
 from network_confrontation_web.settings import AUTO_USER_ACTIVATION
 from main.db_tools.user_error_messages import DBUserErrorMessages
 from main.models import UserData
+# vvv для системы верификации vvv
+from main.db_tools.tokens import account_activation_token
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.core.mail import EmailMessage
 
 
 # TODO: задокументировать код
@@ -21,9 +27,8 @@ class DBUserTools:
         """
         return "$_del"
 
-    # TODO: добавить механизм верификации пользователей
     @staticmethod
-    def try_register(login: str, password: str, email: str, team: int) -> (bool, str):
+    def try_register(login: str, password: str, email: str, team: int, request) -> (bool, str):
         """**Попытка регистрации пользователя**\n
         Пробует зарегистрировать пользователя.
         Когда регистрация удаётся, посылает на указанный адрес письмо с ссылкой для верификации.
@@ -43,6 +48,8 @@ class DBUserTools:
         :type email: str
         :param team: Номер фракции (0-2)
         :type team: int
+        :param request: Запрос на регистрацию
+        :type request: HttpRequest
         :return: (ok, error)
         :rtype: (bool, str) или (bool, None)
         """
@@ -70,9 +77,20 @@ class DBUserTools:
         if AUTO_USER_ACTIVATION:
             user_data.activated = True
         else:
-            pass  # здесь отсылается письмо с ссылкой для верификации
+            DBUserTools.__send_email_with_activation_link(user, request)
         user_data.save()
         return True, None
+
+    @staticmethod
+    def __send_email_with_activation_link(user, request):
+        subject = "Верификация аккаунта онлайн голосований"
+        current_site = get_current_site(request)
+        token = account_activation_token.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        activation_link = f"{current_site}/activate/{uid}/{token}/"
+        message = "Ссылка для верификации аккаунта:\n" + activation_link
+        email = EmailMessage(subject, message, to=[user.email])
+        email.send()
 
     @staticmethod
     def delete_user(user: User):
@@ -127,7 +145,7 @@ class DBUserTools:
             return None, DBUserErrorMessages.invalid_user_configuration
         return user_data[0], None
 
-    @staticmethod  # инструмент проверки существования пары логин-пароль
+    @staticmethod
     def check_user_existence(login: str, password: str) -> bool:
         """**Инструмент проверки существования пары логин-пароль**\n
         Возможные исключения:\n
@@ -149,6 +167,27 @@ class DBUserTools:
             return False
         user = user[0]
         return user.check_password(password)
+
+    @staticmethod
+    def try_activate_user(user) -> bool:
+        """**Инструмент верификации пользователей**\n
+        Возможные исключения:\n
+        - *ArgumentTypeException*
+
+        :param user: Пользователь, аккаунт которого нужно верифицировать
+        :type user: User
+        :return: ok
+        :rtype: bool
+        """
+        if not isinstance(user, User):
+            raise exceptions.ArgumentTypeException()
+        user_data, _ = DBUserTools.try_get_user_data(user)
+        if user_data is None:
+            return False
+        if not user_data.activated:
+            user_data.activated = True
+            user_data.save()
+        return True
 
 
 __email_re = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")

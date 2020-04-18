@@ -1,21 +1,14 @@
 import datetime
-
-from django.http import HttpResponse
-
 import main.forms as forms
-import exceptions
 
+from main.db_tools.cad import CAD
+from django.http import HttpResponse
 from django.contrib.auth import login as log_user_in, logout as log_user_out
 from django.contrib.auth.models import User
 from main.views.form_view import FormView
 from main.views.menu import get_menu_context, get_user_menu_context
-
-from django.contrib.auth.decorators import login_required
-
-import main.forms
 from django.shortcuts import render, redirect
 from main.db_tools.user_tools import DBUserTools
-from django.contrib.auth.models import AnonymousUser
 
 
 def index_page(request):
@@ -77,7 +70,7 @@ class RegistrationFormPage(FormView):
         login = form.data["login"]
         email = form.data["email"]
         team = int(form.data["team"])
-        ok, error = DBUserTools.try_register(login, password, email, team)
+        ok, error = DBUserTools.try_register(login, password, email, team, request)
         if not ok:
             context["ok"] = False
             context["error"] = error
@@ -86,6 +79,11 @@ class RegistrationFormPage(FormView):
             user = User.objects.get(username=login)
             log_user_in(request, user)
             context["user_menu"] = get_user_menu_context(user)
+
+
+def cad_page(request):
+    CAD.clear_all_data()
+    return HttpResponse("SUCCESS! All data is cleared")
 
 
 def darknet_page(request):
@@ -133,8 +131,8 @@ class ProfileFormPage(FormView):
         :type uid: int
         """
         user = ProfileFormPage.__get_user(uid)
-        context["self"] = ProfileFormPage.__does_profile_belong_to_current_user(request.user, uid)
-        ProfileFormPage.__try_pull_user_data_to_context(user, context)
+        self = context["self"] = ProfileFormPage.__does_profile_belong_to_current_user(request.user, uid)
+        ProfileFormPage.__try_pull_user_data_to_context(user, context, self)
 
     @staticmethod
     def post_handler(context: dict, request, form, uid: int):
@@ -154,7 +152,7 @@ class ProfileFormPage(FormView):
         if not self:
             return HttpResponse(status_code=403)
         user = ProfileFormPage.__get_user(uid)
-        ok, user_data = ProfileFormPage.__try_pull_user_data_to_context(user, context, return_user_data=True)
+        ok, user_data = ProfileFormPage.__try_pull_user_data_to_context(user, context, self, return_user_data=True)
         if not ok:
             return
         action = form.data["action"]
@@ -174,12 +172,14 @@ class ProfileFormPage(FormView):
         return req_user.is_authenticated and (req_user.id == uid)
 
     @staticmethod
-    def __try_pull_user_data_to_context(user: User, context: dict, return_user_data=False):
+    def __try_pull_user_data_to_context(user: User, context: dict, self: bool, return_user_data=False):
         user_data, error = DBUserTools.try_get_user_data(user)
         if error is not None:
             context["ok"] = False
             context["error"] = error
             return False, None if return_user_data else False
+        if self:
+            context["pagename"] = "Мой профиль"
         context["login"] = user.username
         context["email"] = user.email
         context["regdate"] = user.date_joined

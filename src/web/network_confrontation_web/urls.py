@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main.views import views
+from main.views import views, activation_view
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import AnonymousUser
 from main.views.menu import get_menu_context, get_user_menu_context
@@ -24,6 +24,8 @@ from main.views.menu import get_menu_context, get_user_menu_context
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index_page, name='index'),
+    path('activate/<str:uid>/<str:token>/', activation_view.activate, name='activate'),
+    path('cad/', views.cad_page, name='cad'),
     path('darknet/', views.darknet_page, name='darknet'),
     path('forum/', views.forum_page, name='forum'),
     path('chat/', views.chat_page, name='chat'),
