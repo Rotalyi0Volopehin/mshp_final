@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from main.views import views
+from main.views import chat
 from django.contrib.auth import views as auth_views
 
 from main.views.menu import get_menu_context
@@ -38,4 +39,8 @@ urlpatterns = [
     path('registration/', views.RegistrationFormPage.as_view(), name='registration'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('profile/<int:uid>/', views.profile_page, name='profile'),
+
+    path('chat/room/<str:room_name>/', chat.room, name='chat_room'),
+    path('chat/user/<int:user_id>/', chat.open_user_chat, name='chat_open_user'),
+    path('chat/list/', chat.chats_list, name='chat_list'),
 ]

@@ -12,6 +12,7 @@ def get_menu_context() -> list:
     return [
         {"url_name": "index", "name": "Главная"},
         {"url_name": "time", "name": "Текущее время"},
+        {"url_name": "chat_list", "name": "Сообщения"},
     ]
 
 

@@ -53,3 +53,15 @@ class TeamStats(models.Model):
     game_session = models.ForeignKey(to=GameSession, on_delete=models.CASCADE)
     coins = models.IntegerField(default=42)  # бюджет фракции
     # эти данные уникальны для пары игрок-сессия
+
+
+class Chat(models.Model):
+    name = models.CharField(default='', max_length=128)  # название чата (хеш)
+    members = models.ManyToManyField(to=User)  # список участников чата
+
+
+class Message(models.Model):
+    chat = models.ForeignKey(to=Chat, on_delete=models.SET_NULL, null=True)  # чат
+    sender = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True)  # автор
+    text = models.TextField(default='', max_length=2048)  # сообщение
+    date = models.DateTimeField(default=datetime.datetime.now)  # время отправки

@@ -1,0 +1,62 @@
+{% extends 'base/base.html' %}
+
+
+{% block content %}
+
+    <style>
+        /******** card frame **************/
+        .card {position: relative; border-radius: 3px; background-color: #fff;color: #4f5256;border: 1px solid #f2f2f2;margin-bottom: 16px;background:#fff;}
+        .card-header{ padding: 16px;margin:0px;}
+        .card-body {position: relative; padding: 16px;}
+
+        .gaadiex-list {list-style-type: none; margin: 0;padding: 0;}
+        .gaadiex-list>.gaadiex-list-item {padding: 0 22px;}
+        .gaadiex-list-item-img  {
+            float: left;
+            width: 58px;
+            height: 58px;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            margin-right: 20px;
+            border-radius: 50%;
+        }
+
+        .gaadiex-list-item i  {
+            float: left;
+            font-size:48px;
+            width: 58px;
+            height: 58px;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            margin-right: 20px;
+            border-radius: 50%;
+        }
+
+        .border-b-1 {border-bottom: 1px solid rgba(162,162,162,.16);}
+    </style>
+
+    {% if chats %}
+        <div class="col mt-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Активные диалоги</h4>
+                </div>
+                <div class="gaadiex-list">
+                    {% for chat in chats %}
+                        <div class="gaadiex-list-item mt-2"><img class="gaadiex-list-item-img" src="http://www.free-icons-download.net/images/commercial-male-user-icon-32765.png" alt="List user">
+                            <div class="gaadiex-list-item-text">
+                                <h3><a href="/chat/room/{{ chat.room_name }}/">{{ chat.members_username }}</a></h3>
+                                <h4>{{ chat.text }}</h4>
+                                <p>{{ chat.time }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-primary mt-3" role="alert">
+            Нет начатых диалогов.
+        </div>
+    {% endif %}
+
+{% endblock %}
