@@ -7,17 +7,28 @@ from objects.button import Btn
 
 class TextBar(DrawObject):
     def __init__(self, game, file_name, path_to_file, font_name='Comic Sans', font_size=24, is_bold=True,
-                 is_italic=False, color=(255, 255, 255), x=10, y=350, width=780, height=240):
+                 is_italic=False, color = (255, 255, 255), x=10, y=350, width=780, height=240, func=None):
         super().__init__(game)
-        self.dialog_index = '0'
-        self.end_quest = False
+        file = open('quests/config', 'r')
+        self.sex = str(file.readline().split()[1])
+        self.end_quest = file.readline().split()[1]
+        if self.end_quest == 'True':
+            self.end_quest = True
+        else:
+            self.end_quest = False
+        self.dialog_index = str(file.readline().split()[1])
+        self.reputation = int(file.readline().split()[1])
+        self.moral = int(file.readline().split()[1])
+        file.close()
+        print("INIT")
+        self.color = color
+        self.func = func
         self.path_to_file = path_to_file
         self.file_name = file_name[0:len(file_name) - 1]
         self.font_name = font_name
         self.font_size = font_size
         self.is_bold = is_bold
         self.is_italic = is_italic
-        self.color = color
         self.x = x
         self.y = y
         self.width = width
@@ -40,6 +51,7 @@ class TextBar(DrawObject):
     def process_logic(self):
         self.set_next_dialog()
 
+
     def set_next_dialog(self):
         if self.is_start:
             self.lal = 0
@@ -58,25 +70,25 @@ class TextBar(DrawObject):
                 if self.text_frame.find('</p>', self.now_word_f) == -1:
                     self.flag = False
             self.now_word_a = self.data.find('</d>', self.now_word_a) + 1
-
-        if self.data.find('</d>', self.now_word_a) < 0 and self.lal + 1 == len(self.data_strings) and not self.end:
-            self.choose_option()
-            self.end = True
+        if not self.end_quest:
+            if self.data.find('</d>', self.now_word_a) < 0 and self.lal + 1 == len(self.data_strings) and not self.end:
+                self.choose_option()
+                self.end = True
 
     def set_next_ev(self, choice):
         self.dialog_index += choice
+        print(self.dialog_index)
         self.data = self.get_data_ff(self.path_to_file, self.file_name, self.dialog_index)
-        # TODO Если файлов
-        # больше нет,то перейти в меню
-        print("NEW FILE")
-        self.buttons.clear()
-        self.now_word_a = 0
-        self.lal = 0
-        self.text_frame = ''
-        self.data_strings = ['v']
-        self.flag = True
-        self.is_start = True
-        self.end = False
+        if not self.end_quest:
+            print("NEW FILE")
+            self.buttons.clear()
+            self.now_word_a = 0
+            self.lal = 0
+            self.text_frame = ''
+            self.data_strings = ['']
+            self.flag = True
+            self.is_start = True
+            self.end = False
 
     def process_draw(self):
         pygame.draw.rect(self.game.screen, Color.GREY_BLUE, (self.x, self.y, self.width, self.height))
@@ -113,13 +125,19 @@ class TextBar(DrawObject):
 
     def get_data_ff(self, a, b, c):
         try:
-            file = open(a + b + str(c), 'r')
-        except FileNotFoundError or UnboundLocalError:
+            file1 = open(a + b + str(c), 'r')
+        except FileNotFoundError or UnboundLocalError or self.end_quest:
             print("END OF JOURNEY")
+            self.dialog_index = self.dialog_index[0:len(self.dialog_index) - 1]
+            self.func()
+            self.end_quest = True
         finally:
-            stri = file.read()
-            file.close()
-            return stri
+            if not self.end_quest:
+                stri = file1.read()
+                file1.close()
+                return stri
+            else:
+                self.end_quest_func()
 
     def choose_option(self):
         self.now_word_b = 0
@@ -142,3 +160,15 @@ class TextBar(DrawObject):
 
     def choice_2(self):
         self.set_next_ev('2')
+
+    def end_quest_func(self):
+        f = open('quests/config', 'w')
+        f.write('sex: ' + str(self.sex) + '\n')
+        if self.end_quest:
+            f.write('end: False' + '\n')
+        else:
+            f.write('end: False' + '\n')
+        f.write('now: ' + str(self.dialog_index) + '\n')
+        f.write('reputation: ' + str(self.reputation) + '\n')
+        f.write('moral: ' + str(self.moral))
+        f.close()
