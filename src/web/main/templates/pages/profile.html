@@ -22,7 +22,7 @@
 <div class="text-center alert alert-danger" role="alert">{{ error }}</div> {% else %}
 
 <form class="form-padding" method="post"> {% csrf_token %}
-    <div class="row py-5 px-1">
+    <div class="row py-4 px-1 mb-5">
         <div class="col-xl-10 col-md-10 col-sm-10 mx-auto">
             <div class="bg-white shadow rounded_border overflow-hidden">
                 <img src="{% static '/profilepic.png' %}" alt="..." width="130"
@@ -41,7 +41,6 @@
                              aria-valuenow="{{ exp }}" aria-valuemin="0" aria-valuemax="100">
                         </div>
                     </div>
-
 
                     <div class="form-group pt-3 row" align="center">
                         <div class="col-sm-3 display">
@@ -63,21 +62,53 @@
                     </div>
 
                     {% if self %}
-                    <div class="form-group row">
-                        <button type="button" class="password_button btn btn-primary col-sm-3" data-toggle="modal"
-                                data-target="#changePassword">Сменить пароль
-                        </button>
+                    <div class="form-group row pt-4">
+                        <div class="col">
+                            <div>Логин: {{ login }}</div>
+                            <div class="pt-3">Email: {{ email }}</div>
+                            <div class="pt-3">Дата регистрации: {{ regdate|date:"d.m.Y" }}</div>
+                        </div>
 
+                        <div class="col">
+                            <center>
+                                <button type="button" class="btn btn-primary btn-block"
+                                        style="width: 80%"
+                                        data-toggle="modal"
+                                        data-target="#changePassword">Сменить пароль
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-block"
+                                        style="width: 80%"
+                                        data-toggle="modal"
+                                        data-target="#deleteAccount">Удалить аккаунт
+                                </button>
+                            </center>
+                        </div>
                     </div>
+
                     <div class="form-group row">
-                        <button type="button" class="delete_button btn btn-secondary col-sm-3" style="height: 38px;"
-                                data-toggle="modal"
-                                data-target="#deleteAccount">Удалить аккаунт
-                        </button>
-                        <button type="submit" class="save_button btn btn-primary btn-lg"
-                                onclick="action_tag.value = 'save-chan'"
-                                style="">Сохранить изменения
-                        </button>
+                        <div class="col">
+                            {% if activated %}
+                            <div class="text-center alert alert-success mt-3"
+                                 role="alert">Аккаунт верифицирован</div>
+                            {% else %}
+                            <div class="text-center alert alert-warning mt-3"
+                                 role="alert">Аккаунт не верифицирован</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col" style="padding-top: 2.8%;">
+                            <center>
+                                <button type="submit" class="save_button btn btn-primary btn-block"
+                                        onclick="action_tag.value = 'save-chan'">Сохранить изменения
+                                </button>
+                            </center>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="form-group row pt-4">
+                        <div class="col">
+                            <div>Дата регистрации: {{ regdate|date:"d.m.Y" }}</div>
+                        </div>
                     </div>
                     {% endif %}
                 </div>
@@ -159,7 +190,6 @@
                     </div>
                 </div>
             </div>
-
 
         </div>
     </div>

@@ -6,31 +6,17 @@
     font-size: 150%;
 }
 .dark_part {
-    padding-bottom: 5%;
+    height: 125px;
     min-width: 900px;
 }
 
-.password_button {
-    margin-left: 2%;
-}
-
-.delete_button {
-    margin-left: 2%;
-    margin-
-}
-
-.save_button {
-    margin-left: 35%;
-    margin-top: -0.5%;
-}
-
 .info {
-    position: absolute;
+    position: relative;
     border: none;
-    margin-left: 22%;
+    margin-left: 23.5%;
     margin-top: -0.5%;
     font-size: 100.5%;
-    height: 7.5%;
+    height: 40%;
 }
 
 .profile-header {
@@ -43,6 +29,11 @@
 
 .display {
     display: inline-block;
+}
+
+.save_button {
+    width: 80%;
+    height: 50px;
 }
 
 body {
