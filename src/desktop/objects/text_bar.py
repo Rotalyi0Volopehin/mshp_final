@@ -19,11 +19,15 @@ class TextBar(DrawObject):
         self.dialog_index = str(file.readline().split()[1])
         self.reputation = int(file.readline().split()[1])
         self.moral = int(file.readline().split()[1])
+        self.act = int(file.readline().split()[1])
         file.close()
         print("INIT")
         self.color = color
         self.func = func
-        self.path_to_file = path_to_file
+        self.path_to_file_qu = path_to_file
+        self.path_to_file = path_to_file + 'A' + str(self.act) \
+                            + '/' + self.sex + '/'
+        print(self.path_to_file)
         self.file_name = file_name[0:len(file_name) - 1]
         self.font_name = font_name
         self.font_size = font_size
@@ -41,12 +45,12 @@ class TextBar(DrawObject):
         self.flag = True
         self.count = 0
         self.rect = pygame.Rect(x, y, width, height)
-        self.next = False
         self.font = pygame.font.SysFont(self.font_name, self.font_size, self.is_bold, self.is_italic)
         self.end = False
         self.lal = 0
         self.is_start = True
         self.buttons = []
+        self.next_act = False
 
     def process_logic(self):
         self.set_next_dialog()
@@ -73,6 +77,7 @@ class TextBar(DrawObject):
         if not self.end_quest:
             if self.data.find('</d>', self.now_word_a) < 0 and self.lal + 1 == len(self.data_strings) and not self.end:
                 self.choose_option()
+                self.set_next_option()
                 self.end = True
 
     def set_next_ev(self, choice):
@@ -156,10 +161,18 @@ class TextBar(DrawObject):
             print(button_name)
 
     def choice_1(self):
-        self.set_next_ev('1')
+        if not self.next_act:
+            self.set_next_ev('1')
+        else:
+            self.set_next_ev('')
+            self.next_act = False
 
     def choice_2(self):
-        self.set_next_ev('2')
+        if not self.next_act:
+            self.set_next_ev('2')
+        else:
+            self.set_next_ev('')
+            self.next_act = False
 
     def end_quest_func(self):
         f = open('quests/config', 'w')
@@ -170,5 +183,17 @@ class TextBar(DrawObject):
             f.write('end: False' + '\n')
         f.write('now: ' + str(self.dialog_index) + '\n')
         f.write('reputation: ' + str(self.reputation) + '\n')
-        f.write('moral: ' + str(self.moral))
+        f.write('moral: ' + str(self.moral) + '\n')
+        f.write('A: ' + str(self.act))
         f.close()
+
+    def set_next_option(self):
+        if self.data.find('<A') != -1:
+            self.act = int(self.data[self.data.find('<A') + 2])
+            self.path_to_file = self.path_to_file_qu + 'A' + str(self.act) \
+                                + '/' + self.sex + '/'
+            print(self.path_to_file, self.file_name)
+            self.dialog_index = '0'
+            self.next_act = True
+        if self.data.find('<END>') != -1:
+            self.end_quest = True
