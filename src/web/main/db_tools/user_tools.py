@@ -23,7 +23,7 @@ class DBUserTools:
     """
     @staticmethod
     def deleted_user_name() -> str:
-        """Особый логин, обозначающий удалённого пользователя
+        """Особый логин/ник, обозначающий удалённого пользователя
         """
         return "$_del"
 
@@ -33,13 +33,10 @@ class DBUserTools:
         Пробует зарегистрировать пользователя.
         Когда регистрация удаётся, посылает на указанный адрес письмо с ссылкой для верификации.
         Если в модуле :mod:`network_confrontation_web.settings` флаг 'AUTO_USER_ACTIVATION' имеет значение True,
-        пользователь верифицируется сразу, а письмо не посылается.\n
-        !!!Механизм верификации пользователей не завершён!!!
+        пользователь верифицируется сразу, а письмо не посылается.
 
-        Возможные исключения:\n
-        - *ArgumentTypeException*
-        - *ArgumentValueException*
-
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
+        :raises ArgumentValueException: Значение переданных аргументов не соответсвует требованиям
         :param login: Логин (1-64 символа)
         :type login: str
         :param password: Пароль (1-64 символа)
@@ -94,11 +91,8 @@ class DBUserTools:
 
     @staticmethod
     def delete_user(user: User):
-        """**Инструмент удаления пользователя из БД**
-
-        Возможные исключения:\n
-        - *ArgumentTypeException*
-
+        """**Инструмент удаления пользователя из БД**\n
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
         :param user: Пользователь
         :type user: User
         """
@@ -116,9 +110,7 @@ class DBUserTools:
         """**Инструмент проверки валидности пользовательских данных**\n
         Проверяет факт наличия в БД ровно одной записи типа :class:`main.models.UserData`.
 
-        Возможные исключения:\n
-        - *ArgumentTypeException*
-
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
         :param user: Пользователь
         :type user: User
         :return: Факт валидности пользовательских данных
@@ -148,9 +140,7 @@ class DBUserTools:
     @staticmethod
     def check_user_existence(login: str, password: str) -> bool:
         """**Инструмент проверки существования пары логин-пароль**\n
-        Возможные исключения:\n
-        - *ArgumentTypeException*
-
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
         :param login: Логин
         :type login: str
         :param password: Пароль
@@ -171,9 +161,7 @@ class DBUserTools:
     @staticmethod
     def try_activate_user(user) -> bool:
         """**Инструмент верификации пользователей**\n
-        Возможные исключения:\n
-        - *ArgumentTypeException*
-
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
         :param user: Пользователь, аккаунт которого нужно верифицировать
         :type user: User
         :return: ok
@@ -195,9 +183,7 @@ __email_re = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
 def is_email_valid(email: str) -> bool:
     """**Метод для проверки валидности E-mail адреса**\n
-    Возможные исключения:\n
-    - *ArgumentTypeException*
-
+    :raises ArgumentTypeException: Неверный тип переданных аргументов
     :param email: E-mail
     :type email: str
     :return: Факт валидности E-mail адреса
