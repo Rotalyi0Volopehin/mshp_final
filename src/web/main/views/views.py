@@ -1,21 +1,14 @@
 import datetime
 
-from django.http import HttpResponse
-
-import main.forms as forms
-import exceptions
-
 from django.contrib.auth import login as log_user_in, logout as log_user_out
 from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
+import main.forms as forms
+from main.db_tools.user_tools import DBUserTools
 from main.views.form_view import FormView
 from main.views.menu import get_menu_context, get_user_menu_context
-
-from django.contrib.auth.decorators import login_required
-
-import main.forms
-from django.shortcuts import render, redirect
-from main.db_tools.user_tools import DBUserTools
-from django.contrib.auth.models import AnonymousUser
 
 
 def index_page(request):
@@ -118,7 +111,7 @@ class ProfileFormPage(FormView):
     """
     pagename = "Профиль"
     form_class = forms.ProfileForm
-    template_name = "pages/profile.html"
+    template_name = "pages/profile/profile.html"
 
     @staticmethod
     def get_handler(context: dict, request, uid: int):
