@@ -1,9 +1,8 @@
-from src.desktop.constants import Color
-from src.desktop.objects.button import Btn
-from src.desktop.scenes.base import Scene
-from src.desktop.objects.hex_grid import Grid
-from src.desktop.objects.text import Text
-
+from constants import Color
+from objects.button import Btn
+from scenes.base import Scene
+from objects.hex_grid import Grid
+from objects.text import Text
 
 class MapScene(Scene):
     def create_objects(self):

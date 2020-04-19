@@ -1,7 +1,7 @@
 import pygame
 from random import randint
 from constants import Color
-from src.desktop.objects.text import Text
+from objects.text import Text
 from objects.base import DrawObject
 
 
