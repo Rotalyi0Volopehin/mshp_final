@@ -11,7 +11,7 @@ from game_eng.grid_tile import GridTile
 # noinspection PyRedundantParentheses
 class GridModel:
     def __init__(self, game, hex_side=20, width=14, height=5, delta=4):
-        super().__init__(game)
+        self.game = game
         self.sq = 3 ** 0.5
         self.extra = hex_side / 2 - delta * self.sq
         self.hex_draw_array = [
