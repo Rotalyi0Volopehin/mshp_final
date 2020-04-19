@@ -14,6 +14,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}"/>
 <link rel="stylesheet" href="{% static 'css/profile.css' %}"/>
 {% endblock %}
 
@@ -27,22 +28,22 @@
             <div class="bg-white shadow rounded_border overflow-hidden">
                 <img src="{% static '/profilepic.png' %}" alt="..." width="130"
                      class="profile_pic rounded-circle mb-2 img-thumbnail">
-                <div class="dark_part px-4 bg-dark">
+                <div class="dark_part px-4 bg-dark cyberfont">
                     <h1 class="text-white mb-1 pt-3 name">{{ login }}</h1>
                     <input type="text" class="info form-control bg-dark col-sm-7 text-white-50" {% if not self %}
                            readonly {% endif %}
                            placeholder="Изменить описание" maxlength="32" value="{{ about }}" name="about">
                 </div>
 
-                <div class="bg-light p-4">
-                    <h3 class="text-center">Level {{ level }}</h3>
+                <div class="bg-light p-4" >
+                    <h3 class="text-center cyberfont">Level {{ level }}</h3>
                     <div class="progress my-3 progress_bar">
                         <div class="progress-bar progress_background" id="progress-bar" role="progressbar"
                              aria-valuenow="{{ exp }}" aria-valuemin="0" aria-valuemax="100">
                         </div>
                     </div>
 
-                    <div class="form-group pt-3 row" align="center">
+                    <div class="form-group pt-3 row cyberfont" align="center">
                         <div class="col-sm-3 display">
                             <div class="mb-1">Team</div>
                             <div class="mb-1 number">{{ team }}</div>
@@ -63,13 +64,13 @@
 
                     {% if self %}
                     <div class="form-group row pt-4">
-                        <div class="col">
-                            <div>Логин: {{ login }}</div>
-                            <div class="pt-3">Email: {{ email }}</div>
-                            <div class="pt-3">Дата регистрации: {{ regdate|date:"d.m.Y" }}</div>
+                        <div class="col ml-4">
+                            <div ><span class="cyberfont">Логин: </span> <b class="label_font"> {{ login }}</b></div>
+                            <div class="pt-3"><span class="cyberfont">Email: </span><b class="label_font"> {{ email }}</b></div>
+                            <div class="pt-3"><span class="cyberfont">Дата регистрации: </span><b class="label_font"> {{ regdate|date:"d.m.Y" }}</b></div>
                         </div>
 
-                        <div class="col">
+                        <div class="col cyberfont">
                             <center>
                                 <button type="button" class="btn btn-primary btn-block"
                                         style="width: 80%"
@@ -85,8 +86,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
-                        <div class="col">
+                    <div class="form-group row cyberfont">
+                        <div class="col ml-4">
                             {% if activated %}
                             <div class="text-center alert alert-success mt-3"
                                  role="alert">Аккаунт верифицирован</div>
