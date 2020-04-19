@@ -45,6 +45,9 @@ def time_page(request):
     }
     return render(request, 'pages/time.html', context)
 
+def rating_page():
+    pass
+
 
 class RegistrationFormPage(FormView):
     """**View-класс страницы '/registration/'**\n

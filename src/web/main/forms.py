@@ -61,3 +61,6 @@ class ProfileForm(forms.Form):
     password = CommonFields.get_password_field(False)
     new_password = CommonFields.get_password_field(False)
     action = CommonFields.get_invisible_field(forms.CharField, "action_tag", '')
+
+
+

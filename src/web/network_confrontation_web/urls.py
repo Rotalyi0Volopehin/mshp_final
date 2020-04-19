@@ -41,6 +41,7 @@ urlpatterns = [
         ),
         name='login'
     ),
+    path('rating_page/', views.chat_page, name='rating_page'),
     path('registration/', views.RegistrationFormPage.as_view(), name='registration'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]

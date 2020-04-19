@@ -53,3 +53,15 @@ class TeamStats(models.Model):
     game_session = models.ForeignKey(to=GameSession, on_delete=models.CASCADE)
     coins = models.IntegerField(default=42)  # бюджет фракции
     # эти данные уникальны для пары игрок-сессия
+
+
+class UserStatistic(models.Model):
+    class Meta:
+        db_table = "UserStatistic"
+
+    User = models.ForeignKey(User)  # внешний ключ на статью
+    lvl = models.IntegerField('Уровень', default=0)
+    exp = models.IntegerField('Опыт', default=0)  # количество просмотров в эту дату
+
+    def __str__(self):
+        return self.User.title
