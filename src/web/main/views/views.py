@@ -91,7 +91,8 @@ class RegistrationFormPage(FormView):
 def darknet_page(request):
     context = {
         'pagename': 'DarkNet',
-        'menu': get_menu_context()
+        'menu': get_menu_context(),
+        'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/darknet.html', context)
 
@@ -99,7 +100,8 @@ def darknet_page(request):
 def forum_page(request):
     context = {
         'pagename': 'Форум',
-        'menu': get_menu_context()
+        'menu': get_menu_context(),
+        'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/forum.html', context)
 
@@ -107,14 +109,16 @@ def forum_page(request):
 def chat_page(request):
     context = {
         'pagename': 'Закрытые каналы',
-        'menu': get_menu_context()
+        'menu': get_menu_context(),
+        'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/chat.html', context)
 
 def fraction1_page(request):
     context = {
         'pagename': 'Фракция1',
-        'menu': get_menu_context()
+        'menu': get_menu_context(),
+        'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/fraction1.html', context)
 
