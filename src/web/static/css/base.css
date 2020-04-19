@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'cyberpunk';
+    src: url('fonts/Rus.ttf');
+    font-style: normal;
+    font-weight: normal;
+}
+
+body {
+    font-family: 'cyberpunk';
+    font-size: 140%;
+}
+
