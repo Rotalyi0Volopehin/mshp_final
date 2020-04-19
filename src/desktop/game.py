@@ -1,4 +1,5 @@
 import sys
+
 import pygame
 
 from scenes.final import FinalScene
@@ -37,9 +38,10 @@ class Game:
         while not self.game_over:
             eventlist = pygame.event.get()
             for event in eventlist:
+                self.scenes[self.current_scene].process_current_event(event)
                 if event.type == pygame.QUIT:
                     print('Пользователь нажал крестик')
                     self.game_over = True
-            self.scenes[self.current_scene].process_frame(eventlist)
 
+            self.scenes[self.current_scene].process_frame(eventlist)
         sys.exit(0)

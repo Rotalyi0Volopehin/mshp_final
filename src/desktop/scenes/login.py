@@ -16,9 +16,7 @@ class LoginScene(Scene):
     def create_objects(self):
         self.login = Txtinput(self.game, False, 170, 20)
         self.password = Txtinput(self.game, False, 180, 80)
-        self.trailer = GIFImage("backimage.gif", self.game)
-
-        # TODO self.trailer = GIFImage("backimage.gif")
+        #self.trailer = GIFImage("backimage.gif", self.game)
 
         self.button_enter = Btn(self.game, (350, 350, 100, 40), Color.WHITE, "Войти", self.lg_on_click)
         self.button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.rg_on_click)
@@ -30,7 +28,8 @@ class LoginScene(Scene):
                              color=(255, 255, 100), x=125, y=90)
 
         self.objects = [
-                    self.trailer, self.password,
+                   # self.trailer,
+                    self.password,
                     self.button_enter, self.button_register,
                     self.text_login, self.text_reg,
                     self.login

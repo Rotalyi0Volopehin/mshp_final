@@ -13,3 +13,4 @@ pip install -r ../src/desktop/requirements.txt
 # django init
 cd ../src/web
 python manage.py migrate
+python manage.py createsuperuser --username "vasya" --email "1@abc.net"
