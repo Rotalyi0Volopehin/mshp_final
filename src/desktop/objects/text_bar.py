@@ -49,6 +49,7 @@ class TextBar(DrawObject):
         self.lal = 0
         self.is_start = True
         self.buttons = []
+        self.moral_choices_costs = []
         self.next_act = False
 
     def process_logic(self):
@@ -90,6 +91,7 @@ class TextBar(DrawObject):
         if not self.end_quest:
             print("NEW FILE")
             self.buttons.clear()
+            self.moral_choices_costs.clear()
             self.now_word_a = 0
             self.lal = 0
             self.text_frame = ''
@@ -110,6 +112,8 @@ class TextBar(DrawObject):
                 text_surface = self.font.render(self.data_strings[i], True, self.color)
                 self.game.screen.blit(text_surface, [self.x + 10, self.y + 10 + self.count])
                 self.count += self.font_size
+            moral_text = self.font.render('Мораль: ' + str(self.moral), True, self.color)
+            self.game.screen.blit(moral_text, [self.game.width - 150, 40])
 
     def process_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -174,11 +178,15 @@ class TextBar(DrawObject):
                                     Color.GREY_BLUE, button_name, functions[self.button_number]
                                     ))
             self.now_word_b = self.data.find('</btn>', self.now_word_b) + 3
+            if self.data.find('[M', self.now_word_b, self.now_word_b + 6) != -1:
+                self.moral_choices_costs.append(self.data[self.data.find('[M', self.now_word_b) + 2 :
+                                                          self.data.find(']', self.now_word_b)])
             self.button_number += 1
             print(button_name)
 
     def choice_1(self):
         if not self.next_act:
+            self.apply_moral(1)
             self.set_next_ev('1')
         else:
             self.set_next_ev('')
@@ -186,6 +194,7 @@ class TextBar(DrawObject):
 
     def choice_2(self):
         if not self.next_act:
+            self.apply_moral(2)
             self.set_next_ev('2')
         else:
             self.set_next_ev('')
@@ -193,6 +202,7 @@ class TextBar(DrawObject):
 
     def choice_3(self):
         if not self.next_act:
+            self.apply_moral(3)
             self.set_next_ev('3')
         else:
             self.set_next_ev('')
@@ -226,7 +236,7 @@ class TextBar(DrawObject):
             self.act = int(self.data[self.data.find('<A') + 2])
             self.path_to_file = self.path_to_file_qu + 'A' + str(self.act) \
                                 + '/' + self.sex + '/'
-            print(self.path_to_file, self.file_name)
+            #print(self.path_to_file, self.file_name)
             self.dialog_index = '0'
             self.next_act = True
         if self.data.find('<END>') != -1:
@@ -247,3 +257,10 @@ class TextBar(DrawObject):
             count += 1
             ind = data.find("<btn>", ind) + 3
         return count
+
+    def apply_moral(self, choice_num):
+        if choice_num <= len(self.moral_choices_costs):
+            if self.moral_choices_costs[choice_num - 1][0] == '+':
+                self.moral += int(self.moral_choices_costs[choice_num - 1][1:len(self.moral_choices_costs[choice_num - 1])])
+            else:
+                self.moral -= int(self.moral_choices_costs[choice_num - 1][1:len(self.moral_choices_costs[choice_num - 1])])
