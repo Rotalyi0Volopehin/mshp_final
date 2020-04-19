@@ -1,6 +1,6 @@
-from third_party.button import Button
 from constants import Color
 from objects.base import DrawObject
+from third_party.button import Button
 
 
 class Btn(DrawObject):
