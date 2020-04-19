@@ -34,7 +34,7 @@ class GridTile(DrawObject):
                            (1.5 * self.side, self.sq * self.side),
                            (self.side / 2, self.sq * self.side),
                            (0, self.sq * self.side / 2)]
-        self.number = Text(game=self.game, text=str(self.value), font_size=20, x=self.pos_x + self.side / 2,
+        self.number = Text(game=self.game, text=str(self.value), font_size=20, x=self.pos_x + self.side,
                            y=self.pos_y + self.sq * self.side / 2)
         self.invisible_wall = wall
         self.surface = pygame.Surface((2 * self.side, 2 * self.side))
@@ -47,8 +47,8 @@ class GridTile(DrawObject):
         pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
 
     def process_draw(self):
+        self.update_surface()
         if not(self.invisible_wall):
-            self.update_surface()
             self.number.process_draw()
         self.game.screen.blit(self.surface, (self.pos_x, self.pos_y))
 
@@ -104,7 +104,7 @@ class GridTile(DrawObject):
 
     def set_wall(self):
         self.invisible_black_wall = True
-        self.color = self.black_color
+        self.color = Color.BLACK
 
 
 # noinspection PyRedundantParentheses

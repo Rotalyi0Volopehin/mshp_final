@@ -10,6 +10,12 @@ class GridTileController:
     def init_view(self,view):
         self.view = view
 
+    def process_logic(self):
+        pass
+
+    def process_draw(self):
+        pass
+
     def process_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             self.on_click(event)
