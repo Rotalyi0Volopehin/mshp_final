@@ -4,6 +4,7 @@ from objects.text import Text
 from scenes.base import Scene
 from objects.button import Btn
 
+
 class MainScene(Scene):
     MAX_COLLISIONS = 15
 

@@ -8,7 +8,7 @@ class GridTileController:
         self.model = model
         self.ability = False
 
-    def init_view(self,view):
+    def init_view(self, view):
         self.view = view
 
     def process_logic(self):
@@ -29,8 +29,8 @@ class GridTileController:
 
     def on_click(self, event):
         clicked_cell = self.model.inPolygon(event.pos[0], event.pos[1])
-        if clicked_cell != None:
-            if not(self.ability):
+        if clicked_cell is not None:
+            if not self.ability:
                 self.clicking_cell(clicked_cell)
             else:
                 self.ability_execute(clicked_cell)
@@ -56,8 +56,10 @@ class GridTileController:
         elif clicked_cell.return_color() == Color.ORANGE:
             self.model.make_cell_green(clicked_cell)
 
-    def on_scroll(self,value):
-        self.model.move_units(self.model.get_cell_by_colour(Color.RED), self.model.get_cell_by_colour(Color.ORANGE), value)
+    def on_scroll(self, value):
+        origin_cell = self.model.get_cell_by_colour(Color.RED)
+        target_cell = self.model.get_cell_by_colour(Color.ORANGE)
+        self.model.move_units(origin_cell, target_cell, value)
 
     def set_ability_emp(self):
         self.ability = "EMP"
