@@ -1,7 +1,7 @@
 from constants import Color
-from game_eng.GRID__TILE.grid_controller import GridTileController
-from game_eng.GRID__TILE.grid_model import GridModel
-from game_eng.GRID__TILE.grid_view import GridTileView
+from game_eng.grid_mvc.grid_controller import GridTileController
+from game_eng.grid_mvc.grid_model import GridModel
+from game_eng.grid_mvc.grid_view import GridTileView
 from objects.button import Btn
 from scenes.base import Scene
 

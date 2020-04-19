@@ -209,6 +209,23 @@ class GridModel(DrawObject):
         if redcell.value-value >= 0 and orangecell.value-value>=0:
             redcell.value -= value
             orangecell.value -= value
-        if orangecell.value == 0:
+        if orangecell.value <= 0:
             orangecell.set_team_color(redcell.team_color)
             orangecell.value = orangecell.start_value # соответствия с нашей механикой
+
+    def ability_emp(self,cell):
+        neighbours = cell.get_neighbours()
+        for row in range(6):
+            cell = self.get_cell_by_x_y(neighbours[row][0], neighbours[row][1])
+            if cell:
+                cell.value -= 20
+                if cell.value <0:
+                    cell.value = 0
+                    #TODO: self.get_cell_by_x_y(neighbours[row][0], neighbours[row][1]).set_team_color =
+
+    def ability_fishing(self,cell):
+        cell.value -= 20
+        if cell.value <0:
+            cell.value = 0
+            #TODO: cell.set_team_color =
+            # cell.value = cell.start_value
