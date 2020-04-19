@@ -1,10 +1,9 @@
 from objects.base import DrawObject
-from  game_eng.GRID__TILE.GridTileModel import GridTile
+from  game_eng.GRID__TILE.grid_model import GridTile
 
 class GridTileView(DrawObject):
     def __init__(self, game, model, controller):
         super().__init__(game)
-        print("view added")
         self.model = model
         self.controller = controller
 

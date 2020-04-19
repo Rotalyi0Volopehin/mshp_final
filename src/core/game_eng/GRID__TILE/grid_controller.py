@@ -5,12 +5,10 @@ from constants import Color
 
 class GridTileController:
     def __init__(self, model):
-        print("controller added")
         self.model = model
 
     def init_view(self,view):
         self.view = view
-        print("view+")
 
     def process_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -24,15 +22,15 @@ class GridTileController:
         clicked_cell = self.model.inPolygon(event.pos[0], event.pos[1])
         if clicked_cell != None:
             if clicked_cell.return_color() == Color.WHITE:
-                self.model.make_cells_white()
-                self.model.make_cell_red(clicked_cell.x,clicked_cell.y)
+                self.model.set_all_team_color()
+                self.model.set_cell_color_x_y(clicked_cell.x, clicked_cell.y, Color.RED)
                 self.model.make_cells_green(clicked_cell)
             elif clicked_cell.return_color() == Color.RED:
-                self.model.make_cells_white()
+                self.model.set_all_team_color()
             elif clicked_cell.return_color() == Color.GREEN:
                 orange = self.model.get_cell_by_colour(Color.ORANGE)
                 self.model.make_cell_green(orange)
-                self.model.make_cell_orange(clicked_cell.x,clicked_cell.y)
+                self.model.set_cell_color_x_y(clicked_cell.x, clicked_cell.y, Color.ORANGE)
             elif clicked_cell.return_color() == Color.ORANGE:
                 self.model.make_cell_green(clicked_cell)
 

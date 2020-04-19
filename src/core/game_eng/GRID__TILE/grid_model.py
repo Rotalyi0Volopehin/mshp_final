@@ -13,16 +13,18 @@ class GridTile(DrawObject):
     #   white - не выбрана
     #   red - выбрана
     #   green - соседняя с выбранной
-    #   orange - та клетка, куда двигаем ОЧКИ ЮНИТЫ ВИРУСЫ БОТНЕТЫ ФАЙРВОЛЛЫ и тд.
+    #   orange - та клетка, куда двигаем все, что хотим
 
     def __init__(self, game, side, color, even, screen_x, screen_y, wall, x, y):
         super().__init__(game)
         self.even = even  # чет нечет строчка
-        self.nx = randint(0, 60)  # ранд количество юнитов
+        self.start_value = randint(0, 60)  # ранд количество юнитов
+        self.value = self.start_value
         self.x = x  # координаты смещений
         self.y = y
         self.pos_x = screen_x  # на экране позиция
         self.pos_y = screen_y
+        self.team_color = color
         self.color = color
         self.side = side
         self.sq = 3 ** (1 / 2)
@@ -32,21 +34,20 @@ class GridTile(DrawObject):
                            (1.5 * self.side, self.sq * self.side),
                            (self.side / 2, self.sq * self.side),
                            (0, self.sq * self.side / 2)]
-
-        self.number = Text(game=self.game, text=str(self.nx), font_size=20, x=self.pos_x + self.side / 2,
+        self.number = Text(game=self.game, text=str(self.value), font_size=20, x=self.pos_x + self.side / 2,
                            y=self.pos_y + self.sq * self.side / 2)
-        self.invisible_black_wall = wall
+        self.invisible_wall = wall
         self.surface = pygame.Surface((2 * self.side, 2 * self.side))
         self.update_surface()
 
     def update_surface(self):
         self.surface = pygame.Surface((2 * self.side, 2 * self.side))
         self.surface.set_colorkey(Color.BLACK)
-        self.number.update_text(str(self.nx))
+        self.number.update_text(str(self.value))
         pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
 
     def process_draw(self):
-        if not(self.invisible_black_wall):
+        if not(self.invisible_wall):
             self.update_surface()
             self.number.process_draw()
         self.game.screen.blit(self.surface, (self.pos_x, self.pos_y))
@@ -88,6 +89,12 @@ class GridTile(DrawObject):
              [left_bot_x, left_bot_y], [left_top_x, left_top_y]]
         return a
 
+    def set_color_to_team(self):
+        self.color = self.team_color
+
+    def set_team_color(self, color):
+        self.team_color = color
+
     def set_color(self, color):
         self.color = color
         self.update_surface()
@@ -101,10 +108,9 @@ class GridTile(DrawObject):
 
 
 # noinspection PyRedundantParentheses
-class GridTileModel(DrawObject):
+class GridModel(DrawObject):
     def __init__(self, game, hex_side=20, width=14, height=5, delta=4):
         super().__init__(game)
-        print("model added")
         self.sq = 3 ** (1 / 2)
         self.extra = hex_side / 2 - delta * self.sq
         self.hex_draw_array = [
@@ -120,6 +126,7 @@ class GridTileModel(DrawObject):
             for row in range(self.width):
                 j += 1
                 self.add_cell(game, hex_side, Color.WHITE, row, column, False, i, j)
+        self.set_cell_color_x_y(4,4,Color.BLUE, Color.BLUE)
 
 
     def add_cell(self, game, hex_side, color, row, column, is_wall, x, y):
@@ -145,7 +152,7 @@ class GridTileModel(DrawObject):
                         and (x >= cell.pos_x) and (x <= cell.pos_x + 1.5 * cell.side):
                     return cell
 
-    def get_cell(self, x, y):
+    def get_cell_by_x_y(self, x, y):
         for row in range(self.width):
             for column in range(self.height):
                 if self.hex_draw_array[row][column].x == x and self.hex_draw_array[row][column].y == y:
@@ -154,43 +161,54 @@ class GridTileModel(DrawObject):
 
     def get_cell_by_colour(self, color):
         for row in range(self.width):
-            for collumn in range(self.height):
-                cell = self.hex_draw_array[row][collumn]
+            for column in range(self.height):
+                cell = self.hex_draw_array[row][column]
                 if (cell.return_color() == color):
                     return cell
         return None
 
-    def make_cells_white(self):
+    def set_all_team_color(self):
         for row in range(self.width):
-            for collumn in range(self.height):
-                self.hex_draw_array[row][collumn].set_color(Color.WHITE)
+            for column in range(self.height):
+                self.hex_draw_array[row][column].set_color_to_team()
 
-    def make_cell_red(self, x, y):
-        cell = self.get_cell(x, y)
+    def set_cell_color_x_y(self, x, y, color, team_color=None):
+        cell = self.get_cell_by_x_y(x, y)
         if not cell:
             return
-        cell.set_color(Color.RED)
+        cell.set_color(color)
+        if team_color:
+            cell.set_team_color(team_color)
+
+    def get_cell_color(self, row, column):
+        return self.hex_draw_array[row][column].return_color()
 
     def make_cell_green(self, cell):
         if cell:
             cell.set_color(Color.GREEN)
 
     def make_cells_green(self, cell):
-        neightbours = cell.get_neighbours()
+        neighbours = cell.get_neighbours()
         for row in range(6):
-            if self.get_cell(neightbours[row][0], neightbours[row][1]):
-                self.make_cell_green(self.get_cell(neightbours[row][0], neightbours[row][1]))
-
-    def make_cell_orange(self, x, y):
-        cell = self.get_cell(x, y)
-        cell.set_color(Color.ORANGE)
+            if self.get_cell_by_x_y(neighbours[row][0], neighbours[row][1]):
+                self.make_cell_green(self.get_cell_by_x_y(neighbours[row][0], neighbours[row][1]))
 
     def move_units(self, redcell, orangecell, value):
         if not redcell:
             return
         if not orangecell:
             return
+        if orangecell.team_color == redcell.team_color:
+            if redcell.value-value >= 0 and orangecell.value+value>=0:
+                redcell.value -= value
+                orangecell.value += value
+        elif value>0:
+            self.attack_cell_units(redcell,orangecell,value)
 
-        if redcell.nx-value >= 0 and orangecell.nx+value>=0:
-            redcell.nx -= value
-            orangecell.nx += value
+    def attack_cell_units(self, redcell, orangecell, value):
+        if redcell.value-value >= 0 and orangecell.value-value>=0:
+            redcell.value -= value
+            orangecell.value -= value
+        if orangecell.value == 0:
+            orangecell.set_team_color(redcell.team_color)
+            orangecell.value = orangecell.start_value # соответствия с нашей механикой

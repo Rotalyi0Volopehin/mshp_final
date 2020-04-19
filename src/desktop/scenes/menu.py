@@ -1,12 +1,12 @@
-from game_eng.GRID__TILE.GridTileController import GridTileController
-from game_eng.GRID__TILE.GridTileModel import GridTileModel
-from game_eng.GRID__TILE.GridTileView import GridTileView
+from game_eng.GRID__TILE.grid_controller import GridTileController
+from game_eng.GRID__TILE.grid_model import GridModel
+from game_eng.GRID__TILE.grid_view import GridTileView
 from scenes.base import Scene
 
 
 class MenuScene(Scene):
     def create_objects(self):
-        grid_model = GridTileModel(self.game)
+        grid_model = GridModel(self.game)
         self.grid_controller = GridTileController(grid_model)
         grid_view = GridTileView(self.game, grid_model, self.grid_controller)
         self.grid_controller.init_view(grid_view)
