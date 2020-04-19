@@ -1,5 +1,6 @@
 from django import forms
 
+
 class CommonFields:
     @staticmethod
     def get_description_field(required, label="Описание", attrs=None):
@@ -24,7 +25,6 @@ class CommonFields:
     @staticmethod
     def get_invisible_field(type_, id_, value=''):
         return type_(label="", widget=forms.HiddenInput(attrs={"id": id_, "value": value}))
-
 
 
 class RegistrationForm(forms.Form):

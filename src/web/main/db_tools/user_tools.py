@@ -15,6 +15,12 @@ from main.models import UserData
 class DBUserTools:
     """**Инструменты работы в БД с данными о пользователях**
     """
+    @staticmethod
+    def deleted_user_name() -> str:
+        """Особый логин, обозначающий удалённого пользователя
+        """
+        return "$_del"
+
     # TODO: добавить механизм верификации пользователей
     @staticmethod
     def try_register(login: str, password: str, email: str, team: int) -> (bool, str):
@@ -41,7 +47,6 @@ class DBUserTools:
         :rtype: (bool, str) или (bool, None)
         """
         # vvv первичная проверка аргументов vvv
-
         if not (isinstance(login, str) and isinstance(password, str) and
                 isinstance(email, str)) and isinstance(team, int):
             raise exceptions.ArgumentTypeException()
@@ -49,8 +54,9 @@ class DBUserTools:
             raise exceptions.ArgumentValueException()
         if not is_email_valid(email):
             raise exceptions.ArgumentValueException("E-mail некорректен!")
-        if login == "$_del":
-            raise exceptions.ArgumentValueException("Логин не должен принимать значение '$_del'!")
+        del_name = DBUserTools.deleted_user_name()
+        if login == del_name:
+            raise exceptions.ArgumentValueException(f"Логин не должен принимать значение '{del_name}'!")
         # vvv проверка согласованности аргументов с данными БД vvv
         if len(User.objects.filter(username=login)) > 0:
             return False, DBUserErrorMessages.login_is_already_in_use
@@ -107,19 +113,18 @@ class DBUserTools:
         user_data = main.models.UserData.objects.filter(user=user)
         return len(user_data) == 1
 
-
     @staticmethod
-    def try_find_user_with_id(id) -> (User, str):
-        user = User.objects.filter(id=id)
+    def try_find_user_with_id(uid: int) -> (User, str):
+        user = User.objects.filter(id=uid)
         if len(user) == 0:
-            return None, "Пользователь не найден!"
+            return None, DBUserErrorMessages.not_found
         return user[0], None
 
     @staticmethod
     def try_get_user_data(user) -> (UserData, str):
         user_data = UserData.objects.filter(user=user)
         if len(user_data) != 1:
-            return None, "Некорректная конфигурация пользовательских данных!"
+            return None, DBUserErrorMessages.invalid_user_configuration
         return user_data[0], None
 
     @staticmethod  # инструмент проверки существования пары логин-пароль
