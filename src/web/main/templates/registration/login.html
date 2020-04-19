@@ -5,7 +5,6 @@
 
 
 {% block content %}
-
   <style>
   body {
       background: linear-gradient(to top right, #0000ff, #ffffff);
@@ -16,7 +15,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%,-50%);
-      background: linear-gradient(to top right, #ffffff, 0000ff);
+      background-color: rgba(220, 220, 220, 0.3);
 
   }
 
@@ -29,21 +28,27 @@
       text-transform: uppercase;
   }
   </style>
+    <div class="form1 p-3 rounded-lg">
+        <h1>Вход</h1>
+        <div class="form">
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                <div class="container">
+                    <div class="form-group">
+                        {% for item in form %}
+                            <div class="row p-2">
+                                <p class="col-5 mr-3 mt-1 text-right text-white">{{ item.label }}</p>
+                                <div class="col-5 form-group">{{ item }}</div>
+                            </div>
+                        {% endfor %}
+                     </div>
+                {% buttons %}
+                    <button type="submit" class="btn btn-dark float-right btn-block">Войти</button>
+                {% endbuttons %}
 
-
-  <div class="form1 p-3 rounded-lg">
-      <h1>Вход</h1>
-      <div class="form p-3">
-          <form action="{% url 'login' %}" method="POST">
-              {% csrf_token %}
-
-              {% bootstrap_form form %}
-              {% buttons %}
-                  <button type="submit" class="btn btn-primary float-right btn-block">Войти</button>
-              {% endbuttons %}
-          </form>
-      </div>
-  </div>
+            </form>
+        </div>
+    </div>
 
 {% endblock %}
 

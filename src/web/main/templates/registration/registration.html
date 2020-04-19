@@ -13,7 +13,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%,-50%);
-      background: linear-gradient(to top right, #ffffff, 0000ff);
+      background-color: rgba(220, 220, 220, 0.3);
 
   }
 
@@ -35,14 +35,14 @@
                     <div class="form-group">
                         {% for item in form %}
                             <div class="row">
-                                <p class="col-5 mr-4 mt-1 text-right">{{ item.label }}</p>
+                                <p class="col-5 mr-4 mt-1 text-right text-white">{{ item.label }}</p>
                                 <div class="col form-group">{{ item }}</div>
                             </div>
                         {% endfor %}
 
                         <div class="row mt-3">
                             <div class="col" align="center">
-                                <button type="submit" class="btn btn-primary" onclick="check_pw()" id="reg_button">Зарегистрироваться</button>
+                                <button type="submit" class="btn btn-dark" onclick="check_pw()" id="reg_button">Зарегистрироваться</button>
                             </div>
 
                             <div class="alert alert-danger w-100" role="alert" hidden id="pw_warning">
@@ -80,7 +80,3 @@
     </p>
 
 {% endblock %}
-
-{% block extra_js %}
-    <script src="{% static 'main.js' %}"></script>
-{% endblock %
