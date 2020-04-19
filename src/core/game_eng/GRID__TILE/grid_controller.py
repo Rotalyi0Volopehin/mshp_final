@@ -30,9 +30,11 @@ class GridTileController:
             elif clicked_cell.return_color() == Color.RED:
                 self.model.make_cells_white()
             elif clicked_cell.return_color() == Color.GREEN:
+                orange = self.model.get_cell_by_colour(Color.ORANGE)
+                self.model.make_cell_green(orange)
                 self.model.make_cell_orange(clicked_cell.x,clicked_cell.y)
             elif clicked_cell.return_color() == Color.ORANGE:
                 self.model.make_cell_green(clicked_cell)
 
     def on_scroll(self,value):
-        self.model.move_units(self.model.getCellByColor(Color.RED),self.model.getCellByColor(Color.ORANGE),value)
+        self.model.move_units(self.model.get_cell_by_colour(Color.RED), self.model.get_cell_by_colour(Color.ORANGE), value)

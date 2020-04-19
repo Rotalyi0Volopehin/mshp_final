@@ -1,5 +1,5 @@
 from objects.base import DrawObject
-
+from  game_eng.GRID__TILE.GridTileModel import GridTile
 
 class GridTileView(DrawObject):
     def __init__(self, game, model, controller):
@@ -9,8 +9,6 @@ class GridTileView(DrawObject):
         self.controller = controller
 
     def process_draw(self):
-        for row in range(self.model.height):
-            for column in range(self.model.width):
-                cell = self.model.getCell(row,column)
-                if cell:
-                    cell.process_draw()
+        for row in range(self.model.width):
+            for column in range(self.model.height):
+                self.model.hex_draw_array[row][column].process_draw()
