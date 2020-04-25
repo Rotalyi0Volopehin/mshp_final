@@ -36,16 +36,15 @@
                 <div class="container">
                     <div class="form-group">
                         {% for item in form %}
-                            <div class="row p-2">
-                                <p class="col-5 mr-3 mt-1 text-right text-white">{{ item.label }}</p>
-                                <div class="col-5 form-group">{{ item }}</div>
+                            <div class="row">
+                                <p class="col-5 mr-4 mt-1 text-right text-white">{{ item.label }}</p>
+                                <div class="col form-group">{{ item }}</div>
                             </div>
                         {% endfor %}
                      </div>
                 {% buttons %}
                     <button type="submit" class="btn btn-dark float-right btn-block">Войти</button>
                 {% endbuttons %}
-
             </form>
         </div>
     </div>

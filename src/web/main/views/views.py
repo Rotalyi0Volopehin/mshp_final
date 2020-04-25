@@ -1,4 +1,8 @@
 import datetime
+
+from django.contrib import auth
+from django.http import HttpResponse
+
 import main.forms as forms
 import exceptions
 
@@ -75,3 +79,17 @@ class RegistrationFormPage(FormView):
         except exceptions.ArgumentValueException as exception:
             context["ok"] = False
             context["error"] = str(exception)
+
+
+class LoginFormPage(FormView):
+
+    pagename = "Вход"
+    form_class = forms.LoginForm
+    template_name = "registration/login.html"
+
+    def LoginView(self, request, form):
+        username = form.data["login"]
+        password = form.data["password"]
+        ok = DBUserTools.check_user_existence(username, password)
+        if ok:
+            auth.login(username, password)

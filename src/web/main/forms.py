@@ -37,3 +37,7 @@ class RegistrationForm(forms.Form):
     team = forms.ChoiceField(widget=forms.Select(attrs={"class": "form-control"}), label="Фракция",
                              required=True, choices=[(0, "0"), (1, "1"), (2, "2")])
 
+class LoginForm(forms.Form):
+    login = CommonFields.get_login_field(True, attrs={"class": "form-control"})
+    password = CommonFields.get_password_field(True, attrs={"class": "form-control"})
+

@@ -25,16 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index_page, name='index'),
     path('time/', views.time_page, name='time'),
-    path(
-        'login/',
-        auth_views.LoginView.as_view(
-            extra_context={
-                'menu': get_menu_context(),
-                'pagename': 'Авторизация'
-            }
-        ),
-        name='login'
-    ),
+    path('login/', views.LoginFormPage.as_view(), name='login'),
     path('registration/', views.RegistrationFormPage.as_view(), name='registration'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]

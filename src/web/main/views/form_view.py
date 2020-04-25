@@ -17,7 +17,6 @@ class FormView(View):
     pagename = "NOPAGENAME"
     form_class = Form
     template_name = "pages/index.html"
-
     get_handler = None
     post_handler = None
 
