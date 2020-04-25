@@ -29,6 +29,8 @@ urlpatterns = [
     path('chat/', views.chat_page, name='chat'),
     path('profile/<int:uid>/', views.ProfileFormPage.as_view(), name='profile'),
     path('fraction1/', views.fraction1_page, name='fraction1'),
+    path('fraction2/', views.fraction2_page, name='fraction2'),
+    path('fraction3/', views.fraction3_page, name='fraction3'),
 
     path(
         'login/',

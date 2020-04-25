@@ -107,13 +107,37 @@ def chat_page(request):
     }
     return render(request, 'pages/chat.html', context)
 
+
 def fraction1_page(request):
+    members = User.objects.all()
     context = {
         'pagename': 'Фракция1',
         'menu': get_menu_context(),
         'user_menu': get_user_menu_context(request.user),
+        'members': members,
     }
-    return render(request, 'pages/fraction1.html', context)
+    return render(request, 'pages/fractions/fraction1.html', context)
+
+
+def fraction2_page(request):
+    context = {
+        'pagename': 'Фракция2',
+        'menu': get_menu_context(),
+        'user_menu': get_user_menu_context(request.user),
+
+    }
+
+    return render(request, 'pages/fractions/fraction2.html', context)
+
+
+def fraction3_page(request):
+    context = {
+        'pagename': 'Фракция3',
+        'menu': get_menu_context(),
+        'user_menu': get_user_menu_context(request.user),
+    }
+    return render(request, 'pages/fractions/fraction3.html', context)
+
 
 class ProfileFormPage(FormView):
     """**View-класс страницы '/profile/<int:uid>/'**\n
