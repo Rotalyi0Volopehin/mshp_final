@@ -28,6 +28,8 @@ urlpatterns = [
     path('forum/', views.forum_page, name='forum'),
     path('chat/', views.chat_page, name='chat'),
     path('profile/<int:uid>/', views.ProfileFormPage.as_view(), name='profile'),
+    path('fraction1/', views.fraction1_page, name='fraction1'),
+
     path(
         'login/',
         auth_views.LoginView.as_view(

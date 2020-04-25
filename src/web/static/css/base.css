@@ -9,3 +9,6 @@
     font-family: 'cyberpunk';
     font-size: 140%;
 }
+
+a:hover,
+a { text-decoration: none; }

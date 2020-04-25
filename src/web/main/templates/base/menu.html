@@ -14,6 +14,14 @@
                         <a class="nav-link" href="{% url item.url_name %}">{{ item.name }}</a>
                     </li>
                 {% endfor %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" style="cursor: pointer">Фракции</a>
+                    <ul class="dropdown-menu bg-dark text-center">
+                        <li class="nav-link"><a class="text-light" href="{% url 'fraction1' %}">fraction1</a></li>
+                        <li class="nav-link"><a class="text-light" href="link">fraction2</a></li>
+                        <li class="nav-link"><a class="text-light" href="link">fraction3</a></li>
+                    </ul>
+                </li>
             {% endblock %}
         </ul>
 
