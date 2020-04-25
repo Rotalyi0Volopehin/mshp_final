@@ -1,4 +1,5 @@
 from constants import Color
+from objects.player_info import PlayerInfo
 from vc_game_eng.grid_controller import GridTileController
 from game_eng.grid_model import GridModel
 from vc_game_eng.grid_view import GridTileView
@@ -14,7 +15,8 @@ class MapScene(Scene):
         self.grid_controller.init_view(self.grid_view)
         self.grid_view.process_draw()
         self.button_back = Btn(self.game, (350, 500, 100, 40), Color.WHITE, 'Меню', self.back_to_menu)
-        self.objects = [self.grid_view, self.grid_controller, self.button_back]
+        self.pl_info = PlayerInfo(self.game, lvl="99")
+        self.objects = [self.pl_info, self.grid_view, self.grid_controller, self.button_back]
 
     def back_to_menu(self):
         self.set_next_scene(self.game.MENU_SCENE_INDEX)
