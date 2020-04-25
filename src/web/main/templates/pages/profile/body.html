@@ -24,7 +24,7 @@
         <div class="col" style="padding-top: 2.8%;">
             <center>
                 <button type="submit" class="save_button btn btn-primary btn-block"
-                        onclick="action_tag.value = 'save-chan'" style="width: 80%">
+                        onclick="action_tag.value = 'save-chan'">
                     Сохранить изменения
                 </button>
             </center>
@@ -32,9 +32,13 @@
     </div>
     {% else %}
     <div class="form-group row pt-4">
-        <div class="col">
-            <div><span class="cyberfont">Дата регистрации: </span><b class="label_font"> {{ regdate|date:"d.m.Y" }}</b>
-            </div>
+        <span class="cyberfont col-sm-4 align-middle mt-1">
+            Дата регистрации:
+        </span>
+        <div class="form-control col-sm-2" readonly style="font-size: larger">
+            <b>
+                {{ regdate|date:"d.m.Y" }}
+            </b>
         </div>
     </div>
     {% endif %}
