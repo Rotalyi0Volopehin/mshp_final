@@ -16,31 +16,35 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from main.views import views
-from main.views import chat
+from main.views import views, activation_view, chat
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.models import AnonymousUser
+from main.views.menu import get_menu_context, get_user_menu_context
 
-from main.views.menu import get_menu_context
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index_page, name='index'),
-    path('time/', views.time_page, name='time'),
+    path('activate/<str:uid>/<str:token>/', activation_view.activate, name='activate'),
+    path('cad/', views.cad_page, name='cad'),
+    path('darknet/', views.darknet_page, name='darknet'),
+    path('forum/', views.forum_page, name='forum'),
+    path('profile/<int:uid>/', views.ProfileFormPage.as_view(), name='profile'),
     path(
         'login/',
         auth_views.LoginView.as_view(
             extra_context={
                 'menu': get_menu_context(),
-                'pagename': 'Авторизация'
+                'usermenu': get_user_menu_context(AnonymousUser()),
+                'pagename': 'Авторизация',
             }
         ),
         name='login'
     ),
     path('registration/', views.RegistrationFormPage.as_view(), name='registration'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('profile/<int:uid>/', views.profile_page, name='profile'),
 
     path('chat/room/<str:room_name>/', chat.room, name='chat_room'),
     path('chat/user/<int:user_id>/', chat.open_user_chat, name='chat_open_user'),
-    path('chat/list/', chat.chats_list, name='chat_list'),
+    path('chat/list/', chat.chats_list, name='chat'),
 ]

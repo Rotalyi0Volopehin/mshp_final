@@ -6,6 +6,13 @@ import exceptions
 from django.contrib.auth.models import User
 from network_confrontation_web.settings import AUTO_USER_ACTIVATION
 from main.db_tools.user_error_messages import DBUserErrorMessages
+from main.models import UserData
+# vvv для системы верификации vvv
+from main.db_tools.tokens import account_activation_token
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.core.mail import EmailMessage
 
 
 # TODO: задокументировать код
@@ -14,20 +21,22 @@ from main.db_tools.user_error_messages import DBUserErrorMessages
 class DBUserTools:
     """**Инструменты работы в БД с данными о пользователях**
     """
-    # TODO: добавить механизм верификации пользователей
     @staticmethod
-    def try_register(login: str, password: str, email: str, team: int) -> (bool, str):
+    def deleted_user_name() -> str:
+        """Особый логин/ник, обозначающий удалённого пользователя
+        """
+        return "$_del"
+
+    @staticmethod
+    def try_register(login: str, password: str, email: str, team: int, request) -> (bool, str):
         """**Попытка регистрации пользователя**\n
         Пробует зарегистрировать пользователя.
         Когда регистрация удаётся, посылает на указанный адрес письмо с ссылкой для верификации.
         Если в модуле :mod:`network_confrontation_web.settings` флаг 'AUTO_USER_ACTIVATION' имеет значение True,
-        пользователь верифицируется сразу, а письмо не посылается.\n
-        !!!Механизм верификации пользователей не завершён!!!
+        пользователь верифицируется сразу, а письмо не посылается.
 
-        Возможные исключения:\n
-        - *ArgumentTypeException*
-        - *ArgumentValueException*
-
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
+        :raises ArgumentValueException: Значение переданных аргументов не соответсвует требованиям
         :param login: Логин (1-64 символа)
         :type login: str
         :param password: Пароль (1-64 символа)
@@ -36,6 +45,8 @@ class DBUserTools:
         :type email: str
         :param team: Номер фракции (0-2)
         :type team: int
+        :param request: Запрос на регистрацию
+        :type request: HttpRequest
         :return: (ok, error)
         :rtype: (bool, str) или (bool, None)
         """
@@ -47,8 +58,9 @@ class DBUserTools:
             raise exceptions.ArgumentValueException()
         if not is_email_valid(email):
             raise exceptions.ArgumentValueException("E-mail некорректен!")
-        if login == "$_del":
-            raise exceptions.ArgumentValueException("Логин не должен принимать значение '$_del'!")
+        del_name = DBUserTools.deleted_user_name()
+        if login == del_name:
+            raise exceptions.ArgumentValueException(f"Логин не должен принимать значение '{del_name}'!")
         # vvv проверка согласованности аргументов с данными БД vvv
         if len(User.objects.filter(username=login)) > 0:
             return False, DBUserErrorMessages.login_is_already_in_use
@@ -62,17 +74,25 @@ class DBUserTools:
         if AUTO_USER_ACTIVATION:
             user_data.activated = True
         else:
-            pass  # здесь отсылается письмо с ссылкой для верификации
+            DBUserTools.__send_email_with_activation_link(user, request)
         user_data.save()
         return True, None
 
     @staticmethod
+    def __send_email_with_activation_link(user, request):
+        subject = "Верификация аккаунта онлайн голосований"
+        current_site = get_current_site(request)
+        token = account_activation_token.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        activation_link = f"{current_site}/activate/{uid}/{token}/"
+        message = "Ссылка для верификации аккаунта:\n" + activation_link
+        email = EmailMessage(subject, message, to=[user.email])
+        email.send()
+
+    @staticmethod
     def delete_user(user: User):
-        """**Инструмент удаления пользователя из БД**
-
-        Возможные исключения:\n
-        - *ArgumentTypeException*
-
+        """**Инструмент удаления пользователя из БД**\n
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
         :param user: Пользователь
         :type user: User
         """
@@ -90,9 +110,7 @@ class DBUserTools:
         """**Инструмент проверки валидности пользовательских данных**\n
         Проверяет факт наличия в БД ровно одной записи типа :class:`main.models.UserData`.
 
-        Возможные исключения:\n
-        - *ArgumentTypeException*
-
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
         :param user: Пользователь
         :type user: User
         :return: Факт валидности пользовательских данных
@@ -105,12 +123,24 @@ class DBUserTools:
         user_data = main.models.UserData.objects.filter(user=user)
         return len(user_data) == 1
 
-    @staticmethod  # инструмент проверки существования пары логин-пароль
+    @staticmethod
+    def try_find_user_with_id(uid: int) -> (User, str):
+        user = User.objects.filter(id=uid)
+        if len(user) == 0:
+            return None, DBUserErrorMessages.not_found
+        return user[0], None
+
+    @staticmethod
+    def try_get_user_data(user) -> (UserData, str):
+        user_data = UserData.objects.filter(user=user)
+        if len(user_data) != 1:
+            return None, DBUserErrorMessages.invalid_user_configuration
+        return user_data[0], None
+
+    @staticmethod
     def check_user_existence(login: str, password: str) -> bool:
         """**Инструмент проверки существования пары логин-пароль**\n
-        Возможные исключения:\n
-        - *ArgumentTypeException*
-
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
         :param login: Логин
         :type login: str
         :param password: Пароль
@@ -128,15 +158,32 @@ class DBUserTools:
         user = user[0]
         return user.check_password(password)
 
+    @staticmethod
+    def try_activate_user(user) -> bool:
+        """**Инструмент верификации пользователей**\n
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
+        :param user: Пользователь, аккаунт которого нужно верифицировать
+        :type user: User
+        :return: ok
+        :rtype: bool
+        """
+        if not isinstance(user, User):
+            raise exceptions.ArgumentTypeException()
+        user_data, _ = DBUserTools.try_get_user_data(user)
+        if user_data is None:
+            return False
+        if not user_data.activated:
+            user_data.activated = True
+            user_data.save()
+        return True
+
 
 __email_re = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
 
 def is_email_valid(email: str) -> bool:
     """**Метод для проверки валидности E-mail адреса**\n
-    Возможные исключения:\n
-    - *ArgumentTypeException*
-
+    :raises ArgumentTypeException: Неверный тип переданных аргументов
     :param email: E-mail
     :type email: str
     :return: Факт валидности E-mail адреса

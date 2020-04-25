@@ -1,16 +1,20 @@
-import locale
-import datetime
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from main.views.menu import get_menu_context
 from main.models import Chat, Message
 import hashlib
-
-from main.views.menu import get_menu_context
+import locale
 
 
 def error(request, msg):
+    """**View-функция ошибки чата**
+
+    :param request: request на недоступную страницу
+    :param msg: текст ошибки
+    :return: response
+    :rtype: HttpResponse
+    """
     context = {
         'pagename': 'Ошибка',
         'menu': get_menu_context(),
@@ -21,8 +25,14 @@ def error(request, msg):
 
 @login_required
 def chats_list(request):
+    """**View-функция списка диалогов**
+
+    :param request: request на страницу 'chat/list/'
+    :return: response
+    :rtype: HttpResponse
+    """
     context = {
-        'pagename': 'Список чатов',
+        'pagename': 'Закрытые каналы',
         'menu': get_menu_context()
     }
 
@@ -38,8 +48,6 @@ def chats_list(request):
                         chats[i], chats[i + 1] = chats[i + 1], chats[i]
                 elif last_msg_2 is not None:
                     chats[i], chats[i + 1] = chats[i + 1], chats[i]
-                # chats = sorted(chats, key=lambda k: Message.objects.filter(chat=k).last().date)
-                # chats.reverse()
     my_chats = []
     for chat in chats:
         chat_members = list(chat.members.all())
@@ -50,7 +58,6 @@ def chats_list(request):
                 time = '--:--'
             else:
                 text = last_message.sender.username + ': ' + last_message.text
-                # In terminal: export LC_ALL="ru_RU.UTF-8"
                 locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
                 time = str(last_message.date.strftime("%H:%M | %A (%d.%m.%Y)"))
             members_username = ''
@@ -66,6 +73,13 @@ def chats_list(request):
 
 @login_required
 def room(request, room_name):
+    """**View-функция комнаты чата**
+
+    :param request: request на страницу 'chat/room/<str:room_name>/'
+    :param room_name: имя комнаты (хеш)
+    :return: response
+    :rtype: HttpResponse
+    """
     context = {
         'pagename': 'Чат',
         'menu': get_menu_context()
@@ -94,6 +108,16 @@ def room(request, room_name):
 
 @login_required
 def open_user_chat(request, user_id):
+    """**Функция начала диалога с пользователем**
+
+    :param request: request на страницу 'chat/user/<int:user_id>/'
+    :param user_id: id user'а, с которым необходимо начать диалог
+    :return: response
+    :rtype: HttpResponse
+    """
+    if user_id == request.user.id:
+        return error(request, 'Вы не можете начать диалог с самим собой!')
+
     interlocutor = User.objects.filter(id=user_id).first()
     if interlocutor is None:
         return error(request, 'Такого пользователя не существует!')

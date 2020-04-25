@@ -12,6 +12,7 @@ Welcome to Network Confrontation's documentation!
 
    overview.rst
    code.rst
+   chat.rst
 
 
 

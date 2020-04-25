@@ -2,20 +2,24 @@
 <html lang="en">
 
     {% load bootstrap4 %}
+    {% load static %}
+
 
     <head>
         <meta charset="UTF-8">
-        <title>{{ pagename }} - Simple votings</title>
+        <title>{{ pagename }}</title>
 
         {% bootstrap_css %}
         <link href="https://getbootstrap.com/docs/4.1/examples/sticky-footer-navbar/sticky-footer-navbar.css"
               rel="stylesheet">
-        {% block extra_css %} {% endblock %}
+
     </head>
 
 
-    <body>
-
+    <body onload="progress_bar();">
+        {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+        {% endblock %}
         <header>
             {% include 'base/menu.html' %}
         </header>
@@ -25,10 +29,10 @@
             {% block content %} {% endblock %}
         </main>
 
-        <footer class="footer">
+        <footer class="footer bg-dark">
             {% block footer %}
                 <div class="container text-right">
-                    <span class="text-muted">&copy; ШП, {% now "Y" %}</span>
+                    <span class="text-white">&copy; MS103</span>
                 </div>
             {% endblock %}
         </footer>

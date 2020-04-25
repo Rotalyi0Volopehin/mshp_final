@@ -74,11 +74,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'network_confrontation_web.wsgi.application'
 
 ASGI_APPLICATION = "network_confrontation_web.routing.application"
+
+CHANNEL_LAYERS_PORT = 6379
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [('127.0.0.1', CHANNEL_LAYERS_PORT)],
         },
     },
 }
@@ -142,3 +144,10 @@ LOGOUT_REDIRECT_URL = '/'
 
 
 AUTO_USER_ACTIVATION = True  # пользователи регистрируются сразу верифицированными, если True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'simplevoting103@gmail.com'
+EMAIL_HOST_PASSWORD = '%sc5V|xBzzmSnsOng~Gd8EkOsnhR5%DcK|1%40KINA'
+EMAIL_PORT = 587
+

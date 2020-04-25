@@ -1,15 +1,20 @@
-import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth.models import User
-
 from main.models import Message, Chat
 import datetime
 import locale
+import json
 
 
 class ChatConsumer(WebsocketConsumer):
+    """**Consumer для WebSocket'ов чата**\n
+    Наследование от класса :class:`WebsocketConsumer`
+    """
+
     def connect(self):
+        """**Функция подключения клиента к комнате чата**
+        """
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
 
@@ -22,14 +27,23 @@ class ChatConsumer(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
+        """**Функция выхода клиента из комнаты чата**
+
+        :param close_code: код выхода
+        """
+
         # Выход из комнаты
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name
         )
 
-    # Получение сообщения от WebSocket (от клиента)
     def receive(self, text_data):
+        """**Функция получения сообщения от WebSocket'а (от клиента)**
+
+        :param text_data: json список параметров
+        """
+
         text_data_json = json.loads(text_data)
         room_name = text_data_json['room_name']
         user_id = text_data_json['user_id']
@@ -66,14 +80,18 @@ class ChatConsumer(WebsocketConsumer):
             }
         )
 
-    # Получение сообщение из комнаты (от сервера)
     def chat_message(self, event):
+        """**Функция получения сообщения из комнаты (от сервера)**
+
+        :param event: словарь параметров
+        """
+
         user_id = event['user_id']
         message = event['message']
         time = event['time']
         date = event['date']
 
-        # Отпраквка сообщения по WebSocket
+        # Отпраквка сообщения по WebSocket'у
         self.send(text_data=json.dumps({
             'user_id': user_id,
             'message': message,

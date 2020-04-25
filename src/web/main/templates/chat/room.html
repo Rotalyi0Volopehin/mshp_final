@@ -1,12 +1,13 @@
 {% extends 'base/base.html' %}
 
-{% block extra_css %}
+{% block content %}
 
 {% load static %}
-<link rel="stylesheet" href="{% static "chat/styles.css" %}">
-{% endblock %}
 
-{% block content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+<link rel="stylesheet" href="{% static 'chat/styles.css' %}">
+{% endblock %}
 
 <h3 class="mt-3 mb-3" style="color: white; text-shadow: black 0 0 4px;">{{ members_username }}</h3>
 
@@ -24,7 +25,7 @@
                         </div>
                     {% else %}
                         <div class="incoming_msg">
-                            <div class="incoming_msg_img"><img src="https://ptetutorials.com/images/user-profile.png"
+                            <div class="incoming_msg_img"><img src="{% static '/profilepic.png' %}"
                                                                alt="user_photo"></div>
                             <div class="received_msg">
                                 <div class="received_withd_msg">
@@ -83,7 +84,7 @@
         } else {
             new_incoming_msg = "<div class=\"incoming_msg\">";
             new_incoming_msg += "<div class=\"incoming_msg_img\">";
-            new_incoming_msg += "<img src=\"https://ptetutorials.com/images/user-profile.png\" alt=\"sunil\"></div>";
+            new_incoming_msg += "<img src=\"{% static '/profilepic.png' %}\" alt=\"sunil\"></div>";
             new_incoming_msg += "<div class=\"received_msg\">";
             new_incoming_msg += "<div class=\"received_withd_msg\">";
             new_incoming_msg += "<p>" + data.message + "</p>";
