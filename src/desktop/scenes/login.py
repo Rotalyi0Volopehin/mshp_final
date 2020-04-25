@@ -11,10 +11,12 @@ from objects.text_input import Txtinput
 from objects.button import Btn
 from objects.text import Text
 from objects.gifimg import GIFImage
+from objects.image import Image as Img
 
 class LoginScene(Scene):
     def create_objects(self):
         self.login = Txtinput(self.game, False, 170, 20)
+        self.image_bg = Img(self.game, file_name='images/Background.png', x=0, y=0)
         self.password = Txtinput(self.game, False, 180, 80)
         #self.trailer = GIFImage("backimage.gif", self.game)
 
@@ -29,6 +31,7 @@ class LoginScene(Scene):
 
         self.objects = [
                    # self.trailer,
+                    self.image_bg,
                     self.password,
                     self.button_enter, self.button_register,
                     self.text_login, self.text_reg,

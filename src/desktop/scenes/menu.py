@@ -1,5 +1,6 @@
 from constants import Color
 from objects.button import Btn
+from objects.image import Image
 from scenes.base import Scene
 
 
@@ -9,7 +10,8 @@ class MenuScene(Scene):
         self.button_exit = Btn(self.game, (350, 305, 100, 40), Color.WHITE, 'Выход', self.exit)
         self.button_map = Btn(self.game, (350, 205, 100, 40), Color.WHITE, 'Квесты', self.set_quest_scene)
         self.button_quest = Btn(self.game, (350, 255, 100, 40), Color.WHITE, 'Карта мира', self.set_map_scene)
-        self.objects = [self.button_start, self.button_exit, self.button_map, self.button_quest]
+        self.image_bg = Image(self.game, file_name='images/Background.png', x=0, y=0)
+        self.objects = [self.image_bg, self.button_start, self.button_exit, self.button_map, self.button_quest]
 
     def set_main_scene(self):
         self.set_next_scene(self.game.MAIN_SCENE_INDEX)

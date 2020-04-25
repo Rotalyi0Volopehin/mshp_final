@@ -1,13 +1,16 @@
 from constants import Color
 from objects.button import Btn
+from objects.text_bar import TextBar
+from objects.text import Text
 from objects.image import Image
 from scenes.base import Scene
 
 
 class QuestScene(Scene):
+
     def create_objects(self):
-        self.image_bg = Image(self.game, file_name='images/Background.png', x=0, y=0)
-        self.button_back = Btn(self.game, (350, 500, 100, 40), Color.WHITE, "Меню", self.back_to_menu)
+        self.image_bg = Image(self.game, file_name='images/Background.png', x=100, y=300)
+        self.button_back = Btn(self.game, (350, 100, 100, 40), Color.WHITE, "Меню", self.back_to_menu)
         self.objects = [self.image_bg, self.button_back]
 
     def back_to_menu(self):
