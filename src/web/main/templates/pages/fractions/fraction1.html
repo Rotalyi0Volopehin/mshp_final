@@ -11,7 +11,7 @@
     <div class="card bg-dark text-white pt-3">
         <img src="{% static '/fr1.png' %}" class="card-img" style="opacity: 0.5; filter: alpha(opacity=50);" alt="...">
         <div class="card-img-overlay">
-            <h1 class="card-title text-center" style="padding-top: 25%; font-size: 250%;">Название фракции 1</h1>
+            <h1 class="card-title text-center cyberfont" style="padding-top: 25%; font-size: 250%;">Название фракции 1</h1>
         </div>
 
         <div class="row">
@@ -26,11 +26,11 @@
             <div class="col">
                 <div class="pt-4">Участники:</div>
                 {% block members %}
-                {% for item in members %}
-                    <div>
-                        {{ item.username }}
-                    </div>
-                {% endfor %}
+                    {% for item in members %}
+                        <div>
+                            {{ item }}
+                        </div>
+                    {% endfor %}
                 {% endblock %}
             </div>
         </div>

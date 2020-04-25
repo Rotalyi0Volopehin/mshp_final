@@ -10,6 +10,8 @@ from main.db_tools.user_tools import DBUserTools
 from main.views.form_view import FormView
 from main.views.menu import get_menu_context, get_user_menu_context
 
+from collections import OrderedDict
+
 
 def index_page(request):
     """**View-функция страницы '/'**
@@ -108,13 +110,34 @@ def chat_page(request):
     return render(request, 'pages/chat.html', context)
 
 
+# def fraction1_page(request):
+#     members = User.objects.all()
+#     context = {
+#         'pagename': 'Фракция1',
+#         'menu': get_menu_context(),
+#         'user_menu': get_user_menu_context(request.user),
+#         'members': members,
+#     }
+#     return render(request, 'pages/fractions/fraction1.html', context)
+
+
+def sort_members_by_reputation(team: int):
+    members = {}
+    for user in User.objects.all():
+        if DBUserTools.try_get_user_data(user) != None:
+            user_data, error = DBUserTools.try_get_user_data(user)
+            if user_data.team == team:
+                members[user.username] = user_data.reputation
+    members = OrderedDict(sorted(members.items(), reverse=True, key=lambda value: value[1]))
+    return members
+
+
 def fraction1_page(request):
-    members = User.objects.all()
     context = {
         'pagename': 'Фракция1',
         'menu': get_menu_context(),
         'user_menu': get_user_menu_context(request.user),
-        'members': members,
+        'members': sort_members_by_reputation(0),
     }
     return render(request, 'pages/fractions/fraction1.html', context)
 
@@ -124,9 +147,8 @@ def fraction2_page(request):
         'pagename': 'Фракция2',
         'menu': get_menu_context(),
         'user_menu': get_user_menu_context(request.user),
-
+        'members': sort_members_by_reputation(1),
     }
-
     return render(request, 'pages/fractions/fraction2.html', context)
 
 
@@ -135,6 +157,7 @@ def fraction3_page(request):
         'pagename': 'Фракция3',
         'menu': get_menu_context(),
         'user_menu': get_user_menu_context(request.user),
+        'members': sort_members_by_reputation(2),
     }
     return render(request, 'pages/fractions/fraction3.html', context)
 

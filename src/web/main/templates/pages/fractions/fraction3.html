@@ -25,6 +25,13 @@
 
             <div class="col">
                 <div class="pt-4">Участники:</div>
+                {% block members %}
+                    {% for item in members %}
+                        <div>
+                            {{ item }}
+                        </div>
+                    {% endfor %}
+                {% endblock %}
             </div>
         </div>
     </div>
