@@ -11,6 +11,8 @@ class MenuScene(Scene):
         self.button_quest = Btn(self.game, (350, 255, 100, 40), Color.WHITE, 'Карта мира', self.set_map_scene)
         self.objects = [self.button_start, self.button_exit, self.button_map, self.button_quest]
 
+
+
     def set_main_scene(self):
         self.set_next_scene(self.game.MAIN_SCENE_INDEX)
 

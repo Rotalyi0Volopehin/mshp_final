@@ -1,6 +1,9 @@
+import pygame
 import sys
 import pygame
+import json
 import time
+import socket
 
 from pygame.locals import *
 from pygame_textinput import TextInput
@@ -122,6 +125,10 @@ class GIFImage(object):
                     self.cur += 1
                     if self.cur > self.breakpoint:
                         self.cur = self.startpoint
+
+
+
+
         screen.blit(self.frames[self.cur][0], pos)
 
     def seek(self, num):
@@ -186,100 +193,3 @@ class GIFImage(object):
         new.ptime = self.ptime
         new.reversed = self.reversed
         return new
-
-
-class Button:
-    def __init__(self, x, y, text, image_press, image_unpress):
-
-        self.size = [190, 45]  # Размер кнопки
-        self.image_button = pygame.image.load(image_press)  # Загружаем изображение исходной кнопки
-        self.text = text  # Текст кнопки
-        self.x = x  # Позиция х кнопки
-        self.y = y  # Позиция у кнопки
-        self.clicked = False
-        self.rect_button = pygame.Rect(self.x, self.y, self.size[0],
-                                       self.size[1])  # Прямоугольник для создания коллизии с курсором
-        self.rect_image_button = self.image_button.get_rect()
-        """Создание кнопки при нажатии на нее"""
-        self.image_click = pygame.image.load(image_press)
-        self.image_put_on_button = pygame.image.load(image_unpress)
-
-    def create_button(self):
-        """Создает кнопку на экране"""
-        font = pygame.font.Font(None, 36)
-        text_button = font.render(self.text, True, (240, 240, 240))  # Создаем изображение с текстом
-        text_rect = text_button.get_rect()  # Возвращаем прямоугольник который занимает текст
-        text_rect.center = self.rect_image_button.center  # Делаем текст посередине кнопки
-        self.image_button.blit(text_button, text_rect)
-        self.image_click.blit(text_button, text_rect)
-        self.image_put_on_button.blit(text_button, text_rect)
-
-    def drawbutton(self, screen):
-        if not(self.clicked):
-            screen.blit(self.image_click,(self.x, self.y))
-        else:
-            screen.blit(self.image_put_on_button, (self.x, self.y))
-
-
-from scenes.final import FinalScene
-from scenes.main import MainScene
-from scenes.menu import MenuScene
-from scenes.map import MapScene
-from scenes.quests import QuestScene
-from scenes.login import LoginScene
-
-class Game:
-    MENU_SCENE_INDEX = 0
-    MAIN_SCENE_INDEX = 1
-    GAMEOVER_SCENE_INDEX = 2
-    QUESTS_SCENE_INDEX = 3
-    MAP_SCENE_INDEX = 4
-    LOGIN_SCENE_INDEX = 5
-
-    def __init__(self, width=800, height=600):
-        self.width = width
-        self.height = height
-        self.size = self.width, self.height
-        self.game_over = False
-        self.login = TextInput(self, antialias=False, cursor_color=(0, 255, 0))
-        self.password = TextInput(self, antialias=False, cursor_color=(255, 112, 184))
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        self.clock = pygame.time.Clock()
-
-        #self.trailer = GIFImage("backimage.gif")
-
-        self.enter = Button(200, 150, "Войти", "button_pressed.png", "button_not_pressed.png")
-        self.enter.create_button()
-        self.register = Button(167, 200, "Регистрация", "button_pressed_2.png", "button_not_pressed_2.png")
-        self.register.create_button()
-
-        self.font = pygame.font.Font(None, 36)
-        self.textl = self.font.render("Логин", 1, (143, 254, 9))
-        self.placel = self.textl.get_rect(center=(125, 30))
-
-        self.font = pygame.font.Font(None, 36)
-        self.textp = self.font.render("Пароль", 1, (9, 254, 243))
-        self.placep = self.textp.get_rect(center=(125, 90))
-
-    def main_loop(self):
-        pygame.init()
-        pygame.display.set_caption("Войти/выйти")
-
-        self.create_window()
-        self.game_over = False
-        self.wall_collision_count = 0
-        self.ticks = 0
-        self.scenes = [MenuScene(self), MainScene(self), FinalScene(self), QuestScene(self), MapScene(self), LoginScene(self)]
-        self.current_scene = 5
-        while True:
-            eventlist = pygame.event.get()
-            for event in eventlist:
-                if event.type == pygame.QUIT:
-                    exit()
-            self.scenes[self.current_scene].process_frame(eventlist)
-            self.clock.tick(30)
-
-
-    def create_window(self):
-        pygame.init()
-        self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
