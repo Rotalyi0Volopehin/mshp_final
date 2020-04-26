@@ -1,4 +1,3 @@
-import pygame
 from random import randint
 
 from objects.base import DrawObject
@@ -26,8 +25,6 @@ class LinearMovingBall(Ball):
         super().__init__(game)
         self.window_width = self.game.width
         self.window_height = self.game.height
-        self.rect.x = randint(10, self.window_width - self.rect.width - 10)
-        self.rect.y = randint(10, self.window_height - self.rect.height - 10)
         self.shift_x = 1 if randint(0, 1) == 1 else -1
         self.shift_y = 1 if randint(0, 1) == 1 else -1
 

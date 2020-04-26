@@ -16,19 +16,18 @@ def fix_project_roots(*roots_names):
     :param roots_names: Имена корней, которые нужно подключить
     :type roots_names: \\*args
     """
-    project_path = os.path.abspath(".")
-    src_path = os.path.join(project_path, "src")
+    current_path = os.path.abspath(sys.modules[__name__].__file__)
+    src_path = current_path[:current_path.find("web")]
     for root_name in roots_names:
-        path = os.path.abspath(os.path.join(src_path, root_name))
-        sys.path.insert(0, path)
+        sys.path.insert(0, src_path + root_name)
 
 
 try:
-    from core_init import init_core
+    import exceptions
 except:
     print("Direct import failed. Patching . . . ", end='')
-    fix_project_roots("core")
-    from core_init import init_core
+    fix_project_roots("core", "desktop")  # TODO: починить game_eng и удалить desktop из списка для патча
+    import exceptions
     print("SUCCESS")
 
 
@@ -46,5 +45,4 @@ def main():
 
 
 if __name__ == '__main__':
-    init_core()
     main()

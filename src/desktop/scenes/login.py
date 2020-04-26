@@ -12,6 +12,7 @@ from net_connection.response_ids import ResponseID
 from ws.parcel_manager import ParcelManager
 from ws.channel import Channel
 
+from objects.gifimg import GIFImage
 
 class LoginScene(Scene):
     def init_form(self):
@@ -19,6 +20,10 @@ class LoginScene(Scene):
         self.password = Txtinput(self.game, False, 180, 80)
         self.button_enter = Btn(self.game, (350, 350, 100, 40), Color.WHITE, "Войти", self.on_login_button_click)
         self.button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
+        #self.trailer = GIFImage("backimage.gif", self.game)
+
+        self.button_enter = Btn(self.game, (350, 350, 100, 40), Color.WHITE, "Войти", self.lg_on_click)
+        self.button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.rg_on_click)
         self.text_login = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False,
                                is_italic=False, text='Логин:',
                                color=(255, 255, 100), x=125, y=30)
@@ -48,7 +53,7 @@ class LoginScene(Scene):
         pygame.mixer.music.play(-1)
 
     def set_menu_scene(self):
-         self.set_next_scene(self.game.MENU_SCENE_INDEX)
+        self.set_next_scene(self.game.MENU_SCENE_INDEX)
 
     def on_login_button_click(self):
         login = self.login.internal_txtinput.get_text()

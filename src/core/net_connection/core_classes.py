@@ -1,7 +1,5 @@
 import os
 
-from types import ModuleType
-
 
 # TODO: задокументировать
 
@@ -13,10 +11,8 @@ class CoreClasses:
     def reg_core_classes(core_dir_path):
         def file_handler(file_path):
             file_name = file_path[len(core_dir_path) + 1:]
-            if file_name == "core_init.py":  # затычка для избежания рекурсии
-                return
-            if file_name.endswith(".py"):
-                module_name = file_name[:-3].replace('\\', '.')
+            if file_name.endswith(".py") and not file_name.endswith("__init__.py"):
+                module_name = file_name[:-3].replace(os.path.sep, '.')
                 module = CoreClasses.__load_module(module_name)
                 CoreClasses.classes[module_name] = CoreClasses.__get_classes_of_module(module)
         CoreClasses.__list_files(core_dir_path, file_handler)

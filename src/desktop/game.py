@@ -1,3 +1,4 @@
+import sys
 import pygame
 import time
 
@@ -282,75 +283,3 @@ class Game:
     def create_window(self):
         pygame.init()
         self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
-
-"""
-    def main_loop(self):
-
-        while not self.game_over:
-            eventlist = pygame.event.get()
-            for event in eventlist:
-                if event.type == pygame.QUIT:
-                    exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        if event.pos[1] >= 50 and event.pos[1] <= 50 + self.login.font_size:
-                            self.login.antialias = True
-                            self.password.antialias = False
-                        if event.pos[1] >= 100 and event.pos[1] <= 100 + self.password.font_size:
-                            self.login.antialias = False
-                            self.password.antialias = True
-
-                    if self.enter.rect_button.collidepoint(event.pos[0],event.pos[1]):
-                        self.enter.clicked = True
-                        #TODO:
-                        # DATA = {"data":
-                        #            {"hostname":"localhost",
-                        #             "ipaddress":"serverhost",
-                        #             "login":login.get_text(),
-                        #             "password":password.get_text()}}
-                        # raw_data = json.dumps(DATA, ensure_ascii=False).encode("utf-8")
-                        # socket = socket.socket()
-                        # a.connect(('serverhost', 'port'))
-                        # socket.send(raw_data)
-                        # print((socket.recv(1000)).decode('utf-8'))
-                        # Server responses us
-                        # IF DATA.ISVALID == TRUE -> THEN GO PLAY CS GO
-                    if self.register.rect_button.collidepoint(event.pos[0],event.pos[1]):
-                        self.register.clicked = True
-                        print('REGISTRACTION')
-
-                if event.type == pygame.MOUSEBUTTONUP and self.enter.rect_button.collidepoint(event.pos[0],event.pos[1]):
-                    self.enter.clicked = False
-                if event.type == pygame.MOUSEBUTTONUP and self.register.rect_button.collidepoint(event.pos[0],event.pos[1]):
-                    self.register.clicked = False
-
-
-
-
-            if self.login.antialias:
-                if self.login.update(events):
-                    print(self.login.get_text())
-            if self.password.antialias:
-                if self.password.update(events):
-                    print(self.password.get_text())
-            # Blit its surface onto the screen
-            self.trailer.render(self.screen, (0, 0))
-            pygame.draw.rect(self.screen, [244, 255, 89], [100,50, 250,25], 0)
-            self.screen.blit(self.login.get_surface(), (100, 50))
-            pygame.draw.rect(self.screen, [244, 255, 89], [100, 103, 250, 25], 0)
-            self.screen.blit(self.password.get_surface(), (100, 103))
-            self.screen.blit(self.textl, self.placel)
-            self.screen.blit(self.textp, self.placep)
-            self.enter.drawbutton(self.screen)
-            self.register.drawbutton(self.screen)
-            pygame.display.update()
-            self.clock.tick(30)
-
-
-
-                    print('Пользователь нажал крестик')
-                    self.game_over = True
-            self.scenes[self.current_scene].process_frame(eventlist)
-        sys.exit(0)
->>>>>>> 0d54502591f2b4a8665436b7974164972f530837
-"""
