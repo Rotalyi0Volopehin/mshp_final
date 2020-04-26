@@ -1,4 +1,8 @@
 import datetime
+
+from django.contrib import auth
+from django.http import HttpResponse
+
 import main.forms as forms
 
 from main.db_tools.cad import CAD
