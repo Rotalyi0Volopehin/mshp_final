@@ -15,7 +15,7 @@ class MenuScene(Scene):
         self.set_next_scene(self.game.MAIN_SCENE_INDEX)
 
     def set_map_scene(self):
-        self.set_next_scene(self.game.MAP_SCENE_INDEX)
+        self.set_next_scene(self.game.TEAM_SCENE_INDEX)
 
     def set_quest_scene(self):
         self.set_next_scene(self.game.QUESTS_SCENE_INDEX)

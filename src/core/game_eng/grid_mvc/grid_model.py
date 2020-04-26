@@ -129,14 +129,26 @@ class GridModel(DrawObject):
             for row in range(self.width):
                 j += 1
                 self.add_cell(game, hex_side, Color.WHITE, row, column, False, i, j)
-        self.set_cell_color_x_y(0,0,Color.BLUE, Color.BLUE)
-        print(i,j)
-        self.hex_draw_array[self.width-1][self.height-1].set_team_color((255,50,255))
-        self.hex_draw_array[0][self.height - 1].set_team_color((255,255,50))
-        self.hex_draw_array[self.width - 1][0].set_team_color((50,255,255))
 
+        self.set_cell_color_x_y(4,4,Color.BLUE, Color.BLUE)
+        self.set_team_starting_zones()
 
-
+    def set_team_starting_zones(self):
+        neighbours = self.get_cell_by_x_y(2, 2).get_neighbours()
+        for row in range(6):
+            cell = self.get_cell_by_x_y(neighbours[row][0], neighbours[row][1])
+            if cell:
+                cell.team_color = Color.GRAY
+        neighbours = self.get_cell_by_x_y(6, 2).get_neighbours()
+        for row in range(6):
+            cell = self.get_cell_by_x_y(neighbours[row][0], neighbours[row][1])
+            if cell:
+                cell.team_color = Color.DARK_ORANGE
+        neighbours = self.get_cell_by_x_y(2, self.height).get_neighbours()
+        for row in range(6):
+            cell = self.get_cell_by_x_y(neighbours[row][0], neighbours[row][1])
+            if cell:
+                cell.team_color = Color.DARK_GREEN
 
     def add_cell(self, game, hex_side, color, row, column, is_wall, x, y):
         self.hex_draw_array[row][column] = GridTile(
@@ -222,19 +234,25 @@ class GridModel(DrawObject):
             orangecell.set_team_color(redcell.team_color)
             orangecell.value = orangecell.start_value # соответствия с нашей механикой
 
-    def ability_emp(self,cell):
+    def ability_emp(self, cell):
         neighbours = cell.get_neighbours()
         for row in range(6):
             cell = self.get_cell_by_x_y(neighbours[row][0], neighbours[row][1])
-            if cell:
+            if cell and self.cell_not_friendly(cell):
                 cell.value -= 20
                 if cell.value <0:
                     cell.value = 0
                     #TODO: self.get_cell_by_x_y(neighbours[row][0], neighbours[row][1]).set_team_color =
 
-    def ability_fishing(self,cell):
-        cell.value -= 20
-        if cell.value <0:
-            cell.value = 0
-            #TODO: cell.set_team_color =
-            # cell.value = cell.start_value
+    def ability_fishing(self, cell):
+        if self.cell_not_friendly(cell):
+            cell.value -= 20
+            if cell.value <0:
+                cell.value = 0
+                #TODO: cell.set_team_color =
+                # cell.value = cell.start_value
+
+    def cell_not_friendly(self, cell):
+        if cell:
+            return self.game.team != cell.team_color
+        return False
