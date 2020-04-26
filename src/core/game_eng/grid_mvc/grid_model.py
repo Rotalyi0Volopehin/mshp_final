@@ -120,7 +120,7 @@ class GridModel(DrawObject):
         self.height = height
         self.width = width
         self.delta = delta
-        self.team_colors = [Color.BLUE, (255,50,255), (50,255,255), (255,255,50)]
+        self.team_colors = [Color.DARK_GREEN, Color.DARK_ORANGE, Color.GRAY]
         i = -1  # x,y смещений
         j = 0
         for column in range(self.height):  # нечет-q https://habr.com/ru/post/319644/
@@ -130,7 +130,6 @@ class GridModel(DrawObject):
                 j += 1
                 self.add_cell(game, hex_side, Color.WHITE, row, column, False, i, j)
 
-        self.set_cell_color_x_y(4,4,Color.BLUE, Color.BLUE)
         self.set_team_starting_zones()
 
     def set_team_starting_zones(self):
