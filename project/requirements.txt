@@ -1,0 +1,9 @@
+pygame==1.9.6
+Image
+django==3.0.1
+django-bootstrap4==1.1.1
+channels==2.4.0
+django_extensions==2.2.8
+six
+sphinx
+sphinx_rtd_theme
