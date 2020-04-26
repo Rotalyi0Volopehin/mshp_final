@@ -1,32 +1,127 @@
-import exceptions
+import pygame
 
-from game_eng.game_object_model import GameObjectModel
+from random import randint
+from constants import Color
+from objects.base import DrawObject
+from objects.text import Text
 
 
-# TODO: задокументировать
+# TODO: Андрей, что это значит? Это не модель!
 
 
-class GridTile(GameObjectModel):
-    def __init__(self, grid, loc_x: int, loc_y: int, team: int = -1):
-        # vvv проверка параметров vvv
-        if not (isinstance(loc_x, int) and isinstance(loc_y, int) and isinstance(team, int)):
-            raise exceptions.ArgumentTypeException()
-        if not grid.is_point_in_bounds(loc_x, loc_y):
-            raise exceptions.ArgumentValueException("Location is out of bounds!")
-        if (team < -1) or (team > 2):
-            raise exceptions.ArgumentValueException()
-        # vvv инициализация vvv
-        self.team = team  # может принимать значения от -1 до 2 (-1 -- нейтральная клетка)
-        self.__loc_x = loc_x
-        self.__loc_y = loc_y
+class GridTile(DrawObject):
+    # Возможные состояния игровой клетки:
+    #   black - наша невидимая черная стена
+    #   white - не выбрана
+    #   red - выбрана
+    #   green - соседняя с выбранной
+    #   orange - та клетка, куда двигаем все, что хотим
 
-    @property
-    def loc_x(self):
-        return self.__loc_x
+    def __init__(self, game, side, even, screen_x, screen_y, wall, x, y):
+        super().__init__(game)
+        self.even = even  # чет нечет строчка
+        self.start_value = randint(0, 60)  # ранд количество юнитов
+        self.value = self.start_value
+        self.x = x  # координаты смещений
+        self.y = y
+        self.team_color = Color.WHITE
+        self.color = Color.WHITE
+        self.pos_x = screen_x  # на экране позиция
+        self.pos_y = screen_y
+        self.side = side
+        self.sq = 3 ** (1 / 2)
+        self.hex_points = [(self.side / 2, 0),
+                           (1.5 * self.side, 0),
+                           (2 * self.side, self.sq * self.side / 2),
+                           (1.5 * self.side, self.sq * self.side),
+                           (self.side / 2, self.sq * self.side),
+                           (0, self.sq * self.side / 2)]
+        self.number = Text(game=self.game, text=str(self.value), font_size=20, x=self.pos_x + self.side,
+                           y=self.pos_y + self.sq * self.side / 2)
+        self.invisible_wall = wall
+        self.surface = pygame.Surface((2 * self.side, 2 * self.side))
+        self.update_surface()
 
-    @property
-    def loc_y(self):
-        return self.__loc_y
+    def update_surface(self):
+        self.surface = pygame.Surface((2 * self.side, 2 * self.side))
+        self.surface.set_colorkey(Color.BLACK)
+        self.number.update_text(str(self.value))
+        pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
 
-    def get_neighbours(self, grid):
-        return grid.get_tile_neighbours(self)
+    def process_draw(self):
+        self.update_surface()
+        if not(self.invisible_wall):
+            self.number.process_draw()
+        self.game.screen.blit(self.surface, (self.pos_x, self.pos_y))
+
+    def get_neighbours(self):  # HEчет-q
+        top_x = self.x
+        top_y = self.y - 1
+
+        bot_x = self.x
+        bot_y = self.y + 1
+
+        left_top_x = self.x - 1
+        left_top_y = self.y - 1
+
+        right_top_x = self.x - 1
+        right_top_y = self.y + 1
+
+        right_bot_x = self.x+1
+        right_bot_y = self.y
+
+        left_bot_x = self.x -1
+        left_bot_y = self.y
+
+        if not (self.even):
+            left_top_x = self.x - 1
+            left_top_y = self.y
+
+            right_top_x = self.x + 1
+            right_top_y = self.y
+
+            left_bot_x = self.x +1
+            right_bot_y = self.y -1
+
+            right_bot_x = self.x + 1
+            left_bot_y = self.y +1
+
+        # создадим список а, с коордами всех клеток. Обход с верхней клетки против часовой стрелки
+        a = [[top_x, top_y], [right_top_x, right_top_y], [right_bot_x, right_bot_y], [bot_x, bot_y],
+             [left_bot_x, left_bot_y], [left_top_x, left_top_y]]
+        return a
+
+    def set_color_to_team(self):
+        self.color = self.team_color
+
+    def set_team_color(self, color):
+        if color == 'dark_green':
+            self.team_color = Color.DARK_GREEN
+        elif color == 'dark_orange':
+            self.team_color = Color.DARK_ORANGE
+        elif color == 'gray':
+            self.team_color = Color.GRAY
+
+    def set_team_color_absolute(self, color):
+        self.team_color = color
+
+    def set_color(self, color):
+        if color == 'green':
+            self.color = Color.GREEN
+        elif color == 'red':
+            self.color = Color.RED
+        elif color == 'orange':
+            self.color = Color.ORANGE
+        elif color == 'white':
+            self.color = Color.WHITE
+        self.update_surface()
+
+    def return_color(self):
+        return self.color
+
+    def return_team_color(self):
+        return self.team_color
+
+    def set_wall(self):
+        self.invisible_black_wall = True
+        self.team_color = Color.BLACK

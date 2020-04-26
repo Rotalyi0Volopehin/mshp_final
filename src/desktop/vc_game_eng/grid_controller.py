@@ -1,14 +1,14 @@
 import pygame
-
 from constants import Color
-
+from scenes.base import Scene
 
 class GridTileController:
-    def __init__(self, model):
+    def __init__(self, model, scene):
+        self.game = scene.game
         self.model = model
         self.ability = False
 
-    def init_view(self,view):
+    def init_view(self, view):
         self.view = view
 
     def process_logic(self):
@@ -29,8 +29,8 @@ class GridTileController:
 
     def on_click(self, event):
         clicked_cell = self.model.inPolygon(event.pos[0], event.pos[1])
-        if clicked_cell != None:
-            if not(self.ability):
+        if clicked_cell is not None:
+            if not self.ability:
                 self.clicking_cell(clicked_cell)
             else:
                 self.ability_execute(clicked_cell)
@@ -44,21 +44,23 @@ class GridTileController:
 
     def clicking_cell(self,clicked_cell):
         self.view.process_draw()
-        if (clicked_cell.team_color in self.model.team_colors) and not(clicked_cell.return_color() in [Color.RED,Color.GREEN,Color.ORANGE]):
+        if (clicked_cell.team_color in [self.game.team]) and not(clicked_cell.return_color() in [Color.RED,Color.GREEN,Color.ORANGE]):
             self.model.set_all_team_color()
-            self.model.set_cell_color_x_y(clicked_cell.x, clicked_cell.y, Color.RED, False)
+            self.model.set_cell_color_x_y(clicked_cell.x, clicked_cell.y, 'red', False)
             self.model.make_cells_green(clicked_cell)
         elif clicked_cell.return_color() == Color.RED:
             self.model.set_all_team_color()
         elif clicked_cell.return_color() == Color.GREEN:
             orange = self.model.get_cell_by_colour(Color.ORANGE)
             self.model.make_cell_green(orange)
-            self.model.set_cell_color_x_y(clicked_cell.x, clicked_cell.y, Color.ORANGE)
+            self.model.set_cell_color_x_y(clicked_cell.x, clicked_cell.y, 'orange')
         elif clicked_cell.return_color() == Color.ORANGE:
             self.model.make_cell_green(clicked_cell)
 
-    def on_scroll(self,value):
-        self.model.move_units(self.model.get_cell_by_colour(Color.RED), self.model.get_cell_by_colour(Color.ORANGE), value)
+    def on_scroll(self, value):
+        origin_cell = self.model.get_cell_by_colour(Color.RED)
+        target_cell = self.model.get_cell_by_colour(Color.ORANGE)
+        self.model.move_units(origin_cell, target_cell, value)
 
     def set_ability_emp(self):
         self.ability = "EMP"

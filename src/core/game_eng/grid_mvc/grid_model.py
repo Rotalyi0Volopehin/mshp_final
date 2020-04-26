@@ -1,7 +1,6 @@
 from random import randint
 import pygame
 import math
-from constants import Color
 from objects.base import DrawObject
 from objects.text import Text
 import time
