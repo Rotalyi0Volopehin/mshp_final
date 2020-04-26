@@ -43,6 +43,7 @@ class GridTile(DrawObject):
     def update_surface(self):
         self.surface = pygame.Surface((2 * self.side, 2 * self.side))
         self.surface.set_colorkey(Color.BLACK)
+        #self.number.update_text(str(self.x)+" "+str(self.y))
         self.number.update_text(str(self.value))
         pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
 
@@ -119,14 +120,22 @@ class GridModel(DrawObject):
         self.height = height
         self.width = width
         self.delta = delta
+        self.team_colors = [Color.BLUE, (255,50,255), (50,255,255), (255,255,50)]
         i = -1  # x,y смещений
+        j = 0
         for column in range(self.height):  # нечет-q https://habr.com/ru/post/319644/
             i += 2
             j = 0
             for row in range(self.width):
                 j += 1
                 self.add_cell(game, hex_side, Color.WHITE, row, column, False, i, j)
-        self.set_cell_color_x_y(4,4,Color.BLUE, Color.BLUE)
+        self.set_cell_color_x_y(0,0,Color.BLUE, Color.BLUE)
+        print(i,j)
+        self.hex_draw_array[self.width-1][self.height-1].set_team_color((255,50,255))
+        self.hex_draw_array[0][self.height - 1].set_team_color((255,255,50))
+        self.hex_draw_array[self.width - 1][0].set_team_color((50,255,255))
+
+
 
 
     def add_cell(self, game, hex_side, color, row, column, is_wall, x, y):
@@ -172,7 +181,7 @@ class GridModel(DrawObject):
             for column in range(self.height):
                 self.hex_draw_array[row][column].set_color_to_team()
 
-    def set_cell_color_x_y(self, x, y, color, team_color=None):
+    def set_cell_color_x_y(self, x, y, color, team_color=False):
         cell = self.get_cell_by_x_y(x, y)
         if not cell:
             return

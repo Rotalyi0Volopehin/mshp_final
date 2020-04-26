@@ -43,9 +43,10 @@ class GridTileController:
         self.ability = None
 
     def clicking_cell(self,clicked_cell):
-        if clicked_cell.return_color() == Color.WHITE:
+        print(clicked_cell.team_color in self.model.team_colors)
+        if (clicked_cell.team_color in self.model.team_colors) and not(clicked_cell.return_color() in [Color.RED,Color.GREEN,Color.ORANGE]):
             self.model.set_all_team_color()
-            self.model.set_cell_color_x_y(clicked_cell.x, clicked_cell.y, Color.RED)
+            self.model.set_cell_color_x_y(clicked_cell.x, clicked_cell.y, Color.RED, False)
             self.model.make_cells_green(clicked_cell)
         elif clicked_cell.return_color() == Color.RED:
             self.model.set_all_team_color()
