@@ -55,13 +55,7 @@ class TeamStats(models.Model):
     # эти данные уникальны для пары игрок-сессия
 
 
-class UserStatistic(models.Model):
-    class Meta:
-        db_table = "UserStatistic"
-
-    User = models.ForeignKey(User)  # внешний ключ на статью
-    lvl = models.IntegerField('Уровень', default=0)
-    exp = models.IntegerField('Опыт', default=0)  # количество просмотров в эту дату
-
-    def __str__(self):
-        return self.User.title
+# class UserStatistic(models.Model):
+#    user = models.ForeignKey(to=User, on_delete=models.CASCADE)  # внешний ключ на user
+#    level = models.IntegerField(default=0)  # уровень
+#    exp = models.IntegerField(default=0)  # количество опыта

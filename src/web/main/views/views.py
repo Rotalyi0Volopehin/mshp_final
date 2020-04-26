@@ -5,10 +5,13 @@ from main.db_tools.cad import CAD
 from django.http import HttpResponse
 from django.contrib.auth import login as log_user_in, logout as log_user_out
 from django.contrib.auth.models import User
+
+from main.models import UserData, UserStatistic
 from main.views.form_view import FormView
 from main.views.menu import get_menu_context, get_user_menu_context
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from main.db_tools.user_tools import DBUserTools
+from django.db.models import Sum
 
 
 def index_page(request):
@@ -44,9 +47,6 @@ def time_page(request):
         'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/time.html', context)
-
-def rating_page():
-    pass
 
 
 class RegistrationFormPage(FormView):
@@ -227,3 +227,24 @@ class ProfileFormPage(FormView):
         context["ok"] = context["success"] = success
         context["error"] = error
         return success
+
+
+
+class RatingFormPage(FormView):
+    template_name = 'rating.html'
+    def get(self, request):
+        # user = get_object_or_404(UserData, id=self.kwargs['user_id'])  # Забираем базы данных
+        context = {}
+
+        # obj, created = UserStatistic.objects.get_or_create(defaults={"user": user,},user=user)
+        # obj.save(update_fields=['exp'])
+
+        # top = UserStatistic.objects.values('user_id', 'article__title').annotate(exp=Sum('exp')).order_by('-exp')[:5]
+
+        top = UserData.objects.order_by("-exp")[:10]
+        # name = ordered_users_data[i].user.username
+        # id_ = ordered_users_data[i].user.id
+
+        context['top_list'] = top  # Отправим в контекст список статей
+
+        return render(template_name=self.template_name, context=context)

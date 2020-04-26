@@ -7,13 +7,13 @@
 {% block content %}
 
     <div class='row'>
-        <div class='col'>
-            <h1> exp top <h1>
-
-        </div>
-        <div class='col'>
-            <h1> lvl top <h1>
-
+        <div class=''>
+            <h1> exp top </h1>
+            {% for top_user in top_list %}
+                <div class="list-group-item">
+                <p>{{ top_user.username }}</p>
+                </div>
+            {% endfor %}
         </div>
     </div>
 
