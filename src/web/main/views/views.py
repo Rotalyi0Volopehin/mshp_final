@@ -228,17 +228,3 @@ class ProfileFormPage(FormView):
         context["ok"] = context["success"] = success
         context["error"] = error
         return success
-
-
-class LoginFormPage(FormView):
-
-    pagename = "Вход"
-    form_class = forms.LoginForm
-    template_name = "registration/login.html"
-
-    def LoginView(self, request, form):
-        username = form.data["login"]
-        password = form.data["password"]
-        ok = DBUserTools.check_user_existence(username, password)
-        if ok:
-            auth.login(username, password)
