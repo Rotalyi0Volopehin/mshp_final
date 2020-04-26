@@ -19,6 +19,7 @@ from main.views import views
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import AnonymousUser
 from main.views.menu import get_menu_context, get_user_menu_context
+from main.views import profile_view, registration_view, fractions_view
 
 
 urlpatterns = [
@@ -27,10 +28,10 @@ urlpatterns = [
     path('darknet/', views.darknet_page, name='darknet'),
     path('forum/', views.forum_page, name='forum'),
     path('chat/', views.chat_page, name='chat'),
-    path('profile/<int:uid>/', views.ProfileFormPage.as_view(), name='profile'),
-    path('fraction1/', views.fraction1_page, name='fraction1'),
-    path('fraction2/', views.fraction2_page, name='fraction2'),
-    path('fraction3/', views.fraction3_page, name='fraction3'),
+    path('profile/<int:uid>/', profile_view.ProfileFormPage.as_view(), name='profile'),
+    path('fraction1/', fractions_view.FractionPages.fraction1_page, name='fraction1'),
+    path('fraction2/', fractions_view.FractionPages.fraction2_page, name='fraction2'),
+    path('fraction3/', fractions_view.FractionPages.fraction3_page, name='fraction3'),
 
     path(
         'login/',
@@ -43,6 +44,6 @@ urlpatterns = [
         ),
         name='login'
     ),
-    path('registration/', views.RegistrationFormPage.as_view(), name='registration'),
+    path('registration/', registration_view.RegistrationFormPage.as_view(), name='registration'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
