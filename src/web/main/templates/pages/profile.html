@@ -79,6 +79,12 @@
                                 style="">Сохранить изменения
                         </button>
                     </div>
+                    {% else %}
+                    <div class="form-group row">
+                        <button type="button" class="password_button btn btn-primary col-sm-3" data-toggle="modal"
+                                onclick="open_chat();">Перейти к диалогу
+                        </button>
+                    </div>
                     {% endif %}
                 </div>
             </div>
