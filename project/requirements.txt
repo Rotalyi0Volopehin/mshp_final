@@ -1,5 +1,7 @@
-pygame==1.9.6
 Image
+pygame==1.9.6
+websockets==8.1
+
 django==3.0.1
 django-bootstrap4==1.1.1
 channels==2.4.0
