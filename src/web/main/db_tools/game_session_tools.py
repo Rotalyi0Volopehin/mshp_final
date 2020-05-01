@@ -11,12 +11,9 @@ class DBGameSessionTools:
     @staticmethod
     def try_create_new_session(title: str, turn_period: int, user_limit: int,
                                user_lowest_level: int, user_highest_level: int) -> (bool, str):
-        """**Попытка создания новой игровой сессии**
-
-        Возможные исключения:\n
-        - *ArgumentTypeException*
-        - *ArgumentValueException*
-
+        """**Попытка создания новой игровой сессии**\n
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
+        :raises ArgumentValueException: Значение переданных аргументов не соответсвует требованиям
         :param title: Название игровой сессии
         :type title: str
         :param turn_period: Период хода

@@ -75,8 +75,7 @@ class FormView(View):
         return render(request, self.template_name, context)
 
     def collect_default_context(self, request) -> dict:
-        """**Метод, собирающий контекст по умолчанию**
-
+        """**Метод, собирающий контекст по умолчанию**\n
         :return: контекст по умолчанию
         :rtype: dict
         """

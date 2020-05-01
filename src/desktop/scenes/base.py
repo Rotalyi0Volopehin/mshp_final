@@ -1,6 +1,7 @@
 import pygame
 
 from constants import Color
+from game import GIFImage
 
 
 class Scene:
@@ -9,6 +10,7 @@ class Scene:
         self.screen = self.game.screen
         self.objects = []
         self.create_objects()
+
 
     def create_objects(self):
         pass
@@ -44,7 +46,7 @@ class Scene:
             item.process_draw()
         self.additional_draw()
         pygame.display.flip()  # double buffering
-        pygame.time.wait(10)  # подождать 10 миллисекунд
+        pygame.time.wait(30)  # подождать 10 миллисекунд
 
     def additional_draw(self):
         pass
