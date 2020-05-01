@@ -31,7 +31,7 @@ class RegistrationFormPage(FormView):
         login = form.data["login"]
         email = form.data["email"]
         team = int(form.data["team"])
-        ok, error = DBUserTools.try_register(login, password, email, team)
+        ok, error = DBUserTools.try_register(login, password, email, team, request)
         if not ok:
             context["ok"] = False
             context["error"] = error
