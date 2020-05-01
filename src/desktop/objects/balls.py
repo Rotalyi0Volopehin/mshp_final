@@ -1,3 +1,4 @@
+import pygame
 from random import randint
 
 from objects.base import DrawObject
