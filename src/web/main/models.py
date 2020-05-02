@@ -1,4 +1,5 @@
 ﻿import datetime
+import exceptions
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -25,6 +26,35 @@ class UserData(models.Model):
     exp = models.IntegerField(default=0)
     reputation = models.IntegerField(default=0)  # репутация [-50; 50]
     extra_info = models.TextField(default='')
+
+    @property
+    def exp_cap(self) -> int:
+        return 1 << self.level
+
+    @property
+    def can_levelup(self) -> bool:
+        return self.exp_cap >= self.exp
+
+    def levelup(self):
+        if not self.try_levelup():
+            raise exceptions.InvalidOperationException()
+
+    def try_levelup(self) -> bool:
+        cap = self.exp_cap
+        if self.exp < cap:
+            return False
+        self.exp -= cap
+        self.level += 1
+        return True
+
+    def gain_exp(self, exp: int):
+        if not isinstance(exp, int):
+            raise exceptions.ArgumentTypeException()
+        if exp < 0:
+            raise exceptions.ArgumentValueException()
+        self.exp += exp
+        while self.try_levelup():
+            pass
 
 
 class PressureToolSet(models.Model):
