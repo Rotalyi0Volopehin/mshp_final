@@ -1,4 +1,3 @@
-import datetime
 import main.forms as forms
 
 from main.db_tools.cad import CAD
