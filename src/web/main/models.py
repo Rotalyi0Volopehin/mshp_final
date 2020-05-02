@@ -24,6 +24,7 @@ class UserData(models.Model):
     team = models.IntegerField(default=0)  # фракция [0; 2]
     level = models.IntegerField(default=0)
     exp = models.IntegerField(default=0)
+    total_exp = models.IntegerField(default=0)
     reputation = models.IntegerField(default=0)  # репутация [-50; 50]
     extra_info = models.TextField(default='')
 
@@ -53,6 +54,7 @@ class UserData(models.Model):
         if exp < 0:
             raise exceptions.ArgumentValueException()
         self.exp += exp
+        self.total_exp += exp
         while self.try_levelup():
             pass
 
