@@ -27,7 +27,7 @@ if DEBUG:
     ALLOWED_HOSTS = []
     SECRET_KEY = '(^bvf47lc+06+v+rul45ch(u!a1(&*p16a$vk#okso%thze6$z'
 else:
-    ALLOWED_HOSTS = ['127.0.0.1', 'network_conf.gq']
+    ALLOWED_HOSTS = ['127.0.0.1', 'network-conf.gq']
     SECRET_KEY = os.environ.get("NC_SECRET_KEY", 'Dummy secret key')
 
 
