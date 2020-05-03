@@ -23,6 +23,6 @@ upload_to_server:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
     - ssh $SSH_USER@$SSH_HOST "cd prodserver_conf/ms103_nc && git checkout master && git pull origin master && exit"
-    - ssh $SSH_USER@$SSH_HOST "cd prodserver_conf && docker stop ms103_nc && docker rm ms103_nc && docker-compose build && docker-compose up -d ms103_nc && exit"
+    - ssh $SSH_USER@$SSH_HOST "cd prodserver_conf && docker stop ms103_nc && docker rm ms103_nc && docker-compose build ms103_nc && docker-compose up -d ms103_nc && exit"
   only:
     - testbranch
