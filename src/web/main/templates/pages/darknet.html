@@ -1,14 +1,168 @@
 {% extends 'base/base.html' %}
 
+{% load static %}
+
+{% block extra_js %}
+<script src="{% static 'darknet.js' %}"></script>
+{% endblock %}
 
 {% block content %}
-    <div class="mt-3">
-        <div class="jumbotron">
-            <h1 class="display-4">DarkNet</h1>
-            <p class="lead">В общем, нужен здесь крутой текст, чтобы мы рил были, будто в Даркнете, а ещё темная тема! Используйте нестандартное, новое!
-            Нам нужно выделится среди всех проектов!</p>
-            <hr class="my-4">
-            <p>Описание страницы, что-нить красивенькое.</p>
+
+<div class="container">
+    <div class="row">
+        <div class="mt-3">
+            <div class="jumbotron">
+                <h1 class="display-4">DarkNet</h1>
+                <p class="lead">В общем, нужен здесь крутой текст, чтобы мы рил были, будто в Даркнете, а ещё темная тема! Используйте нестандартное, новое!
+                Нам нужно выделится среди всех проектов!</p>
+                <hr class="my-4">
+                <p>Описание страницы, что-нить красивенькое.</p>
+            </div>
         </div>
     </div>
+    <div class="row">
+        <div class="btn-group" role="group" aria-label="Basic example" style="width: 100%;">
+            <button type="button" class="btn btn-secondary" onclick="button_all();">Все</button>
+            <button type="button" class="btn btn-secondary" onclick="button_attack();">Атака</button>
+            <button type="button" class="btn btn-secondary" onclick="button_protection();">Защита</button>
+            <button type="button" class="btn btn-secondary" onclick="button_mining();">Майнинг</button>
+            <button type="button" class="btn btn-secondary" onclick="button_antivirus();">Антивирус</button>
+            <button type="button" class="btn btn-secondary" onclick="button_kamikaze();">Камикадзе</button>
+        </div>
+    </div>
+
+    <div class="row mt-4 tool-attack">
+        <div class="card" style="width: 100%;">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <img src="https://static8.depositphotos.com/1046686/921/i/450/depositphotos_9218159-stock-photo-grey-background.jpg"
+                             class="card-img-top mt-2" alt="..." style="margin-bottom: 9px;">
+                    </div>
+                    <div class="col-7">
+                        <div class="card-body" style="margin-left: -25px; margin-top: -5px; width: 105%;">
+                            <h5 class="card-title">Атака 1</h5>
+                            <p class="card-text" style="margin-bottom: 40px;">Описание предмета. Описание предмета. Описание предмета.</p>
+                            <p class="card-text" style="font-weight: bold; position:absolute; bottom:20px;">
+                                Необходимый уровень: 4
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <a href="#" class="btn btn-primary mt-3 float-right" style="width: 100%;">Купить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4 tool-protection">
+        <div class="card" style="width: 100%;">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <img src="https://static8.depositphotos.com/1046686/921/i/450/depositphotos_9218159-stock-photo-grey-background.jpg"
+                             class="card-img-top mt-2" alt="..." style="margin-bottom: 9px;">
+                    </div>
+                    <div class="col-7">
+                        <div class="card-body" style="margin-left: -25px; margin-top: -5px; width: 105%;">
+                            <h5 class="card-title">Защита 1</h5>
+                            <p class="card-text" style="margin-bottom: 40px;">Описание предмета. Описание предмета. Описание предмета.
+                            Описание предмета. Описание предмета. Описание предмета. Описание предмета.</p>
+                            <p class="card-text" style="font-weight: bold; position:absolute; bottom:20px;">
+                                Необходимый уровень: 4
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <a href="#" class="btn btn-primary mt-3 float-right" style="width: 100%;">Купить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4 tool-mining">
+        <div class="card" style="width: 100%;">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <img src="https://static8.depositphotos.com/1046686/921/i/450/depositphotos_9218159-stock-photo-grey-background.jpg"
+                             class="card-img-top mt-2" alt="..." style="margin-bottom: 9px;">
+                    </div>
+                    <div class="col-7">
+                        <div class="card-body" style="margin-left: -25px; margin-top: -5px; width: 105%;">
+                            <h5 class="card-title">Майнинг 1</h5>
+                            <p class="card-text" style="margin-bottom: 40px;">Описание предмета. Описание предмета. Описание предмета.
+                            Описание предмета. Описание предмета. Описание предмета. Описание предмета.</p>
+                            <p class="card-text" style="font-weight: bold; position:absolute; bottom:20px;">
+                                Необходимый уровень: 4
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <a href="#" class="btn btn-primary mt-3 float-right" style="width: 100%;">Купить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4 tool-antivirus">
+        <div class="card" style="width: 100%;">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <img src="https://static8.depositphotos.com/1046686/921/i/450/depositphotos_9218159-stock-photo-grey-background.jpg"
+                             class="card-img-top mt-2" alt="..." style="margin-bottom: 9px;">
+                    </div>
+                    <div class="col-7">
+                        <div class="card-body" style="margin-left: -25px; margin-top: -5px; width: 105%;">
+                            <h5 class="card-title">Антивирус 1</h5>
+                            <p class="card-text" style="margin-bottom: 40px;">Описание предмета. Описание предмета. Описание предмета.
+                            Описание предмета. Описание предмета. Описание предмета. Описание предмета.</p>
+                            <p class="card-text" style="font-weight: bold; position:absolute; bottom:20px;">
+                                Необходимый уровень: 4
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <a href="#" class="btn btn-primary mt-3 float-right" style="width: 100%;">Купить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4 tool-kamikaze">
+        <div class="card" style="width: 100%;">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <img src="https://static8.depositphotos.com/1046686/921/i/450/depositphotos_9218159-stock-photo-grey-background.jpg"
+                             class="card-img-top mt-2" alt="..." style="margin-bottom: 9px;">
+                    </div>
+                    <div class="col-7">
+                        <div class="card-body" style="margin-left: -25px; margin-top: -5px; width: 105%;">
+                            <h5 class="card-title">Камикадзе 1</h5>
+                            <p class="card-text" style="margin-bottom: 40px;">Описание предмета. Описание предмета. Описание предмета.
+                            Описание предмета. Описание предмета. Описание предмета. Описание предмета.
+                            Описание предмета. Описание предмета. Описание предмета. Описание предмета.
+                            Описание предмета. Описание предмета. Описание предмета. Описание предмета.</p>
+                            <p class="card-text" style="font-weight: bold; position:absolute; bottom:20px;">
+                                Необходимый уровень: 4
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <a href="#" class="btn btn-primary mt-3 float-right" style="width: 100%;">Купить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 300px;"></div>
+</div>
+
 {% endblock %}
