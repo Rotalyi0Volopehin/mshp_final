@@ -5,32 +5,23 @@
 .number {
     font-size: 150%;
 }
+
+.label_font {
+    font-size: 130%;
+}
+
 .dark_part {
-    padding-bottom: 5%;
+    height: 125px;
     min-width: 900px;
 }
 
-.password_button {
-    margin-left: 2%;
-}
-
-.delete_button {
-    margin-left: 2%;
-    margin-
-}
-
-.save_button {
-    margin-left: 35%;
-    margin-top: -0.5%;
-}
-
 .info {
-    position: absolute;
+    position: relative;
     border: none;
-    margin-left: 22%;
+    margin-left: 23.5%;
     margin-top: -0.5%;
     font-size: 100.5%;
-    height: 7.5%;
+    height: 40%;
 }
 
 .profile-header {
@@ -45,13 +36,16 @@
     display: inline-block;
 }
 
+.save_button {
+    width: 80%;
+    height: 50px;
+}
+
 body {
     background: #654ea3;
     background: -webkit-linear-gradient(to right, #654ea3, #eaafc8);
     background: linear-gradient(to right, #654ea3, #eaafc8);
     min-height: 100vh;
-    font-family: 'cyberpunk';
-    font-size: 140%;
 }
 
 .profile_pic {
@@ -64,16 +58,8 @@ body {
     margin-left: 25%;
 }
 
-@font-face {
-    font-family: 'cyberpunk';
-    src: url('fonts/Rus.ttf');
-    font-style: normal;
-    font-weight: normal;
-}
-
-
 .progress_bar {
-height: 30px;
+    height: 30px;
 }
 
 .progress_background {

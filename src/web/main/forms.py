@@ -43,7 +43,7 @@ class RegistrationForm(forms.Form):
     name = CommonFields.get_name_field(True, attrs={"class": "form-control"})
     email = forms.CharField(label="E-mail", min_length=1, max_length=64,
                             required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
-    team = forms.ChoiceField(widget=forms.Select(attrs={"class": "custom-select col-sm-9 ml-4"}), label="Фракция",
+    team = forms.ChoiceField(widget=forms.Select(attrs={"class": "form-control"}), label="Фракция",
                              required=True, choices=[(0, "0"), (1, "1"), (2, "2")])
 
 
@@ -61,3 +61,8 @@ class ProfileForm(forms.Form):
     password = CommonFields.get_password_field(False)
     new_password = CommonFields.get_password_field(False)
     action = CommonFields.get_invisible_field(forms.CharField, "action_tag", '')
+
+
+class LoginForm(forms.Form):
+    login = CommonFields.get_login_field(True, attrs={"class": "form-control"})
+    password = CommonFields.get_password_field(True, attrs={"class": "form-control"})
