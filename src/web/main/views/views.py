@@ -11,6 +11,7 @@ from django.contrib.auth import login as log_user_in, logout as log_user_out
 from django.contrib.auth.models import User
 
 from main.db_tools.user_tools import DBUserTools
+from main.db_tools.user_top_tools import DBUserTopTools
 from main.views.form_view import FormView
 from main.views.menu import get_menu_context, get_user_menu_context
 from django.shortcuts import render, redirect, get_object_or_404
@@ -100,9 +101,14 @@ def chat_page(request):
     return render(request, 'pages/chat.html', context)
 
 def rate_page(request):
-    context = {}
-
-    return render(request, 'pages/rating_page.html', context)
+    a = 5
+    top_list = DBUserTopTools.get_top_by_level(a)
+    context = {
+        'pagename': 'Топ игроков',
+        'menu': get_menu_context(),
+        'top_list': top_list
+    }
+    return render(request, 'pages/rating.html', context)
 
 
 class ProfileFormPage(FormView):

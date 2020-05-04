@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+
+
+{% load bootstrap4 %}
+
+
+{% block content %}
+
+<style>
+  body {
+      background: linear-gradient(to bottom, #ffff00, #ffffff);
+  }
+
+  .form1 {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-90%);
+
+  }
+
+  .form1 h1 {
+      margin: 30px 100px;
+      padding: 0;
+      text-align: center;
+      color: #000;
+      font-size: 30px;
+      text-transform: uppercase;
+  }
+
+</style>
+
+    <div class='form1 row'>
+        <div class='text-right'>
+            <h1> ТОП ИГРОКОВ </h1>
+            <div class="container text-center">
+                    <div class="form-group">
+                        {% for UserData in top_list %}
+                            <div class="row border border-dark m-2 rounded-pill">
+                                <div class="col-sm-3 display">
+                                    <div class="">Никнейм</div>
+                                    <div class="form-group">{{ UserData.user }}</div>
+                                </div>
+                                <div class="col-sm-3 display">
+                                    <div class="">Уровень</div>
+                                    <div class="form-group">{{ UserData.level }}</div>
+                                </div>
+
+                                <div class="col-sm-3 display">
+                                    <div class="">Опыт</div>
+                                    <div class="form-group">{{ UserData.exp }}</div>
+                                </div>
+                                <div class="col-sm-3 display">
+                                    <div class="">Фракция</div>
+                                    <div class="form-group">{{ UserData.team }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+             </div>
+        </div>
+    </div>
+
+
+{% endblock %}
