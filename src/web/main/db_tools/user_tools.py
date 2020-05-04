@@ -1,18 +1,19 @@
-import main.models
 import re
-import datetime
-import exceptions
 
 from django.contrib.auth.models import User
-from network_confrontation_web.settings import AUTO_USER_ACTIVATION
-from main.db_tools.user_error_messages import DBUserErrorMessages
-from main.models import UserData
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+from django.utils import timezone
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
+import exceptions
+import main.models
 # vvv для системы верификации vvv
 from main.db_tools.tokens import account_activation_token
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.core.mail import EmailMessage
+from main.db_tools.user_error_messages import DBUserErrorMessages
+from main.models import UserData
+from network_confrontation_web.settings import AUTO_USER_ACTIVATION
 
 
 # TODO: задокументировать код
@@ -67,7 +68,7 @@ class DBUserTools:
         if len(User.objects.filter(email=email)) > 0:
             return False, DBUserErrorMessages.email_is_already_in_use
         # vvv запись в БД vvv
-        user = User(username=login, email=email, date_joined=datetime.datetime.now())
+        user = User(username=login, email=email, date_joined=timezone.now())
         user.set_password(password)
         user.save()
         user_data = main.models.UserData(user=user, team=team)
