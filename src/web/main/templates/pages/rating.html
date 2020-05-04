@@ -32,25 +32,49 @@
 
     <div class='form1 row'>
         <div class='text-right'>
-            <h1> ТОП ИГРОКОВ </h1>
-            <div class="container text-center">
-                    <div class="form-group">
+            <h1 class="cyberfont"> ТОП ИГРОКОВ </h1>
+            <div class="container text-center row">
+                    <div class="form-group col-6">
                         {% for UserData in top_list %}
-                            <div class="row border border-dark m-2 rounded-pill">
-                                <div class="col-sm-3 display">
+                            <div class="row border border-dark m-2 p-3">
+                                <div class="col-sm-6 display cyberfont">
                                     <div class="">Никнейм</div>
                                     <div class="form-group">{{ UserData.user }}</div>
                                 </div>
-                                <div class="col-sm-3 display">
+                                <div class="col-sm-6 display cyberfont">
                                     <div class="">Уровень</div>
                                     <div class="form-group">{{ UserData.level }}</div>
                                 </div>
 
-                                <div class="col-sm-3 display">
+                                <div class="col-sm-6 display cyberfont">
                                     <div class="">Опыт</div>
                                     <div class="form-group">{{ UserData.exp }}</div>
                                 </div>
-                                <div class="col-sm-3 display">
+                                <div class="col-sm-6 display cyberfont">
+                                    <div class="">Фракция</div>
+                                    <div class="form-group">{{ UserData.team }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+<!--                ИЗБАВИТЬСЯ ОТ КОПИПАСТА -->
+                <div class="form-group col-6">
+                        {% for UserData in top_list %}
+                            <div class="row border border-dark m-2 p-3">
+                                <div class="col-sm-6 display cyberfont">
+                                    <div class="">Никнейм</div>
+                                    <div class="form-group">{{ UserData.user }}</div>
+                                </div>
+                                <div class="col-sm-6 display cyberfont">
+                                    <div class="">Уровень</div>
+                                    <div class="form-group">{{ UserData.level }}</div>
+                                </div>
+
+                                <div class="col-sm-6 display cyberfont">
+                                    <div class="">Опыт</div>
+                                    <div class="form-group">{{ UserData.exp }}</div>
+                                </div>
+                                <div class="col-sm-6 display cyberfont">
                                     <div class="">Фракция</div>
                                     <div class="form-group">{{ UserData.team }}</div>
                                 </div>
