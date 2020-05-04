@@ -9,7 +9,7 @@ class PressureToolSet:
         self.count = 0
 
     @property  # при наследовании необходимо перегрузить
-    def cost(self):
+    def cost(self) -> int:
         raise exceptions.NotImplementedException()
 
     def try_use(self, target: GridTile) -> bool:
