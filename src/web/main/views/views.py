@@ -10,7 +10,6 @@ from django.http import HttpResponse
 from django.contrib.auth import login as log_user_in, logout as log_user_out
 from django.contrib.auth.models import User
 
-from main.models import UserData, UserStatistic
 from main.db_tools.user_tools import DBUserTools
 from main.views.form_view import FormView
 from main.views.menu import get_menu_context, get_user_menu_context
@@ -99,6 +98,11 @@ def chat_page(request):
         'menu': get_menu_context()
     }
     return render(request, 'pages/chat.html', context)
+
+def rate_page(request):
+    context = {}
+
+    return render(request, 'pages/rating_page.html', context)
 
 
 class ProfileFormPage(FormView):
