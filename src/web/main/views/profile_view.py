@@ -1,104 +1,11 @@
 from django.contrib.auth import login as log_user_in, logout as log_user_out
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 
 import main.forms as forms
-
-from main.db_tools.cad import CAD
-from django.http import HttpResponse
-from django.contrib.auth import login as log_user_in, logout as log_user_out
-from django.contrib.auth.models import User
-
-from main.models import UserData, UserStatistic
 from main.db_tools.user_tools import DBUserTools
 from main.views.form_view import FormView
-from main.views.menu import get_menu_context, get_user_menu_context
-from django.shortcuts import render, redirect, get_object_or_404
-from main.db_tools.user_tools import DBUserTools
-from django.db.models import Sum
-
-
-def index_page(request):
-    """**View-функция страницы '/'**
-
-    :param request: request на страницу '/'
-    :type request: HttpRequest
-    :return: response
-    :rtype: HttpResponse
-    """
-    context = {
-        'pagename': 'Главная',
-        'author': 'Andrew',
-        'pages': 4,
-        'menu': get_menu_context(),
-        'user_menu': get_user_menu_context(request.user),
-    }
-    return render(request, 'pages/index.html', context)
-
-
-class RegistrationFormPage(FormView):
-    """**View-класс страницы '/registration/'**\n
-    Наследование от класса :class:`main.views.form_view.FormView`
-    """
-    pagename = "Регистрация"
-    form_class = forms.RegistrationForm
-    template_name = "registration/registration.html"
-
-    @staticmethod
-    def post_handler(context: dict, request, form):
-        """**Дополнительный обработчик post-запросов**\n
-        Вызывается методом :meth:`main.views.form_view.FormView.post`
-
-        :param context: контекст страницы
-        :type context: dict
-        :param request: запрос на страницу '/registration/'
-        :type request: HttpRequest
-        :param form: форма, содержащая post-данные
-        :type form: RegistrationForm
-        """
-        password = form.data["password1"]
-        login = form.data["login"]
-        email = form.data["email"]
-        team = int(form.data["team"])
-        ok, error = DBUserTools.try_register(login, password, email, team, request)
-        if not ok:
-            context["ok"] = False
-            context["error"] = error
-        else:
-            context["success"] = True
-            user = User.objects.get(username=login)
-            log_user_in(request, user)
-            context["user_menu"] = get_user_menu_context(user)
-
-
-def cad_page(request):
-    CAD.clear_all_data()
-    return HttpResponse("SUCCESS! All data is cleared")
-
-
-def darknet_page(request):
-    context = {
-        'pagename': 'DarkNet',
-        'menu': get_menu_context()
-    }
-    return render(request, 'pages/darknet.html', context)
-
-
-def forum_page(request):
-    context = {
-        'pagename': 'Форум',
-        'menu': get_menu_context()
-    }
-    return render(request, 'pages/forum.html', context)
-
-
-def chat_page(request):
-    context = {
-        'pagename': 'Закрытые каналы',
-        'menu': get_menu_context()
-    }
-    return render(request, 'pages/chat.html', context)
 
 
 class ProfileFormPage(FormView):
@@ -107,7 +14,7 @@ class ProfileFormPage(FormView):
     """
     pagename = "Профиль"
     form_class = forms.ProfileForm
-    template_name = "pages/profile.html"
+    template_name = "pages/profile/profile.html"
 
     @staticmethod
     def get_handler(context: dict, request, uid: int):

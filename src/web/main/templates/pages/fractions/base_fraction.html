@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container bg-dark">
+    <div class="card bg-dark text-white pt-3">
+        {% block fraction %}{% endblock %}
+        <div class="row">
+            {% block info %} {% endblock %}
+            <div class="col">
+                <div class="pt-4 cyberfont">Участники:</div>
+                {% block members %}
+                {% for item in members %}
+                <div>
+                    {{ item }}
+                </div>
+                {% endfor %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    <br><br><br><br>
+</div>
+{% endblock %}
