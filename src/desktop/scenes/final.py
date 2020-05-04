@@ -25,4 +25,7 @@ class FinalScene(Scene):
             self.seconds_left = seconds_left  # вызываем font.render только тогда,
             self.text_gameover.update_text(self.get_gameover_str())  # когда текст изменился
         if self.seconds_left == 0:
-            self.game.game_over = True
+            self.exit()
+
+    def exit(self):
+        self.set_next_scene(self.game.MENU_SCENE_INDEX)
