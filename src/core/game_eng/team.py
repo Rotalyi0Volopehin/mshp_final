@@ -1,7 +1,5 @@
 import exceptions
 
-from game_eng.player import Player
-
 
 # abstract
 class Team:
@@ -10,8 +8,15 @@ class Team:
         self.__current_player_index = 0
         self.money = 0
 
-    def add_player(self, player: Player):
-        if not isinstance(player, Player):
+    @property
+    def player_type(self):
+        if not hasattr(Team, "__player_type"):
+            from game_eng.player import Player
+            Team.__player_type = Player
+        return Team.__player_type
+
+    def add_player(self, player):
+        if not isinstance(player, self.player_type):
             raise exceptions.ArgumentTypeException()
         if player.team != self:
             raise exceptions.ArgumentValueException()

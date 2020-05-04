@@ -3,6 +3,7 @@ import exceptions
 from game_eng.grid_tile import GridTile
 
 
+# abstract
 class PressureToolSet:
     def __init__(self):
         self.count = 0
