@@ -1,12 +1,16 @@
 import exceptions
 
 from game_eng.grid_tile import GridTile
+from game_eng.player import Player
 
 
 # abstract
 class PressureToolSet:
-    def __init__(self):
+    def __init__(self, player: Player):
+        if not isinstance(player, Player):
+            raise exceptions.ArgumentTypeException()
         self.count = 0
+        self._player = player
 
     @property  # при наследовании необходимо перегрузить
     def cost(self) -> int:
