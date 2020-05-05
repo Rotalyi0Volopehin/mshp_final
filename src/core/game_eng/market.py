@@ -22,7 +22,8 @@ class Market:
         Запускается автоматически при инициализации модуля.
         """
         Market.tool_types = set()
-        pts_ders_dir = os.path.join(os.path.abspath(".."), "core", "game_eng", "pressure_tool_set_ders")
+        root_path = os.path.abspath(os.path.dirname(exceptions.__file__))
+        pts_ders_dir = os.path.join(root_path, "game_eng", "pressure_tool_set_ders")
         for entry in os.listdir(pts_ders_dir):
             if entry.endswith(".py") and (entry != "__init__.py"):
                 module_name = f"game_eng.pressure_tool_set_ders.{entry[:len(entry) - 3]}"
