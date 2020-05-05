@@ -4,8 +4,11 @@ from game_eng.player import Player
 from game_eng.grid_tile import GridTile
 
 
-# abstract
 class PlayerAction:
+    """**Модель действия, совершаемого игроком**\n
+    abstract class\n
+    Этот класс необходим для журналирования ходов.
+    """
     def __init__(self, player: Player, target: GridTile):
         if not isinstance(player, Player):
             raise exceptions.ArgumentTypeException()
@@ -13,7 +16,15 @@ class PlayerAction:
         self.target = target
 
     def try_do(self) -> bool:
+        """**Попытка совершить действие**\n
+        :return: ok
+        :rtype: bool
+        """
         raise exceptions.NotImplementedException()
 
     def try_undo(self) -> bool:
+        """**Попытка отменить действие**\n
+        :return: ok
+        :rtype: bool
+        """
         raise exceptions.NotImplementedException()
