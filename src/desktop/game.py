@@ -1,10 +1,10 @@
-import sys
-import pygame
 import time
 
-from pygame.locals import *
-from pygame_textinput import TextInput
+import pygame
 from PIL import Image
+from pygame.locals import *
+
+from pygame_textinput import TextInput
 
 
 class GIFImage(object):
@@ -27,7 +27,7 @@ class GIFImage(object):
         pass
 
     def process_draw(self):
-        self.render(self.screen, (125,70))
+        self.render(self.screen, (125, 70))
 
     def process_event(self, event):
         pass
@@ -215,8 +215,8 @@ class Button:
         self.image_put_on_button.blit(text_button, text_rect)
 
     def drawbutton(self, screen):
-        if not(self.clicked):
-            screen.blit(self.image_click,(self.x, self.y))
+        if not (self.clicked):
+            screen.blit(self.image_click, (self.x, self.y))
         else:
             screen.blit(self.image_put_on_button, (self.x, self.y))
 
@@ -246,7 +246,7 @@ class Game:
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.clock = pygame.time.Clock()
 
-        #self.trailer = GIFImage("backimage.gif")
+        # self.trailer = GIFImage("backimage.gif")
 
         self.enter = Button(200, 150, "Войти", "button_pressed.png", "button_not_pressed.png")
         self.enter.create_button()
@@ -278,7 +278,6 @@ class Game:
                     exit()
             self.scenes[self.current_scene].process_frame(eventlist)
             self.clock.tick(30)
-
 
     def create_window(self):
         pygame.init()

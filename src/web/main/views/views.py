@@ -1,13 +1,13 @@
-import main.forms as forms
-
-from main.db_tools.cad import CAD
-from django.http import HttpResponse
 from django.contrib.auth import login as log_user_in, logout as log_user_out
 from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
+import main.forms as forms
+from main.db_tools.cad import CAD
+from main.db_tools.user_tools import DBUserTools
 from main.views.form_view import FormView
 from main.views.menu import get_menu_context, get_user_menu_context
-from django.shortcuts import render, redirect
-from main.db_tools.user_tools import DBUserTools
 
 
 def index_page(request):

@@ -7,15 +7,15 @@
     <div class="card bg-dark text-white pt-3">
         {% block fraction %}{% endblock %}
         <div class="row">
-        {% block info %} {% endblock %}
+            {% block info %} {% endblock %}
             <div class="col">
                 <div class="pt-4 cyberfont">Участники:</div>
                 {% block members %}
-                    {% for item in members %}
-                        <div>
-                            {{ item }}
-                        </div>
-                    {% endfor %}
+                {% for item in members %}
+                <div>
+                    {{ item }}
+                </div>
+                {% endfor %}
                 {% endblock %}
             </div>
         </div>

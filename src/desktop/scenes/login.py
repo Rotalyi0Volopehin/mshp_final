@@ -1,18 +1,18 @@
 import pygame
-import request_parcel_helpers.user_logging as user_logging
-
 from pygame.locals import *
-from constants import Color
-from scenes.base import Scene
-from objects.text_input import Txtinput
-from objects.button import Btn
-from objects.text import Text
-from objects.gifimage import GIFImage
-from net_connection.response_ids import ResponseID
-from ws.parcel_manager import ParcelManager
-from ws.channel import Channel
 
+import request_parcel_helpers.user_logging as user_logging
+from constants import Color
+from net_connection.response_ids import ResponseID
+from objects.button import Btn
+from objects.gifimage import GIFImage
 from objects.gifimg import GIFImage
+from objects.text import Text
+from objects.text_input import Txtinput
+from scenes.base import Scene
+from ws.channel import Channel
+from ws.parcel_manager import ParcelManager
+
 
 class LoginScene(Scene):
     def init_form(self):
@@ -62,6 +62,7 @@ class LoginScene(Scene):
 
         def handler_cloak(parcel):
             self.login_response_parcel_handler(parcel)
+
         ParcelManager.receive_parcel_async(handler_cloak)
 
     def login_response_parcel_handler(self, parcel):

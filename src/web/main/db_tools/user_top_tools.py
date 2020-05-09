@@ -1,12 +1,13 @@
-import exceptions
-
-from main.models import UserData
 from django.db.models import Manager, QuerySet
+
+import exceptions
+from main.models import UserData
 
 
 class DBUserTopTools:
     """**Инструменты получения топа пользователей из БД**
     """
+
     @staticmethod
     def get_top_by_level(count: int, top_base=UserData.objects) -> list:
         """**Инструмент получения топа пользователей по их уровню**\n

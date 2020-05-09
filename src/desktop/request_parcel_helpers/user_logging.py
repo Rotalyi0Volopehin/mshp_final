@@ -1,5 +1,5 @@
-from ws.parcel_manager import ParcelManager
 from net_connection.request_ids import RequestID
+from ws.parcel_manager import ParcelManager
 
 
 def send_login_request(login, password):

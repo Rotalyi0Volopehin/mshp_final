@@ -1,10 +1,11 @@
-import exceptions
-import websockets
 import asyncio
-
 from queue import Queue
 from threading import Thread
 from types import FunctionType
+
+import websockets
+
+import exceptions
 
 
 # TODO: задокументировать
@@ -47,6 +48,7 @@ class Channel:
             asyncio.ensure_future(Channel.__send_loop())
             asyncio.ensure_future(Channel.__receive_loop())
             loop.run_forever()
+
         Channel.__channel_thread = Thread(target=channel_loop)
         Channel.__channel_thread.start()
 
