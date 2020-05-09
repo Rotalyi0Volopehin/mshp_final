@@ -1,6 +1,7 @@
 import pygame
 
 from constants import Color
+from game import GIFImage
 
 
 class Scene:
@@ -9,6 +10,7 @@ class Scene:
         self.screen = self.game.screen
         self.objects = []
         self.create_objects()
+
 
     def create_objects(self):
         pass

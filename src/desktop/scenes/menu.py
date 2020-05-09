@@ -13,6 +13,8 @@ class MenuScene(Scene):
         self.pl_info = PlayerInfo(self.game, lvl="99")
         self.objects = [self.pl_info, self.button_start, self.button_exit, self.button_map, self.button_quest]
 
+
+
     def set_main_scene(self):
         self.set_next_scene(self.game.MAIN_SCENE_INDEX)
 

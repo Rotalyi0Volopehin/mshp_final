@@ -5,18 +5,45 @@
 
 
 {% block content %}
+  <style>
+  body {
+      background: linear-gradient(to top right, #0000ff, #ffffff);
+  }
 
-    <h1 class="mt-4">Авторизация ( Требуется переделать стили )</h1>
-    <hr>
+  .form1 {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      background-color: rgba(220, 220, 220, 0.3);
 
-    <div class="row">
-        <div class="col-4 offset-4">
+  }
+
+  .form1 h1 {
+      margin: 30px 100px;
+      padding: 0;
+      text-align: center;
+      color: #000;
+      font-size: 30px;
+      text-transform: uppercase;
+  }
+  </style>
+    <div class="form1 p-3 rounded-lg">
+        <h1>Вход</h1>
+        <div class="form">
             <form action="{% url 'login' %}" method="POST">
                 {% csrf_token %}
-
-                {% bootstrap_form form %}
+                <div class="container">
+                    <div class="form-group">
+                        {% for item in form %}
+                            <div class="row">
+                                <p class="col-5 mr-4 mt-1 text-right text-white">{{ item.label }}</p>
+                                <div class="col form-group">{{ item }}</div>
+                            </div>
+                        {% endfor %}
+                     </div>
                 {% buttons %}
-                    <button type="submit" class="btn btn-primary float-right btn-block">Войти</button>
+                    <button type="submit" class="btn btn-dark float-right btn-block">Войти</button>
                 {% endbuttons %}
             </form>
         </div>
