@@ -2,7 +2,7 @@ from main.views.menu import get_menu_context, get_user_menu_context
 from django.shortcuts import render
 from django.views import View
 from django.forms import Form
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 
 
 class FormView(View):
@@ -27,7 +27,7 @@ class FormView(View):
     get_handler = None
     post_handler = None
 
-    def get(self, request, **kwargs):
+    def get(self, request: HttpRequest, **kwargs):
         """**Обработчик get-запросов**\n
         Вызывает дополнительный обработчик get-запросов со следующими аргументами:\n
         - context (*dict*) - контекст

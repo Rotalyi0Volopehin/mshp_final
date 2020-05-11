@@ -26,7 +26,7 @@ class GameModel:
         self.teams = teams
         self.market = Market()
         self.__current_team_index = 0
-        self.__current_player = teams[0].current_player()
+        self.__current_player = teams[0].current_player
         self.__current_player_turn = PlayerTurn()
 
     @property

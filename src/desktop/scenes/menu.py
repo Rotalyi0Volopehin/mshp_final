@@ -12,13 +12,16 @@ class MenuScene(Scene):
         self.objects = [self.button_start, self.button_exit, self.button_map, self.button_quest]
 
     def set_main_scene(self):
-        self.set_next_scene(self.game.MAIN_SCENE_INDEX)
+        from game_vc.game_vc import GameVC
+        self.game.goto_deeper_scene(GameVC)
 
     def set_map_scene(self):
-        self.set_next_scene(self.game.MAP_SCENE_INDEX)
+        from scenes.map import MapScene
+        self.game.goto_deeper_scene(MapScene)
 
     def set_quest_scene(self):
-        self.set_next_scene(self.game.QUESTS_SCENE_INDEX)
+        from scenes.quests import QuestScene
+        self.game.goto_deeper_scene(QuestScene)
 
     def exit(self):
         self.game.game_over = True
