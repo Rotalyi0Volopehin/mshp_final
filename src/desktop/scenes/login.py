@@ -60,7 +60,6 @@ class LoginScene(Scene):
 
         def handler_cloak(parcel):
             self.login_response_parcel_handler(parcel)
-
         ParcelManager.receive_parcel_async(handler_cloak)
 
     def login_response_parcel_handler(self, parcel):
@@ -75,3 +74,6 @@ class LoginScene(Scene):
 
     def on_reg_button_click(self):
         pass  # TODO: сделать редирект в браузер на страницу регистрации
+
+    def on_closed(self):
+        pygame.mixer.music.stop()

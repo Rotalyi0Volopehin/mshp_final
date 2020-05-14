@@ -59,6 +59,3 @@ class Scene:
     # event
     def on_returned_to_this_scene(self):
         pass
-
-    def __del__(self):
-        self.on_closed()

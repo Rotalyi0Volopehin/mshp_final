@@ -30,11 +30,14 @@ class Game:
         self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
 
     def __init_scenes(self):
+        self.scene_stack = []
         self.set_origin_scene(LoginScene)
 
     def set_origin_scene(self, new_scene_type: type):
         if not issubclass(new_scene_type, Scene):
             raise exceptions.ArgumentTypeException()
+        for scene in self.scene_stack:
+            scene.on_closed()
         self.__current_scene = new_scene_type(self)
         self.scene_stack = [self.__current_scene]
 
@@ -47,7 +50,7 @@ class Game:
         prev_scene.on_gone_to_deeper_scene_from_this()
 
     def return_to_upper_scene(self):
-        self.scene_stack.pop()
+        self.scene_stack.pop().on_closed()
         self.__current_scene = self.scene_stack[-1]
         self.__current_scene.on_returned_to_this_scene()
 

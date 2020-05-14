@@ -24,17 +24,3 @@ class MenuScene(Scene):
     def __set_quest_scene(self):
         from scenes.quests import QuestScene
         self.game.goto_deeper_scene(QuestScene)
-
-    @staticmethod
-    def __mute_login_bgm():
-        pygame.mixer.music.stop()
-
-    @staticmethod
-    def __unmute_login_bgm():
-        pygame.mixer.music.play()
-
-    def on_gone_to_deeper_scene_from_this(self):
-        MenuScene.__mute_login_bgm()
-
-    def on_returned_to_this_scene(self):
-        MenuScene.__unmute_login_bgm()
