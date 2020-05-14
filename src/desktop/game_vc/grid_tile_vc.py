@@ -55,7 +55,7 @@ class GridTileVC(DrawObject):
         return GridTileVC.HEXAGON.contains_point(x - self.pos_x, y - self.pos_y)
 
     def render_number(self):
-        self.number.update_text(str(self.model.power))
+        self.number.update_text("{:0>2x}".format(self.model.power))
 
     def update_surface(self):
         if (self.__surface_status != self.status) or (self.__surface_team != self.model.team):
@@ -78,8 +78,8 @@ class GridTileVC(DrawObject):
             if self.contains_point(x, y):
                 grid_view = self.model.grid.view
                 if mouse_down:
-                    grid_view.select_tile(self.model)
                     grid_view.select_target_tile(None)
+                    grid_view.select_tile(self.model)
                 elif (self.model == grid_view.selected_tile) or \
                         (self.model in grid_view.selected_tile.get_neighbours()):
                     grid_view.select_target_tile(self.model)

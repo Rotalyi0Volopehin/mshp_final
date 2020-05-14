@@ -86,7 +86,7 @@ class Market:
         Пополняет ассортимент ИВ, при этом происходит изменение цен и количества ИВ определённых типов.\n
         Выполняется при окончании хода любой фракции.
         """
-        for slot in self.assortment:
+        for slot in self.assortment.values():
             slot.update_price_and_count()
             slot.refresh_count()
 
@@ -105,16 +105,16 @@ class MarketSlot:
         """
         sold_ratio = self.pt_set.count / self.start_count
         if sold_ratio == 0.0:
-            self.start_count += Market.MarketSlot.__calc_dynamic_value_delta(self.start_count)
+            self.start_count += MarketSlot.__calc_dynamic_value_delta(self.start_count)
             overprice = self.price - self.pt_set.production_cost
-            overprice += Market.MarketSlot.__calc_dynamic_value_delta(overprice)
+            overprice += MarketSlot.__calc_dynamic_value_delta(overprice)
             self.price = overprice + self.pt_set.production_cost
         elif sold_ratio >= 0.25:
             if self.start_count > 1:
-                self.start_count -= Market.MarketSlot.__calc_dynamic_value_delta(self.start_count)
+                self.start_count -= MarketSlot.__calc_dynamic_value_delta(self.start_count)
             overprice = self.price - self.pt_set.production_cost
             if overprice > 0:
-                overprice -= Market.MarketSlot.__calc_dynamic_value_delta(overprice)
+                overprice -= MarketSlot.__calc_dynamic_value_delta(overprice)
                 self.price = overprice + self.pt_set.production_cost
 
     @staticmethod

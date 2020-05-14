@@ -45,4 +45,4 @@ def create_hardcoded_game_model() -> GameModel:
         player = Player(f"P{i}A", team)
         team.add_player(player)
         team.add_player(Player(f"P{i}B", team))
-        return GameModel(teams, title="Hardcoded session", player_turn_period=30, teams_money_limit=999)
+    return GameModel(teams, title="Hardcoded session", player_turn_period=30, teams_money_limit=999)

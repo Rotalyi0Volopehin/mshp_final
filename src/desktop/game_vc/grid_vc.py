@@ -47,21 +47,37 @@ class GridVC(DrawObject):
             for tile in column:
                 tile.controller.process_event(event)
         if (event.type == pygame.MOUSEBUTTONDOWN) and (4 <= event.button <= 5):
-            self.__try_move_power(5 if event.button == 4 else -5)
+            self.__try_move_power(4 if event.button == 4 else -4)
+        elif event.type == pygame.KEYUP:
+            self.__handle_key_up(event.key)
 
     def __try_move_power(self, value):
+        if (self.selected_tile is None) or (self.target_tile is None):
+            return
         if self.selected_tile.power < value:
             value = self.selected_tile.power
         elif (value <= 0) and (self.selected_tile.team == self.target_tile.team) and (self.target_tile.power < -value):
             value = -self.target_tile.power
         self.selected_tile.move_power(self.target_tile, value)
 
-
-    def on_scroll(self, value):
-        self.selected_tile.move_power(self.target_tile, value)
+    def __handle_key_up(self, key):
+        if key == pygame.K_c:
+            self.select_tile(None)
+            self.select_target_tile(None)
+        elif (self.selected_tile is not None) and (self.target_tile is not None):
+            if key == pygame.K_END:
+                self.selected_tile.move_power(self.target_tile, self.selected_tile.power)
+            elif (key == pygame.K_HOME) and (self.selected_tile.team == self.target_tile.team):
+                self.target_tile.move_power(self.selected_tile, self.target_tile.power)
+            elif key == pygame.K_UP:
+                self.__try_move_power(1)
+            elif key == pygame.K_DOWN:
+                self.__try_move_power(-1)
 
     def use_ability_emp(self):
-        self.model.ability_emp(self.target_tile)
+        if self.target_tile is not None:
+            self.model.ability_emp(self.target_tile)
 
     def use_ability_fishing(self):
-        self.model.ability_fishing(self.target_tile)
+        if self.target_tile is not None:
+            self.model.ability_fishing(self.target_tile)
