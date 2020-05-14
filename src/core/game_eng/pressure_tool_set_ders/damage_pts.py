@@ -14,5 +14,5 @@ class DamagePTSet(PressureToolSet):
         dmg = self.damage
         if not isinstance(dmg, int):
             raise exceptions.InvalidReturnException()
-        target.value -= dmg
+        target.power -= dmg
         return True  # да, атаковать можно и себя

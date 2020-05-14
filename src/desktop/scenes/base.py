@@ -47,3 +47,18 @@ class Scene:
 
     def additional_draw(self):
         pass
+
+    # event
+    def on_gone_to_deeper_scene_from_this(self):
+        pass
+
+    # event
+    def on_closed(self):
+        pass
+
+    # event
+    def on_returned_to_this_scene(self):
+        pass
+
+    def __del__(self):
+        self.on_closed()

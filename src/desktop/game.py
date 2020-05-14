@@ -17,7 +17,6 @@ class Game:
         pygame.font.init()
 
     def __init__(self, width=800, height=600):
-        self.game_over = False
         self.clock = pygame.time.Clock()
         self.__init_window(width, height)
         self.__init_scenes()
@@ -42,24 +41,30 @@ class Game:
     def goto_deeper_scene(self, new_scene_type: type):
         if not issubclass(new_scene_type, Scene):
             raise exceptions.ArgumentTypeException()
+        prev_scene = self.__current_scene
         self.__current_scene = new_scene_type(self)
         self.scene_stack.append(self.__current_scene)
+        prev_scene.on_gone_to_deeper_scene_from_this()
 
     def return_to_upper_scene(self):
         self.scene_stack.pop()
         self.__current_scene = self.scene_stack[-1]
+        self.__current_scene.on_returned_to_this_scene()
 
     @property
     def current_scene(self):
         return self.__current_scene
 
     def main_loop(self):
-        self.wall_collision_count = 0
-        self.ticks = 0
         while True:
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
-                    exit()
+                    Game.exit()
             self.current_scene.process_frame(events)
             self.clock.tick(self.main_loop_duration)  # это не "sleep(dur)", а "sleep(dur - elapsed)"
+
+    @staticmethod
+    def exit():  # TODO: починить exit
+        pygame.quit()
+        exit()

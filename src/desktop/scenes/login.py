@@ -35,7 +35,6 @@ class LoginScene(Scene):
 
     def load_sound(self):
         pygame.mixer.music.load(path.join("sounds", "login_bgm.wav"))
-        pygame.mixer.music.set_volume(0.5)
 
     def collect_objects(self):
         self.objects = [self.trailer, self.login, self.password,
