@@ -1,23 +1,29 @@
-from constants import Color
-from vc_game_eng.grid_controller import GridTileController
-from game_eng.grid_model import GridModel
-from vc_game_eng.grid_view import GridTileView
-from objects.button import Btn
 from scenes.base import Scene
+from objects.button import Btn
+from objects.text import Text
+from constants import Color
 
 
 class MapScene(Scene):
     def create_objects(self):
-        grid_model = GridModel(self.game)
-        self.grid_controller = GridTileController(grid_model)
-        self.grid_view = GridTileView(self.game, grid_model, self.grid_controller)
-        self.grid_controller.init_view(self.grid_view)
-        self.grid_view.process_draw()
-        self.button_back = Btn(self.game, (350, 500, 100, 40), Color.WHITE, 'Меню', self.back_to_menu)
-        self.objects = [self.grid_view, self.grid_controller, self.button_back]
+        button_back = Btn(self.game, (350, 500, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
+        self.objects.append(button_back)
+        self.game_vc = self.game.current_scene.game_vc
+        self.objects.append(self.game_vc)
+        emp_button = Btn(self.game, (30, 450, 100, 40), Color.WHITE, 'EMP', self.game_vc.grid_vc.use_ability_emp)
+        self.objects.append(emp_button)
+        fish_button = Btn(self.game, (30, 500, 100, 40), Color.WHITE, 'Fishing',
+                          self.game_vc.grid_vc.use_ability_fishing)
+        self.objects.append(fish_button)
+        controls = [
+            "ЛКМ - выделение",
+            "зажатие ЛКМ - выделение соседа",
+            "колёсико/вверх/вниз/end/home - перемещение мощи",
+            "С - снятие выделения"
+        ]
+        for i in range(len(controls)):
+            line = controls[i]
+            text = Text(self.game, font_name="Consolas", font_size=20, color=Color.WHITE, x = 300, y=250 + i * 20,
+                        text=line)
+            self.objects.append(text)
 
-    def back_to_menu(self):
-        self.set_next_scene(self.game.MENU_SCENE_INDEX)
-
-    def exit(self):
-        self.game.game_over = True

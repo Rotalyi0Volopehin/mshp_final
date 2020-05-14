@@ -5,7 +5,7 @@
 
 
 {% block content %}
-  <style>
+<style>
   body {
       background: linear-gradient(to top right, #0000ff, #ffffff);
   }
@@ -27,21 +27,22 @@
       font-size: 30px;
       text-transform: uppercase;
   }
-  </style>
-    <div class="form1 p-3 rounded-lg">
-        <h1>Вход</h1>
-        <div class="form">
+
+</style>
+<div class="form1 p-3 rounded-lg">
+    <h1>Вход</h1>
+    <div class="form">
             <form action="{% url 'login' %}" method="POST">
                 {% csrf_token %}
                 <div class="container">
                     <div class="form-group">
                         {% for item in form %}
-                            <div class="row">
-                                <p class="col-5 mr-4 mt-1 text-right text-white">{{ item.label }}</p>
-                                <div class="col form-group">{{ item }}</div>
-                            </div>
+                        <div class="row">
+                            <p class="col-5 mr-4 mt-1 text-right text-white">{{ item.label }}</p>
+                            <div class="col form-group">{{ item }}</div>
+                        </div>
                         {% endfor %}
-                     </div>
+                    </div>
                 {% buttons %}
                     <button type="submit" class="btn btn-dark float-right btn-block">Войти</button>
                 {% endbuttons %}

@@ -28,7 +28,7 @@ class Button:
         self.image_put_on_button.blit(text_button, text_rect)
 
     def drawbutton(self, screen):
-        if not(self.clicked):
-            screen.blit(self.image_click,(self.x, self.y))
+        if not (self.clicked):
+            screen.blit(self.image_click, (self.x, self.y))
         else:
             screen.blit(self.image_put_on_button, (self.x, self.y))

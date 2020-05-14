@@ -62,7 +62,7 @@ class ProfileForm(forms.Form):
     new_password = CommonFields.get_password_field(False)
     action = CommonFields.get_invisible_field(forms.CharField, "action_tag", '')
 
+
 class LoginForm(forms.Form):
     login = CommonFields.get_login_field(True, attrs={"class": "form-control"})
     password = CommonFields.get_password_field(True, attrs={"class": "form-control"})
-

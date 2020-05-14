@@ -1,10 +1,10 @@
+from types import FunctionType
+
 import exceptions
 import net_connection.json_serialize as json_ser
-
-from .channel import Channel
 from net_connection.parcel_check import is_request_parcel_valid
 from net_connection.parcel_check import is_response_parcel_valid
-from types import FunctionType
+from .channel import Channel
 
 
 class ParcelManager:
@@ -28,6 +28,7 @@ class ParcelManager:
         def receive_handler(response):
             parcel = ParcelManager.__convert_response_into_parcel(response)
             parcel_handler(parcel)
+
         Channel.receive_async(receive_handler)
 
     @staticmethod

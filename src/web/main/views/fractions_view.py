@@ -1,11 +1,11 @@
+from collections import OrderedDict
+
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views import View
 
 from main.db_tools.user_tools import DBUserTools
 from main.views.menu import get_menu_context, get_user_menu_context
-
-from collections import OrderedDict
 
 
 class FractionPages(View):
