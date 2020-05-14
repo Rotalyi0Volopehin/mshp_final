@@ -30,8 +30,8 @@ class GridModel:
     @staticmethod
     def ability_emp(target):
         for neighbour in target.get_neighbours():
-            neighbour.power = max(neighbour.power - 20, 0)
+            neighbour.power = max(neighbour.power - 16, 0)
 
     @staticmethod
     def ability_fishing(target):
-        target.power = max(target.power - 40, 0)
+        target.power = max(target.power - 32, 0)

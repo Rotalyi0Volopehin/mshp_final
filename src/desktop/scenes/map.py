@@ -1,7 +1,6 @@
-import pygame
-
 from scenes.base import Scene
 from objects.button import Btn
+from objects.text import Text
 from constants import Color
 
 
@@ -16,4 +15,15 @@ class MapScene(Scene):
         fish_button = Btn(self.game, (30, 500, 100, 40), Color.WHITE, 'Fishing',
                           self.game_vc.grid_vc.use_ability_fishing)
         self.objects.append(fish_button)
+        controls = [
+            "ЛКМ - выделение",
+            "зажатие ЛКМ - выделение соседа",
+            "колёсико/вверх/вниз/end/home - перемещение мощи",
+            "С - снятие выделения"
+        ]
+        for i in range(len(controls)):
+            line = controls[i]
+            text = Text(self.game, font_name="Consolas", font_size=20, color=Color.WHITE, x = 300, y=250 + i * 20,
+                        text=line)
+            self.objects.append(text)
 
