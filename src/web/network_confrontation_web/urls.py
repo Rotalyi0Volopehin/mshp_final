@@ -31,9 +31,9 @@ urlpatterns = [
     path('forum/', views.forum_page, name='forum'),
     path('chat/', views.chat_page, name='chat'),
     path('profile/<int:uid>/', profile_view.ProfileFormPage.as_view(), name='profile'),
-    path('fraction0/', fractions_view.FractionPages.fraction1_page, name='fraction0'),
-    path('fraction1/', fractions_view.FractionPages.fraction2_page, name='fraction1'),
-    path('fraction2/', fractions_view.FractionPages.fraction3_page, name='fraction2'),
+    path('fraction0/', fractions_view.FractionPages.fraction0_page, name='fraction0'),
+    path('fraction1/', fractions_view.FractionPages.fraction1_page, name='fraction1'),
+    path('fraction2/', fractions_view.FractionPages.fraction2_page, name='fraction2'),
 
     path(
         'login/',
