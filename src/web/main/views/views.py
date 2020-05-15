@@ -17,6 +17,9 @@ from main.views.menu import get_menu_context, get_user_menu_context
 from django.shortcuts import render, redirect, get_object_or_404
 from main.db_tools.user_tools import DBUserTools
 from django.db.models import Sum
+from django.db.models import Manager, QuerySet
+import exceptions
+from main.models import UserData
 
 
 def index_page(request):
@@ -100,13 +103,16 @@ def chat_page(request):
     }
     return render(request, 'pages/chat.html', context)
 
-def rate_page(request):
+def rate_page(request, top_base=UserData.objects):
     a = 5
-    top_list = DBUserTopTools.get_top_by_level(a)
+    topexp_list = DBUserTopTools.get_top_by_level(a)
+
+    toprep_list = top_base.order_by("-reputation")[:a]
     context = {
         'pagename': 'Топ игроков',
         'menu': get_menu_context(),
-        'top_list': top_list
+        'topexp_list': topexp_list,
+        'toprep_list': toprep_list
     }
     return render(request, 'pages/rating.html', context)
 

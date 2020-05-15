@@ -15,7 +15,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%,-90%);
+      transform: translate(-50%,-80%);
 
   }
 
@@ -35,7 +35,8 @@
             <h1 class="cyberfont"> ТОП ИГРОКОВ </h1>
             <div class="container text-center row">
                     <div class="form-group col-6">
-                        {% for UserData in top_list %}
+                        <h1 class="cyberfont"> По опыту </h1>
+                        {% for UserData in topexp_list %}
                             <div class="row border border-dark m-2 p-3">
                                 <div class="col-sm-6 display cyberfont">
                                     <div class="">Никнейм</div>
@@ -59,7 +60,8 @@
                     </div>
 <!--                ИЗБАВИТЬСЯ ОТ КОПИПАСТА -->
                 <div class="form-group col-6">
-                        {% for UserData in top_list %}
+                    <h1 class="cyberfont"> По репутации </h1>
+                        {% for UserData in toprep_list %}
                             <div class="row border border-dark m-2 p-3">
                                 <div class="col-sm-6 display cyberfont">
                                     <div class="">Никнейм</div>
@@ -71,8 +73,8 @@
                                 </div>
 
                                 <div class="col-sm-6 display cyberfont">
-                                    <div class="">Опыт</div>
-                                    <div class="form-group">{{ UserData.exp }}</div>
+                                    <div class="">Репутация</div>
+                                    <div class="form-group">{{ UserData.reputation }}</div>
                                 </div>
                                 <div class="col-sm-6 display cyberfont">
                                     <div class="">Фракция</div>
