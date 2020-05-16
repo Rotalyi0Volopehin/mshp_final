@@ -7,25 +7,41 @@ from objects.text import Text
 
 
 class ToolBarCell(DrawObject):
-    def __init__(self, game, x, y, width, height, num=0, function=None):
+    ERROR_SHAKING_DURATION = 10
+
+    def __init__(self, game, x, y, width, height, num=0, pt_set=None):
         super().__init__(game)
-        self.function = function
+        self.pt_set = pt_set
         self.x = x
         self.y = y
         self.num = num
+        self.count_label = Text(self.game, x=x + 32, y=y - 16, font_name="Consolas", font_size=20, color=Color.WHITE)
+        self.update_count()
         self.num_label = Text(self.game, x=x + 32, y=y + 64 + 16,
                               font_name="Consolas", font_size=20, color=Color.WHITE, text=str(num))
         self.img = pygame.image.load(os.path.join("images", "pt_icons", f"{num}.png"))
-        # self.img_rect = self.img.get_rect(x, y)
         self.width = width
         self.height = height
         self.geometry = (self.x, self.y, self.width, self.height)
         self.rect = pygame.Rect(self.geometry)
+        self.error_shaking_ticks = 0
+
+    def update_count(self):
+        text = "x0" if self.pt_set is None else "x" + str(self.pt_set.count)
+        self.count_label.update_text(text)
 
     def process_draw(self):
         self.num_label.process_draw()
-        self.game.screen.blit(self.img, (self.x, self.y))
-        pygame.draw.rect(self.game.screen, (64, 128, 255), self.geometry, 2)
+        self.count_label.process_draw()
+        if self.error_shaking_ticks == 0:
+            self.game.screen.blit(self.img, (self.x, self.y))
+            pygame.draw.rect(self.game.screen, Color.BLUE, self.geometry, 2)
+        else:
+            shaking_shift = ((self.error_shaking_ticks & 7) << 1) - 8
+            self.game.screen.blit(self.img, (self.x, self.y + shaking_shift))
+            geom = (self.x, self.y + shaking_shift, self.width, self.height)
+            pygame.draw.rect(self.game.screen, Color.RED, geom, 2)
+            self.error_shaking_ticks -= 1
 
     def process_event(self, event):
         if event.type == pygame.KEYUP:
@@ -43,10 +59,16 @@ class ToolBarCell(DrawObject):
             self.__try_invoke_function()
 
     def __try_invoke_function(self):
-        if self.function is not None:
+        ok = False
+        if self.pt_set is not None:
             target_tile = self.game.current_scene.game_vc.grid_vc.target_tile
             if target_tile is not None:
-                self.function(target_tile)
+                if self.pt_set.try_use(target_tile):
+                    self.error_shaking_ticks = 0
+                    self.update_count()
+                    ok = True
+        if not ok:
+            self.error_shaking_ticks = ToolBarCell.ERROR_SHAKING_DURATION
 
     def set_img(self, img):
         self.img = pygame.image.load(img)
