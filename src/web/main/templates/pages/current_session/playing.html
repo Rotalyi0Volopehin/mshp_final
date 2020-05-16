@@ -1,0 +1,80 @@
+{% extends 'base/base.html' %}
+
+
+{% load bootstrap4 %}
+
+
+{% block content %}
+<style>
+  body {
+      background: linear-gradient(to top right, #0000ff, #ffffff);
+  }
+
+  .form1 {
+      width: 1000px;
+      height: 300px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      background-color: rgba(220, 220, 220, 0.3);
+
+  }
+
+  .form1 h1 {
+      margin: 30px 100px;
+      padding: 0;
+      text-align: center;
+      color: #000;
+      font-size: 30px;
+      text-transform: uppercase;
+  }
+
+</style>
+<div class="form1 p-3 rounded-lg  container">
+    <h1>Вы участвуете в сессии {{ current.session }}</h1>
+        <div class="row">
+            <div class="col-9 text-center">
+                <span class="cyberfont">
+                    Представители фракций, участвующие в сессии.
+                </span>
+                <div class="row m-2">
+                    <div class="col-4 mt-2 border-right">
+                        <span class="cyberfont">
+                            фракция #0
+                        </span>
+                        <div class="align-middle">
+                            <div class="cyberfont ml-5 row"> игрок 1 {{ player }} </div>
+                            <div class="cyberfont ml-5 row"> игрок 2 {{ player }} </div>
+                        </div>
+                    </div>
+                    <div class="col-4 mt-2 border-right">
+                        <span class="cyberfont">
+                            фракция #1
+                        </span>
+                        <div class="align-middle">
+                            <div class="cyberfont ml-5 row"> игрок 1 {{ player }}</div>
+                            <div class="cyberfont ml-5 row"> игрок 2 {{ player }}</div>
+                        </div>
+                    </div>
+                    <div class="col-4 mt-2">
+                        <span class="cyberfont">
+                            фракция #2
+                        </span>
+                        <div class="justify-content-center">
+                            <div class="cyberfont ml-5 row"> игрок 1 {{ player }}</div>
+                            <div class="cyberfont ml-5 row"> игрок 2 {{ player }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 text-right">
+                <a href="pages/chat.html" role="button" class="m-1 cyberfont mt-4 btn btn-light">Чат фракции</a>
+                <a href="pages/chat.html" role="button" class="m-1 cyberfont btn btn-light">Общий чат</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

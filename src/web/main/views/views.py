@@ -94,6 +94,13 @@ def chat_page(request):
     }
     return render(request, 'pages/chat.html', context)
 
+def game(request):
+    context = {
+        'pagename': 'Текущая сессия',
+        'menu': get_menu_context(),
+        'user_menu': get_user_menu_context(request.user),
+    }
+    return render(request, 'pages/current_session/playing.html', context)
 
 class ProfileFormPage(FormView):
     """**View-класс страницы '/profile/<int:uid>/'**\n

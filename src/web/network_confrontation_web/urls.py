@@ -34,7 +34,7 @@ urlpatterns = [
     path('fraction1/', fractions_view.FractionPages.fraction1_page, name='fraction1'),
     path('fraction2/', fractions_view.FractionPages.fraction2_page, name='fraction2'),
     path('fraction3/', fractions_view.FractionPages.fraction3_page, name='fraction3'),
-
+    path('game/', views.game, name='game'),
     path(
         'login/',
         auth_views.LoginView.as_view(
