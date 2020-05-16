@@ -53,3 +53,12 @@ def chat_page(request):
         'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/chat.html', context)
+
+
+def sessions_page(request):
+    context = {
+        'pagename': 'Закрытые каналы',
+        'menu': get_menu_context(),
+        'user_menu': get_user_menu_context(request.user),
+    }
+    return render(request, 'pages/sessions.html', context)

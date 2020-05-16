@@ -26,6 +26,7 @@ def get_user_menu_context(user: User) -> list:
     if not (isinstance(user, User) or isinstance(user, AnonymousUser)):
         raise exceptions.ArgumentTypeException()
     return [
+        {"url_name": "sessions", "name": "Сессии"},
         {"url": f"/profile/{user.id}/", "name": "Профиль"},
         {"url_name": "logout", "name": "Выйти"},
     ] if user.is_authenticated else [
