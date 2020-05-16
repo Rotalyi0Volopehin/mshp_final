@@ -67,3 +67,6 @@ class GridTile:
         target.power -= value
         if target.power < 0:
             target.conquer(self.team)
+
+    def take_damage(self, value):
+        self.power = max(self.power - value, 0)

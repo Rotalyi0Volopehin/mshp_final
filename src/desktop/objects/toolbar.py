@@ -1,56 +1,45 @@
-import pygame as pg
-from constants import Color
+import pygame
+
+from game_eng.market import Market
 from objects.base import DrawObject
 from objects.toolbar_cell import ToolBarCell
 
 
 class ToolBar(DrawObject):
-    def __init__(self, game, **kwargs):
-        self.game = game
+    def __init__(self, game, geometry: tuple):
         super().__init__(game)
         self.cells = []
-        self.geometry = (35, self.game.height - 100, self.game.width - 70, 80)
-        self.process_kwargs(kwargs)
-        self.init_cells()
+        self.geometry = geometry
+        self.__init_tools()
+        self.__init_cells()
 
-    def process_kwargs(self, kwargs):
-        self.functions = {
-            "K_1": None,
-            "K_2": None,
-            "K_3": None,
-            "K_4": None,
-            "K_5": None,
-            "K_6": None,
-            "K_7": None,
-            "K_8": None,
-            "K_9": None,
-            "K_0": None,
-        }
-        for key, func in kwargs.items():
-            if key in self.functions:
-                self.functions[key] = func
+    def __init_tools(self):
+        self.tools = dict()
+        i = 0
+        for pt_type in Market.tool_types:
+            self.tools["K_" + str(i)] = pt_type()
+            i += 1
 
-    def init_cells(self):
+    def __init_cells(self):
         for i in range(10):
-            function = self.functions["K_" + str((i+1) % 10)]
-            self.cells.append(ToolBarCell(self.game, 35 + i * 74, self.game.height - 100,
-                                          64, 64, (i + 1) % 10, function))
-        self.cells[0].set_img('images/EMP.png')
-        self.cells[1].set_img('images/Phishing.png')
+            num = (i + 1) % 10
+            key = "K_" + str(num)
+            func = self.tools[key].try_use if key in self.tools else None
+            x = self.geometry[0] + i * 74
+            y = self.geometry[1]
+            self.cells.append(ToolBarCell(self.game, x, y, 64, 64, num, func))
 
     def process_event(self, event):
-        if event.type == pg.KEYDOWN:
-            st = str(event.key)
-            n = int(st) - 48
-            if n == 0:
-                n = 9
+        if event.type == pygame.KEYUP:
+            num = event.key - 48
+            if num == 0:
+                num = 9
             else:
-                n -= 1
-            if 9 >= n >= 0:
-                self.cells[n].process_event(event)
-        if event.type == pg.MOUSEBUTTONDOWN:
-            for item in self.cells:
-                item.process_event(event)
+                num -= 1
+            if 9 >= num >= 0:
+                self.cells[num].process_event(event)
+        for item in self.cells:
+            item.process_event(event)
 
     def process_draw(self):
         for item in self.cells:

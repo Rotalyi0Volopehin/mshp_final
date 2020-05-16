@@ -18,9 +18,8 @@ class GameVC(DrawObject):
         self.model = create_hardcoded_game_model()
         self.grid = GridModel(6, 6)
         self.grid_vc = GridVC(self.grid, self.game)
-        self.tool_bar = ToolBar(self.game,
-                                K_1=self.grid_vc.use_ability_emp,
-                                K_2=self.grid_vc.use_ability_fishing)
+        toolbar_geom = (35, self.game.height - 100, self.game.width - 70, 80)
+        self.toolbar = ToolBar(self.game, toolbar_geom)
 
     def process_logic(self):
         self.grid_vc.process_logic()
@@ -32,13 +31,13 @@ class GameVC(DrawObject):
         scene = type(self.game.current_scene).__name__
         if scene.startswith("Map"):
             self.grid_vc.process_event(event)
-            self.tool_bar.process_event(event)
+            self.toolbar.process_event(event)
 
     def process_draw(self):
         scene = type(self.game.current_scene).__name__
         if scene.startswith("Map"):
             self.grid_vc.process_draw()
-            self.tool_bar.process_draw()
+            self.toolbar.process_draw()
 
     def __next_turn(self):
         self.model.next_player_turn()
