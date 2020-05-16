@@ -5,7 +5,6 @@ from game_eng.team_ders.team_a import TeamA
 from game_eng.team_ders.team_b import TeamB
 from game_eng.team_ders.team_c import TeamC
 from game_eng.player import Player
-from game_eng.grid_model import GridModel
 from game_vc.grid_vc import GridVC
 from objects.base import DrawObject
 from objects.toolbar import ToolBar
@@ -16,8 +15,7 @@ class GameVC(DrawObject):
         super().__init__(game)
         self.__turn_start_time = time.time()
         self.model = create_hardcoded_game_model()
-        self.grid = GridModel(6, 6)
-        self.grid.tiles[0][0].conquer(self.model.teams[2])
+        self.grid = self.model.grid
         self.grid_vc = GridVC(self.grid, self.game)
         toolbar_geom = (35, self.game.height - 100, self.game.width - 70, 80)
         self.toolbar = ToolBar(self.game, toolbar_geom)
@@ -51,4 +49,8 @@ def create_hardcoded_game_model() -> GameModel:
         player = Player(f"P{i}A", team)
         team.add_player(player)
         team.add_player(Player(f"P{i}B", team))
-    return GameModel(teams, title="Hardcoded session", player_turn_period=30, teams_money_limit=999)
+    game = GameModel(teams, title="Hardcoded session", grid_width=6, grid_height=6,
+                     player_turn_period=30, teams_money_limit=999)
+    for team in teams:
+        team.set_game_model(game)
+    return game

@@ -7,6 +7,7 @@ class Team:
     Все наследующие классы должны располагаться в директории 'team_ders'.
     """
     def __init__(self):
+        self.game = None
         self.players = []
         self.__current_player_index = 0
         self.money = 0
@@ -17,6 +18,13 @@ class Team:
             from game_eng.player import Player
             Team.__player_type = Player
         return Team.__player_type
+
+    def set_game_model(self, game):
+        """**Установка модели игры**\n
+        :param game: Модель игры
+        :type game: GameModel
+        """
+        self.game = game
 
     def add_player(self, player):
         """**Добавление нового игрока в представители фракции в игровой сессии**\n
@@ -60,9 +68,25 @@ class Team:
         """
         return self.__current_player_index
 
+    @property
+    def money_limit(self) -> int:
+        return self.game.teams_money_limit
+
     def next_player(self):
         """**Передача хода следующему представителю**
         """
         self.__current_player_index += 1
         if self.__current_player_index == len(self.players):
             self.__current_player_index = 0
+
+    def earn_money(self, value: int):
+        """**Добавление денег**\n
+        Увеличивает значение поля 'money' с учётом лимита бюджета фракций 'money_limit'
+
+        :raises ArgumentTypeException: Неверный тип переданных аргументов
+        :param value: Добавляемая денежная сумма
+        :type value: int
+        """
+        if not isinstance(value, int):
+            raise exceptions.ArgumentTypeException()
+        self.money = min(self.money + value, self.money_limit)

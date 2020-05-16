@@ -85,17 +85,23 @@ class GridTile:
             target.conquer(self.team)
 
     def handle_new_turn(self):
-        pass
+        if self.grid.game.current_team == self.team:
+            income = self.owners_income
+            power_growth = self.power_growth
+            if not (isinstance(income, int) and isinstance(power_growth, int)):
+                raise exceptions.InvalidReturnException()
+            self.team.earn_money(income)
+            self.gain_power(power_growth)
 
-    @property
-    def income(self) -> int:
+    @property  # virtual
+    def owners_income(self) -> int:
         return 0
 
-    @property
+    @property  # virtual
     def power_growth(self) -> int:
         return 1
 
-    @property
+    @property  # virtual
     def power_cap(self) -> int:
         return 64
 
