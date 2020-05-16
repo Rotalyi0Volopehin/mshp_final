@@ -37,8 +37,10 @@ class GridTileController:
 
     def ability_execute(self,clicked_cell):
         if self.ability == "EMP":
+            self.game.sfx_player.play_sound('EMP')
             self.model.ability_emp(clicked_cell)
         elif self.ability == "FISH":
+            self.game.sfx_player.play_sound('Fishing')
             self.model.ability_fishing(clicked_cell)
         self.ability = None
 
@@ -61,6 +63,7 @@ class GridTileController:
         origin_cell = self.model.get_cell_by_colour(Color.RED)
         target_cell = self.model.get_cell_by_colour(Color.ORANGE)
         self.model.move_units(origin_cell, target_cell, value)
+        self.game.sfx_player.play_sound('HighBeep')
 
     def set_ability_emp(self):
         self.ability = "EMP"

@@ -1,7 +1,7 @@
 import sys
 
 import pygame
-
+from objects.sfx_player import SoundPlayer
 from scenes.final import FinalScene
 from scenes.main import MainScene
 from scenes.menu import MenuScene
@@ -9,6 +9,7 @@ from scenes.map import MapScene
 from scenes.quests import QuestScene
 from scenes.login import LoginScene
 from scenes.team import TeamScene
+
 
 class Game:
     MENU_SCENE_INDEX = 0
@@ -20,6 +21,9 @@ class Game:
     TEAM_SCENE_INDEX = 6
 
     def __init__(self, width=800, height=600):
+        pygame.mixer.init(22050, -16, 2, 64)
+        self.sfx_player = SoundPlayer
+        self.sfx_player.load()
         self.width = width
         self.height = height
         self.size = self.width, self.height
