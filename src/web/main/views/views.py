@@ -1,18 +1,13 @@
-import datetime
-
-from django.contrib import auth
-from django.http import HttpResponse
-
-import main.forms as forms
-
-from main.db_tools.cad import CAD
-from django.http import HttpResponse
 from django.contrib.auth import login as log_user_in, logout as log_user_out
 from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
+import main.forms as forms
+from main.db_tools.cad import CAD
+from main.db_tools.user_tools import DBUserTools
 from main.views.form_view import FormView
 from main.views.menu import get_menu_context, get_user_menu_context
-from django.shortcuts import render, redirect
-from main.db_tools.user_tools import DBUserTools
 
 
 def index_page(request):
@@ -31,23 +26,6 @@ def index_page(request):
         'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/index.html', context)
-
-
-def time_page(request):
-    """**View-функция страницы '/time/'**
-
-    :param request: request на страницу '/time/'
-    :type request: HttpRequest
-    :return: response
-    :rtype: HttpResponse
-    """
-    context = {
-        'pagename': 'Текущее время',
-        'time': datetime.datetime.now().time(),
-        'menu': get_menu_context(),
-        'user_menu': get_user_menu_context(request.user),
-    }
-    return render(request, 'pages/time.html', context)
 
 
 class RegistrationFormPage(FormView):
@@ -93,7 +71,8 @@ def cad_page(request):
 def darknet_page(request):
     context = {
         'pagename': 'DarkNet',
-        'menu': get_menu_context()
+        'menu': get_menu_context(),
+        'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/darknet.html', context)
 
@@ -101,7 +80,8 @@ def darknet_page(request):
 def forum_page(request):
     context = {
         'pagename': 'Форум',
-        'menu': get_menu_context()
+        'menu': get_menu_context(),
+        'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/forum.html', context)
 
@@ -109,7 +89,8 @@ def forum_page(request):
 def chat_page(request):
     context = {
         'pagename': 'Закрытые каналы',
-        'menu': get_menu_context()
+        'menu': get_menu_context(),
+        'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/chat.html', context)
 

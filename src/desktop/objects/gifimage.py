@@ -1,13 +1,8 @@
-import pygame
-import sys
-import pygame
-import json
 import time
-import socket
 
-from pygame.locals import *
-from pygame_textinput import TextInput
+import pygame
 from PIL import Image
+from pygame.locals import *
 
 
 class GIFImage(object):
@@ -30,7 +25,7 @@ class GIFImage(object):
         pass
 
     def process_draw(self):
-        self.render(self.screen, (125,70))
+        self.render(self.screen, (125, 70))
 
     def process_event(self, event):
         pass
@@ -125,9 +120,6 @@ class GIFImage(object):
                     self.cur += 1
                     if self.cur > self.breakpoint:
                         self.cur = self.startpoint
-
-
-
 
         screen.blit(self.frames[self.cur][0], pos)
 
