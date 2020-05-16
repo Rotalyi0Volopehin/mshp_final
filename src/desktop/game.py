@@ -227,6 +227,7 @@ from scenes.menu import MenuScene
 from scenes.map import MapScene
 from scenes.quests import QuestScene
 from scenes.login import LoginScene
+from player import Player
 
 class Game:
     MENU_SCENE_INDEX = 0
@@ -238,47 +239,33 @@ class Game:
 
     def __init__(self, width=800, height=600):
         self.width = width
+        self.player = Player()
         self.height = height
         self.size = self.width, self.height
         self.game_over = False
-        self.login = TextInput(self, antialias=False, cursor_color=(0, 255, 0))
-        self.password = TextInput(self, antialias=False, cursor_color=(255, 112, 184))
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.clock = pygame.time.Clock()
 
-        #self.trailer = GIFImage("backimage.gif")
-
-        self.enter = Button(200, 150, "Войти", "button_pressed.png", "button_not_pressed.png")
-        self.enter.create_button()
-        self.register = Button(167, 200, "Регистрация", "button_pressed_2.png", "button_not_pressed_2.png")
-        self.register.create_button()
-
-        self.font = pygame.font.Font(None, 36)
-        self.textl = self.font.render("Логин", 1, (143, 254, 9))
-        self.placel = self.textl.get_rect(center=(125, 30))
-
-        self.font = pygame.font.Font(None, 36)
-        self.textp = self.font.render("Пароль", 1, (9, 254, 243))
-        self.placep = self.textp.get_rect(center=(125, 90))
 
     def main_loop(self):
         pygame.init()
         pygame.display.set_caption("Войти/выйти")
-
         self.create_window()
         self.game_over = False
         self.wall_collision_count = 0
         self.ticks = 0
         self.scenes = [MenuScene(self), MainScene(self), FinalScene(self), QuestScene(self), MapScene(self), LoginScene(self)]
         self.current_scene = 5
-        while True:
+        while not self.game_over:
             eventlist = pygame.event.get()
             for event in eventlist:
                 if event.type == pygame.QUIT:
-                    exit()
-            self.scenes[self.current_scene].process_frame(eventlist)
-            self.clock.tick(30)
-
+                    self.game_over = True
+            if not self.game_over:
+                self.scenes[self.current_scene].process_frame(eventlist)
+                self.clock.tick(30)
+        pygame.quit()
+        sys.exit()
 
     def create_window(self):
         pygame.init()

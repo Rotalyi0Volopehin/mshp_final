@@ -1,9 +1,11 @@
+from pygame_textinput import TextInput
+from PIL import Image
 import pygame
-import request_parcel_helpers.user_logging as user_logging
-
 from pygame.locals import *
 from constants import Color
+from request_parcel_helpers import user_logging
 from scenes.base import Scene
+import socket
 from objects.text_input import Txtinput
 from objects.button import Btn
 from objects.text import Text
@@ -18,12 +20,9 @@ class LoginScene(Scene):
     def init_form(self):
         self.login = Txtinput(self.game, False, 170, 20)
         self.password = Txtinput(self.game, False, 180, 80)
+        #self.trailer = GIFImage("backimage.gif", self.game)
         self.button_enter = Btn(self.game, (350, 350, 100, 40), Color.WHITE, "Войти", self.on_login_button_click)
         self.button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
-        #self.trailer = GIFImage("backimage.gif", self.game)
-
-        self.button_enter = Btn(self.game, (350, 350, 100, 40), Color.WHITE, "Войти", self.lg_on_click)
-        self.button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.rg_on_click)
         self.text_login = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False,
                                is_italic=False, text='Логин:',
                                color=(255, 255, 100), x=125, y=30)

@@ -39,7 +39,7 @@ class Txtinput(DrawObject):
 
         if self.internal_txtinput.antialias:
             if self.internal_txtinput.update(event):
-                print(self.login.get_text())
+                print(self.internal_txtinput.get_text())
 
     def process_draw(self):
         self.game.screen.blit(self.internal_txtinput.get_surface(), (self.x, self.y))

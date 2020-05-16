@@ -1,5 +1,7 @@
 from random import randint
 
+import pygame
+
 from objects.base import DrawObject
 
 
