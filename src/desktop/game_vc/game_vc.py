@@ -8,6 +8,7 @@ from game_eng.player import Player
 from game_eng.grid_model import GridModel
 from game_vc.grid_vc import GridVC
 from objects.base import DrawObject
+from objects.toolbar import ToolBar
 
 
 class GameVC(DrawObject):
@@ -17,6 +18,9 @@ class GameVC(DrawObject):
         self.model = create_hardcoded_game_model()
         self.grid = GridModel(6, 6)
         self.grid_vc = GridVC(self.grid, self.game)
+        self.tool_bar = ToolBar(self.game,
+                                K_1=self.grid_vc.use_ability_emp,
+                                K_2=self.grid_vc.use_ability_fishing)
 
     def process_logic(self):
         self.grid_vc.process_logic()
@@ -28,11 +32,13 @@ class GameVC(DrawObject):
         scene = type(self.game.current_scene).__name__
         if scene.startswith("Map"):
             self.grid_vc.process_event(event)
+            self.tool_bar.process_event(event)
 
     def process_draw(self):
         scene = type(self.game.current_scene).__name__
         if scene.startswith("Map"):
             self.grid_vc.process_draw()
+            self.tool_bar.process_draw()
 
     def __next_turn(self):
         self.model.next_player_turn()
