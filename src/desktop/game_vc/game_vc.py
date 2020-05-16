@@ -17,6 +17,7 @@ class GameVC(DrawObject):
         self.__turn_start_time = time.time()
         self.model = create_hardcoded_game_model()
         self.grid = GridModel(6, 6)
+        self.grid.tiles[0][0].conquer(self.model.teams[2])
         self.grid_vc = GridVC(self.grid, self.game)
         toolbar_geom = (35, self.game.height - 100, self.game.width - 70, 80)
         self.toolbar = ToolBar(self.game, toolbar_geom)

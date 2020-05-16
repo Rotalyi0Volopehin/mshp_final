@@ -54,21 +54,22 @@ class GridVC(DrawObject):
     def __try_move_power(self, value):
         if (self.selected_tile is None) or (self.target_tile is None):
             return
-        if self.selected_tile.power < value:
-            value = self.selected_tile.power
-        elif (value <= 0) and (self.selected_tile.team == self.target_tile.team) and (self.target_tile.power < -value):
-            value = -self.target_tile.power
-        self.selected_tile.move_power(self.target_tile, value)
+        self.selected_tile.move_power(self.target_tile, value, True)
 
     def __handle_key_up(self, key):
+        selected = self.selected_tile
+        target = self.target_tile
         if key == pygame.K_c:
             self.select_tile(None)
             self.select_target_tile(None)
-        elif (self.selected_tile is not None) and (self.target_tile is not None):
+        elif (selected is not None) and (target is not None):
             if key == pygame.K_END:
-                self.selected_tile.move_power(self.target_tile, self.selected_tile.power)
-            elif (key == pygame.K_HOME) and (self.selected_tile.team == self.target_tile.team):
-                self.target_tile.move_power(self.selected_tile, self.target_tile.power)
+                selected.move_power(target, selected.power)
+            elif key == pygame.K_HOME:
+                if selected.team == target.team:
+                    self.target_tile.move_power(selected, target.power)
+                else:
+                    self.target_tile.move_power(selected, -(selected.power_cap + target.power_cap), True)
             elif key == pygame.K_UP:
                 self.__try_move_power(1)
             elif key == pygame.K_DOWN:

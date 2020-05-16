@@ -6,7 +6,7 @@ from constants import Color
 
 class MapScene(Scene):
     def create_objects(self):
-        button_back = Btn(self.game, (350, 450, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
+        button_back = Btn(self.game, (350, 420, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
         self.objects.append(button_back)
         self.game_vc = self.game.current_scene.game_vc
         self.objects.append(self.game_vc)
