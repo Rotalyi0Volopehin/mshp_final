@@ -10,11 +10,15 @@ class MapScene(Scene):
         self.objects.append(button_back)
         self.game_vc = self.game.current_scene.game_vc
         self.objects.append(self.game_vc)
+        self.__init_controls()
+
+    def __init_controls(self):
         controls = [
             "ЛКМ - выделение",
             "зажатие ЛКМ - выделение соседа",
             "колёсико/вверх/вниз/end/home - перемещение мощи",
-            "С - снятие выделения"
+            "С - снятие выделения",
+            "цифры - применение ИВ"
         ]
         for i in range(len(controls)):
             line = controls[i]
