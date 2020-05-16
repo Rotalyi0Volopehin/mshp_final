@@ -73,11 +73,3 @@ class GridVC(DrawObject):
                 self.__try_move_power(1)
             elif key == pygame.K_DOWN:
                 self.__try_move_power(-1)
-
-    def use_ability_emp(self):
-        if self.target_tile is not None:
-            self.model.ability_emp(self.target_tile)
-
-    def use_ability_fishing(self):
-        if self.target_tile is not None:
-            self.model.ability_fishing(self.target_tile)
