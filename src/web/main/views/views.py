@@ -57,8 +57,12 @@ def chat_page(request):
 
 def sessions_page(request):
     context = {
-        'pagename': 'Закрытые каналы',
+        'pagename': 'Сессии',
         'menu': get_menu_context(),
         'user_menu': get_user_menu_context(request.user),
+
     }
+    tmp1 = [1,2,3,4]
+    tmp2 = ['a','b', 'c', 'd']
+    context['tables'] = [tmp1, tmp2]
     return render(request, 'pages/sessions.html', context)
