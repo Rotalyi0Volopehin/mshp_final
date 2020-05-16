@@ -6,9 +6,10 @@ from game_eng.team import Team
 class Player:
     """**Модель игрока**
     """
-    def __init__(self, team: Team):
-        if not isinstance(team, Team):
+    def __init__(self, name: str, team: Team):
+        if not (isinstance(name, str) and isinstance(team, Team)):
             raise exceptions.ArgumentTypeException()
+        self.name = name
         self.__team = team
         self.pressure_tools = dict()
 

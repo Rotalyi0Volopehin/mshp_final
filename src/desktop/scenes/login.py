@@ -1,6 +1,7 @@
 import pygame
-from pygame.locals import *
+import os.path as path
 
+from pygame.locals import *
 import request_parcel_helpers.user_logging as user_logging
 from constants import Color
 from net_connection.response_ids import ResponseID
@@ -8,7 +9,8 @@ from objects.button import Btn
 from objects.gifimage import GIFImage
 from objects.gifimg import GIFImage
 from objects.text import Text
-from objects.text_input import Txtinput
+from objects.text_input import TextInput
+from objects.password_input import PasswordInput
 from scenes.base import Scene
 from ws.channel import Channel
 from ws.parcel_manager import ParcelManager
@@ -16,11 +18,11 @@ from ws.parcel_manager import ParcelManager
 
 class LoginScene(Scene):
     def init_form(self):
-        self.login = Txtinput(self.game, False, 170, 20)
-        self.password = Txtinput(self.game, False, 180, 80)
+        self.login = TextInput(self.game, False, 170, 20)
+        self.password = PasswordInput(self.game, False, 180, 80)
         self.button_enter = Btn(self.game, (350, 350, 100, 40), Color.WHITE, "Войти", self.on_login_button_click)
         self.button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
-        self.trailer = GIFImage("backimage.gif", self.game)
+        self.trailer = GIFImage(path.join("images", "login_backimage.gif"), self.game)
 
         self.button_enter = Btn(self.game, (350, 350, 100, 40), Color.WHITE, "Войти", self.on_login_button_click)
         self.button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
@@ -31,12 +33,8 @@ class LoginScene(Scene):
                              is_italic=False, text='Пароль:',
                              color=(255, 255, 100), x=125, y=90)
 
-    def load_backimage(self):
-        self.trailer = GIFImage("backimage.gif", self.game)
-
     def load_sound(self):
-        pygame.mixer.music.load('soundtrack.wav')
-        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.load(path.join("sounds", "login_bgm.wav"))
 
     def collect_objects(self):
         self.objects = [self.trailer, self.login, self.password,
@@ -47,13 +45,13 @@ class LoginScene(Scene):
         if not Channel.try_connect():  # TODO: заменить на сообщение с кнопкой для повторной попытки
             raise Exception("Cannot connect to server!")
         self.init_form()
-        self.load_backimage()
         self.load_sound()
         self.collect_objects()
         pygame.mixer.music.play(-1)
 
     def set_menu_scene(self):
-        self.set_next_scene(self.game.MENU_SCENE_INDEX)
+        from scenes.menu import MenuScene
+        self.game.set_origin_scene(MenuScene)
 
     def on_login_button_click(self):
         login = self.login.internal_txtinput.get_text()
@@ -62,7 +60,6 @@ class LoginScene(Scene):
 
         def handler_cloak(parcel):
             self.login_response_parcel_handler(parcel)
-
         ParcelManager.receive_parcel_async(handler_cloak)
 
     def login_response_parcel_handler(self, parcel):
@@ -77,3 +74,6 @@ class LoginScene(Scene):
 
     def on_reg_button_click(self):
         pass  # TODO: сделать редирект в браузер на страницу регистрации
+
+    def on_closed(self):
+        pygame.mixer.music.stop()
