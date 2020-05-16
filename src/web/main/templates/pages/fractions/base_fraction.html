@@ -10,7 +10,8 @@
             <div class="pt-4 cyberfont">Участники:</div>
             {% block members %}
             {% for item in members %}
-            <div>
+            <div class="cyberfont">
+                {{ forloop.counter }}.
                 {{ item }}
             </div>
             {% endfor %}

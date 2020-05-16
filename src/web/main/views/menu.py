@@ -9,7 +9,6 @@ def get_menu_context() -> list:
     :rtype: list
     """
     return [
-        {"url_name": "index", "name": "Главная"},
         {"url_name": "darknet", "name": "darknet"},
         {"url_name": "forum", "name": "форум"},
         {"url_name": "chat", "name": "чат"},
