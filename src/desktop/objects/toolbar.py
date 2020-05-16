@@ -24,11 +24,10 @@ class ToolBar(DrawObject):
         for i in range(10):
             num = (i + 1) % 10
             key = "K_" + str(num)
-            func = self.tools[key].try_use if key in self.tools else None
-            usage = self.tools[key].count if key in self.tools else None
+            tool = self.tools[key] if key in self.tools else None
             x = self.geometry[0] + i * 74
             y = self.geometry[1]
-            self.cells.append(ToolBarCell(self.game, x, y, 64, 64, num, func, usage))
+            self.cells.append(ToolBarCell(self.game, x, y, 64, 64, num, tool))
 
     def process_event(self, event):
         if event.type == pygame.KEYUP:
