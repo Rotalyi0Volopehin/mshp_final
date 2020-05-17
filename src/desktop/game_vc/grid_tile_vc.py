@@ -17,7 +17,6 @@ class GridTileVCStatus(Enum):
 class GridTileVC(DrawObject):
     HEXAGON = Hexagon(20)
     DIST_BETWEEN_TILES = 3
-    TEAM_COLORS = [Color.DARK_RED, Color.DARK_GREEN, Color.DARK_BLUE]
 
     def __init__(self, model: GridTile, game, status):
         super().__init__(game)
@@ -58,7 +57,8 @@ class GridTileVC(DrawObject):
 
     def update_surface(self):
         if (self.__surface_status != self.status) or (self.__surface_team != self.model.team):
-            fill_color = Color.BLACK if self.model.team is None else GridTileVC.TEAM_COLORS[self.model.team.index]
+            from game_vc.game_vc import GameVC
+            fill_color = GameVC.get_team_color(self.model.team)
             self.__surface = GridTileVC.HEXAGON.get_surface(self.status.value, fill_color)
             self.__surface_status = self.status
             self.__surface_team = self.model.team

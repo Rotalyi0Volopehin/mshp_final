@@ -3,14 +3,7 @@ import pygame
 
 from queue import Queue
 from constants import Color
-
-
-def sign(value) -> int:
-    if value > 0:
-        return 1
-    elif value < 0:
-        return -1
-    return 0
+from geometry_tools import rect_contains_point, triangle_contains_point
 
 
 class Hexagon:
@@ -63,20 +56,9 @@ class Hexagon:
     def contains_point(self, x: int, y: int) -> bool:
         if not (isinstance(x, int) and isinstance(y, int)):
             raise exceptions.ArgumentTypeException()
-        return self.__rect_contains_p(self.top_left_point, self.top_right_point, self.bottom_left_point, x, y) or \
-               self.__triangle_contains_p(self.top_left_point, self.top_right_point, self.top_mid_point, x, y) or \
-               self.__triangle_contains_p(self.bottom_left_point, self.bottom_mid_point, self.bottom_right_point, x, y)
-
-    @staticmethod
-    def __rect_contains_p(origin, right_top, left_bottom, x, y) -> bool:
-        return (origin[0] <= x) and (right_top[0] >= x) and (origin[1] <= y) and (left_bottom[1] >= y)
-
-    @staticmethod
-    def __triangle_contains_p(p1, p2, p3, x, y) -> bool:
-        s1 = (p1[0] - x) * (p2[1] - p1[1]) - (p2[0] - p1[0]) * (p1[1] - y)
-        s2 = (p2[0] - x) * (p3[1] - p2[1]) - (p3[0] - p2[0]) * (p2[1] - y)
-        s3 = (p3[0] - x) * (p1[1] - p3[1]) - (p1[0] - p3[0]) * (p3[1] - y)
-        return (sign(s1) == sign(s2)) and (sign(s2) == sign(s3))
+        return rect_contains_point(self.top_left_point, self.top_right_point, self.bottom_left_point, x, y) or \
+               triangle_contains_point(self.top_left_point, self.top_right_point, self.top_mid_point, x, y) or \
+               triangle_contains_point(self.bottom_left_point, self.bottom_mid_point, self.bottom_right_point, x, y)
 
     def get_surface(self, edge_color: tuple, fill_color: tuple) -> pygame.Surface:
         if not (isinstance(edge_color, tuple) and isinstance(fill_color, tuple)):

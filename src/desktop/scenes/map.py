@@ -3,6 +3,7 @@ from objects.button import Btn
 from objects.text import Text
 from constants import Color
 from objects.toolbar import ToolBar
+from objects.end_turn_button import EndTurnButton
 
 
 class MapScene(Scene):
@@ -14,6 +15,8 @@ class MapScene(Scene):
         toolbar_geom = (35, self.game.height - 100, self.game.width - 70, 80)
         self.toolbar = ToolBar(self.game, toolbar_geom)
         self.objects.append(self.toolbar)
+        self.end_turn_button = EndTurnButton(self.game, self.game.width - 100, self.game.height - 200)
+        self.objects.append(self.end_turn_button)
         self.__init_controls()
 
     def __init_controls(self):

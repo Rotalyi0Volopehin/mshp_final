@@ -7,21 +7,37 @@ from game_eng.team_ders.team_c import TeamC
 from game_eng.player import Player
 from game_vc.grid_vc import GridVC
 from objects.base import DrawObject
+from constants import Color
 
 
 class GameVC(DrawObject):
+    TEAM_COLORS = [Color.DARK_RED, Color.DARK_GREEN, Color.DARK_BLUE]
+
     def __init__(self, game):
         super().__init__(game)
         self.__turn_start_time = time.time()
         self.model = create_hardcoded_game_model()
         self.grid = self.model.grid
         self.grid_vc = GridVC(self.grid, self.game)
+        self.__end_turn_flag = False
 
     def process_logic(self):
         self.grid_vc.process_logic()
-        if time.time() - self.__turn_start_time >= self.model.player_turn_period:
+        if (self.turn_time_elapsed >= self.model.player_turn_period) or self.__end_turn_flag:
             self.__next_turn()  # TODO: переписать для сетевой игры (потребуется асинхронная синхронизация)
             self.__turn_start_time = time.time()
+            self.__end_turn_flag = False
+
+    def end_turn(self):
+        self.__end_turn_flag = True
+
+    @property
+    def turn_time_left(self) -> float:
+        return self.model.player_turn_period - self.turn_time_elapsed
+
+    @property
+    def turn_time_elapsed(self) -> float:
+        return time.time() - self.__turn_start_time
 
     @property
     def is_current_scene_map(self) -> bool:
@@ -39,6 +55,14 @@ class GameVC(DrawObject):
     def __next_turn(self):
         self.model.next_player_turn()
         self.game.current_scene.toolbar.update_tools()
+
+    @staticmethod
+    def get_team_color(team) -> tuple:
+        return Color.BLACK if team is None else GameVC.TEAM_COLORS[team.index]
+
+    @property
+    def current_team_color(self) -> tuple:
+        return GameVC.TEAM_COLORS[self.model.current_team_index]
 
 
 def create_hardcoded_game_model() -> GameModel:
