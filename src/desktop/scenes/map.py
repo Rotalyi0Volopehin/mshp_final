@@ -20,7 +20,7 @@ class MapScene(Scene):
         self.objects.append(self.toolbar)
         self.end_turn_button = EndTurnButton(self.game, width - 100, height - 200)
         self.objects.append(self.end_turn_button)
-        current_player_plate = CurrentPlayerPlate(self.game, width - 100, height - 185)
+        current_player_plate = CurrentPlayerPlate(self.game, width - 90, height - 183)
         self.objects.append(current_player_plate)
         self.__init_controls()
 

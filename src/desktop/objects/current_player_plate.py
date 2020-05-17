@@ -1,3 +1,5 @@
+import pygame
+
 from objects.base import DrawObject
 from objects.text import Text
 from constants import Color
@@ -34,3 +36,7 @@ class CurrentPlayerPlate(DrawObject):
         self.update_player_label()
         self.team_label.process_draw()
         self.player_label.process_draw()
+        min_x = min(self.team_label.x - (self.team_label.width >> 1),
+                    self.player_label.x - (self.player_label.width >> 1)) - 4
+        rect = (min_x, self.pos_y - 15, self.right_border - min_x - 16, 60)
+        pygame.draw.rect(self.game.screen, Color.WHITE, rect, 2)
