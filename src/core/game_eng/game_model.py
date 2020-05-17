@@ -30,6 +30,7 @@ class GameModel:
         self.__current_team_index = 0
         self.__current_player = teams[0].current_player
         self.__current_player_turn = PlayerTurn()
+        self.grid.handle_new_team_turn()
 
     @property
     def current_team(self) -> Team:
@@ -65,10 +66,10 @@ class GameModel:
             self.__next_team_turn()
         self.__current_player = self.current_team.current_player
         self.__current_player_turn.reset()
-        self.grid.handle_new_turn()
 
     def __next_team_turn(self):
         self.market.update()
         self.__current_team_index += 1
         if self.__current_team_index == len(self.teams):
             self.__current_team_index = 0
+        self.grid.handle_new_team_turn()

@@ -6,8 +6,13 @@ class Team:
     abstract class\n
     Все наследующие классы должны располагаться в директории 'team_ders'.
     """
-    def __init__(self):
+    def __init__(self, index: int):
+        if not isinstance(index, int):
+            raise exceptions.ArgumentTypeException()
+        if (index < 0) or (index > 2):
+            raise exceptions.ArgumentOutOfRangeException()
         self.game = None
+        self.index = index
         self.players = []
         self.__current_player_index = 0
         self.money = 0

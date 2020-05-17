@@ -50,6 +50,12 @@ class GridTile:
         self.team = team
         self.power = abs(self.power)
 
+    def try_move_power_as_team(self, target, value: int, team, cut_surplus: bool = False) -> bool:
+        if (self.team != team) or ((target.team is None) and (value < 0)):
+            return False
+        self.move_power(target, value, cut_surplus)
+        return True
+
     def move_power(self, target, value: int, cut_surplus: bool = False):
         if not (isinstance(target, GridTile) and isinstance(value, int) and isinstance(cut_surplus, bool)):
             raise exceptions.ArgumentTypeException()
@@ -84,7 +90,7 @@ class GridTile:
         if target.power < 0:
             target.conquer(self.team)
 
-    def handle_new_turn(self):
+    def handle_new_team_turn(self):
         if self.grid.game.current_team == self.team:
             income = self.owners_income
             power_growth = self.power_growth

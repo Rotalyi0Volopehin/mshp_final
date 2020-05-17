@@ -51,11 +51,6 @@ class GridVC(DrawObject):
         elif event.type == pygame.KEYUP:
             self.__handle_key_up(event.key)
 
-    def __try_move_power(self, value):
-        if (self.selected_tile is None) or (self.target_tile is None):
-            return
-        self.selected_tile.move_power(self.target_tile, value, True)
-
     def __handle_key_up(self, key):
         selected = self.selected_tile
         target = self.target_tile
@@ -64,13 +59,22 @@ class GridVC(DrawObject):
             self.select_target_tile(None)
         elif (selected is not None) and (target is not None):
             if key == pygame.K_END:
-                selected.move_power(target, selected.power)
+                self.__move_power(selected.power)
             elif key == pygame.K_HOME:
                 if selected.team == target.team:
-                    self.target_tile.move_power(selected, target.power)
+                    self.__move_power(-target.power)
                 else:
-                    self.target_tile.move_power(selected, -(selected.power_cap + target.power_cap), True)
+                    self.__move_power(-(selected.power_cap + target.power_cap), True)
             elif key == pygame.K_UP:
-                self.__try_move_power(1)
+                self.__move_power(1)
             elif key == pygame.K_DOWN:
-                self.__try_move_power(-1)
+                self.__move_power(-1)
+
+    def __try_move_power(self, value):
+        if (self.selected_tile is None) or (self.target_tile is None):
+            return
+        self.__move_power(value, True)
+
+    def __move_power(self, value, cut_surplus=False):
+        team = self.game.current_scene.game_vc.model.current_team
+        self.selected_tile.try_move_power_as_team(self.target_tile, value, team, cut_surplus)

@@ -25,7 +25,7 @@ class GridModel:
     def set_controller(self, controller):
         self.controller = controller
 
-    def handle_new_turn(self):
+    def handle_new_team_turn(self):
         for column in self.tiles:
             for tile in column:
-                tile.handle_new_turn()
+                tile.handle_new_team_turn()

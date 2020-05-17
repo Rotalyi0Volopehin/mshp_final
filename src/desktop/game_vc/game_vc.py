@@ -43,7 +43,7 @@ class GameVC(DrawObject):
 
 
 def create_hardcoded_game_model() -> GameModel:
-    teams = [TeamA(), TeamB(), TeamC()]
+    teams = [TeamA(0), TeamB(1), TeamC(2)]
     for i in range(len(teams)):
         team = teams[i]
         player = Player(f"P{i}A", team)
@@ -53,4 +53,7 @@ def create_hardcoded_game_model() -> GameModel:
                      player_turn_period=30, teams_money_limit=999)
     for team in teams:
         team.set_game_model(game)
+    game.grid.tiles[0][0].conquer(teams[0])
+    game.grid.tiles[1][0].conquer(teams[1])
+    game.grid.tiles[2][0].conquer(teams[2])
     return game
