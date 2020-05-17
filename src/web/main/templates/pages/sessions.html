@@ -11,21 +11,30 @@
             border-radius: 40px;
         }
 
-        .margin_everything {
-            margin-top: 10%;
+        .move_everything {
+            margin-top: 12%;
+            padding-bottom: 8%;
+        }
+
+        .dark_part {
+            margin-top: -2%;
+            height: 125px;
         }
 </style>
 
-<div class="row margin_everything">
+<div class="row move_everything">
     <div class="col">
-        <div class="container bg-white shadow rounded_border overflow-hidden pt-4">
-            <div class="row mt-5">
-                <div class="col-lg-3">
 
-                    <label style="font-size: 130%;">Поиск игровых сессий</label>
+        <div class="dark_part bg-dark cyberfont rounded_border rounded-bottom">
+            <h2 class="text-center text-white cyberfont pt-5" style="font-size: 150%;">Поиск игровых сессий</h2>
+        </div>
+
+        <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-4">
+            <div class="row mt-2">
+                <div class="col-lg-3 cyberfont" style="font-size: 90%;">
 
                     <div class="btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-secondary mt-1">
+                        <label class="btn btn-secondary">
                             <input type="radio" name="options" id="option2" autocomplete="off"> К которым можно
                             присоединиться
                         </label>
@@ -49,13 +58,12 @@
                     </div>
 
                     <button type="button" class="btn btn-primary btn-block mt-1 mb-3">Найти</button>
-
                 </div>
 
                 <div class="col-lg-9">
-                    <table class="table table-striped">
+                    <table class="table">
                         <thead class="thead-dark">
-                        <tr>
+                        <tr class="cyberfont" style="font-size: 120%;">
                             <th scope="col">Название</th>
                             <th scope="col">Число игроков</th>
                             <th scope="col">Дата начала</th>
@@ -66,7 +74,7 @@
 
                         {% block tables %}
                         {% for item in tables %}
-                        <tr>
+                        <tr class="table-secondary">
                             {% for i in item %}
                             <td>{{ i }}</td>
                             {% endfor %}
@@ -80,7 +88,7 @@
 
             <div class="row mt-1 pb-4" style="font-size: 140%;">
                 <div class="col-lg-8"></div>
-                <div class="col-lg-4">
+                <div class="col-lg-4 cyberfont" style="font-size: 90%;">
                     <button type="button" class="btn btn-primary" style="width: 20%;"> <</button>
                     Страница {{ 1 }}
                     <button type="button" class="btn btn-primary" style="width: 20%;"> ></button>
