@@ -26,7 +26,7 @@ try:
     import exceptions
 except:
     print("Direct import failed. Patching . . . ", end='')
-    fix_project_roots("core", "desktop")  # TODO: починить game_eng и удалить desktop из списка для патча
+    fix_project_roots("core")
     import exceptions
     print("SUCCESS")
 
