@@ -75,6 +75,7 @@ def create_hardcoded_game_model() -> GameModel:
                      player_turn_period=30, teams_money_limit=999)
     for team in teams:
         team.set_game_model(game)
+        team.earn_money(999)
     game.grid.tiles[0][0].conquer(teams[0])
     game.grid.tiles[1][0].conquer(teams[1])
     game.grid.tiles[2][0].conquer(teams[2])

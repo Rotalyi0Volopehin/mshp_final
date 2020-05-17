@@ -69,6 +69,34 @@ class GridVC(DrawObject):
                 self.__move_power(1)
             elif key == pygame.K_DOWN:
                 self.__move_power(-1)
+        if selected is not None:
+            if key == pygame.K_F1:
+                from game_eng.grid_tile_ders.enhanced_tile import EnhancedGridTile
+                self.__try_upgrade_tile(EnhancedGridTile)
+            elif key == pygame.K_F2:
+                from game_eng.grid_tile_ders.defense_tile import DefenseGridTile
+                self.__try_upgrade_tile(DefenseGridTile)
+            elif key == pygame.K_F3:
+                from game_eng.grid_tile_ders.service_tile import ServiceGridTile
+                self.__try_upgrade_tile(ServiceGridTile)
+            elif key == pygame.K_F4:
+                from game_eng.grid_tile_ders.enhanced_tile_plus import EnhancedGridTilePlus
+                self.__try_upgrade_tile(EnhancedGridTilePlus)
+            elif key == pygame.K_F5:
+                from game_eng.grid_tile_ders.defense_tile_plus import DefenseGridTilePlus
+                self.__try_upgrade_tile(DefenseGridTilePlus)
+            elif key == pygame.K_F6:
+                from game_eng.grid_tile_ders.service_tile_plus import ServiceGridTilePlus
+                self.__try_upgrade_tile(ServiceGridTilePlus)
+
+    def __try_upgrade_tile(self, upgrade):
+        from game_eng.grid_tile_upgrade_tree import GridTileUpgradeTree
+        GridTileUpgradeTree.upgrade_tile(self.selected_tile, upgrade)
+        new_tile = self.model.tiles[self.selected_tile.loc_x][self.selected_tile.loc_y]
+        GridTileVC(new_tile, self.game, self.selected_tile.view.status)
+        if self.target_tile == self.selected_tile:
+            self.target_tile = new_tile
+        self.selected_tile = new_tile
 
     def __try_move_power(self, value):
         if (self.selected_tile is None) or (self.target_tile is None):
