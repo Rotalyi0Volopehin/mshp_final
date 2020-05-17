@@ -26,6 +26,10 @@ class ToolBarCell(DrawObject):
         self.rect = pygame.Rect(self.geometry)
         self.error_shaking_ticks = 0
 
+    def update_pt_set(self, new_pt_set):
+        self.pt_set = new_pt_set
+        self.update_count()
+
     def update_count(self):
         text = "x0" if self.pt_set is None else "x" + str(self.pt_set.count)
         self.count_label.update_text(text)

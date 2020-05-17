@@ -2,6 +2,7 @@ from scenes.base import Scene
 from objects.button import Btn
 from objects.text import Text
 from constants import Color
+from objects.toolbar import ToolBar
 
 
 class MapScene(Scene):
@@ -10,6 +11,9 @@ class MapScene(Scene):
         self.objects.append(button_back)
         self.game_vc = self.game.current_scene.game_vc
         self.objects.append(self.game_vc)
+        toolbar_geom = (35, self.game.height - 100, self.game.width - 70, 80)
+        self.toolbar = ToolBar(self.game, toolbar_geom)
+        self.objects.append(self.toolbar)
         self.__init_controls()
 
     def __init_controls(self):
