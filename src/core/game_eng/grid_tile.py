@@ -1,12 +1,10 @@
 import exceptions
 
-from random import randint
-
 
 class GridTile:
     def __init__(self, grid, loc_x, loc_y, team=None):
         self.grid = grid
-        self.power = randint(0, 60)  # ранд количество юнитов
+        self.power = 0
         self.loc_x = loc_x
         self.loc_y = loc_y
         self.team = team
@@ -110,6 +108,19 @@ class GridTile:
     @property  # virtual
     def power_cap(self) -> int:
         return 64
+
+    @staticmethod
+    def get_upgrade_price() -> int:
+        return 0
+
+    def upgrade(self, tile_type: type):
+        if not isinstance(tile_type, type):
+            raise exceptions.ArgumentTypeException()
+        if not issubclass(tile_type, GridTile):
+            raise exceptions.ArgumentValueException()
+        new_tile = tile_type(self.grid, self.loc_x, self.loc_y, self.team)
+        new_tile.gain_power(self.power)
+        self.grid.tiles[self.loc_x][self.loc_y] = new_tile
 
     def take_damage(self, value):
         self.power = max(self.power - value, 0)
