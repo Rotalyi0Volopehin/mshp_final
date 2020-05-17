@@ -9,7 +9,6 @@ def get_menu_context() -> list:
     :rtype: list
     """
     return [
-        {"url_name": "index", "name": "Главная"},
         {"url_name": "darknet", "name": "darknet"},
         {"url_name": "forum", "name": "форум"},
         {"url_name": "chat", "name": "чат"},
@@ -26,6 +25,7 @@ def get_user_menu_context(user: User) -> list:
     if not (isinstance(user, User) or isinstance(user, AnonymousUser)):
         raise exceptions.ArgumentTypeException()
     return [
+        {"url_name": "sessions", "name": "Сессии"},
         {"url": f"/profile/{user.id}/", "name": "Профиль"},
         {"url_name": "logout", "name": "Выйти"},
     ] if user.is_authenticated else [
