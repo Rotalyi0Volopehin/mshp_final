@@ -4,19 +4,24 @@ from objects.text import Text
 from constants import Color
 from objects.toolbar import ToolBar
 from objects.end_turn_button import EndTurnButton
+from objects.current_player_plate import CurrentPlayerPlate
 
 
 class MapScene(Scene):
     def create_objects(self):
-        button_back = Btn(self.game, (350, 420, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
+        width = self.game.width
+        height = self.game.height
+        button_back = Btn(self.game, (width - 120, 20, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
         self.objects.append(button_back)
         self.game_vc = self.game.current_scene.game_vc
         self.objects.append(self.game_vc)
-        toolbar_geom = (35, self.game.height - 100, self.game.width - 70, 80)
+        toolbar_geom = (35, height - 100, width - 70, 80)
         self.toolbar = ToolBar(self.game, toolbar_geom)
         self.objects.append(self.toolbar)
-        self.end_turn_button = EndTurnButton(self.game, self.game.width - 100, self.game.height - 200)
+        self.end_turn_button = EndTurnButton(self.game, width - 100, height - 200)
         self.objects.append(self.end_turn_button)
+        current_player_plate = CurrentPlayerPlate(self.game, width - 100, height - 185)
+        self.objects.append(current_player_plate)
         self.__init_controls()
 
     def __init_controls(self):

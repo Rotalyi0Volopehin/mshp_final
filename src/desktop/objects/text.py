@@ -21,5 +21,13 @@ class Text(DrawObject):
         self.text = str(text)
         self.text_surface = self.font.render(self.text, True, self.color)
 
+    @property
+    def width(self) -> int:
+        return self.text_surface.get_width()
+
+    @property
+    def height(self) -> int:
+        return self.text_surface.get_height()
+
     def process_draw(self):
         self.game.screen.blit(self.text_surface, self.text_surface.get_rect(center=(self.x, self.y)))

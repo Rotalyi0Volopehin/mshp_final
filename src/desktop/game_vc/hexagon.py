@@ -71,24 +71,10 @@ class Hexagon:
     def __render_surface(self, edge_color, fill_color, hash_):
         surface = pygame.Surface((2 * self.side, 2 * self.side))
         surface.set_colorkey(Color.BLACK)
-        self.__flood_fill(surface, fill_color)
+        pygame.draw.polygon(surface, fill_color, self.points)
         pygame.draw.polygon(surface, edge_color, self.points, 3)
         self.__surfaces[hash_] = surface
         return surface
-
-    def __flood_fill(self, surface, color):
-        bfs = Queue()
-        bfs.put_nowait((self.side, self.side))
-        visited = set()
-        while not bfs.empty():
-            point = bfs.get_nowait()
-            if (point not in visited) and self.contains_point(point[0], point[1]):
-                surface.set_at(point, color)
-                visited.add(point)
-                bfs.put_nowait((point[0] - 1, point[1]))
-                bfs.put_nowait((point[0] + 1, point[1]))
-                bfs.put_nowait((point[0], point[1] - 1))
-                bfs.put_nowait((point[0], point[1] + 1))
 
     @staticmethod
     def __calc_hash_of_colors(edge_color: tuple, fill_color: tuple) -> int:
