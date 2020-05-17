@@ -2,28 +2,39 @@ from scenes.base import Scene
 from objects.button import Btn
 from objects.text import Text
 from constants import Color
+from objects.toolbar import ToolBar
+from objects.end_turn_button import EndTurnButton
+from objects.current_player_plate import CurrentPlayerPlate
 
 
 class MapScene(Scene):
     def create_objects(self):
-        button_back = Btn(self.game, (350, 500, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
+        width = self.game.width
+        height = self.game.height
+        button_back = Btn(self.game, (width - 120, 20, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
         self.objects.append(button_back)
         self.game_vc = self.game.current_scene.game_vc
         self.objects.append(self.game_vc)
-        emp_button = Btn(self.game, (30, 450, 100, 40), Color.WHITE, 'EMP', self.game_vc.grid_vc.use_ability_emp)
-        self.objects.append(emp_button)
-        fish_button = Btn(self.game, (30, 500, 100, 40), Color.WHITE, 'Fishing',
-                          self.game_vc.grid_vc.use_ability_fishing)
-        self.objects.append(fish_button)
+        toolbar_geom = (35, height - 100, width - 70, 80)
+        self.toolbar = ToolBar(self.game, toolbar_geom)
+        self.objects.append(self.toolbar)
+        self.end_turn_button = EndTurnButton(self.game, width - 100, height - 200)
+        self.objects.append(self.end_turn_button)
+        current_player_plate = CurrentPlayerPlate(self.game, width - 90, height - 183)
+        self.objects.append(current_player_plate)
+        self.__init_controls()
+
+    def __init_controls(self):
         controls = [
             "ЛКМ - выделение",
             "зажатие ЛКМ - выделение соседа",
             "колёсико/вверх/вниз/end/home - перемещение мощи",
-            "С - снятие выделения"
+            "С - снятие выделения",
+            "цифры - применение ИВ"
         ]
         for i in range(len(controls)):
             line = controls[i]
-            text = Text(self.game, font_name="Consolas", font_size=20, color=Color.WHITE, x = 300, y=250 + i * 20,
+            text = Text(self.game, font_name="Consolas", font_size=20, color=Color.WHITE, x=300, y=250 + i * 20,
                         text=line)
             self.objects.append(text)
 

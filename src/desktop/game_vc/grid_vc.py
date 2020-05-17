@@ -51,33 +51,30 @@ class GridVC(DrawObject):
         elif event.type == pygame.KEYUP:
             self.__handle_key_up(event.key)
 
-    def __try_move_power(self, value):
-        if (self.selected_tile is None) or (self.target_tile is None):
-            return
-        if self.selected_tile.power < value:
-            value = self.selected_tile.power
-        elif (value <= 0) and (self.selected_tile.team == self.target_tile.team) and (self.target_tile.power < -value):
-            value = -self.target_tile.power
-        self.selected_tile.move_power(self.target_tile, value)
-
     def __handle_key_up(self, key):
+        selected = self.selected_tile
+        target = self.target_tile
         if key == pygame.K_c:
             self.select_tile(None)
             self.select_target_tile(None)
-        elif (self.selected_tile is not None) and (self.target_tile is not None):
+        elif (selected is not None) and (target is not None):
             if key == pygame.K_END:
-                self.selected_tile.move_power(self.target_tile, self.selected_tile.power)
-            elif (key == pygame.K_HOME) and (self.selected_tile.team == self.target_tile.team):
-                self.target_tile.move_power(self.selected_tile, self.target_tile.power)
+                self.__move_power(selected.power)
+            elif key == pygame.K_HOME:
+                if selected.team == target.team:
+                    self.__move_power(-target.power)
+                else:
+                    self.__move_power(-(selected.power_cap + target.power_cap), True)
             elif key == pygame.K_UP:
-                self.__try_move_power(1)
+                self.__move_power(1)
             elif key == pygame.K_DOWN:
-                self.__try_move_power(-1)
+                self.__move_power(-1)
 
-    def use_ability_emp(self):
-        if self.target_tile is not None:
-            self.model.ability_emp(self.target_tile)
+    def __try_move_power(self, value):
+        if (self.selected_tile is None) or (self.target_tile is None):
+            return
+        self.__move_power(value, True)
 
-    def use_ability_fishing(self):
-        if self.target_tile is not None:
-            self.model.ability_fishing(self.target_tile)
+    def __move_power(self, value, cut_surplus=False):
+        team = self.game.current_scene.game_vc.model.current_team
+        self.selected_tile.try_move_power_as_team(self.target_tile, value, team, cut_surplus)

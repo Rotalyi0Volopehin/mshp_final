@@ -1,9 +1,9 @@
 from game_eng.grid_tile import GridTile
 
 
-# noinspection PyRedundantParentheses
 class GridModel:
-    def __init__(self, width, height):
+    def __init__(self, game, width, height):
+        self.game = game
         self.height = height
         self.width = width
         self.tiles = None
@@ -25,13 +25,7 @@ class GridModel:
     def set_controller(self, controller):
         self.controller = controller
 
-    # TODO: вынести абилки в отдельные классы
-
-    @staticmethod
-    def ability_emp(target):
-        for neighbour in target.get_neighbours():
-            neighbour.power = max(neighbour.power - 16, 0)
-
-    @staticmethod
-    def ability_fishing(target):
-        target.power = max(target.power - 32, 0)
+    def handle_new_team_turn(self):
+        for column in self.tiles:
+            for tile in column:
+                tile.handle_new_team_turn()

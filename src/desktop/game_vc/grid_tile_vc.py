@@ -9,10 +9,8 @@ from objects.text import Text
 
 
 class GridTileVCStatus(Enum):
-    INVISIBLE = Color.BLACK  # наша невидимая черная стена
     DEFAULT = Color.WHITE  # не выбрана
-    SELECTED = Color.RED  # выбрана
-    NEIGHBOUR = Color.GREEN  # соседняя с выбранной
+    SELECTED = Color.MAGENTA  # выбрана
     TARGET = Color.ORANGE  # та клетка, куда двигаем все, что хотим
 
 
@@ -59,7 +57,9 @@ class GridTileVC(DrawObject):
 
     def update_surface(self):
         if (self.__surface_status != self.status) or (self.__surface_team != self.model.team):
-            self.__surface = GridTileVC.HEXAGON.get_surface(self.status.value, Color.BLACK)
+            from game_vc.game_vc import GameVC
+            fill_color = GameVC.get_team_color(self.model.team)
+            self.__surface = GridTileVC.HEXAGON.get_surface(self.status.value, fill_color)
             self.__surface_status = self.status
             self.__surface_team = self.model.team
 

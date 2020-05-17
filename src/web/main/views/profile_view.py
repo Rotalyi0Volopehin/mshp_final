@@ -85,7 +85,12 @@ class ProfileFormPage(FormView):
         context["played_games"] = user_data.played_games_count
         context["activated"] = user_data.activated
         context["about"] = user_data.extra_info
-        context["team"] = user_data.team
+        if user_data.team == 0:
+            context["team"] = 'Cyber Corp'
+        elif user_data.team == 1:
+            context["team"] = 'Underground'
+        elif user_data.team == 2:
+            context["team"] = 'Freedom call'
         context["exp"] = user_data.exp
         context["level"] = user_data.level
         context["reputation"] = user_data.reputation
