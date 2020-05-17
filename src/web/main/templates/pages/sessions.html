@@ -2,7 +2,7 @@
 
 
 {% block content %}
-    <style>
+<style>
         body {
             background: linear-gradient(to right, #9FE2BF, #B0E0E6);
         }
@@ -11,84 +11,82 @@
             border-radius: 40px;
         }
 
-        .dark_part {
-            height: 125px;
-            min-width: 900px;
-        }
-
         .margin_everything {
             margin-top: 10%;
         }
-    </style>
+</style>
 
-    <div class="row margin_everything">
-        <div class="col">
-            <div class="container bg-white shadow rounded_border overflow-hidden pt-4">
-                <div class="row mt-5">
-                    <div class="col-lg-3">
+<div class="row margin_everything">
+    <div class="col">
+        <div class="container bg-white shadow rounded_border overflow-hidden pt-4">
+            <div class="row mt-5">
+                <div class="col-lg-3">
 
-                        <label style="font-size: 130%;">Поиск игровых сессий</label>
+                    <label style="font-size: 130%;">Поиск игровых сессий</label>
 
-                        <div class="btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-secondary mt-1">
-                                <input type="radio" name="options" id="option2" autocomplete="off"> К которым можно присоединиться
-                            </label>
-                            <label class="btn btn-secondary mt-1">
-                                <input type="radio" name="options" id="option3" autocomplete="off"> В которых вы принимали участие
-                            </label>
-                        </div>
-
-                        <div class="dropdown mt-4">
-                            <button class="btn btn-secondary btn-block dropdown-toggle" type="button" id="dropdownMenuButton"
-                                    data-toggle="dropdown" aria-expanded="false">
-                                Сортировать по
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Дате начала</a>
-                                <a class="dropdown-item" href="#">Длительности</a>
-                                <a class="dropdown-item" href="#">Числу игроков</a>
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-primary btn-block mt-1 mb-3">Найти</button>
-
+                    <div class="btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary mt-1">
+                            <input type="radio" name="options" id="option2" autocomplete="off"> К которым можно
+                            присоединиться
+                        </label>
+                        <label class="btn btn-secondary mt-1">
+                            <input type="radio" name="options" id="option3" autocomplete="off"> В которых вы принимали
+                            участие
+                        </label>
                     </div>
 
-                    <div class="col-lg-9">
-                        <table class="table table-striped">
-                            <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Название</th>
-                                <th scope="col">Число игроков</th>
-                                <th scope="col">Дата начала</th>
-                                <th scope="col">Дата окончания</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            {% block tables %}
-                            {% for item in tables %}
-                            <tr>
-                                {% for i in item %}
-                                <td>{{ i }}</td>
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                            {% endblock %}
-                            </tbody>
-                        </table>
+                    <div class="dropdown mt-4">
+                        <button class="btn btn-secondary btn-block dropdown-toggle" type="button"
+                                id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-expanded="false">
+                            Сортировать по
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Дате начала</a>
+                            <a class="dropdown-item" href="#">Длительности</a>
+                            <a class="dropdown-item" href="#">Числу игроков</a>
+                        </div>
                     </div>
+
+                    <button type="button" class="btn btn-primary btn-block mt-1 mb-3">Найти</button>
+
                 </div>
 
-                <div class="row mt-1 pb-4" style="font-size: 140%;">
-                    <div class="col-lg-8"></div>
-                    <div class="col-lg-4">
-                        <button type="button" class="btn btn-primary" style="width: 20%;"> < </button>
-                        Страница {{ 1 }}
-                        <button type="button" class="btn btn-primary" style="width: 20%;"> > </button>
-                    </div>
+                <div class="col-lg-9">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Название</th>
+                            <th scope="col">Число игроков</th>
+                            <th scope="col">Дата начала</th>
+                            <th scope="col">Дата окончания</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% block tables %}
+                        {% for item in tables %}
+                        <tr>
+                            {% for i in item %}
+                            <td>{{ i }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                        {% endblock %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row mt-1 pb-4" style="font-size: 140%;">
+                <div class="col-lg-8"></div>
+                <div class="col-lg-4">
+                    <button type="button" class="btn btn-primary" style="width: 20%;"> <</button>
+                    Страница {{ 1 }}
+                    <button type="button" class="btn btn-primary" style="width: 20%;"> ></button>
                 </div>
             </div>
         </div>
     </div>
-    {% endblock %}
+</div>
+{% endblock %}
