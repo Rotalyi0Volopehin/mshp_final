@@ -81,15 +81,27 @@ def create_hardcoded_game_model() -> GameModel:
 
 
 def make_capital_tile(x, y, team):
-    from game_eng.grid_tile_ders.capital_grid_tile import CapitalGridTile
+    from game_eng.grid_tile_ders.capital_tile import CapitalGridTile
     team.game.grid.tiles[x][y].upgrade(CapitalGridTile)
     team.game.grid.tiles[x][y].conquer(team)
 
 
 def create_hardcoded_player(name, team) -> Player:
     player = Player(name, team)
-    from game_eng.pressure_tool_set_ders.ddos_pts import DDosPTSet
     from game_eng.pressure_tool_set_ders.dos_pts import DosPTSet
+    from game_eng.pressure_tool_set_ders.ddos_pts import DDosPTSet
+    from game_eng.pressure_tool_set_ders.phishing_pts import PhishingPTSet
+    from game_eng.pressure_tool_set_ders.exploit_pts import ExploitPTSet
+    from game_eng.pressure_tool_set_ders.virus_pts import VirusPTSet
+    # ...
+    from game_eng.pressure_tool_set_ders.mining_farm_pts import MiningFarmPTSet
+    from game_eng.pressure_tool_set_ders.reboot_pts import RebootPTSet
     player.add_pressure_tools(DDosPTSet, 1)
-    player.add_pressure_tools(DosPTSet, 2)
+    player.add_pressure_tools(DosPTSet, 1)
+    player.add_pressure_tools(PhishingPTSet, 1)
+    player.add_pressure_tools(ExploitPTSet, 1)
+    player.add_pressure_tools(VirusPTSet, 1)
+    # ...
+    player.add_pressure_tools(MiningFarmPTSet, 1)
+    player.add_pressure_tools(RebootPTSet, 2)
     return player

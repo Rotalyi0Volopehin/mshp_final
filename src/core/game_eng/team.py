@@ -1,6 +1,6 @@
 import exceptions
 
-from game_eng.grid_tile_ders.capital_grid_tile import CapitalGridTile
+from game_eng.grid_tile_ders.capital_tile import CapitalGridTile
 
 
 class Team:
@@ -143,4 +143,7 @@ class Team:
         """
         if not isinstance(value, int):
             raise exceptions.ArgumentTypeException()
-        self.money = min(self.money + value, self.money_limit)
+        if value > 0:
+            self.money = min(self.money + value, self.money_limit)
+        else:
+            self.money = max(self.money + value, 0)

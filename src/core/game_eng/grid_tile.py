@@ -9,6 +9,37 @@ class GridTile:
         self.loc_y = loc_y
         self.team = team
         self.controller = self.view = None
+        self.effects = set()
+
+    @property  # костыль для избежания циклического импорта
+    def effect_type(self) -> type:
+        if not hasattr(GridTile, "__effect_type"):
+            from game_eng.grid_tile_effect import GridTileEffect
+            GridTile.__effect_type = GridTileEffect
+        return GridTile.__effect_type
+
+    def add_effect(self, effect):
+        if not isinstance(effect, self.effect_type):
+            raise exceptions.ArgumentTypeException()
+        self.effects.add(effect)
+
+    def remove_effect(self, effect):
+        if not isinstance(effect, self.effect_type):
+            raise exceptions.ArgumentTypeException()
+        self.effects.remove(effect)
+
+    def has_effect(self, effect_type: type) -> bool:
+        if not isinstance(effect_type, type):
+            raise exceptions.ArgumentTypeException()
+        if not issubclass(effect_type, self.effect_type):
+            raise exceptions.ArgumentValueException()
+        for effect in self.effects:
+            if type(effect) == effect_type:
+                return True
+        return False
+
+    def clear_effects(self):
+        self.effects.clear()
 
     @property
     def even_row(self) -> bool:
@@ -96,6 +127,8 @@ class GridTile:
                 raise exceptions.InvalidReturnException()
             self.team.earn_money(income)
             self.gain_power(power_growth)
+        for effect in set(self.effects):
+            effect.apply()
 
     @property  # virtual
     def owners_income(self) -> int:

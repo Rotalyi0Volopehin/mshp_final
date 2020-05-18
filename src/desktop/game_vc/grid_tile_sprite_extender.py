@@ -2,7 +2,7 @@ import pygame
 import exceptions
 
 from constants import Color
-from game_eng.grid_tile_ders.capital_grid_tile import CapitalGridTile
+from game_eng.grid_tile_ders.capital_tile import CapitalGridTile
 from game_eng.grid_tile_ders.enhanced_tile import EnhancedGridTile
 from game_eng.grid_tile_ders.defense_tile import DefenseGridTile
 from game_eng.grid_tile_ders.service_tile import ServiceGridTile

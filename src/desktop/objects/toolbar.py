@@ -1,6 +1,5 @@
 import pygame
 
-from game_eng.market import Market
 from objects.base import DrawObject
 from objects.toolbar_cell import ToolBarCell
 
@@ -12,9 +11,21 @@ class ToolBar(DrawObject):
     def init_pts_keys():
         from game_eng.pressure_tool_set_ders.dos_pts import DosPTSet
         from game_eng.pressure_tool_set_ders.ddos_pts import DDosPTSet
+        from game_eng.pressure_tool_set_ders.phishing_pts import PhishingPTSet
+        from game_eng.pressure_tool_set_ders.exploit_pts import ExploitPTSet
+        from game_eng.pressure_tool_set_ders.virus_pts import VirusPTSet
+        # ...
+        from game_eng.pressure_tool_set_ders.mining_farm_pts import MiningFarmPTSet
+        from game_eng.pressure_tool_set_ders.reboot_pts import RebootPTSet
         ToolBar.PTS_KEYS = {
             DosPTSet: "K_1",
             DDosPTSet: "K_2",
+            PhishingPTSet: "K_3",
+            ExploitPTSet: "K_4",
+            VirusPTSet: "K_5",
+            # ...
+            MiningFarmPTSet: "K_9",
+            RebootPTSet: "K_0",
         }
 
     def __init__(self, game, geometry: tuple):
