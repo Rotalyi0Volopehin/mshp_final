@@ -38,13 +38,13 @@ class FractionPages(View):
     @staticmethod
     def fraction1_page(request):
         context = FractionPages.collect_default_context(request)
-        context['pagename'] = 'Underground'
+        context['pagename'] = 'Подполье'
         context['members'] = FractionPages.sort_members_by_reputation(1)
         return render(request, 'pages/fractions/fraction1.html', context)
 
     @staticmethod
     def fraction2_page(request):
         context = FractionPages.collect_default_context(request)
-        context['pagename'] = 'Freedom call'
+        context['pagename'] = 'Зов Свободы'
         context['members'] = FractionPages.sort_members_by_reputation(2)
         return render(request, 'pages/fractions/fraction2.html', context)

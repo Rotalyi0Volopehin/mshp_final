@@ -88,9 +88,9 @@ class ProfileFormPage(FormView):
         if user_data.team == 0:
             context["team"] = 'Cyber Corp'
         elif user_data.team == 1:
-            context["team"] = 'Underground'
+            context["team"] = 'Подполье'
         elif user_data.team == 2:
-            context["team"] = 'Freedom call'
+            context["team"] = 'Зов Свободы'
         context["exp"] = user_data.exp
         context["level"] = user_data.level
         context["reputation"] = user_data.reputation

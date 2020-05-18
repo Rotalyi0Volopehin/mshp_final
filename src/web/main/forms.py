@@ -44,7 +44,7 @@ class RegistrationForm(forms.Form):
     email = forms.CharField(label="E-mail", min_length=1, max_length=64,
                             required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
     team = forms.ChoiceField(widget=forms.Select(attrs={"class": "form-control"}), label="Фракция",
-                             required=True, choices=[(0, "0"), (1, "1"), (2, "2")])
+                             required=True, choices=[(0, "Cyber Corp"), (1, "Подполье"), (2, "Зов Свободы")])
 
 
 class ProfileForm(forms.Form):
