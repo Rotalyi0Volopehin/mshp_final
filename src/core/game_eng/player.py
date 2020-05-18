@@ -23,8 +23,8 @@ class Player:
 
     def add_pressure_tools(self, tool_type: type, count: int):
         """**Получение игроком некоторого количества ИВ одного типа**\n
-        :raises ArgumentTypeException: Неверный тип переданных аргументов
-        :raises ArgumentValueException: Значение переданных аргументов не соответсвует требованиям
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :raises ArgumentValueException: |ArgumentValueException|
         :param tool_type: Тип ИВ
         :type tool_type: type
         :param count: Получаемое количество ИВ (>= 0)

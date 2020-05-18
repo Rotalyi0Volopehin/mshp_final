@@ -2,12 +2,17 @@ import pygame
 import exceptions
 
 from constants import Color
+from game_eng.grid_tile_ders.capital_grid_tile import CapitalGridTile
 from game_eng.grid_tile_ders.enhanced_tile import EnhancedGridTile
 from game_eng.grid_tile_ders.defense_tile import DefenseGridTile
 from game_eng.grid_tile_ders.service_tile import ServiceGridTile
 from game_eng.grid_tile_ders.enhanced_tile_plus import EnhancedGridTilePlus
 from game_eng.grid_tile_ders.defense_tile_plus import DefenseGridTilePlus
 from game_eng.grid_tile_ders.service_tile_plus import ServiceGridTilePlus
+
+
+def capital_ext(x, y, surface):
+    pygame.draw.polygon(surface, Color.WHITE, [(x, y), (x - 3, y + 3), (x, y + 6), (x + 3, y + 3)])
 
 
 def enhanced_ext(x, y, surface):
@@ -56,6 +61,7 @@ class GridTileSpriteExtender:
             ext(x, y, surface)
 
     extensions = {
+        CapitalGridTile: capital_ext,
         EnhancedGridTile: enhanced_ext,
         DefenseGridTile: defense_ext,
         ServiceGridTile: service_ext,

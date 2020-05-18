@@ -52,8 +52,8 @@ class Market:
 
     def try_buy(self, buyer: Player, tool_type: type, count: int) -> bool:
         """**Попытка покупки игроком нескольких ИВ одного типа**\n
-        :raises ArgumentTypeException: Неверный тип переданных аргументов
-        :raises ArgumentValueException: Значение переданных аргументов не соответсвует требованиям
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :raises ArgumentValueException: |ArgumentValueException|
         :param buyer: Покупатель
         :type buyer: Player
         :param tool_type: Тип ИВ

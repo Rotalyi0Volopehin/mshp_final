@@ -62,7 +62,7 @@ def sessions_page(request):
         'user_menu': get_user_menu_context(request.user),
 
     }
-    tmp1 = [1,2,3,4]
-    tmp2 = ['a','b', 'c', 'd']
-    context['tables'] = [tmp1, tmp2, tmp2, tmp2] # sample rows
+    tmp1 = [1, 2, 3, 4]
+    tmp2 = ['a', 'b', 'c', 'd']
+    context['tables'] = [tmp1, tmp2, tmp2, tmp2]  # sample rows
     return render(request, 'pages/sessions.html', context)
