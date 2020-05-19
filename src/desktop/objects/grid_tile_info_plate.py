@@ -6,7 +6,7 @@ from constants import Color
 
 
 class GridTileInfoPlate(DrawObject):
-    EFFECTS_CONTENT_LINE_INDEX = 4
+    EFFECTS_CONTENT_LINE_INDEX = 5
 
     def __init__(self, game, right_border: int, pos_y: int, height: int):
         super().__init__(game)
@@ -55,7 +55,7 @@ class GridTileInfoPlate(DrawObject):
         self.rect_color = self.game.current_scene.game_vc.get_team_color(tile.team)
         content = [
             tile.name, None,
-            f"Доход : {tile.owners_income}",
+            f"Доход : +{tile.owners_income}",
             "Мощя : {:0>2x}/{:0>2x} (+{:0>2x})".format(tile.power, tile.power_cap, tile.power_growth),
         ]
         self.__try_create_effects_info(content)
@@ -69,6 +69,7 @@ class GridTileInfoPlate(DrawObject):
     def __try_create_effects_info(self, content: list):
         tile = self.game.current_scene.game_vc.grid_vc.selected_tile
         if len(tile.effects) > 0:
+            content.append(None)
             content.append("Эффекты:")
             for effect in tile.effects:
                 content.append(f"- {effect.name}")
