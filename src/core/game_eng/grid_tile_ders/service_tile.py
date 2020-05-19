@@ -17,3 +17,7 @@ class ServiceGridTile(GridTile):
     @property
     def power_cap(self) -> int:
         return 32
+
+    @property
+    def name(self) -> str:
+        return "Комерческий Кластер"

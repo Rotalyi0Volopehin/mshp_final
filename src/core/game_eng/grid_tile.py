@@ -151,6 +151,10 @@ class GridTile:
     def power_cap(self) -> int:
         return 64
 
+    @property  # virtual
+    def name(self) -> str:
+        return "Обыкновенный Кластер"
+
     @staticmethod
     def get_upgrade_price() -> int:
         return 0

@@ -10,3 +10,7 @@ class VirusGridTileEffect(GridTileEffect):
                 if neighbour.has_effect(VirusGridTileEffect):
                     continue
                 VirusGridTileEffect(neighbour)
+
+    @property
+    def name(self) -> str:
+        return "Вирус"

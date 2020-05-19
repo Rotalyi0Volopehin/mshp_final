@@ -1,7 +1,7 @@
-from game_eng.grid_tile import GridTile
+from .service_tile import ServiceGridTile
 
 
-class ServiceGridTilePlus(GridTile):
+class ServiceGridTilePlus(ServiceGridTile):
     @staticmethod
     def get_upgrade_price() -> int:
         return 48
@@ -17,3 +17,7 @@ class ServiceGridTilePlus(GridTile):
     @property
     def power_cap(self) -> int:
         return 64
+
+    @property
+    def name(self) -> str:
+        return super().name + " +"

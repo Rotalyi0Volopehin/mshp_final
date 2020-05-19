@@ -17,3 +17,7 @@ class DefenseGridTile(GridTile):
     @property
     def power_cap(self) -> int:
         return 128
+
+    @property
+    def name(self) -> str:
+        return "Защищённый Кластер"

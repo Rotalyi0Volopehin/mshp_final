@@ -15,7 +15,7 @@ class VirusPTSet(PressureToolSet):
 
     @property
     def name(self) -> str:
-        return "Virus"
+        return "Вирус"
 
     def _try_apply(self, target) -> bool:
         VirusGridTileEffect(target)

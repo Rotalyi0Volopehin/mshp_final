@@ -15,7 +15,7 @@ class PhishingPTSet(PressureToolSet):
 
     @property
     def name(self) -> str:
-        return "Phishing"
+        return "Фишинг"
 
     def _try_apply(self, target) -> bool:
         PhishingGridTileEffect(target, self._player.team)

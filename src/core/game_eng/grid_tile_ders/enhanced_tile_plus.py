@@ -1,7 +1,7 @@
-from game_eng.grid_tile import GridTile
+from .enhanced_tile import EnhancedGridTile
 
 
-class EnhancedGridTilePlus(GridTile):
+class EnhancedGridTilePlus(EnhancedGridTile):
     @staticmethod
     def get_upgrade_price() -> int:
         return 16
@@ -17,3 +17,7 @@ class EnhancedGridTilePlus(GridTile):
     @property
     def power_cap(self) -> int:
         return 192
+
+    @property
+    def name(self) -> str:
+        return super().name + " +"

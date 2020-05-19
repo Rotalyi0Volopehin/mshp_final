@@ -10,6 +10,10 @@ class GridTileEffect:
         tile.add_effect(self)
         self.tile = tile
 
+    @property  # abstract
+    def name(self) -> str:
+        raise exceptions.NotImplementedException()
+
     # abstract
     def apply(self):
         pass

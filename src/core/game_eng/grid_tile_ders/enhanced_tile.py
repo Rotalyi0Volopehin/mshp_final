@@ -17,3 +17,7 @@ class EnhancedGridTile(GridTile):
     @property
     def power_cap(self) -> int:
         return 96
+
+    @property
+    def name(self) -> str:
+        return "Усиленный Кластер"

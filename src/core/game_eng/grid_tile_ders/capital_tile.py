@@ -14,6 +14,10 @@ class CapitalGridTile(GridTile):
     def power_cap(self) -> int:
         return 255
 
+    @property
+    def name(self) -> str:
+        return "Контрольный Кластер"
+
     def conquer(self, team):
         prev_team = self.team
         super().conquer(team)

@@ -15,7 +15,7 @@ class RebootPTSet(PressureToolSet):
 
     @property
     def name(self) -> str:
-        return "Reboot"
+        return "Перезагрузка"
 
     def _try_apply(self, target) -> bool:
         RebootGridTileEffect(target)
