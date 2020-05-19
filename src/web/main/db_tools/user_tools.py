@@ -1,18 +1,18 @@
 import re
+import exceptions
+import main.models
 
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
-
-import exceptions
-import main.models
-# vvv для системы верификации vvv
-from main.db_tools.tokens import account_activation_token
 from main.db_tools.user_error_messages import DBUserErrorMessages
-from main.models import UserData
+from main.models import UserData, UserParticipation, GameSession
+
+# vvv для системы верификации vvv
+from django.utils.http import urlsafe_base64_encode
+from main.db_tools.tokens import account_activation_token
 from network_confrontation_web.settings import AUTO_USER_ACTIVATION
 
 
@@ -107,22 +107,27 @@ class DBUserTools:
         user.delete()
 
     @staticmethod
-    def is_user_configuration_correct(user: User) -> bool:
+    def is_user_configuration_correct(user: User, return_user_data: bool = False):
         """**Инструмент проверки валидности пользовательских данных**\n
         Проверяет факт наличия в БД ровно одной записи типа :class:`main.models.UserData`.
 
         :raises ArgumentTypeException: |ArgumentTypeException|
         :param user: Пользователь
         :type user: User
+        :param return_user_data: Факт возврата этим методом UserData
+        :type return_user_data: bool
         :return: Факт валидности пользовательских данных
-        :rtype: bool
+        :rtype: bool или (bool, UserData)
         """
         # vvv проверка аргумента vvv
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
         # vvv проверка валидности vvv
         user_data = main.models.UserData.objects.filter(user=user)
-        return len(user_data) == 1
+        ok = len(user_data) == 1
+        if return_user_data:
+            return ok, user_data[0] if ok else None
+        return ok
 
     @staticmethod
     def try_find_user_with_id(uid: int) -> (User, str):
@@ -177,6 +182,20 @@ class DBUserTools:
             user_data.activated = True
             user_data.save()
         return True
+
+    @staticmethod
+    def try_sign_user_up_for_session(user, game_session) -> (bool, str):
+        if not (isinstance(user, User) and isinstance(game_session, GameSession)):
+            raise exceptions.ArgumentTypeException()
+        ok, user_data = DBUserTools.is_user_configuration_correct(user)
+        if not ok:
+            return False, DBUserErrorMessages.invalid_user_configuration
+        from .game_session_tools import DBGameSessionTools
+        ok, error = DBGameSessionTools.can_user_sign_up_for_session(user, user_data, game_session)
+        if not ok:
+            return False, error
+        participation = UserParticipation(user_data=user_data, game_session=game_session)
+        participation.save()
 
 
 email_re = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
