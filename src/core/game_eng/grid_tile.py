@@ -26,7 +26,8 @@ class GridTile:
     def remove_effect(self, effect):
         if not isinstance(effect, self.effect_type):
             raise exceptions.ArgumentTypeException()
-        self.effects.remove(effect)
+        if effect in self.effects:
+            self.effects.remove(effect)
 
     def has_effect(self, effect_type: type) -> bool:
         if not isinstance(effect_type, type):
