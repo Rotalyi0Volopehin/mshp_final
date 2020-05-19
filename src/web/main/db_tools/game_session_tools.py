@@ -49,7 +49,7 @@ class DBGameSessionTools:
         return True, None
 
     @staticmethod
-    def can_user_sign_up_for_session(correct_user, user_data, game_session) -> (bool, str):
+    def can_user_take_part_in_session(correct_user, user_data, game_session) -> (bool, str):
         if not (isinstance(correct_user, User) and isinstance(user_data, UserData) and
                 isinstance(game_session, GameSession)):
             raise exceptions.ArgumentTypeException()
