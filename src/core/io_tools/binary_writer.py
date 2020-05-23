@@ -48,14 +48,34 @@ class BinaryWriter:
         bin_ = pack('>I', data)
         self.__base_stream.write(bin_)
 
+    def write_uint(self, data: int):
+        """**Запись UnsignedInt32**\n
+        Формат данных : [data<32bit>]
+
+        :param data: UnsignedInt32
+        :type data: int
+        """
+        bin_ = pack('>I', data)
+        self.__base_stream.write(bin_)
+
     def write_byte(self, data: int):
+        """**Запись UnsignedInt8**\n
+        Формат данных : [data<8bit>]
+
+        :param data: UnsignedInt8
+        :type data: int
+        """
+        bin_ = pack('B', data)
+        self.__base_stream.write(bin_)
+
+    def write_sbyte(self, data: int):
         """**Запись Int8**\n
         Формат данных : [data<8bit>]
 
         :param data: Int8
         :type data: int
         """
-        bin_ = pack('B', data)
+        bin_ = pack('b', data)
         self.__base_stream.write(bin_)
 
     def write_bool(self, data: bool):
@@ -66,6 +86,46 @@ class BinaryWriter:
         :type data: bool
         """
         self.write_byte(data)
+
+    def write_int_point(self, data: tuple):
+        """**Запись точки Int32**\n
+        Формат данных : [x<32bit>][y<32bit>]
+
+        :param data: Точка Int32
+        :type data: (int, int)
+        """
+        self.write_int(data[0])
+        self.write_int(data[1])
+
+    def write_uint_point(self, data: tuple):
+        """**Запись точки UnsignedInt32**\n
+        Формат данных : [x<32bit>][y<32bit>]
+
+        :param data: Точка UnsignedInt32
+        :type data: (int, int)
+        """
+        self.write_uint(data[0])
+        self.write_uint(data[1])
+
+    def write_byte_point(self, data: tuple):
+        """**Запись точки UnsignedInt8**\n
+        Формат данных : [x<8bit>][y<8bit>]
+
+        :param data: Точка UnsignedInt8
+        :type data: (int, int)
+        """
+        self.write_byte(data[0])
+        self.write_byte(data[1])
+
+    def write_sbyte_point(self, data: tuple):
+        """**Запись точки Int8**\n
+        Формат данных : [x<8bit>][y<8bit>]
+
+        :param data: Точка Int8
+        :type data: (int, int)
+        """
+        self.write_sbyte(data[0])
+        self.write_sbyte(data[1])
 
     def write_chars(self, data: str):
         """**Запись строки известной длины**\n
@@ -84,7 +144,7 @@ class BinaryWriter:
         :param data: Строка
         :type data: str
         """
-        self.write_int(len(data))
+        self.write_uint(len(data))
         self.write_chars(data)
 
     def write_short_str(self, data: str):
@@ -129,7 +189,7 @@ class BinaryWriter:
         :param elem_type: Тип данных, поддерживаемый методом write
         :type elem_type: type
         """
-        self.write_int(len(iterable))
+        self.write_uint(len(iterable))
         self.__write_iterable(iterable, elem_type)
 
     def write_short_iterable(self, iterable, elem_type: type):

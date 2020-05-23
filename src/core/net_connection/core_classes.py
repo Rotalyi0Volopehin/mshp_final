@@ -1,14 +1,15 @@
 import os
+import exceptions
 
-
-# TODO: задокументировать
+from io_tools.binary_reader import BinaryReader
+from io_tools.binary_writer import BinaryWriter
 
 
 class CoreClasses:
     classes = {}
 
     @staticmethod
-    def reg_core_classes(core_dir_path):
+    def reg_core_classes(core_dir_path: str):
         def file_handler(file_path):
             file_name = file_path[len(core_dir_path) + 1:]
             if file_name.endswith(".py") and not file_name.endswith("__init__.py"):
@@ -41,3 +42,20 @@ class CoreClasses:
             if isinstance(elem, type):
                 classes[name] = elem
         return classes
+
+    @staticmethod
+    def read_class(stream: BinaryReader) -> type:
+        if not isinstance(stream, BinaryReader):
+            raise exceptions.ArgumentTypeException()
+        module_name = stream.read_short_str()
+        class_name = stream.read_short_str()
+        return CoreClasses.classes[module_name][class_name]
+
+    @staticmethod
+    def write_class(stream: BinaryWriter, cls: type, module_name: str):
+        if not (isinstance(stream, BinaryWriter) and isinstance(cls, type) and isinstance(module_name, str)):
+            raise exceptions.ArgumentTypeException()
+        if (len(module_name) > 255) or (len(cls.__name__) > 255):
+            raise exceptions.ArgumentValueException("Module and class names must be shorter than 256 symbols!")
+        stream.write_short_str(module_name)
+        stream.write_short_str(cls.__name__)

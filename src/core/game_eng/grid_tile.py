@@ -7,6 +7,7 @@ class GridTile:
         self.power = 0
         self.loc_x = loc_x
         self.loc_y = loc_y
+        self.team_ind = -1
         self.team = team
         self.controller = self.view = None
         self.effects = set()
@@ -49,6 +50,14 @@ class GridTile:
 
     def clear_effects(self):
         self.effects.clear()
+
+    @property
+    def team(self):
+        return self.grid.game.teams[self.team_ind]
+
+    @team.setter
+    def team(self, value):
+        self.team_ind = -1 if value is None else value.index
 
     @property
     def even_row(self) -> bool:

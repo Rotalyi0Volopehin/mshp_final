@@ -96,6 +96,15 @@ class GameModel:
         self.__current_player = self.current_team.current_player
         self.__current_player_turn.reset()
 
+    def find_player_by_name(self, name: str):
+        if not isinstance(name, str):
+            raise exceptions.ArgumentTypeException()
+        for team in self.teams:
+            player = team.find_player_by_name(name)
+            if player is not None:
+                return player
+        return None
+
     def __next_team_turn(self):
         self.market.update()
         self.__current_team_index += 1

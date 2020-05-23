@@ -46,9 +46,29 @@ class BinaryReader:
         :rtype: int
         """
         bin_ = self.__base_stream.read(4)
+        return unpack('>i', bin_)[0]
+
+    def read_uint(self) -> int:
+        """**Чтение UnsignedInt32**\n
+        Формат данных : [data<32bit>]
+
+        :return: UnsignedInt32
+        :rtype: int
+        """
+        bin_ = self.__base_stream.read(4)
         return unpack('>I', bin_)[0]
 
     def read_byte(self) -> int:
+        """**Чтение UnsignedInt8**\n
+        Формат данных : [data<8bit>]
+
+        :return: UnsignedInt8
+        :rtype: int
+        """
+        bin_ = self.__base_stream.read(1)
+        return unpack('B', bin_)[0]
+
+    def read_sbyte(self) -> int:
         """**Чтение Int8**\n
         Формат данных : [data<8bit>]
 
@@ -56,7 +76,7 @@ class BinaryReader:
         :rtype: int
         """
         bin_ = self.__base_stream.read(1)
-        return unpack('B', bin_)[0]
+        return unpack('b', bin_)[0]
 
     def read_bool(self) -> bool:
         """**Чтение Boolean**\n
@@ -66,6 +86,50 @@ class BinaryReader:
         :rtype: bool
         """
         return self.read_byte() != 0
+
+    def read_int_point(self) -> tuple:
+        """**Чтение точки Int32**\n
+        Формат данных : [x<32bit>][y<32bit>]
+
+        :return: Точка Int32
+        :rtype: (int, int)
+        """
+        x = self.read_int()
+        y = self.read_int()
+        return x, y
+
+    def read_uint_point(self) -> tuple:
+        """**Чтение точки UnsignedInt32**\n
+        Формат данных : [x<32bit>][y<32bit>]
+
+        :return: Точка UnsignedInt32
+        :rtype: (int, int)
+        """
+        x = self.read_uint()
+        y = self.read_uint()
+        return x, y
+
+    def read_byte_point(self) -> tuple:
+        """**Чтение точки UnsignedInt8**\n
+        Формат данных : [x<8bit>][y<8bit>]
+
+        :return: Точка UnsignedInt8
+        :rtype: (int, int)
+        """
+        x = self.read_byte()
+        y = self.read_byte()
+        return x, y
+
+    def read_sbyte_point(self) -> tuple:
+        """**Чтение точки Int8**\n
+        Формат данных : [x<8bit>][y<8bit>]
+
+        :return: Точка Int8
+        :rtype: (int, int)
+        """
+        x = self.read_sbyte()
+        y = self.read_sbyte()
+        return x, y
 
     def read_chars(self, length: int) -> str:
         """**Чтение строки известной длины**\n
@@ -86,7 +150,7 @@ class BinaryReader:
         :return: Строка
         :rtype: str
         """
-        length = self.read_int()
+        length = self.read_uint()
         return self.read_chars(length)
 
     def read_short_str(self) -> str:
@@ -141,7 +205,7 @@ class BinaryReader:
         :return: Последовательность однотипных данных
         :rtype: list или generator
         """
-        length = self.read_int()
+        length = self.read_uint()
         if lazy:
             for elem in self.__read_iterable(length, elem_type, True):
                 yield elem
