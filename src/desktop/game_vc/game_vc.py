@@ -69,9 +69,9 @@ class GameVC(DrawObject):
 def create_hardcoded_game_model() -> GameModel:
     game = GameModel(title="Hardcoded session", grid_width=6, grid_height=6,
                      player_turn_period=30, teams_money_limit=999)
-    game.add_team(TeamA(game))
-    game.add_team(TeamB(game))
-    game.add_team(TeamC(game))
+    TeamA(game)
+    TeamB(game)
+    TeamC(game)
     for team in game.teams:
         team.add_player(create_hardcoded_player(f"P{team.index}A", team))
         team.add_player(create_hardcoded_player(f"P{team.index}B", team))
@@ -87,7 +87,7 @@ def make_capital_tile(x, y, team):
 
 
 def create_hardcoded_player(name, team) -> Player:
-    player = Player(name, team)
+    player = Player((team.index << 1) + len(team.players) + 1, name, team)
     from game_eng.pressure_tool_set_ders.ddos_pts import DDosPTSet
     from game_eng.pressure_tool_set_ders.phishing_pts import PhishingPTSet
     from game_eng.pressure_tool_set_ders.exploit_pts import ExploitPTSet

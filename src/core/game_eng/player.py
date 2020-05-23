@@ -17,19 +17,18 @@ class Player:
         self.name = name
         self.__team = team
         self.pressure_tools = dict()
+        team.add_player(self)
 
     @staticmethod
     def read(stream: BinaryReader):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
         uid = stream.read_uint()
-        name = stream.read_short_str()
-        team_ind = stream.read_byte()
+        name = stream.read_short_string()
+        team_ind = stream.read_sbyte()
         team = LoadingDump.get_team_by_index(team_ind)
         obj = Player(uid, name, team)
         LoadingDump.add_player(obj)
-        for pts in stream.read_iterable(Player.get_pts_type(), True):
-            obj.pressure_tools[type(pts)] = pts
         return obj
 
     @staticmethod
@@ -37,9 +36,8 @@ class Player:
         if not (isinstance(stream, BinaryWriter) and isinstance(obj, Player)):
             raise exceptions.ArgumentTypeException()
         stream.write_uint(obj.id)
-        stream.write_short_str(obj.name)
-        stream.write_byte(obj.team.index)
-        stream.write_iterable(obj.pressure_tools.values(), Player.get_pts_type())
+        stream.write_short_string(obj.name)
+        stream.write_sbyte(obj.team.index)
 
     @property
     def team(self) -> Team:

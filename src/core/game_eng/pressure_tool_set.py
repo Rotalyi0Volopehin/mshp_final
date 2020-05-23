@@ -26,7 +26,7 @@ class PressureToolSet:
             self.count = 0
 
     @staticmethod
-    def read(stream: BinaryReader):
+    def read(stream: BinaryReader, player=None):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
         pts_type = CoreClasses.read_class(stream)
@@ -35,13 +35,14 @@ class PressureToolSet:
         player = LoadingDump.get_player_by_id(uid)
         obj = pts_type(player)
         obj.count = count
+        player.pressure_tools[pts_type] = obj
         return obj
 
     @staticmethod
     def write(stream: BinaryWriter, obj):
         if not (isinstance(stream, BinaryWriter) and isinstance(obj, PressureToolSet)):
             raise exceptions.ArgumentTypeException()
-        CoreClasses.write_class(stream, PressureToolSet, __name__)
+        CoreClasses.write_class(stream, type(obj))
         stream.write_uint(obj.count)
         uid = 0 if obj._player is None else obj._player.id
         stream.write_uint(uid)

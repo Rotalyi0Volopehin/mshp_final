@@ -12,7 +12,7 @@ class BinaryWriter:
         self.__write_methods = {
             int: self.write_int,
             bool: self.write_byte,
-            str: self.write_str,
+            str: self.write_string,
         }
 
     @property
@@ -137,7 +137,7 @@ class BinaryWriter:
         bin_ = data.encode()
         self.__base_stream.write(bin_)
 
-    def write_str(self, data: str):
+    def write_string(self, data: str):
         """**Запись строки**\n
         Формат данных : [length<32bit>][chars<bytes>]
 
@@ -147,7 +147,7 @@ class BinaryWriter:
         self.write_uint(len(data))
         self.write_chars(data)
 
-    def write_short_str(self, data: str):
+    def write_short_string(self, data: str):
         """**Запись строки длиной до 255 элементов**\n
         Формат данных : [length<8bit>][chars<bytes>]
 

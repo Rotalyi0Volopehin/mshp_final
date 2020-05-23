@@ -31,6 +31,7 @@ class Team:
         self.__current_player_index = 0
         self.money = 0
         self.capital_tiles = set()
+        game_model.add_team(self)
 
     @staticmethod
     def read(stream: BinaryReader):
@@ -38,6 +39,7 @@ class Team:
             raise exceptions.ArgumentTypeException()
         team_type = CoreClasses.read_class(stream)
         obj = team_type(LoadingDump.game_session)
+        LoadingDump.add_team(obj)
         obj.__index = stream.read_byte()
         obj.players = stream.read_iterable(Team.get_player_type())
         obj.__current_player_index = stream.read_byte()
@@ -53,7 +55,7 @@ class Team:
     def write(stream: BinaryWriter, obj):
         if not (isinstance(stream, BinaryWriter) and isinstance(obj, Team)):
             raise exceptions.ArgumentTypeException()
-        CoreClasses.write_class(stream, Team, __name__)
+        CoreClasses.write_class(stream, type(obj))
         stream.write_byte(obj.__index)
         stream.write_iterable(obj.players, Team.get_player_type())
         stream.write_byte(obj.__current_player_index)

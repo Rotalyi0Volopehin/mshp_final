@@ -12,7 +12,7 @@ class BinaryReader:
         self.__read_methods = {
             int: self.read_int,
             bool: self.read_bool,
-            str: self.read_str,
+            str: self.read_string,
         }
 
     @property
@@ -143,7 +143,7 @@ class BinaryReader:
         bin_ = self.__base_stream.read(length)
         return bin_.decode()
 
-    def read_str(self) -> str:
+    def read_string(self) -> str:
         """**Чтение строки**\n
         Формат данных : [length<32bit>][chars<bytes>]
 
@@ -153,7 +153,7 @@ class BinaryReader:
         length = self.read_uint()
         return self.read_chars(length)
 
-    def read_short_str(self) -> str:
+    def read_short_string(self) -> str:
         """**Чтение строки длиной до 255 элементов**\n
         Формат данных : [length<8bit>][chars<bytes>]
 
@@ -163,16 +163,20 @@ class BinaryReader:
         length = self.read_byte()
         return self.read_chars(length)
 
-    def __get_read_method(self, data_type: type):
+    def __get_read_method(self, data_type: type, extra_kwargs: dict):
         if hasattr(data_type, "read"):
-            def method():
-                return data_type.read(stream=self)
+            if extra_kwargs is None:
+                def method():
+                    return data_type.read(stream=self)
+            else:
+                def method():
+                    return data_type.read(stream=self, **extra_kwargs)
             return method
         if data_type in self.__read_methods:
             return self.__read_methods[data_type]
         raise exceptions.ArgumentValueException()
 
-    def read(self, data_type: type):
+    def read(self, data_type: type, extra_kwargs: dict = None):
         """**Чтение данных**\n
         Поддерживает int, bool, str и любые типы, имеющие метод 'read',
         принимающий параметр 'stream' типа BinaryReader\n
@@ -180,12 +184,14 @@ class BinaryReader:
 
         :param data_type: Поддерживаемый тип данных
         :type data_type: type
+        :param extra_kwargs: kwargs для метода 'read' загружаемого типа
+        :type extra_kwargs: dict
         :return: Прочитанные данные
         """
-        return self.__get_read_method(data_type)()
+        return self.__get_read_method(data_type, extra_kwargs)()
 
-    def __read_iterable(self, length: int, elem_type: type, lazy: bool):
-        read_method = self.__get_read_method(elem_type)
+    def __read_iterable(self, length: int, elem_type: type, lazy: bool, extra_kwargs: dict):
+        read_method = self.__get_read_method(elem_type, extra_kwargs)
         if lazy:
             for _ in range(length):
                 yield read_method()
@@ -194,7 +200,7 @@ class BinaryReader:
             for i in range(length):
                 data[i] = read_method()
 
-    def read_iterable(self, elem_type: type, lazy: bool = False):
+    def read_iterable(self, elem_type: type, lazy: bool = False, extra_kwargs: dict = None):
         """**Чтение последовательности однотипных данных**\n
         Формат данных : [length<32bit>][elem<elem_type>]*length
 
@@ -202,17 +208,19 @@ class BinaryReader:
         :type elem_type: type
         :param lazy: Факт ленивости
         :type lazy: bool
+        :param extra_kwargs: kwargs для метода 'read' загружаемого типа
+        :type extra_kwargs: dict
         :return: Последовательность однотипных данных
         :rtype: list или generator
         """
         length = self.read_uint()
         if lazy:
-            for elem in self.__read_iterable(length, elem_type, True):
+            for elem in self.__read_iterable(length, elem_type, True, extra_kwargs):
                 yield elem
         else:
-            return self.__read_iterable(length, elem_type, False)
+            return self.__read_iterable(length, elem_type, False, extra_kwargs)
 
-    def read_short_iterable(self, elem_type: type, lazy: bool = False):
+    def read_short_iterable(self, elem_type: type, lazy: bool = False, extra_kwargs: dict = None):
         """**Чтение последовательности однотипных данных длиной до 255 элементов**\n
         Формат данных : [length<8bit>][elem<elem_type>]*length
 
@@ -220,12 +228,14 @@ class BinaryReader:
         :type elem_type: type
         :param lazy: Факт ленивости
         :type lazy: bool
+        :param extra_kwargs: kwargs для метода 'read' загружаемого типа
+        :type extra_kwargs: dict
         :return: Последовательность однотипных данных
         :rtype: list или generator
         """
         length = self.read_byte()
         if lazy:
-            for elem in self.__read_iterable(length, elem_type, True):
+            for elem in self.__read_iterable(length, elem_type, True, extra_kwargs):
                 yield elem
         else:
-            return self.__read_iterable(length, elem_type, False)
+            return self.__read_iterable(length, elem_type, False, extra_kwargs)

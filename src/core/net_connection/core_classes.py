@@ -47,15 +47,15 @@ class CoreClasses:
     def read_class(stream: BinaryReader) -> type:
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
-        module_name = stream.read_short_str()
-        class_name = stream.read_short_str()
+        module_name = stream.read_short_string()
+        class_name = stream.read_short_string()
         return CoreClasses.classes[module_name][class_name]
 
     @staticmethod
-    def write_class(stream: BinaryWriter, cls: type, module_name: str):
-        if not (isinstance(stream, BinaryWriter) and isinstance(cls, type) and isinstance(module_name, str)):
+    def write_class(stream: BinaryWriter, cls: type):
+        if not (isinstance(stream, BinaryWriter) and isinstance(cls, type)):
             raise exceptions.ArgumentTypeException()
-        if (len(module_name) > 255) or (len(cls.__name__) > 255):
+        if (len(cls.__module__) > 255) or (len(cls.__name__) > 255):
             raise exceptions.ArgumentValueException("Module and class names must be shorter than 256 symbols!")
-        stream.write_short_str(module_name)
-        stream.write_short_str(cls.__name__)
+        stream.write_short_string(cls.__module__)
+        stream.write_short_string(cls.__name__)
