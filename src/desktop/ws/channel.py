@@ -1,11 +1,10 @@
 import asyncio
+import websockets
+import exceptions
+
 from queue import Queue
 from threading import Thread
 from types import FunctionType
-
-import websockets
-
-import exceptions
 
 
 # TODO: задокументировать

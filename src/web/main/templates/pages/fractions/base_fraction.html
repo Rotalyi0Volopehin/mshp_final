@@ -2,24 +2,21 @@
 {% load static %}
 
 {% block content %}
-
-<div class="container bg-dark">
-    <div class="card bg-dark text-white pt-3">
-        {% block fraction %}{% endblock %}
-        <div class="row">
-            {% block info %} {% endblock %}
-            <div class="col">
-                <div class="pt-4 cyberfont">Участники:</div>
-                {% block members %}
-                {% for item in members %}
-                <div>
-                    {{ item }}
-                </div>
-                {% endfor %}
-                {% endblock %}
+<div class="container card text-white pt-3" style="background-color: rgba(0, 0, 0, 0.6); padding-bottom : 7%;">
+    {% block fraction %}{% endblock %}
+    <div class="text-center">
+        {% block info %}{% endblock %}
+        <div class="col">
+            <div class="pt-4 cyberfont">Участники:</div>
+            {% block members %}
+            {% for item in members %}
+            <div class="cyberfont">
+                {{ forloop.counter }}.
+                {{ item }}
             </div>
+            {% endfor %}
+            {% endblock %}
         </div>
     </div>
-    <br><br><br><br>
 </div>
 {% endblock %}

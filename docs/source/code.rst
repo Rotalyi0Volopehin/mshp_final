@@ -1,14 +1,47 @@
+.. |ArgumentTypeException| replace:: Неверный тип переданного аргумента
+.. |ArgumentValueException| replace:: Значение переданного аргумента не соответсвует требованиям
+.. |ArgumentOutOfRangeException| replace:: Значение переданного аргумента не принадлежит множеству допустимых значений
+.. |InvalidOperationException| replace:: Недопустимая операция
+.. |NotImplementedException| replace:: Нет реализации
+.. |InvalidReturnException| replace:: Неверное возвращаемое значение вызываемой функции
+
 Документация разработчика
 =========================
 
-*********
+
+*******************
+Раздел проекта Core
+*******************
+
+
+Игровой движок
+**************
+
+
+.. automodule:: game_eng.game_model
+    :members:
+
+
+.. automodule:: game_eng.team
+    :members:
+
+
+**********************
+Раздел проекта Desktop
+**********************
+
+
+******************
+Раздел проекта Web
+******************
+
+
 Модели БД
 *********
 .. automodule:: main.models
     :members:
 
 
-***********************
 Инструменты работы с БД
 ***********************
 .. automodule:: main.db_tools.cad
@@ -38,14 +71,12 @@
     :members:
 
 
-*********************
 Формы для веб-страниц
 *********************
 .. automodule:: main.forms
     :members:
 
 
-**********************
 View-функции и -классы
 **********************
 .. automodule:: main.views.menu

@@ -14,7 +14,7 @@ class DBUserTopTools:
         Сортирует пользователей по убыванию их уровней, затем в рамках одного уровня по убыванию их опыта.\n
         Возвращаемый топ может иметь длину меньше count, если пользователей не хватает.
 
-        :raises ArgumentTypeException: Неверный тип переданных аргументов
+        :raises ArgumentTypeException: |ArgumentTypeException|
         :param count: Желаемое количество пользователей в топе
         :type count: int
         :param top_base: Фрагмент БД, из которого составляется топ
