@@ -1,5 +1,6 @@
 from game_eng.pressure_tool_set import PressureToolSet
 
+
 class IceWallPTSet(PressureToolSet):
     __END_PRODUCT__ = None
 
