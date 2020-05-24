@@ -20,6 +20,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.__init_window(width, height)
         self.__init_scenes()
+        self.multiplayer = False
 
     def __init_window(self, width, height):
         self.width = width

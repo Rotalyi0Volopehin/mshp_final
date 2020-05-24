@@ -22,7 +22,7 @@ class Btn(DrawObject):
         self.internal_button.render_text()
 
     @staticmethod
-    def no_action(self):
+    def no_action():
         pass
 
     def process_event(self, event):

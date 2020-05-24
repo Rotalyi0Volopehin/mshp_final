@@ -13,6 +13,7 @@ class GridTileVCStatus(Enum):
     DEFAULT = Color.WHITE  # не выбрана
     SELECTED = Color.MAGENTA  # выбрана
     TARGET = Color.ORANGE  # та клетка, куда двигаем все, что хотим
+    CHANGED = Color.CYAN  # изменена игроком
 
 
 class GridTileVC(DrawObject):

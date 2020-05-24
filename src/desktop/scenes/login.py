@@ -18,35 +18,36 @@ from ws.parcel_manager import ParcelManager
 
 class LoginScene(Scene):
     def init_form(self):
-        self.login = TextInput(self.game, False, 170, 20)
-        self.password = PasswordInput(self.game, False, 180, 80)
-        self.button_enter = Btn(self.game, (350, 350, 100, 40), Color.WHITE, "Войти", self.on_login_button_click)
-        self.button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
-        self.trailer = GIFImage(path.join("images", "login_backimage.gif"), self.game)
-
-        self.button_enter = Btn(self.game, (350, 350, 100, 40), Color.WHITE, "Войти", self.on_login_button_click)
-        self.button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
-        self.text_login = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False,
-                               is_italic=False, text='Логин:',
-                               color=(255, 255, 100), x=125, y=30)
-        self.text_reg = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False,
-                             is_italic=False, text='Пароль:',
-                             color=(255, 255, 100), x=125, y=90)
+        self.login_textbox = TextInput(self.game, False, 170, 20)
+        self.password_textbox = PasswordInput(self.game, False, 180, 80)
+        button_enter = Btn(self.game, (350, 300, 100, 40), Color.WHITE, "Войти", self.on_enter_button_click)
+        button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
+        trailer = GIFImage(path.join("images", "login_backimage.gif"), self.game)
+        login_label = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False, is_italic=False,
+                           text='Логин : ', color=Color.YELLOW, x=125, y=30)
+        password_label = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False, is_italic=False,
+                              text='Пароль : ', color=Color.YELLOW, x=125, y=90)
+        multiplayer_enter_color = Color.WHITE if self.game.multiplayer else Color.BLACK
+        button_multiplayer_enter = Btn(self.game, (300, 350, 200, 40), multiplayer_enter_color, "Сетевая игра",
+                                       self.on_login_button_click if self.game.multiplayer else None)
+        self.objects.extend([
+            trailer,
+            self.login_textbox,
+            self.password_textbox,
+            button_enter,
+            button_multiplayer_enter,
+            button_register,
+            login_label,
+            password_label,
+        ])
 
     def load_sound(self):
         pygame.mixer.music.load(path.join("sounds", "login_bgm.wav"))
 
-    def collect_objects(self):
-        self.objects = [self.trailer, self.login, self.password,
-                        self.button_enter, self.button_register,
-                        self.text_login, self.text_reg, ]
-
     def create_objects(self):
-        if not Channel.try_connect():  # TODO: заменить на сообщение с кнопкой для повторной попытки
-            raise Exception("Cannot connect to server!")
+        self.game.multiplayer = Channel.try_connect()  # TODO: заменить на сообщение с кнопкой для повторной попытки
         self.init_form()
         self.load_sound()
-        self.collect_objects()
         pygame.mixer.music.play(-1)
 
     def set_menu_scene(self):
@@ -54,13 +55,14 @@ class LoginScene(Scene):
         self.game.set_origin_scene(MenuScene)
 
     def on_login_button_click(self):
-        login = self.login.internal_txtinput.get_text()
-        password = self.password.internal_txtinput.get_text()
+        login = self.login_textbox.internal_txtinput.get_text()
+        password = self.password_textbox.internal_txtinput.get_text()
         user_logging.send_login_request(login, password)
+        ParcelManager.receive_parcel_async(self.login_response_parcel_handler)
 
-        def handler_cloak(parcel):
-            self.login_response_parcel_handler(parcel)
-        ParcelManager.receive_parcel_async(handler_cloak)
+    def on_enter_button_click(self):
+        self.game.multiplayer = False
+        self.set_menu_scene()
 
     def login_response_parcel_handler(self, parcel):
         response_id = parcel[0]
