@@ -7,30 +7,59 @@ from game_eng.grid_model import GridModel
 
 
 class GameModel:
-    """**Модель игры**
+    """**Модель игры**\n
+    :ivar title: Название игровой сессии
+    :vartype title: str
+    :ivar player_turn_period: Максимальная продолжительность хода любого игрока
+    :vartype player_turn_period: int
+    :ivar teams_money_limit: Лимит бюджета фракций
+    :vartype teams_money_limit: int
+    :ivar grid: Модель сетки
+    :vartype grid: GridModel
+    :ivar teams: Список фракций
+    :vartype teams: list
+    :ivar market: Локальный Даркнет сессии
+    :vartype market: Market
     """
-    def __init__(self, teams: list, title: str, grid_width: int, grid_height: int,
-                 player_turn_period: int, teams_money_limit: int):
+    def __init__(self, title: str, grid_width: int, grid_height: int, player_turn_period: int, teams_money_limit: int):
         # vvv параметры сессии vvv
-        if not (isinstance(title, str) and isinstance(teams, list) and
-                isinstance(player_turn_period, int) and isinstance(teams_money_limit, int)):
+        if not (isinstance(title, str) and isinstance(player_turn_period, int) and isinstance(teams_money_limit, int)):
             raise exceptions.ArgumentTypeException()
-        for team in teams:
-            if not isinstance(team, Team):
-                raise exceptions.ArgumentTypeException()
-        if (player_turn_period <= 0) or (teams_money_limit <= 0) or (len(teams) != 3):
-            raise exceptions.ArgumentValueException()
         self.title = title
         self.player_turn_period = player_turn_period
         self.teams_money_limit = teams_money_limit
         # vvv переменные полЯ vvv
         self.grid = GridModel(self, grid_width, grid_height)
-        self.teams = teams
+        self.teams = list()
         self.market = Market()
         self.__current_team_index = 0
-        self.__current_player = teams[0].current_player
+        self.__current_player_turn = self.__current_player = None
+        self.__fixed = False
+
+    def start_game(self):
+        """**Окончание инициализации**\n
+        Запрещает запуск метода add_team.
+        """
+        self.__fixed = True
+        self.__current_player = self.current_team.current_player
         self.__current_player_turn = PlayerTurn()
         self.grid.handle_new_team_turn()
+
+    def add_team(self, team: Team):
+        """**Добавление фракции**\n
+        Добавлять необходимо до начала игры.
+        Максимальное число - 3.
+
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :raises InvalidOperationException: |InvalidOperationException|
+        :param team: Фракция
+        :type team: Team
+        """
+        if not isinstance(team, Team):
+            raise exceptions.ArgumentTypeException()
+        if (len(self.teams) >= 3) or self.__fixed:
+            raise exceptions.InvalidOperationException()
+        self.teams.append(team)
 
     @property
     def current_team(self) -> Team:

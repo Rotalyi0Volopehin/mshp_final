@@ -2,24 +2,24 @@
 
 
 class ArgumentTypeException(Exception):
-    pass
+    DESCRIPTION = "Неверный тип переданного аргумента"
 
 
 class ArgumentValueException(Exception):
-    pass
+    DESCRIPTION = "Значение переданного аргумента не соответсвует требованиям"
 
 
 class ArgumentOutOfRangeException(Exception):
-    pass
+    DESCRIPTION = "Значение переданного аргумента не принадлежит множеству допустимых значений"
 
 
 class InvalidOperationException(Exception):
-    pass
+    DESCRIPTION = "Недопустимая операция"
 
 
 class NotImplementedException(Exception):
-    pass
+    DESCRIPTION = "Нет реализации"
 
 
 class InvalidReturnException(Exception):
-    pass
+    DESCRIPTION = "Неверное возвращаемое значение вызываемой функции"

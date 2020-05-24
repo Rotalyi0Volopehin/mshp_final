@@ -1,8 +1,8 @@
 from game_eng.pressure_tool_set import PressureToolSet
-from game_eng.grid_tile_effect_ders.phishing_effect import PhishingGridTileEffect
+from game_eng.grid_tile_effect_ders.reboot_effect import RebootGridTileEffect
 
 
-class PhishingPTSet(PressureToolSet):
+class RebootPTSet(PressureToolSet):
     __END_PRODUCT__ = None
 
     @property
@@ -11,12 +11,12 @@ class PhishingPTSet(PressureToolSet):
 
     @property
     def production_cost(self) -> int:
-        return 8
+        return 4
 
     @property
     def name(self) -> str:
-        return "Фишинг"
+        return "Перезагрузка"
 
     def _try_apply(self, target) -> bool:
-        PhishingGridTileEffect(target, self._player.team)
+        RebootGridTileEffect(target)
         return True

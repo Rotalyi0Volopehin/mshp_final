@@ -52,9 +52,13 @@ class UserData(models.Model):
 
 
 class PressureToolSet(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    user_data = models.ForeignKey(to=UserData, on_delete=models.CASCADE)
     count = models.IntegerField(default=0)
     type = models.TextField(default='')  # имя класса, отнаследованного от базового PressureTool
+
+    @property
+    def user(self) -> User:
+        return self.user_data.user
 
 
 class GameSession(models.Model):
@@ -67,13 +71,22 @@ class GameSession(models.Model):
     turn_period = models.IntegerField(default=0)  # период времени в секундах, выделенный под ход одного игрока
     user_lowest_level = models.IntegerField(default=-1)  # нижний предел уровня игроков; -1 -- без предела
     user_highest_level = models.IntegerField(default=-1)  # верхний предел уровня игроков; -1 -- без предела
-    user_limit = models.IntegerField(default=6)  # лимит общего числа игроков сессии
+    user_per_team_count = models.IntegerField(default=2)  # лимит общего числа игроков сессии
     money_limit = models.IntegerField(default=255)  # лимит бюджета фракций
     winning_team = models.IntegerField(default=-1)  # победившая фракция; -1 -- неизвестно/ничья
     # путь до файла сессии должен быть "GameSessions/{id}.gses"
 
 
 class TeamStats(models.Model):
+    team = models.IntegerField(default=0)
     game_session = models.ForeignKey(to=GameSession, on_delete=models.CASCADE)
     coins = models.IntegerField(default=42)  # бюджет фракции
-    # эти данные уникальны для пары игрок-сессия
+
+
+class UserParticipation(models.Model):
+    user_data = models.ForeignKey(to=UserData, on_delete=models.CASCADE)
+    game_session = models.ForeignKey(to=GameSession, on_delete=models.CASCADE)
+
+    @property
+    def user(self) -> User:
+        return self.user_data.user

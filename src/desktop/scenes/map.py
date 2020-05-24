@@ -5,13 +5,14 @@ from constants import Color
 from objects.toolbar import ToolBar
 from objects.end_turn_button import EndTurnButton
 from objects.current_player_plate import CurrentPlayerPlate
+from objects.grid_tile_info_plate import GridTileInfoPlate
 
 
 class MapScene(Scene):
     def create_objects(self):
         width = self.game.width
         height = self.game.height
-        button_back = Btn(self.game, (width - 120, 20, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
+        button_back = Btn(self.game, (width - 120, 5, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
         self.objects.append(button_back)
         self.game_vc = self.game.current_scene.game_vc
         self.objects.append(self.game_vc)
@@ -22,6 +23,8 @@ class MapScene(Scene):
         self.objects.append(self.end_turn_button)
         current_player_plate = CurrentPlayerPlate(self.game, width - 90, height - 183)
         self.objects.append(current_player_plate)
+        grid_tile_info_plate = GridTileInfoPlate(self.game, width - 20, 50, 340)
+        self.objects.append(grid_tile_info_plate)
         self.__init_controls()
 
     def __init_controls(self):

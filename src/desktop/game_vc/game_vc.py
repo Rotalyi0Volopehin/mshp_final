@@ -17,6 +17,7 @@ class GameVC(DrawObject):
         super().__init__(game)
         self.__turn_start_time = time.time()
         self.model = create_hardcoded_game_model()
+        self.model.start_game()
         self.grid = self.model.grid
         self.grid_vc = GridVC(self.grid, self.game)
         self.__end_turn_flag = False
@@ -66,25 +67,39 @@ class GameVC(DrawObject):
 
 
 def create_hardcoded_game_model() -> GameModel:
-    teams = [TeamA(0), TeamB(1), TeamC(2)]
-    for i in range(len(teams)):
-        team = teams[i]
-        team.add_player(create_hardcoded_player(f"P{i}A", team))
-        team.add_player(create_hardcoded_player(f"P{i}B", team))
-    game = GameModel(teams, title="Hardcoded session", grid_width=6, grid_height=6,
+    game = GameModel(title="Hardcoded session", grid_width=6, grid_height=6,
                      player_turn_period=30, teams_money_limit=999)
-    for team in teams:
-        team.set_game_model(game)
-    game.grid.tiles[0][0].conquer(teams[0])
-    game.grid.tiles[1][0].conquer(teams[1])
-    game.grid.tiles[2][0].conquer(teams[2])
+    game.add_team(TeamA(game))
+    game.add_team(TeamB(game))
+    game.add_team(TeamC(game))
+    for team in game.teams:
+        team.add_player(create_hardcoded_player(f"P{team.index}A", team))
+        team.add_player(create_hardcoded_player(f"P{team.index}B", team))
+        team.earn_money(999)
+        make_capital_tile(team.index << 1, 3, team)
     return game
+
+
+def make_capital_tile(x, y, team):
+    from game_eng.grid_tile_ders.capital_tile import CapitalGridTile
+    team.game.grid.tiles[x][y].upgrade(CapitalGridTile)
+    team.game.grid.tiles[x][y].conquer(team)
 
 
 def create_hardcoded_player(name, team) -> Player:
     player = Player(name, team)
     from game_eng.pressure_tool_set_ders.ddos_pts import DDosPTSet
-    from game_eng.pressure_tool_set_ders.dos_pts import DosPTSet
+    from game_eng.pressure_tool_set_ders.phishing_pts import PhishingPTSet
+    from game_eng.pressure_tool_set_ders.exploit_pts import ExploitPTSet
+    from game_eng.pressure_tool_set_ders.virus_pts import VirusPTSet
+    # ...
+    from game_eng.pressure_tool_set_ders.mining_farm_pts import MiningFarmPTSet
+    from game_eng.pressure_tool_set_ders.reboot_pts import RebootPTSet
     player.add_pressure_tools(DDosPTSet, 1)
-    player.add_pressure_tools(DosPTSet, 2)
+    player.add_pressure_tools(PhishingPTSet, 1)
+    player.add_pressure_tools(ExploitPTSet, 1)
+    player.add_pressure_tools(VirusPTSet, 1)
+    # ...
+    player.add_pressure_tools(MiningFarmPTSet, 1)
+    player.add_pressure_tools(RebootPTSet, 2)
     return player

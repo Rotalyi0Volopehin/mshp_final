@@ -1,7 +1,7 @@
-from game_eng.pressure_tool_set_ders.damage_pts import DamagePTSet
+from game_eng.pressure_tool_set import PressureToolSet
 
 
-class DDosPTSet(DamagePTSet):
+class DDosPTSet(PressureToolSet):
     __END_PRODUCT__ = None
 
     @property
@@ -16,6 +16,8 @@ class DDosPTSet(DamagePTSet):
     def name(self) -> str:
         return "DDoS"
 
-    @property
-    def damage(self) -> int:
-        return 24
+    def _try_apply(self, target) -> bool:
+        if target.power == 0:
+            return False
+        target.take_damage(24)
+        return True

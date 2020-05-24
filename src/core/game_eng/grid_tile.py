@@ -1,16 +1,54 @@
 import exceptions
 
-from random import randint
-
 
 class GridTile:
     def __init__(self, grid, loc_x, loc_y, team=None):
         self.grid = grid
-        self.power = randint(0, 60)  # ранд количество юнитов
+        self.power = 0
         self.loc_x = loc_x
         self.loc_y = loc_y
         self.team = team
         self.controller = self.view = None
+        self.effects = set()
+
+    @property  # костыль для избежания циклического импорта
+    def effect_type(self) -> type:
+        if not hasattr(GridTile, "__effect_type"):
+            from game_eng.grid_tile_effect import GridTileEffect
+            GridTile.__effect_type = GridTileEffect
+        return GridTile.__effect_type
+
+    def add_effect(self, effect):
+        if not isinstance(effect, self.effect_type):
+            raise exceptions.ArgumentTypeException()
+        # vvv необходимо, чтобы на одной клетке было не долее одного эффекта одного типа
+        self.__remove_effect_with_type(type(effect))
+        self.effects.add(effect)
+
+    def __remove_effect_with_type(self, effect_type: type):
+        for effect in self.effects:
+            if type(effect) == effect_type:
+                self.effects.remove(effect)
+                break
+
+    def remove_effect(self, effect):
+        if not isinstance(effect, self.effect_type):
+            raise exceptions.ArgumentTypeException()
+        if effect in self.effects:
+            self.effects.remove(effect)
+
+    def has_effect(self, effect_type: type) -> bool:
+        if not isinstance(effect_type, type):
+            raise exceptions.ArgumentTypeException()
+        if not issubclass(effect_type, self.effect_type):
+            raise exceptions.ArgumentValueException()
+        for effect in self.effects:
+            if type(effect) == effect_type:
+                return True
+        return False
+
+    def clear_effects(self):
+        self.effects.clear()
 
     @property
     def even_row(self) -> bool:
@@ -98,6 +136,8 @@ class GridTile:
                 raise exceptions.InvalidReturnException()
             self.team.earn_money(income)
             self.gain_power(power_growth)
+        for effect in set(self.effects):
+            effect.apply()
 
     @property  # virtual
     def owners_income(self) -> int:
@@ -110,6 +150,23 @@ class GridTile:
     @property  # virtual
     def power_cap(self) -> int:
         return 64
+
+    @property  # virtual
+    def name(self) -> str:
+        return "Обыкновенный Кластер"
+
+    @staticmethod
+    def get_upgrade_price() -> int:
+        return 0
+
+    def upgrade(self, tile_type: type):
+        if not isinstance(tile_type, type):
+            raise exceptions.ArgumentTypeException()
+        if not issubclass(tile_type, GridTile):
+            raise exceptions.ArgumentValueException()
+        new_tile = tile_type(self.grid, self.loc_x, self.loc_y, self.team)
+        new_tile.gain_power(self.power)
+        self.grid.tiles[self.loc_x][self.loc_y] = new_tile
 
     def take_damage(self, value):
         self.power = max(self.power - value, 0)

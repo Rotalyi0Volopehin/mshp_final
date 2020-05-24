@@ -17,6 +17,7 @@ class PlayerAction:
 
     def try_do(self) -> bool:
         """**Попытка совершить действие**\n
+        :raises NotImplementedException: |NotImplementedException|
         :return: ok
         :rtype: bool
         """
@@ -24,6 +25,7 @@ class PlayerAction:
 
     def try_undo(self) -> bool:
         """**Попытка отменить действие**\n
+        :raises NotImplementedException: |NotImplementedException|
         :return: ok
         :rtype: bool
         """

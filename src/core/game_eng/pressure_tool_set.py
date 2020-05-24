@@ -23,6 +23,9 @@ class PressureToolSet:
     @property
     def start_market_count(self) -> int:
         """**Количество ИВ этого типа в Даркнете в начале игры**\n
+        abstract property
+
+        :raises NotImplementedException: |NotImplementedException|
         :return: Количество ИВ
         :rtype: int
         """
@@ -33,7 +36,7 @@ class PressureToolSet:
         """**Стоимость изготовления одного ИВ этого типа**\n
         abstract property
 
-        :raises NotImplementedException: Нет реализации
+        :raises NotImplementedException: |NotImplementedException|
         :return: Стоимость изготовления
         :rtype: int
         """
@@ -44,7 +47,7 @@ class PressureToolSet:
         """**Название ИВ этого типа**\n
         abstract property
 
-        :raises NotImplementedException: Нет реализации
+        :raises NotImplementedException: |NotImplementedException|
         :return: Название ИВ
         :rtype: str
         """
@@ -55,8 +58,8 @@ class PressureToolSet:
         Пробует использовать один ИВ этого типа на указанной клетке поля.
         Уменьшает количество ИВ в множестве на один, если удачно.
 
-        :raises ArgumentTypeException: Неверный тип переданных аргументов
-        :raises InvalidReturnException: Неверное возвращаемое значение вызываемой функции
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :raises InvalidReturnException: |InvalidReturnException|
         :param target: Клетка поля, на которой применяется ИВ
         :type target: GridTile
         :return: ok
@@ -78,7 +81,7 @@ class PressureToolSet:
         abstract method\n
         Применяет эффект ИВ этого типа на указанной клетке поля.
 
-        :raises NotImplementedException: Нет реализации
+        :raises NotImplementedException: |NotImplementedException|
         :param target: Клетка поля, на которой применяется эффект ИВ
         :type target: GridTile
         :return: ok
