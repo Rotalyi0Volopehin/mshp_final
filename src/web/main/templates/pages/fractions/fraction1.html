@@ -2,25 +2,47 @@
 {% load static %}
 
 {% block fraction %}
-<style>
-    body {
-        background: linear-gradient(to top right, #C34D0A, #000000);
-    }
-</style>
-<img src="{% static '/fr2.jpg' %}" class="card-img" style="opacity: 0.5; filter: alpha(opacity=50);" alt="...">
-<div class="card-img-overlay">
-    <h1 class="card-title text-center cyberfont" style="padding-top: 25%; font-size: 300%;">Подполье</h1>
-</div>
+{% if team == 1 %}
+    <style>
+            body {
+                background: linear-gradient(to top right, #C34D0A, #000000);
+            }
+
+
+    </style>
+    <img src="{% static '/fr2.jpg' %}" class="card-img" style="opacity: 0.5; filter: alpha(opacity=50);" alt="...">
+    <div class="card-img-overlay">
+        <h1 class="card-title text-center cyberfont" style="padding-top: 25%; font-size: 300%;">Подполье</h1>
+    </div>
+    {% else %}
+    <style>
+            body {
+                background: linear-gradient(to top right, #C34D0A, #000000);
+            }
+    </style>
+    <img src="{% static '/fr2.jpg' %}" class="card-img" style="opacity: 0.5; filter: alpha(opacity=50);" alt="...">
+    <div class="card-img-overlay">
+        <h1 class="card-title text-center cyberfont" style="padding-top: 25%; font-size: 300%;">Добрая воля</h1>
+    </div>
+{% endif %}
 {% endblock %}
 
 {% block info %}
 <div class="col">
-    <p class="card-text pt-4">This is a wider card with supporting text below as a natural lead-in to additional
-        content. This content is a little bit longer. This is a wider card with supporting text below as a natural
-        lead-in to additional
-        content. This content is a little bit longer. This is a wider card with supporting text below as a natural
-        lead-in to additional
-        content. This content is a little bit longer.
+    {% if team == 1 %}
+    <p class="card-text pt-4 cyberfont pb-4" style="font-size: 105%;">Добро пожаловать в Подполье, ты выбрал нас не
+        случайно. Это была судьба. Мы торгуем аугментациями, модулями, снаряжением и оружием. Конечно, наша деятельность
+        незаконна, но о ней никто не знает до тех пор, пока работает наша благотворительная компания. Добро пожаловать в
+        семью, здесь тебя научат всему необходимому, чтобы удержаться в нашем бизнесе и продолжать действовать скрытно.
+        "Взломаем оковы современного мира”.
     </p>
+    {% else %}
+    <p class="card-text pt-4 cyberfont pb-4" style="font-size: 105%;">Если вам нужны бесплатные аугментации или
+        недорогие модули, мы предоставим их вам с превеликим удовольствием. Вы всегда можете найти нас на территории
+        торговой федерации, мы пребываем в приюте “Добрая воля”. Мы будем рады новым лицам в нашей организации, которые
+        помогут нам противостоять недугам и помочь нуждающимся. Ведь каждый заслуживает право на спасение, именно этим
+        мы и занимаемся.
+    </p>
+    {% endif %}
 </div>
 {% endblock %}
