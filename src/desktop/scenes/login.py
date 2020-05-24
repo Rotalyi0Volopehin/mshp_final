@@ -28,7 +28,7 @@ class LoginScene(Scene):
         password_label = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False, is_italic=False,
                               text='Пароль : ', color=Color.YELLOW, x=125, y=90)
         multiplayer_enter_color = Color.WHITE if self.game.online else Color.BLACK
-        button_multiplayer_enter = Btn(self.game, (300, 350, 200, 40), multiplayer_enter_color, "Сетевая игра",
+        button_multiplayer_enter = Btn(self.game, (350, 350, 100, 40), multiplayer_enter_color, "Сетевая игра",
                                        self.on_login_button_click if self.game.online else None)
         self.objects.extend([
             trailer,
