@@ -92,6 +92,7 @@ def create_hardcoded_player(name, team) -> Player:
     from game_eng.pressure_tool_set_ders.phishing_pts import PhishingPTSet
     from game_eng.pressure_tool_set_ders.exploit_pts import ExploitPTSet
     from game_eng.pressure_tool_set_ders.virus_pts import VirusPTSet
+    from game_eng.pressure_tool_set_ders.icewall_pts import IceWallPTSet
     # ...
     from game_eng.pressure_tool_set_ders.mining_farm_pts import MiningFarmPTSet
     from game_eng.pressure_tool_set_ders.reboot_pts import RebootPTSet
