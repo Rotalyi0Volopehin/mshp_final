@@ -1,8 +1,8 @@
 import pygame
 import os.path as path
+import request_parcel_helpers.user_logging as user_logging
 
 from pygame.locals import *
-import request_parcel_helpers.user_logging as user_logging
 from constants import Color
 from net_connection.response_ids import ResponseID
 from objects.button import Btn
