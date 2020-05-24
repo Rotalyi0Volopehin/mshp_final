@@ -68,15 +68,6 @@ def cad_page(request):
     return HttpResponse("SUCCESS! All data is cleared")
 
 
-def darknet_page(request):
-    context = {
-        'pagename': 'DarkNet',
-        'menu': get_menu_context(),
-        'user_menu': get_user_menu_context(request.user),
-    }
-    return render(request, 'pages/darknet.html', context)
-
-
 def forum_page(request):
     context = {
         'pagename': 'Форум',
