@@ -5,10 +5,11 @@ from io import BytesIO
 
 
 class BinaryWriter:
-    def __init__(self, base_stream: BytesIO = None):
-        if not (isinstance(base_stream, BytesIO) or (base_stream is None)):
+    def __init__(self, base_stream: BytesIO = None, data: bytes = None):
+        if not ((isinstance(base_stream, BytesIO) or (base_stream is None)) and
+                (isinstance(data, bytes) or (data is None))):
             raise exceptions.ArgumentTypeException()
-        self.__base_stream = BytesIO() if base_stream is None else base_stream
+        self.__base_stream = BytesIO(data) if base_stream is None else base_stream
         self.__write_methods = {
             int: self.write_int,
             bool: self.write_byte,
