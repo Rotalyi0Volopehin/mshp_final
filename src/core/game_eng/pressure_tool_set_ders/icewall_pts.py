@@ -13,5 +13,5 @@ class IceWallPTSet(PressureToolSet):
         return 8
 
     def _try_apply(self, target) -> bool:
-        target.gain_power(20)
+        target.gain_power(16)
         return True
