@@ -13,5 +13,7 @@ class IceWallPTSet(PressureToolSet):
         return 8
 
     def _try_apply(self, target) -> bool:
+        if target.power == target.power_cap:
+            return False
         target.gain_power(16)
         return True
