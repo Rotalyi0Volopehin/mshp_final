@@ -18,7 +18,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import AnonymousUser
 from django.urls import path
 
-from main.views import profile_view, registration_view, fractions_view
+from main.views import profile_view, registration_view, fractions_view, game_session_view
 from main.views import views, activation_view
 from main.views.menu import get_menu_context, get_user_menu_context
 
@@ -35,7 +35,7 @@ urlpatterns = [
     path('fraction0/', fractions_view.FractionPages.fraction0_page, name='fraction0'),
     path('fraction1/', fractions_view.FractionPages.fraction1_page, name='fraction1'),
     path('fraction2/', fractions_view.FractionPages.fraction2_page, name='fraction2'),
-    path('game/', views.game, name='game'),
+    path('gs/', game_session_view.game_session_page, name='game_session'),
     path(
         'login/',
         auth_views.LoginView.as_view(

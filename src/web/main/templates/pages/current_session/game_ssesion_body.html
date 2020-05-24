@@ -1,0 +1,68 @@
+
+
+{% extends 'base/base.html' %}
+
+
+{% load static %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/profile.css' %}"/>
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'profile.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+
+
+{% block content %}
+<style>
+  body {
+      background: linear-gradient(to top right, #0000ff, #ffffff);
+  }
+
+  .form1 {
+      width: 700px;
+      height: 300px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      background-color: rgba(220, 220, 220, 0.3);
+
+  }
+
+  .form1 h1 {
+      margin: 30px 100px;
+      padding: 0;
+      text-align: center;
+      color: #000;
+      font-size: 30px;
+      text-transform: uppercase;
+  }
+
+</style>
+
+{% if error %}
+
+<div class="text-center alert alert-danger" role="alert">{{ error }}</div>
+
+{% elif state == 0 %}
+
+{% include 'pages/current_session/afk.html' %}
+
+{% elif state == 1 %}
+
+{% include 'pages/current_session/expectation.html' %}
+
+{% else %}
+
+{% elif state == 0 %}
+
+{% include 'pages/current_session/playing.html' %}
+
+{% endif %}

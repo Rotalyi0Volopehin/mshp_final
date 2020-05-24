@@ -5,35 +5,12 @@
 
 
 {% block content %}
-<style>
-  body {
-      background: linear-gradient(to top right, #0000ff, #ffffff);
-  }
 
-  .form1 {
-      width: 1000px;
-      height: 300px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%,-50%);
-      background-color: rgba(220, 220, 220, 0.3);
-
-  }
-
-  .form1 h1 {
-      margin: 30px 100px;
-      padding: 0;
-      text-align: center;
-      color: #000;
-      font-size: 30px;
-      text-transform: uppercase;
-  }
-
-</style>
     <div class="form1 rounded-lg text-center container">
-        <h1>Вы присоеденились к сессии {{ current.session }}</h1>
-        <div class="cyberfont">Количество участников: 4{{ users.count }}/6 </div>
+        <div class="text-center alert alert-success" role="alert">
+            <h1>Вы присоеденились к сессии {{ session_name }}</h1>
+        </div>
+        <div class="cyberfont">Количество участников: {{ player_count }}/{{ players_must_be }} </div>
         <div class="fixed-bottom mb-2">
             <label class="cyberfont btn btn-light">
                 <input type="radio" name="radioOption" id="Value3" autocomplete="off"> прислать email уведомление о начале сессии

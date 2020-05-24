@@ -3,6 +3,10 @@ from django.http import HttpResponse
 
 from main.views.menu import get_menu_context, get_user_menu_context
 from django.shortcuts import render
+from main.models import UserData
+from main.models import UserParticipation
+from main.models import GameSession
+from main.db_tools.game_session_tools import DBGameSessionTools
 
 
 def index_page(request):
@@ -54,13 +58,6 @@ def chat_page(request):
     }
     return render(request, 'pages/chat.html', context)
 
-def game(request):
-    context = {
-        'pagename': 'Текущая сессия',
-        'menu': get_menu_context(),
-        'user_menu': get_user_menu_context(request.user),
-    }
-    return render(request, 'pages/current_session/playing.html', context)
 
 def sessions_page(request):
     context = {
