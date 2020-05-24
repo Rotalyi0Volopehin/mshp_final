@@ -7,12 +7,21 @@
 {% endif %}
 
 {% if team == 'Подполье' %}
+    {% if self %}
     <style>
         body {
             background: linear-gradient(to top right, #C34D0A, #000000);
         }
     </style>
+    {% else %}
+    <style>
+        body {
+            background: linear-gradient(to right, #654ea3, #eaafc8);
+        }
+    </style>
+    {% endif %}
 {% endif %}
+
 {% if team == 'Зов Свободы' %}
     <style>
         body {

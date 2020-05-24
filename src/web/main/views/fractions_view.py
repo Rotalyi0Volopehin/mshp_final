@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.views import View
 
 from main.db_tools.user_tools import DBUserTools
+from main.models import UserData
 from main.views.menu import get_menu_context, get_user_menu_context
 
 
@@ -38,8 +39,14 @@ class FractionPages(View):
     @staticmethod
     def fraction1_page(request):
         context = FractionPages.collect_default_context(request)
-        context['pagename'] = 'Подполье'
+        context['pagename'] = 'Добрая воля'
+        if request.user.is_authenticated:
+            user_data, error = DBUserTools.try_get_user_data(request.user)
+            context['team'] = user_data.team
+            if user_data.team == 1:
+                context['pagename'] = 'encrypted'
         context['members'] = FractionPages.sort_members_by_reputation(1)
+
         return render(request, 'pages/fractions/fraction1.html', context)
 
     @staticmethod
