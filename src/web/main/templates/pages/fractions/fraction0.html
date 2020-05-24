@@ -2,9 +2,14 @@
 {% load static %}
 
 {% block fraction %}
-<img src="{% static '/fr3.jpg' %}" class="card-img" style="opacity: 0.5; filter: alpha(opacity=50);" alt="...">
+<style>
+    body {
+        background: linear-gradient(to top right, #000000, #dddddd);
+    }
+</style>
+<img src="{% static '/fr1.png' %}" class="card-img" style="opacity: 0.6; filter: alpha(opacity=60);" alt="...">
 <div class="card-img-overlay">
-    <h1 class="card-title text-center cyberfont" style="padding-top: 25%; font-size: 280%;">Freedom call</h1>
+    <h1 class="card-title text-center cyberfont" style="padding-top: 24%; font-size: 350%;">Cyber Corp</h1>
 </div>
 {% endblock %}
 
@@ -18,5 +23,4 @@
         content. This content is a little bit longer.
     </p>
 </div>
-
 {% endblock %}

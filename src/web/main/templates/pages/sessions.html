@@ -1,0 +1,100 @@
+{% extends 'base/base.html' %}
+
+
+{% block content %}
+<style>
+        body {
+            background: linear-gradient(to right, #9FE2BF, #B0E0E6);
+        }
+
+        .rounded_border {
+            border-radius: 40px;
+        }
+
+        .move_everything {
+            margin-top: 12%;
+            padding-bottom: 8%;
+        }
+
+        .dark_part {
+            margin-top: -2%;
+            height: 125px;
+        }
+</style>
+
+<div class="row move_everything">
+    <div class="col">
+
+        <div class="dark_part bg-dark cyberfont rounded_border rounded-bottom">
+            <h2 class="text-center text-white cyberfont pt-5" style="font-size: 150%;">Поиск игровых сессий</h2>
+        </div>
+
+        <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-4">
+            <div class="row mt-2">
+                <div class="col-lg-3 cyberfont" style="font-size: 90%;">
+
+                    <div class="btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="options" id="option2" autocomplete="off"> К которым можно
+                            присоединиться
+                        </label>
+                        <label class="btn btn-secondary mt-1">
+                            <input type="radio" name="options" id="option3" autocomplete="off"> В которых вы принимали
+                            участие
+                        </label>
+                    </div>
+
+                    <div class="dropdown mt-4">
+                        <button class="btn btn-secondary btn-block dropdown-toggle" type="button"
+                                id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-expanded="false">
+                            Сортировать по
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Дате начала</a>
+                            <a class="dropdown-item" href="#">Длительности</a>
+                            <a class="dropdown-item" href="#">Числу игроков</a>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-block mt-1 mb-3">Найти</button>
+                </div>
+
+                <div class="col-lg-9">
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr class="cyberfont" style="font-size: 120%;">
+                            <th scope="col">Название</th>
+                            <th scope="col">Число игроков</th>
+                            <th scope="col">Дата начала</th>
+                            <th scope="col">Дата окончания</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% block tables %}
+                        {% for item in tables %}
+                        <tr class="table-secondary">
+                            {% for i in item %}
+                            <td>{{ i }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                        {% endblock %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row mt-1 pb-4" style="font-size: 140%;">
+                <div class="col-lg-8"></div>
+                <div class="col-lg-4 cyberfont" style="font-size: 90%;">
+                    <button type="button" class="btn btn-primary" style="width: 20%;"> <</button>
+                    Страница {{ 1 }}
+                    <button type="button" class="btn btn-primary" style="width: 20%;"> ></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

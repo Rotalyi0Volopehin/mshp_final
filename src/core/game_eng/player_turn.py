@@ -14,7 +14,7 @@ class PlayerTurn:
         """**Попытка совершения действия**\n
         Пробует выполнить действие. Добавляет в стэк, если удачно.
 
-        :raises ArgumentTypeException: Неверный тип переданных аргументов
+        :raises ArgumentTypeException: |ArgumentTypeException|
         :param action: Действие
         :type action: PlayerAction
         :return: ok

@@ -1,109 +1,175 @@
-import pygame
-
-from random import randint
-from constants import Color
-from objects.base import DrawObject
-from objects.text import Text
+import exceptions
 
 
-# TODO: Андрей, что это значит? Это не модель!
+class GridTile:
+    def __init__(self, grid, loc_x, loc_y, team=None):
+        self.grid = grid
+        self.power = 0
+        self.loc_x = loc_x
+        self.loc_y = loc_y
+        self.team = team
+        self.controller = self.view = None
+        self.effects = set()
 
+    @property  # костыль для избежания циклического импорта
+    def effect_type(self) -> type:
+        if not hasattr(GridTile, "__effect_type"):
+            from game_eng.grid_tile_effect import GridTileEffect
+            GridTile.__effect_type = GridTileEffect
+        return GridTile.__effect_type
 
-class GridTile(DrawObject):
-    # Возможные состояния игровой клетки:
-    #   black - наша невидимая черная стена
-    #   white - не выбрана
-    #   red - выбрана
-    #   green - соседняя с выбранной
-    #   orange - та клетка, куда двигаем все, что хотим
+    def add_effect(self, effect):
+        if not isinstance(effect, self.effect_type):
+            raise exceptions.ArgumentTypeException()
+        # vvv необходимо, чтобы на одной клетке было не долее одного эффекта одного типа
+        self.__remove_effect_with_type(type(effect))
+        self.effects.add(effect)
 
-    def __init__(self, game, side, color, even, screen_x, screen_y, wall, x, y):
-        super().__init__(game)
-        self.even = even  # чет нечет строчка
-        self.start_value = randint(0, 60)  # ранд количество юнитов
-        self.value = self.start_value
-        self.x = x  # координаты смещений
-        self.y = y
-        self.pos_x = screen_x  # на экране позиция
-        self.pos_y = screen_y
-        self.team_color = color
-        self.color = color
-        self.side = side
-        self.sq = 3 ** (1 / 2)
-        self.hex_points = [(self.side / 2, 0),
-                           (1.5 * self.side, 0),
-                           (2 * self.side, self.sq * self.side / 2),
-                           (1.5 * self.side, self.sq * self.side),
-                           (self.side / 2, self.sq * self.side),
-                           (0, self.sq * self.side / 2)]
-        self.number = Text(game=self.game, text=str(self.value), font_size=20, x=self.pos_x + self.side,
-                           y=self.pos_y + self.sq * self.side / 2)
-        self.invisible_wall = wall
-        self.surface = pygame.Surface((2 * self.side, 2 * self.side))
-        self.update_surface()
+    def __remove_effect_with_type(self, effect_type: type):
+        for effect in self.effects:
+            if type(effect) == effect_type:
+                self.effects.remove(effect)
+                break
 
-    def update_surface(self):
-        self.surface = pygame.Surface((2 * self.side, 2 * self.side))
-        self.surface.set_colorkey(Color.BLACK)
-        self.number.update_text(str(self.value))
-        pygame.draw.polygon(self.surface, self.color, self.hex_points, 5)
+    def remove_effect(self, effect):
+        if not isinstance(effect, self.effect_type):
+            raise exceptions.ArgumentTypeException()
+        if effect in self.effects:
+            self.effects.remove(effect)
 
-    def process_draw(self):
-        self.update_surface()
-        if not(self.invisible_wall):
-            self.number.process_draw()
-        self.game.screen.blit(self.surface, (self.pos_x, self.pos_y))
+    def has_effect(self, effect_type: type) -> bool:
+        if not isinstance(effect_type, type):
+            raise exceptions.ArgumentTypeException()
+        if not issubclass(effect_type, self.effect_type):
+            raise exceptions.ArgumentValueException()
+        for effect in self.effects:
+            if type(effect) == effect_type:
+                return True
+        return False
 
-    def get_neighbours(self):  # HEчет-q
-        top_x = self.x
-        top_y = self.y - 1
+    def clear_effects(self):
+        self.effects.clear()
 
-        bot_x = self.x
-        bot_y = self.y + 1
+    @property
+    def even_row(self) -> bool:
+        return (self.loc_y & 1) == 0
 
-        left_top_x = self.x - 1
-        left_top_y = self.y - 1
+    @property
+    def odd_row(self) -> bool:
+        return (self.loc_y & 1) == 1
 
-        right_top_x = self.x - 1
-        right_top_y = self.y + 1
+    def set_view(self, view):
+        self.view = view
 
-        right_bot_x = self.x+1
-        right_bot_y = self.y
+    def set_controller(self, controller):
+        self.controller = controller
 
-        left_bot_x = self.x -1
-        left_bot_y = self.y
+    def get_neighbours(self) -> set:
+        neighbours = set()
 
-        if not (self.even):
-            left_top_x = self.x - 1
-            left_top_y = self.y
+        def try_add_neighbour(dx, dy):
+            neighbour_x = self.loc_x + dx
+            neighbour_y = self.loc_y + dy
+            if (neighbour_x >= 0) and (neighbour_x < self.grid.width) and\
+                    (neighbour_y >= 0) and (neighbour_y < self.grid.height):
+                neighbour = self.grid.tiles[neighbour_x][neighbour_y]
+                if neighbour is not None:
+                    neighbours.add(neighbour)
+        try_add_neighbour(-1, 0)
+        try_add_neighbour(1, 0)
+        try_add_neighbour(0, -1)
+        try_add_neighbour(0, 1)
+        shift = 1 if self.odd_row else -1
+        try_add_neighbour(shift, -1)
+        try_add_neighbour(shift, 1)
+        return neighbours
 
-            right_top_x = self.x + 1
-            right_top_y = self.y
+    def conquer(self, team):
+        self.team = team
+        self.power = abs(self.power)
 
-            left_bot_x = self.x +1
-            right_bot_y = self.y -1
+    def try_move_power_as_team(self, target, value: int, team, cut_surplus: bool = False) -> bool:
+        if (self.team != team) or ((target.team is None) and (value < 0)):
+            return False
+        self.move_power(target, value, cut_surplus)
+        return True
 
-            right_bot_x = self.x + 1
-            left_bot_y = self.y +1
+    def move_power(self, target, value: int, cut_surplus: bool = False):
+        if not (isinstance(target, GridTile) and isinstance(value, int) and isinstance(cut_surplus, bool)):
+            raise exceptions.ArgumentTypeException()
+        value = self.__check_and_correct_value_for_power_movement(value, cut_surplus)
+        if self.team == target.team:
+            value = -target.__check_and_correct_value_for_power_movement(-value, cut_surplus)
+            self.__ally_power_movement(target, value)
+        else:
+            value = target.__check_and_correct_value_for_power_movement(value, cut_surplus, True)
+            self.__foe_power_movement(target, value)
 
-        # создадим список а, с коордами всех клеток. Обход с верхней клетки против часовой стрелки
-        a = [[top_x, top_y], [right_top_x, right_top_y], [right_bot_x, right_bot_y], [bot_x, bot_y],
-             [left_bot_x, left_bot_y], [left_top_x, left_top_y]]
-        return a
+    def __check_and_correct_value_for_power_movement(self, value: int, cut_surplus: bool, foe: bool = False) -> int:
+        if not foe and (self.power < value):
+            if cut_surplus:
+                return self.power
+            else:
+                raise exceptions.ArgumentOutOfRangeException()
+        elif self.power - self.power_cap > value:
+            if cut_surplus:
+                return self.power - self.power_cap
+            else:
+                raise exceptions.ArgumentOutOfRangeException()
+        return value
 
-    def set_color_to_team(self):
-        self.color = self.team_color
+    def __ally_power_movement(self, target, value):
+        self.power -= value
+        target.power += value
 
-    def set_team_color(self, color):
-        self.team_color = color
+    def __foe_power_movement(self, target, value):
+        self.power -= value
+        target.power -= value
+        if target.power < 0:
+            target.conquer(self.team)
 
-    def set_color(self, color):
-        self.color = color
-        self.update_surface()
+    def handle_new_team_turn(self):
+        if self.grid.game.current_team == self.team:
+            income = self.owners_income
+            power_growth = self.power_growth
+            if not (isinstance(income, int) and isinstance(power_growth, int)):
+                raise exceptions.InvalidReturnException()
+            self.team.earn_money(income)
+            self.gain_power(power_growth)
+        for effect in set(self.effects):
+            effect.apply()
 
-    def return_color(self):
-        return self.color
+    @property  # virtual
+    def owners_income(self) -> int:
+        return 0
 
-    def set_wall(self):
-        self.invisible_black_wall = True
-        self.color = Color.BLACK
+    @property  # virtual
+    def power_growth(self) -> int:
+        return 1
+
+    @property  # virtual
+    def power_cap(self) -> int:
+        return 64
+
+    @property  # virtual
+    def name(self) -> str:
+        return "Обыкновенный Кластер"
+
+    @staticmethod
+    def get_upgrade_price() -> int:
+        return 0
+
+    def upgrade(self, tile_type: type):
+        if not isinstance(tile_type, type):
+            raise exceptions.ArgumentTypeException()
+        if not issubclass(tile_type, GridTile):
+            raise exceptions.ArgumentValueException()
+        new_tile = tile_type(self.grid, self.loc_x, self.loc_y, self.team)
+        new_tile.gain_power(self.power)
+        self.grid.tiles[self.loc_x][self.loc_y] = new_tile
+
+    def take_damage(self, value):
+        self.power = max(self.power - value, 0)
+
+    def gain_power(self, value):
+        self.power = min(self.power + value, self.power_cap)

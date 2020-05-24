@@ -3,6 +3,9 @@ import exceptions
 import os
 
 from main.db_tools.game_session_error_messages import DBGameSessionErrorMessages
+from .game_session_participation_error_messages import DBGameSessionParticipationErrorMessages
+from django.contrib.auth.models import User
+from main.models import UserData, UserParticipation, GameSession
 
 
 class DBGameSessionTools:
@@ -12,8 +15,8 @@ class DBGameSessionTools:
     def try_create_new_session(title: str, turn_period: int, user_limit: int,
                                user_lowest_level: int, user_highest_level: int) -> (bool, str):
         """**Попытка создания новой игровой сессии**\n
-        :raises ArgumentTypeException: Неверный тип переданных аргументов
-        :raises ArgumentValueException: Значение переданных аргументов не соответсвует требованиям
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :raises ArgumentValueException: |ArgumentValueException|
         :param title: Название игровой сессии
         :type title: str
         :param turn_period: Период хода
@@ -44,6 +47,32 @@ class DBGameSessionTools:
         session.save()
         DBGameSessionTools.__create_session_file(session)
         return True, None
+
+    @staticmethod
+    def can_user_take_part_in_session(correct_user, user_data, game_session) -> (bool, str):
+        if not (isinstance(correct_user, User) and isinstance(user_data, UserData) and
+                isinstance(game_session, GameSession)):
+            raise exceptions.ArgumentTypeException()
+        if user_data.user != correct_user:
+            raise exceptions.ArgumentValueException()
+        if game_session.phase != 0:
+            return False, DBGameSessionParticipationErrorMessages.enrollment_closed
+        if (user_data.level < game_session.user_lowest_level) or (user_data.level > game_session.user_highest_level):
+            return False, DBGameSessionParticipationErrorMessages.invalid_user_level
+        if len(UserParticipation.objects.filter(user=correct_user)) > 0:
+            return False, DBGameSessionParticipationErrorMessages.user_already_participates
+        if DBGameSessionTools.__count_free_participant_places(user_data, game_session) == 0:
+            return False, DBGameSessionParticipationErrorMessages.places_for_team_participants_over
+        return True, None
+
+    @staticmethod
+    def __count_free_participant_places(user_data, game_session):
+        participants = UserParticipation.objects.filter(game_session=game_session)
+        free_places = game_session.user_per_team_count
+        for participant in participants:
+            if participant.user_data.team == user_data.team:
+                free_places -= 1
+        return free_places
 
     @staticmethod
     def __create_session_file(session: main.models.GameSession):
