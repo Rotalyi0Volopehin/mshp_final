@@ -21,6 +21,7 @@ class ToolBar(DrawObject):
             PhishingPTSet: "K_2",
             ExploitPTSet: "K_3",
             VirusPTSet: "K_4",
+            IceWallPTSet: "K_5",
             # ...
             MiningFarmPTSet: "K_9",
             RebootPTSet: "K_0",

@@ -99,6 +99,7 @@ def create_hardcoded_player(name, team) -> Player:
     player.add_pressure_tools(PhishingPTSet, 1)
     player.add_pressure_tools(ExploitPTSet, 1)
     player.add_pressure_tools(VirusPTSet, 1)
+    player.add_pressure_tools(IceWallPTSet, 1)
     # ...
     player.add_pressure_tools(MiningFarmPTSet, 1)
     player.add_pressure_tools(RebootPTSet, 2)
