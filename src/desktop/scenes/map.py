@@ -16,8 +16,8 @@ class MapScene(Scene):
         height = self.game.height
         button_back = Btn(self.game, (width - 120, 5, 100, 40), Color.WHITE, 'Меню', self.__set_menu_scene)
         self.objects.append(button_back)
-        button_back = Btn(self.game, (width - 240, 5, 100, 40), Color.WHITE, 'Прокачка', self.__set_tech_scene)
-        self.objects.append(button_back)
+        button_up = Btn(self.game, (width - 240, 5, 100, 40), Color.WHITE, 'Прокачка', self.__set_tech_scene)
+        self.objects.append(button_up)
         self.game_vc = self.game.current_scene.game_vc
         self.objects.append(self.game_vc)
         toolbar_geom = (35, height - 100, width - 70, 80)
@@ -34,8 +34,9 @@ class MapScene(Scene):
     def __set_menu_scene(self):
         self.game.goto_deeper_scene(MenuScene)
 
-    def __set_tech_scene(self):
+    def __set_tech_scene(self,):
         self.game.goto_deeper_scene(TreeScene)
+
 
     def __init_controls(self):
         controls = [

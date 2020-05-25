@@ -34,6 +34,7 @@ class GridTileUpgradeTree:
 
     @staticmethod
     def upgrade_tile(tile: GridTile, upgrade: type):
+        print(tile, upgrade)
         if not (isinstance(tile, GridTile) and isinstance(upgrade, type)):
             raise exceptions.ArgumentTypeException()
         if not issubclass(upgrade, GridTile):

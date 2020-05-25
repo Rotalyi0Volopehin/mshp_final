@@ -44,13 +44,13 @@ from objects.button import Btn
 
 
 class ImageButton(Btn):
-    def __init__(self, game, image, geometry=(10, 10, 100, 100), text = None, function=None):
-        super(ImageButton, self).__init__(game)
-        self.internal_button.function = function
-        print(function)
-        self.internal_button.text = text
-        self.geometry = geometry
+    def __init__(self, game, image, geometry=(10, 10, 100, 100), text=None, function=None):
+        super(ImageButton, self).__init__(game,geometry)
         self.image = image
+        self.internal_button.function = function
+        self.internal_button.text = text
+        print(function)
+        self.internal_button.render_text()
 
     def process_draw(self):
         self.internal_button.update(self.game.screen)
