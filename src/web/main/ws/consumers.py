@@ -66,10 +66,10 @@ class WebsocketRequestHandler(WebsocketConsumer):
 
     def try_delegate_parcel(self, parcel: list) -> (Exception, list):  # (exception, response_parcel)
         request_id = parcel[0]
-        if request_id not in RequestParcelHandlers._handlers:
+        if request_id not in RequestParcelHandlers.handlers:
             exception = exceptions.NotImplementedException("Request parcel handler is not implemented!")
             return exception, [ResponseID.FAIL]
-        handler = RequestParcelHandlers._handlers[request_id]
+        handler = RequestParcelHandlers.handlers[request_id]
         response_parcel = handler(self, parcel)
         if not is_response_parcel_valid(response_parcel):
             exception = exceptions.InvalidReturnException("Request parcel handler must return response parcel!")

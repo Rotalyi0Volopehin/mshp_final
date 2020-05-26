@@ -9,11 +9,8 @@ from main.db_tools.user_tools import DBUserTools
 from main.models import User
 
 
-# TODO: задокументировать
-
-
 class LoggedInSockets:
-    _users_of_sockets = {}
+    users_of_sockets = dict()
 
     @staticmethod
     def try_login_socket(socket: WebsocketConsumer, user_login: str, user_password: str) -> bool:
@@ -24,17 +21,17 @@ class LoggedInSockets:
         if not user_exists:
             return False
         user = User.objects.get(username=user_login)
-        if user in LoggedInSockets._users_of_sockets.values():
+        if user in LoggedInSockets.users_of_sockets.values():
             return False
-        LoggedInSockets._users_of_sockets[socket] = user
+        LoggedInSockets.users_of_sockets[socket] = user
         return True
 
     @staticmethod
     def try_logout_socket(socket: WebsocketConsumer) -> bool:
         if not isinstance(socket, WebsocketConsumer):
             raise exceptions.ArgumentTypeException()
-        if socket in LoggedInSockets._users_of_sockets:
-            LoggedInSockets._users_of_sockets.pop(socket)
+        if socket in LoggedInSockets.users_of_sockets:
+            LoggedInSockets.users_of_sockets.pop(socket)
             return True
         return False
 
