@@ -8,14 +8,11 @@ from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.utils.encoding import force_bytes
 from main.db_tools.user_error_messages import DBUserErrorMessages
-from main.models import UserData, UserParticipation, GameSession
+from main.models import UserData
 # vvv для системы верификации vvv
 from django.utils.http import urlsafe_base64_encode
 from main.db_tools.tokens import account_activation_token
 from network_confrontation_web.settings import AUTO_USER_ACTIVATION
-
-
-# TODO: задокументировать код
 
 
 class DBUserTools:
@@ -125,7 +122,7 @@ class DBUserTools:
         user_data = main.models.UserData.objects.filter(user=user)
         ok = len(user_data) == 1
         if return_user_data:
-            return ok, user_data[0] if ok else None
+            return ok, (user_data[0] if ok else None)
         return ok
 
     @staticmethod
@@ -181,40 +178,6 @@ class DBUserTools:
             user_data.activated = True
             user_data.save()
         return True
-
-    @staticmethod
-    def try_sign_user_up_for_session(user, game_session) -> (bool, str):
-        if not (isinstance(user, User) and isinstance(game_session, GameSession)):
-            raise exceptions.ArgumentTypeException()
-        ok, user_data = DBUserTools.is_user_configuration_correct(user, True)
-        if not ok:
-            return False, DBUserErrorMessages.invalid_user_configuration
-        if not user_data.activated:
-            return False, DBUserErrorMessages.not_activated
-        from .game_session_tools import DBGameSessionTools
-        ok, error = DBGameSessionTools.can_user_take_part_in_session(user, user_data, game_session)
-        if not ok:
-            return False, error
-        participation = UserParticipation(user_data=user_data, game_session=game_session)
-        participation.save()
-
-    @staticmethod
-    def search_sessions_for_user_participation(user) -> (set, str):
-        if not isinstance(user, User):
-            raise exceptions.ArgumentTypeException()
-        ok, user_data = DBUserTools.is_user_configuration_correct(user, True)
-        if not ok:
-            return False, DBUserErrorMessages.invalid_user_configuration
-        if not user_data.activated:
-            return False, DBUserErrorMessages.not_activated
-        level = user_data.level
-        raw = GameSession.objects.filter(user_lowest_level__lte=level, user_highest_level__gte=level, phase=0)
-        from .game_session_tools import DBGameSessionTools
-        sessions = set()
-        for session in raw:
-            if DBGameSessionTools.can_user_take_part_in_session(user, user_data, session)[0]:
-                sessions.add(session)
-        return sessions, None
 
 
 email_re = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")

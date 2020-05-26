@@ -4,9 +4,6 @@ from enum import Enum
 from net_connection.response_ids import ResponseID
 
 
-# TODO: задокументировать
-
-
 class ErrorResponseID(Enum):
     INCORRECT_BYTE_DATA = 0  # если request - это bytes, но
     JSON_FORMAT_REQUIRED = 1  # если request - это string, но не json
