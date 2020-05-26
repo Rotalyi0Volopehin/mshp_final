@@ -13,6 +13,14 @@ class LoggedInSockets:
     users_of_sockets = dict()
 
     @staticmethod
+    def get_user_of_socket(socket: WebsocketConsumer) -> User:
+        if not isinstance(socket, WebsocketConsumer):
+            raise exceptions.ArgumentTypeException()
+        if socket in LoggedInSockets.users_of_sockets:
+            return LoggedInSockets.users_of_sockets[socket]
+        return None
+
+    @staticmethod
     def try_login_socket(socket: WebsocketConsumer, user_login: str, user_password: str) -> bool:
         if not (isinstance(socket, WebsocketConsumer) and
                 isinstance(user_login, str) and isinstance(user_password, str)):
