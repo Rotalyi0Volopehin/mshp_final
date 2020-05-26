@@ -1,0 +1,67 @@
+.form-padding {
+    padding-top: 10%
+}
+
+.number {
+    font-size: 150%;
+}
+
+.label_font {
+    font-size: 130%;
+}
+
+.dark_part {
+    height: 125px;
+    min-width: 900px;
+}
+
+.info {
+    position: relative;
+    border: none;
+    margin-left: 23.5%;
+    margin-top: -0.5%;
+    font-size: 100.5%;
+    height: 40%;
+}
+
+.profile-header {
+    transform: translateY(5rem);
+}
+
+.rounded_border {
+    border-radius: 40px;
+}
+
+.display {
+    display: inline-block;
+}
+
+.save_button {
+    width: 80%;
+    height: 50px;
+}
+
+body {
+    background: #654ea3;
+    background: -webkit-linear-gradient(to right, #654ea3, #eaafc8);
+    background: linear-gradient(to right, #654ea3, #eaafc8);
+    min-height: 100vh;
+}
+
+.profile_pic {
+    position: absolute;
+    margin-top: -7%;
+    margin-left: 7%;
+}
+
+.name {
+    margin-left: 25%;
+}
+
+.progress_bar {
+    height: 30px;
+}
+
+.progress_background {
+    background: linear-gradient(to right,#eaafc8, #654ea3);
+}

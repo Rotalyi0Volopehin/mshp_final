@@ -1,31 +1,44 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <a class="navbar-brand" href="{% url 'index' %}">Simple votings</a>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
+<nav class="navbar navbar-expand-xl fixed-top navbar-dark bg-dark cyberfont">
+    <a class="navbar-brand d-xl-none" href="{% url 'index' %}" style="font-size: 102%;">HackWorld</a>
 
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+            aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <ul class="navbar-nav mr-auto">
+    <div class="collapse navbar-collapse justify-content-between" id="navbarToggle">
+        <ul class="navbar-nav">
             {% block menu %}
                 {% for item in menu %}
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url item.url_name %}">{{ item.name }}</a>
                     </li>
                 {% endfor %}
-            {% endblock %}
-        </ul>
-
-
-        <ul class="navbar-nav mr-1">
-            {% block usermenu %}
-                <li class="nav-item">
-                    {% if request.user.is_authenticated %}
-                        <a class="nav-link active" href="{% url 'logout' %}">Выйти</a>
-                    {% else %}
-                        <a class="nav-link active" href="{% url 'login' %}">Войти</a>
-                    {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" style="cursor: pointer">Фракции</a>
+                    <ul class="dropdown-menu bg-dark text-center">
+                        <li class="nav-link"><a class="text-light" href="{% url 'fraction0' %}">Cyber Corp</a></li>
+                        <li class="nav-link"><a class="text-light" href="{% url 'fraction1' %}">Underground</a></li>
+                        <li class="nav-link"><a class="text-light" href="{% url 'fraction2' %}">Freedom call</a></li>
+                    </ul>
                 </li>
             {% endblock %}
         </ul>
 
+        <a class="navbar-brand d-none d-xl-block" style="font-size: 130%; position: absolute; margin-left: 44%;" href="/">HackWorld</a>
 
+        <ul class="navbar-nav">
+            {% block usermenu %}
+                {% for item in user_menu %}
+                    <li class="nav-item">
+                        {% if item.url_name %}
+                            <a class="nav-link" href="{% url item.url_name %}">{{ item.name }}</a>
+                        {% else %}
+                            <a class="nav-link" href="{{ item.url }}">{{ item.name }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% endblock %}
+        </ul>
     </div>
 </nav>

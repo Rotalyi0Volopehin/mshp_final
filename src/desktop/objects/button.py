@@ -1,6 +1,6 @@
-from third_party.button import Button
 from constants import Color
 from objects.base import DrawObject
+from third_party.button import Button
 
 
 class Btn(DrawObject):
@@ -22,7 +22,7 @@ class Btn(DrawObject):
         self.internal_button.render_text()
 
     @staticmethod
-    def no_action(self):
+    def no_action():
         pass
 
     def process_event(self, event):

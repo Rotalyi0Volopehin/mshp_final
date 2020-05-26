@@ -1,16 +1,26 @@
+import pygame
+
 from constants import Color
 from objects.button import Btn
 from scenes.base import Scene
+from game_vc.game_vc import GameVC
 
 
 class MenuScene(Scene):
     def create_objects(self):
-        self.button_start = Btn(self.game, (350, 255, 100, 40), Color.WHITE, "Запуск игры", self.set_main_scene)
-        self.button_exit = Btn(self.game, (350, 305, 100, 40), Color.WHITE, 'Выход', self.exit)
-        self.objects = [self.button_start, self.button_exit]
+        button_exit = Btn(self.game, (350, 305, 100, 40), Color.WHITE, 'Выход', self.game.exit)
+        self.objects.append(button_exit)
+        button_map = Btn(self.game, (350, 255, 100, 40), Color.WHITE, 'Квесты', self.__set_quest_scene)
+        self.objects.append(button_map)
+        button_quest = Btn(self.game, (350, 205, 100, 40), Color.WHITE, 'Карта', self.__set_map_scene)
+        self.objects.append(button_quest)
+        self.game_vc = GameVC(self.game)
+        self.objects.append(self.game_vc)
 
-    def set_main_scene(self):
-        self.set_next_scene(self.game.MAIN_SCENE_INDEX)
+    def __set_map_scene(self):
+        from scenes.map import MapScene
+        self.game.goto_deeper_scene(MapScene)
 
-    def exit(self):
-        self.game.game_over = True
+    def __set_quest_scene(self):
+        from scenes.quests import QuestScene
+        self.game.goto_deeper_scene(QuestScene)

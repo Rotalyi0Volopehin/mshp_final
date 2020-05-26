@@ -8,7 +8,7 @@ from net_connection.response_ids import ResponseID
 
 
 class ErrorResponseID(Enum):
-    BYTE_FORMAT_NOT_SUPPORTED = 0  # если формат request не string, а bytes
+    INCORRECT_BYTE_DATA = 0  # если request - это bytes, но
     JSON_FORMAT_REQUIRED = 1  # если request - это string, но не json
     WRONG_PARCEL_FORMAT = 2  # если request - это не лист, пустой лист или первый элемент не request id
     WRONG_PARCEL_CONTENT = 3  # если содержание request parcel является неправильным

@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'cyberpunk';
+    src: url('fonts/Rus.ttf');
+    font-style: normal;
+    font-weight: normal;
+}
+
+.cyberfont {
+    font-family: 'cyberpunk';
+    font-size: 140%;
+}
+
+a:hover,
+a { text-decoration: none; }
