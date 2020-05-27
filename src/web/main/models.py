@@ -84,9 +84,6 @@ class TeamStats(models.Model):
 
 
 class UserParticipation(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     user_data = models.ForeignKey(to=UserData, on_delete=models.CASCADE)
     game_session = models.ForeignKey(to=GameSession, on_delete=models.CASCADE)
-
-    @property
-    def user(self) -> User:
-        return self.user_data.user

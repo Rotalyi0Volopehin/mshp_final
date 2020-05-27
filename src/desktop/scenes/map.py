@@ -40,4 +40,3 @@ class MapScene(Scene):
             text = Text(self.game, font_name="Consolas", font_size=20, color=Color.WHITE, x=300, y=250 + i * 20,
                         text=line)
             self.objects.append(text)
-
