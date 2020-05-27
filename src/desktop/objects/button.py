@@ -16,7 +16,7 @@ class Btn(DrawObject):
         super().__init__(game)
         self.geometry = geometry
         self.color = color
-        self.function = function if function else Btn.no_action
+        self.function = function if function else self.no_action
         self.internal_button = Button(self.geometry, self.color, self.function, **Btn.BUTTON_STYLE)
         self.internal_button.text = text
         self.internal_button.render_text()

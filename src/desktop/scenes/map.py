@@ -37,7 +37,6 @@ class MapScene(Scene):
     def __set_tech_scene(self,):
         self.game.goto_deeper_scene(TreeScene)
 
-
     def __init_controls(self):
         controls = [
             "ЛКМ - выделение",

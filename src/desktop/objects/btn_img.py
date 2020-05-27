@@ -49,7 +49,6 @@ class ImageButton(Btn):
         self.image = image
         self.internal_button.function = function
         self.internal_button.text = text
-        print(function)
         self.internal_button.render_text()
 
     def process_draw(self):

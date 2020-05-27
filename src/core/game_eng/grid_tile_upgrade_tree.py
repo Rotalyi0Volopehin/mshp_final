@@ -34,13 +34,14 @@ class GridTileUpgradeTree:
 
     @staticmethod
     def upgrade_tile(tile: GridTile, upgrade: type):
-        print(tile, upgrade)
         if not (isinstance(tile, GridTile) and isinstance(upgrade, type)):
             raise exceptions.ArgumentTypeException()
         if not issubclass(upgrade, GridTile):
             raise exceptions.ArgumentValueException()
         if (tile.team is None) or (tile.team.money < upgrade.get_upgrade_price()) or \
                 (GridTileUpgradeTree.tile_upgrade_bases[upgrade] != type(tile)):
-            raise exceptions.InvalidOperationException()
-        tile.upgrade(upgrade)
-        tile.team.money -= upgrade.get_upgrade_price()
+            pass
+            #raise exceptions.InvalidOperationException()
+        else:
+            tile.upgrade(upgrade)
+            tile.team.money -= upgrade.get_upgrade_price()
