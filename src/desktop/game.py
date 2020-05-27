@@ -10,12 +10,6 @@ class Game:
     def main_loop_duration(self) -> int:
         return 25
 
-    @staticmethod
-    def init_libs():
-        pygame.mixer.init(22050, -16, 2, 64)
-        pygame.display.init()
-        pygame.font.init()
-
     def __init__(self, width=800, height=600):
         self.clock = pygame.time.Clock()
         self.__init_window(width, height)

@@ -1,6 +1,7 @@
 import pygame
 import os.path as path
 import request_parcel_helpers.user_logging as user_logging
+import exceptions
 
 from pygame.locals import *
 from constants import Color
@@ -50,9 +51,13 @@ class LoginScene(Scene):
         self.load_sound()
         pygame.mixer.music.play(-1)
 
-    def set_menu_scene(self):
-        from scenes.menu import MenuScene
-        self.game.set_origin_scene(MenuScene)
+    def set_gs_menu_scene(self):
+        from scenes.gs_menu import GSMenuScene
+        self.game.set_origin_scene(GSMenuScene)
+
+    def set_main_menu_scene(self):
+        from scenes.main_menu import MainMenuScene
+        self.game.set_origin_scene(MainMenuScene)
 
     def on_login_button_click(self):
         login = self.login_textbox.internal_txtinput.get_text()
@@ -62,17 +67,17 @@ class LoginScene(Scene):
 
     def on_enter_button_click(self):
         self.game.online = False
-        self.set_menu_scene()
+        self.set_gs_menu_scene()
 
     def login_response_parcel_handler(self, parcel):
         response_id = parcel[0]
         if response_id == ResponseID.ERROR:
             error_id = parcel[1]
-            raise Exception("Server says that client is not right! ResponseError #" + str(error_id.value))
+            raise exceptions.ErrorResponseException(error_id)
         if response_id == ResponseID.FAIL:
             pass  # TODO: реализовать вывод ошибки
         elif response_id == ResponseID.SUCCESS:
-            self.set_menu_scene()
+            self.set_main_menu_scene()
 
     def on_reg_button_click(self):
         pass  # TODO: сделать редирект в браузер на страницу регистрации

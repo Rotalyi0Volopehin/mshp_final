@@ -1,6 +1,6 @@
 import exceptions
 
-from net_connection.participation_status_ids import ParticipationStatusIDs
+from net_connection.participation_status_ids import ParticipationStatusID
 from main.models import UserParticipation, GameSession
 from django.contrib.auth.models import User
 from .user_tools import DBUserTools
@@ -12,18 +12,18 @@ class DBUSerParticipationTools:
     def get_user_participation(user: User) -> UserParticipation:
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
-        participation = UserParticipation.objects.get(user=user)
+        participation = UserParticipation.objects.filter(user=user)
         return None if len(participation) == 0 else participation[0]
 
     @staticmethod
-    def get_participation_status(user: User) -> ParticipationStatusIDs:
+    def get_participation_status(user: User) -> ParticipationStatusID:
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
         participation = DBUSerParticipationTools.get_user_participation(user)
         if participation is None:
-            return ParticipationStatusIDs.NO_PARTICIPATION
+            return ParticipationStatusID.NO_PARTICIPATION
         phase = participation.game_session.phase
-        return ParticipationStatusIDs.WAITING_FOR_BEGINNING if phase == 0 else ParticipationStatusIDs.PLAYING_GAME
+        return ParticipationStatusID.WAITING_FOR_BEGINNING if phase == 0 else ParticipationStatusID.PLAYING_GAME
 
     @staticmethod
     def try_sign_user_up_for_session(user, game_session) -> (bool, str):

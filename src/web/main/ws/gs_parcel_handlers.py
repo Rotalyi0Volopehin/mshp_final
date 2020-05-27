@@ -14,7 +14,7 @@ class GSParcelHandlers:
             return ErrorResponse(ErrorResponseID.WRONG_PARCEL_FORMAT)
         user = LoggedInSockets.get_user_of_socket(socket)
         if user is None:
-            return [ResponseID.FAIL]
+            return ErrorResponse(ErrorResponseID.LOGGING_IN_REQUIRED)
         status = DBUSerParticipationTools.get_participation_status(user)
         return [ResponseID.SUCCESS, status]
 
