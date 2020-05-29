@@ -6,3 +6,5 @@ class Color:
     GREY_BLUE = (21, 23, 25)
     WHITE = (255, 255, 255)
     ORANGE = (255, 180, 0)
+    DARK_RED = (150, 0, 0)
+    DARK_GREEN = (0, 150, 0)

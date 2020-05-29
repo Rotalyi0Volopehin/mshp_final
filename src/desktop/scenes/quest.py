@@ -13,7 +13,7 @@ class QuestScene(Scene):
         self.image_char = Image(self.game, file_name='images/cyber.png', x=100, y=300)
         self.button_back = Btn(self.game, (350, 100, 100, 40), Color.WHITE, "Меню", self.back_to_menu)
         self.button_restart = Btn(self.game, (350, 50, 100, 40), Color.WHITE, "РЕСТАРТ", self.restart)
-        self.objects = [self.button_back, self.image_char, self.text_bar, self.button_restart]
+        self.objects = [self.button_back, self.image_char, self.button_restart, self.text_bar]
 
     def back_to_menu(self):
         self.set_next_scene(self.game.MENU_SCENE_INDEX)

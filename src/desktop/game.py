@@ -8,6 +8,7 @@ from scenes.map import MapScene
 from scenes.quests_menu import QuestMenuScene
 from scenes.login import LoginScene
 from scenes.quest import QuestScene
+from scenes.stats import StatsMenuScene
 
 class Game:
     MENU_SCENE_INDEX = 0
@@ -17,6 +18,7 @@ class Game:
     MAP_SCENE_INDEX = 4
     LOGIN_SCENE_INDEX = 5
     QUEST_SCENE_INDEX = 3
+    STATS_SCENE_INDEX = 7
 
     def __init__(self, width=800, height=600):
         self.width = width
@@ -28,7 +30,7 @@ class Game:
         self.wall_collision_count = 0
         self.ticks = 0
         self.scenes = [MenuScene(self), MainScene(self), FinalScene(self), QuestScene(self),
-                       MapScene(self), LoginScene(self), QuestMenuScene(self)]
+                       MapScene(self), LoginScene(self), QuestMenuScene(self), StatsMenuScene(self)]
         self.current_scene = 0
 
     def create_window(self):
