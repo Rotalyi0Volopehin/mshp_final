@@ -1,43 +1,17 @@
 import exceptions
 
 from struct import pack
-from io import BytesIO
+from .binary_stream import BinaryStream
 
 
-class BinaryWriter:
-    def __init__(self, base_stream: BytesIO = None, data: bytes = None):
-        if not ((isinstance(base_stream, BytesIO) or (base_stream is None)) and
-                (isinstance(data, bytes) or (data is None))):
-            raise exceptions.ArgumentTypeException()
-        self.__base_stream = BytesIO(data) if base_stream is None else base_stream
+class BinaryWriter(BinaryStream):
+    def __init__(self, base_stream, data):
+        super().__init__(base_stream, data)
         self.__write_methods = {
             int: self.write_int,
             bool: self.write_byte,
             str: self.write_string,
         }
-
-    @property
-    def base_stream(self) -> BytesIO:
-        """**Базовый поток бинарных данных**\n
-        :return: Базовый поток
-        :rtype: BytesIO
-        """
-        return self.__base_stream
-
-    @property
-    def position(self) -> int:
-        """**Текущая позиция каретки записи**\n
-        :return: Позиция каретки
-        :rtype: int
-        """
-        return self.__base_stream.tell()
-
-    def seek(self, pos: int):
-        """**Перемещение каретки записи**\n
-        :param pos: Новая позиция каретки
-        :rtype: int
-        """
-        self.__base_stream.seek(pos)
 
     def write_int(self, data: int):
         """**Запись Int32**\n

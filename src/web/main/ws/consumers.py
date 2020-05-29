@@ -7,9 +7,9 @@ from net_connection.json_serialize import CoreJSONDecoder
 from .request_parcel_handlers import RequestParcelHandlers
 from net_connection.response_ids import ResponseID
 from net_connection.request_ids import RequestID
-from net_connection.parcel_check import is_request_parcel_valid
-from net_connection.parcel_check import is_response_parcel_valid
+from net_connection.parcel_check import is_request_parcel_valid, is_response_parcel_valid, is_parcel_binary
 from io_tools.binary_reader import BinaryReader
+from io_tools.binary_writer import BinaryWriter
 
 
 class WebsocketRequestHandler(WebsocketConsumer):
@@ -26,16 +26,11 @@ class WebsocketRequestHandler(WebsocketConsumer):
             ok, parcel = self.try_get_parcel_from_bytes(bytes_data)
         else:
             ok, parcel = self.try_parse_json_into_parcel(text_data)
-        if not ok:
-            return
-        if not self.check_parcel_format(parcel):
+        if not (ok and self.check_parcel_format(parcel)):
             return
         # vvv делегирование к обработчикам (request parcel handler) request-ов в соответствии с id request-ов vvv
         exception, response_parcel = self.try_delegate_parcel(parcel)
-        response = CoreJSONEncoder().encode(response_parcel)
-        self.send(response)
-        if exception is not None:
-            raise exception
+        self.send_response(exception, response_parcel)
 
     def try_get_parcel_from_bytes(self, bytes_data) -> (bool, object):  # (ok, parcel)
         try:
@@ -63,6 +58,24 @@ class WebsocketRequestHandler(WebsocketConsumer):
             self.send(CoreJSONEncoder().encode(error_response))
             return False
         return True
+
+    def send_response(self, exception, response_parcel):
+        if is_parcel_binary(response_parcel):
+            self.send_binary_response(response_parcel[0], response_parcel[1])
+        else:
+            self.send_json_response(response_parcel)
+        if exception is not None:
+            raise exception
+
+    def send_binary_response(self, response_id, stream):
+        stream.write_byte(response_id.value)
+        stream.seek(0)
+        response = stream.base_stream.read()
+        self.send(bytes_data=response)
+
+    def send_json_response(self, response_parcel):
+        response = CoreJSONEncoder().encode(response_parcel)
+        self.send(text_data=response)
 
     def try_delegate_parcel(self, parcel: list) -> (Exception, list):  # (exception, response_parcel)
         request_id = parcel[0]
