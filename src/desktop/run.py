@@ -1,25 +1,20 @@
 import pygame
+import sys
+import os
 
 
-# TODO: починить путь по-умолчанию при запуске run.py через консоль не из папки файла
-def fix_project_roots():
-    import importlib.util as imp
-    import sys
-    import os
+def fix_project_roots(*root_names):
     current_path = os.path.abspath(sys.modules[__name__].__file__)
     src_path = current_path[:current_path.find("src") + 4]
-    root_patcher_path = os.path.join(src_path, "core", "root_patcher.py")
-    spec = imp.spec_from_file_location("root_patcher", root_patcher_path)
-    root_patcher = imp.module_from_spec(spec)
-    spec.loader.exec_module(root_patcher)
-    root_patcher.fix_project_roots(src_path, "core")
+    for root_name in root_names:
+        sys.path.append(src_path + root_name)
 
 
 try:
     import exceptions
 except:
     print("Direct import failed. Patching . . . ", end='')
-    fix_project_roots()
+    fix_project_roots("core")
     import exceptions
     print("SUCCESS")
 

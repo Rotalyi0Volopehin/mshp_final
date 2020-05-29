@@ -4,26 +4,22 @@ import os
 import sys
 
 
-def fix_project_roots():
-    import importlib.util as imp
-    import sys
-    import os
+def fix_project_roots(*root_names):
     current_path = os.path.abspath(sys.modules[__name__].__file__)
     src_path = current_path[:current_path.find("src") + 4]
-    root_patcher_path = os.path.join(src_path, "core", "root_patcher.py")
-    spec = imp.spec_from_file_location("root_patcher", root_patcher_path)
-    root_patcher = imp.module_from_spec(spec)
-    spec.loader.exec_module(root_patcher)
-    root_patcher.fix_project_roots(src_path, "core")
+    for root_name in root_names:
+        sys.path.append(src_path + root_name)
 
 
 try:
-    import exceptions
+    # vvv этот импорт каким-то образом чинит один маленький баг; я не понимаю vvv
+    from net_connection.core_classes import CoreClasses
 except:
     print("Direct import failed. Patching . . . ", end='')
-    fix_project_roots()
-    import exceptions
+    fix_project_roots("core")
+    from net_connection.core_classes import CoreClasses
     print("SUCCESS")
+del CoreClasses
 
 
 def main():
