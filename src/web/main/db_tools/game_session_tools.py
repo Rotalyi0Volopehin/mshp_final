@@ -1,11 +1,11 @@
 import exceptions
 import os
-import sys
 
+from django.utils import timezone
 from main.db_tools.game_session_error_messages import DBGameSessionErrorMessages
 from .game_session_participation_error_messages import DBGameSessionParticipationErrorMessages
 from django.contrib.auth.models import User
-from main.models import UserData, UserParticipation, GameSession
+from main.models import UserData, UserParticipation, GameSession, TeamStats
 from io_tools.binary_writer import BinaryWriter
 from game_eng.game_model import GameModel
 from game_eng.team_ders.team_a import TeamA
@@ -82,7 +82,7 @@ class DBGameSessionTools:
     @staticmethod
     def start_session_active_phase(session: GameSession):
         """**Перевод игровой сессии в фазу #1**\n
-        Изменяет поле 'GameSession.phase' на 1 и создаёт файл сессии.
+        Изменяет поле 'GameSession.phase' на 1 и создаёт соответствующие файл сессии и TeamStats.
         Сессия должна находиться в фазе #0!
 
         :raises ArgumentTypeException: |ArgumentTypeException|
@@ -94,14 +94,14 @@ class DBGameSessionTools:
             raise exceptions.ArgumentTypeException()
         if session.phase != 0:
             raise exceptions.InvalidOperationException()
-        current_path = os.path.abspath(sys.modules[__name__].__file__)
-        web_path = current_path[:current_path.find("web") + 4]
-        path = os.path.join(web_path, "game_sessions", "{:0>8x}.gs".format(session.id))
         gs = DBGameSessionTools.__create_new_game_session(session)
         stream = BinaryWriter()
         GameModel.write(stream, gs)
-        DBGameSessionTools.__write_stream_into_file(path, stream)
+        DBGameSessionTools.__write_stream_into_file(session.file_path, stream)
+        for i in range(3):
+            TeamStats(team=i, game_session=session).save()
         session.phase = 1
+        session.date_started = timezone.now()
         session.save()
 
     @staticmethod
@@ -122,3 +122,25 @@ class DBGameSessionTools:
         file = open(file_path, 'w')
         file.write(stream.base_stream.getbuffer())
         file.close()
+
+    @staticmethod
+    def end_session_active_phase(session: GameSession):
+        """**Переход игровой сессии в фазу #2**\n
+        Изменяет поле 'GameSession.phase' на 2 и удаляет соответствующие файл сессии, TeamStats и UserParticipation.
+        Сессия должна находиться в фазе #1!
+
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :raises InvalidOperationException: |InvalidOperationException|
+        :param session: Игровая сессия, которую требуется перевести в фазу #1
+        :type session: GameSession
+        """
+        if not isinstance(session, GameSession):
+            raise exceptions.ArgumentTypeException()
+        if session.phase != 1:
+            raise exceptions.InvalidOperationException()
+        os.remove(session.file_path)
+        TeamStats.objects.filter(game_session=session).delete()
+        UserParticipation.objects.filter(game_session=session).delete()
+        session.phase = 2
+        session.date_stopped = timezone.now()
+        session.save()

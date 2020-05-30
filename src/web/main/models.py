@@ -1,4 +1,6 @@
 ﻿import exceptions
+import sys
+import os
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -71,7 +73,12 @@ class GameSession(models.Model):
     user_per_team_count = models.IntegerField(default=2)  # лимит числа представителей для каждой фракции
     money_limit = models.IntegerField(default=255)  # лимит бюджета фракций
     winning_team = models.IntegerField(default=-1)  # победившая фракция; -1 -- неизвестно/ничья
-    # путь до файла сессии должен быть "GameSessions/{id}.gses"
+
+    @property
+    def file_path(self) -> str:
+        current_path = os.path.abspath(sys.modules[__name__].__file__)
+        web_path = current_path[:current_path.find("web") + 4]
+        return os.path.join(web_path, "game_sessions", "{:0>8x}.gs".format(self.id))
 
     def get_participants(self):
         return UserParticipation.objects.filter(game_session=self)
@@ -80,7 +87,7 @@ class GameSession(models.Model):
 class TeamStats(models.Model):
     team = models.IntegerField(default=0)
     game_session = models.ForeignKey(to=GameSession, on_delete=models.CASCADE)
-    coins = models.IntegerField(default=42)  # бюджет фракции
+    money = models.IntegerField(default=0)  # бюджет фракции
 
 
 class UserParticipation(models.Model):
