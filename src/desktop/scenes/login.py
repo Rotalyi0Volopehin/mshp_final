@@ -19,8 +19,8 @@ from ws.parcel_manager import ParcelManager
 
 class LoginScene(Scene):
     def init_form(self):
-        self.login_textbox = TextInput(self.game, False, 170, 20)
-        self.password_textbox = PasswordInput(self.game, False, 180, 80)
+        self.login_textbox = TextInput(self.game, False, 170, 20, 11)
+        self.password_textbox = PasswordInput(self.game, False, 180, 80, 18)
         button_enter = Btn(self.game, (350, 300, 100, 40), Color.WHITE, "Войти", self.on_enter_button_click)
         button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
         trailer = GIFImage(path.join("images", "login_backimage.gif"), self.game)
