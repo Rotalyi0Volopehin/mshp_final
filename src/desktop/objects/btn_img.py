@@ -1,9 +1,11 @@
 import pygame
 
 
+# TODO: удалить по причине ущербности
+
+
 class Button:
     def __init__(self, x, y, text, image_press, image_unpress):
-
         self.size = [190, 45]  # Размер кнопки
         self.image_button = pygame.image.load(image_press)  # Загружаем изображение исходной кнопки
         self.text = text  # Текст кнопки
@@ -28,7 +30,5 @@ class Button:
         self.image_put_on_button.blit(text_button, text_rect)
 
     def drawbutton(self, screen):
-        if not (self.clicked):
-            screen.blit(self.image_click, (self.x, self.y))
-        else:
-            screen.blit(self.image_put_on_button, (self.x, self.y))
+        img = self.image_put_on_button if self.clicked else self.image_click
+        screen.blit(self.image_click, (self.x, self.y))

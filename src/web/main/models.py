@@ -71,10 +71,13 @@ class GameSession(models.Model):
     turn_period = models.IntegerField(default=0)  # период времени в секундах, выделенный под ход одного игрока
     user_lowest_level = models.IntegerField(default=-1)  # нижний предел уровня игроков; -1 -- без предела
     user_highest_level = models.IntegerField(default=-1)  # верхний предел уровня игроков; -1 -- без предела
-    user_per_team_count = models.IntegerField(default=2)  # лимит общего числа игроков сессии
+    user_per_team_count = models.IntegerField(default=2)  # лимит числа представителей для каждой фракции
     money_limit = models.IntegerField(default=255)  # лимит бюджета фракций
     winning_team = models.IntegerField(default=-1)  # победившая фракция; -1 -- неизвестно/ничья
     # путь до файла сессии должен быть "GameSessions/{id}.gses"
+
+    def get_participants(self):
+        return UserParticipation.objects.filter(game_session=self)
 
 
 class TeamStats(models.Model):
@@ -84,9 +87,6 @@ class TeamStats(models.Model):
 
 
 class UserParticipation(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     user_data = models.ForeignKey(to=UserData, on_delete=models.CASCADE)
     game_session = models.ForeignKey(to=GameSession, on_delete=models.CASCADE)
-
-    @property
-    def user(self) -> User:
-        return self.user_data.user
