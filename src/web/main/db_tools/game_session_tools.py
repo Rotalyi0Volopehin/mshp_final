@@ -1,11 +1,17 @@
-import main.models
 import exceptions
 import os
 
+from django.utils import timezone
 from main.db_tools.game_session_error_messages import DBGameSessionErrorMessages
 from .game_session_participation_error_messages import DBGameSessionParticipationErrorMessages
 from django.contrib.auth.models import User
-from main.models import UserData, UserParticipation, GameSession
+from main.models import UserData, UserParticipation, GameSession, TeamStats
+from io_tools.binary_writer import BinaryWriter
+from game_eng.game_model import GameModel
+from game_eng.team_ders.team_a import TeamA
+from game_eng.team_ders.team_b import TeamB
+from game_eng.team_ders.team_c import TeamC
+from game_eng.player import Player
 
 
 class DBGameSessionTools:
@@ -39,13 +45,12 @@ class DBGameSessionTools:
         if user_lowest_level > user_highest_level:
             raise exceptions.ArgumentValueException()
         # vvv проверка согласованности аргументов с данными БД vvv
-        if len(main.models.GameSession.objects.filter(title=title)) > 0:
+        if len(GameSession.objects.filter(title=title)) > 0:
             return False, DBGameSessionErrorMessages.title_is_already_in_use
         # vvv запись в БД vvv
-        session = main.models.GameSession(title=title, turn_period=turn_period, user_limit=user_limit,
-                                          user_lowest_level=user_lowest_level, user_highest_level=user_highest_level)
+        session = GameSession(title=title, turn_period=turn_period, user_limit=user_limit,
+                              user_lowest_level=user_lowest_level, user_highest_level=user_highest_level)
         session.save()
-        DBGameSessionTools.__create_session_file(session)
         return True, None
 
     @staticmethod
@@ -75,9 +80,67 @@ class DBGameSessionTools:
         return free_places
 
     @staticmethod
-    def __create_session_file(session: main.models.GameSession):
-        # TODO: проверить директорию по-умолчанию
-        path = os.path.join("GameSessions", str(session.id) + ".gses")
-        file = open(path, 'w')
-        # TODO: написать создание объекта core.GameSession и вписать его данные в файл
+    def start_session_active_phase(session: GameSession):
+        """**Перевод игровой сессии в фазу #1**\n
+        Изменяет поле 'GameSession.phase' на 1 и создаёт соответствующие файл сессии и TeamStats.
+        Сессия должна находиться в фазе #0!
+
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :raises InvalidOperationException: |InvalidOperationException|
+        :param session: Игровая сессия, которую требуется перевести в фазу #1
+        :type session: GameSession
+        """
+        if not isinstance(session, GameSession):
+            raise exceptions.ArgumentTypeException()
+        if session.phase != 0:
+            raise exceptions.InvalidOperationException()
+        gs = DBGameSessionTools.__create_new_game_session(session)
+        stream = BinaryWriter()
+        GameModel.write(stream, gs)
+        DBGameSessionTools.__write_stream_into_file(session.file_path, stream)
+        for i in range(3):
+            TeamStats(team=i, game_session=session).save()
+        session.phase = 1
+        session.date_started = timezone.now()
+        session.save()
+
+    @staticmethod
+    def __create_new_game_session(session: GameSession) -> GameModel:
+        game = GameModel(session.title, session.turn_period, session.money_limit, 16, 16)
+        TeamA(game)
+        TeamB(game)
+        TeamC(game)
+        participations = UserParticipation.objects.filter(game_session=session)
+        for participation in participations:
+            user_data = participation.user_data
+            team = game.teams[user_data.team]
+            Player(user_data.user.id, user_data.user.username, team)
+        return game
+
+    @staticmethod
+    def __write_stream_into_file(file_path: str, stream: BinaryWriter):
+        file = open(file_path, 'w')
+        file.write(stream.base_stream.getbuffer())
         file.close()
+
+    @staticmethod
+    def end_session_active_phase(session: GameSession):
+        """**Переход игровой сессии в фазу #2**\n
+        Изменяет поле 'GameSession.phase' на 2 и удаляет соответствующие файл сессии, TeamStats и UserParticipation.
+        Сессия должна находиться в фазе #1!
+
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :raises InvalidOperationException: |InvalidOperationException|
+        :param session: Игровая сессия, которую требуется перевести в фазу #1
+        :type session: GameSession
+        """
+        if not isinstance(session, GameSession):
+            raise exceptions.ArgumentTypeException()
+        if session.phase != 1:
+            raise exceptions.InvalidOperationException()
+        os.remove(session.file_path)
+        TeamStats.objects.filter(game_session=session).delete()
+        UserParticipation.objects.filter(game_session=session).delete()
+        session.phase = 2
+        session.date_stopped = timezone.now()
+        session.save()

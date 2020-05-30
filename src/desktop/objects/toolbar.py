@@ -13,6 +13,7 @@ class ToolBar(DrawObject):
         from game_eng.pressure_tool_set_ders.phishing_pts import PhishingPTSet
         from game_eng.pressure_tool_set_ders.exploit_pts import ExploitPTSet
         from game_eng.pressure_tool_set_ders.virus_pts import VirusPTSet
+        from game_eng.pressure_tool_set_ders.encryption_pts import EncryptionPTSet
         # ...
         from game_eng.pressure_tool_set_ders.mining_farm_pts import MiningFarmPTSet
         from game_eng.pressure_tool_set_ders.reboot_pts import RebootPTSet
@@ -21,6 +22,7 @@ class ToolBar(DrawObject):
             PhishingPTSet: "K_2",
             ExploitPTSet: "K_3",
             VirusPTSet: "K_4",
+            EncryptionPTSet: "K_5",
             # ...
             MiningFarmPTSet: "K_9",
             RebootPTSet: "K_0",

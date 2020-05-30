@@ -1,6 +1,11 @@
 import exceptions
 
 from game_eng.grid_tile_ders.capital_tile import CapitalGridTile
+# vvv импорты для чтения/записи vvv
+from net_connection.core_classes import CoreClasses
+from net_connection.loading_dump import LoadingDump
+from io_tools.binary_reader import BinaryReader
+from io_tools.binary_writer import BinaryWriter
 
 
 class Team:
@@ -26,9 +31,42 @@ class Team:
         self.__current_player_index = 0
         self.money = 0
         self.capital_tiles = set()
+        game_model.add_team(self)
 
-    @property  # костыль для избежания циклического импорта
-    def player_type(self) -> type:
+    @staticmethod
+    def read(stream: BinaryReader):
+        if not isinstance(stream, BinaryReader):
+            raise exceptions.ArgumentTypeException()
+        team_type = CoreClasses.read_class(stream)
+        obj = team_type(LoadingDump.game_session)
+        LoadingDump.add_team(obj)
+        obj.__index = stream.read_byte()
+        obj.players = stream.read_iterable(Team.get_player_type())
+        obj.__current_player_index = stream.read_byte()
+        obj.money = stream.read_uint()
+        tiles = LoadingDump.game_session.grid.tiles
+        capital_tiles_count = stream.read_byte()
+        for _ in range(capital_tiles_count):
+            capital_tile_loc_x, capital_tile_loc_y = stream.read_byte_point()
+            obj.capital_tiles.add(tiles[capital_tile_loc_x][capital_tile_loc_y])
+        return obj
+
+    @staticmethod
+    def write(stream: BinaryWriter, obj):
+        if not (isinstance(stream, BinaryWriter) and isinstance(obj, Team)):
+            raise exceptions.ArgumentTypeException()
+        CoreClasses.write_class(stream, type(obj))
+        stream.write_byte(obj.__index)
+        stream.write_iterable(obj.players, Team.get_player_type())
+        stream.write_byte(obj.__current_player_index)
+        stream.write_uint(obj.money)
+        stream.write_byte(len(obj.capital_tiles))
+        for capital_tile in obj.capital_tiles:
+            capital_tile_loc = (capital_tile.loc_x, capital_tile.loc_y)
+            stream.write_byte_point(capital_tile_loc)
+
+    @staticmethod  # костыль для избежания циклического импорта
+    def get_player_type() -> type:
         if not hasattr(Team, "__player_type"):
             from game_eng.player import Player
             Team.__player_type = Player
@@ -89,7 +127,7 @@ class Team:
         :param player: Добавляемый игрок
         :type player: Player
         """
-        if not isinstance(player, self.player_type):
+        if not isinstance(player, Team.get_player_type()):
             raise exceptions.ArgumentTypeException()
         if player.team != self:
             raise exceptions.ArgumentValueException()
@@ -147,3 +185,11 @@ class Team:
             self.money = min(self.money + value, self.money_limit)
         else:
             self.money = max(self.money + value, 0)
+
+    def find_player_by_name(self, name: str):
+        if not isinstance(name, str):
+            raise exceptions.ArgumentTypeException()
+        for player in self.players:
+            if player.name == name:
+                return player
+        return None
