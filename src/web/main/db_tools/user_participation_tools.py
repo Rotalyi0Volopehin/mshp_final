@@ -16,14 +16,25 @@ class DBUSerParticipationTools:
         return None if len(participation) == 0 else participation[0]
 
     @staticmethod
-    def get_participation_status(user: User) -> ParticipationStatusID:
+    def get_participation_status(user: User, return_participation: bool = False):
+        """**Инструмент получения ParticipationStatusID для пользователя**\n
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :param user: Пользователь, ParticipationStatusID которого нужно узнать
+        :param return_participation: Факт возврата этим методом UserParticipation
+        :return: ParticipationStatusID данного пользователя
+        :rtype: ParticipationStatusID или (ParticipationStatusID, UserParticipation)
+        """
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
         participation = DBUSerParticipationTools.get_user_participation(user)
         if participation is None:
-            return ParticipationStatusID.NO_PARTICIPATION
-        phase = participation.game_session.phase
-        return ParticipationStatusID.WAITING_FOR_BEGINNING if phase == 0 else ParticipationStatusID.PLAYING_GAME
+            status_id = ParticipationStatusID.NO_PARTICIPATION
+        else:
+            phase = participation.game_session.phase
+            status_id = ParticipationStatusID.WAITING_FOR_BEGINNING if phase == 0 else ParticipationStatusID.PLAYING_GAME
+        if return_participation:
+            return status_id, participation
+        return status_id
 
     @staticmethod
     def try_sign_user_up_for_session(user, game_session) -> (bool, str):
