@@ -78,7 +78,7 @@ class Channel:
 
     @staticmethod
     def send(data: str):
-        if not isinstance(data, str):
+        if not isinstance(data, (str, bytes)):
             raise exceptions.ArgumentTypeException()
         Channel.__data_to_send.put(data)
 

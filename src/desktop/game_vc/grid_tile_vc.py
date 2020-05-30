@@ -6,14 +6,14 @@ from game_eng.grid_tile import GridTile
 from constants import Color
 from objects.base import DrawObject
 from objects.text import Text
+from game_vc.grid_tile_sprite_extender import GridTileSpriteExtender
 
 
 class GridTileVCStatus(Enum):
-    INVISIBLE = Color.BLACK  # наша невидимая черная стена
     DEFAULT = Color.WHITE  # не выбрана
-    SELECTED = Color.RED  # выбрана
-    NEIGHBOUR = Color.GREEN  # соседняя с выбранной
+    SELECTED = Color.MAGENTA  # выбрана
     TARGET = Color.ORANGE  # та клетка, куда двигаем все, что хотим
+    CHANGED = Color.CYAN  # изменена игроком
 
 
 class GridTileVC(DrawObject):
@@ -59,7 +59,9 @@ class GridTileVC(DrawObject):
 
     def update_surface(self):
         if (self.__surface_status != self.status) or (self.__surface_team != self.model.team):
-            self.__surface = GridTileVC.HEXAGON.get_surface(self.status.value, Color.BLACK)
+            from game_vc.game_vc import GameVC
+            fill_color = GameVC.get_team_color(self.model.team)
+            self.__surface = GridTileVC.HEXAGON.get_surface(self.status.value, fill_color)
             self.__surface_status = self.status
             self.__surface_team = self.model.team
 
@@ -68,6 +70,7 @@ class GridTileVC(DrawObject):
         self.update_surface()
         self.game.screen.blit(self.__surface, self.pos)
         self.number.process_draw()
+        GridTileSpriteExtender.extend_sprite(self, self.game.screen)
 
     def process_event(self, event):
         mouse_down = event.type == pygame.MOUSEBUTTONDOWN
