@@ -5,7 +5,7 @@ from .binary_stream import BinaryStream
 
 
 class BinaryWriter(BinaryStream):
-    def __init__(self, base_stream, data):
+    def __init__(self, base_stream=None, data=None):
         super().__init__(base_stream, data)
         self.__write_methods = {
             int: self.write_int,

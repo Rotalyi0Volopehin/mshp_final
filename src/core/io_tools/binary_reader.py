@@ -5,7 +5,7 @@ from .binary_stream import BinaryStream
 
 
 class BinaryReader(BinaryStream):
-    def __init__(self, base_stream, data):
+    def __init__(self, base_stream=None, data=None):
         super().__init__(base_stream, data)
         self.__read_methods = {
             int: self.read_int,

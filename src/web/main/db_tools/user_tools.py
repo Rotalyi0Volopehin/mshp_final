@@ -1,6 +1,4 @@
-import re
 import exceptions
-import main.models
 
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
@@ -20,7 +18,7 @@ class DBUserTools:
     """
     @staticmethod
     def deleted_user_name() -> str:
-        """Особый логин/ник, обозначающий удалённого пользователя
+        """**Особый логин/ник, обозначающий удалённого пользователя**
         """
         return "$_del"
 
@@ -53,8 +51,6 @@ class DBUserTools:
             raise exceptions.ArgumentTypeException()
         if not ((0 < len(login) <= 64) and (0 < len(email) <= 64) and (0 < len(password) <= 64) and (0 <= team < 3)):
             raise exceptions.ArgumentValueException()
-        if not is_email_valid(email):
-            raise exceptions.ArgumentValueException("E-mail некорректен!")
         del_name = DBUserTools.deleted_user_name()
         if login == del_name:
             raise exceptions.ArgumentValueException(f"Логин не должен принимать значение '{del_name}'!")
@@ -67,7 +63,7 @@ class DBUserTools:
         user = User(username=login, email=email, date_joined=timezone.now())
         user.set_password(password)
         user.save()
-        user_data = main.models.UserData(user=user, team=team)
+        user_data = UserData(user=user, team=team)
         if AUTO_USER_ACTIVATION:
             user_data.activated = True
         else:
@@ -97,7 +93,7 @@ class DBUserTools:
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
         # vvv удаление из БД vvv
-        user_data = main.models.UserData.objects.filter(user=user)
+        user_data = UserData.objects.filter(user=user)
         if len(user_data) > 0:
             user_data.delete()
         user.delete()
@@ -119,7 +115,7 @@ class DBUserTools:
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
         # vvv проверка валидности vvv
-        user_data = main.models.UserData.objects.filter(user=user)
+        user_data = UserData.objects.filter(user=user)
         ok = len(user_data) == 1
         if return_user_data:
             return ok, (user_data[0] if ok else None)
@@ -178,19 +174,3 @@ class DBUserTools:
             user_data.activated = True
             user_data.save()
         return True
-
-
-email_re = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-
-
-def is_email_valid(email: str) -> bool:
-    """**Метод для проверки валидности E-mail адреса**\n
-    :raises ArgumentTypeException: |ArgumentTypeException|
-    :param email: E-mail
-    :type email: str
-    :return: Факт валидности E-mail адреса
-    :rtype: bool
-    """
-    if not isinstance(email, str):
-        raise exceptions.ArgumentTypeException()
-    return email_re.match(email)

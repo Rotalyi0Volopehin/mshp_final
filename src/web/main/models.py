@@ -1,11 +1,8 @@
-﻿from django.contrib.auth.models import User
+﻿import exceptions
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-
-import exceptions
-
-
-# TODO: задокументировать модели
 
 
 class UserData(models.Model):
