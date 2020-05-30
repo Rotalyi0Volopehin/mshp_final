@@ -1,7 +1,7 @@
 from game_eng.pressure_tool_set import PressureToolSet
 
 
-class IceWallPTSet(PressureToolSet):
+class EncryptionPTSet(PressureToolSet):
     __END_PRODUCT__ = None
 
     @property
@@ -11,6 +11,10 @@ class IceWallPTSet(PressureToolSet):
     @property
     def production_cost(self) -> int:
         return 8
+
+    @property
+    def name(self) -> str:
+        return "Шифрование"
 
     def _try_apply(self, target) -> bool:
         if target.power == target.power_cap:
