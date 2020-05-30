@@ -12,24 +12,22 @@ from scenes.stats import StatsMenuScene
 
 class Game:
     MENU_SCENE_INDEX = 0
-    MAIN_SCENE_INDEX = 1
-    GAMEOVER_SCENE_INDEX = 2
-    QUEST_MENU_SCENE_INDEX = 6
-    MAP_SCENE_INDEX = 4
-    LOGIN_SCENE_INDEX = 5
-    QUEST_SCENE_INDEX = 3
-    STATS_SCENE_INDEX = 7
+    GAMEOVER_SCENE_INDEX = 1
+    QUEST_MENU_SCENE_INDEX = 2
+    MAP_SCENE_INDEX = 3
+    LOGIN_SCENE_INDEX = 4
+    QUEST_SCENE_INDEX = 5
+    STATS_SCENE_INDEX = 6
 
     def __init__(self, width=800, height=600):
         self.width = width
         self.height = height
         self.size = self.width, self.height
-
         self.create_window()
         self.game_over = False
         self.wall_collision_count = 0
         self.ticks = 0
-        self.scenes = [MenuScene(self), MainScene(self), FinalScene(self), QuestScene(self),
+        self.scenes = [MenuScene(self), FinalScene(self), QuestScene(self),
                        MapScene(self), LoginScene(self), QuestMenuScene(self), StatsMenuScene(self)]
         self.current_scene = 0
 
