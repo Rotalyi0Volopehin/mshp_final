@@ -13,10 +13,10 @@ from scenes.stats import StatsMenuScene
 class Game:
     MENU_SCENE_INDEX = 0
     GAMEOVER_SCENE_INDEX = 1
-    QUEST_MENU_SCENE_INDEX = 2
+    QUEST_SCENE_INDEX = 2
     MAP_SCENE_INDEX = 3
     LOGIN_SCENE_INDEX = 4
-    QUEST_SCENE_INDEX = 5
+    QUEST_MENU_SCENE_INDEX = 5
     STATS_SCENE_INDEX = 6
 
     def __init__(self, width=800, height=600):
