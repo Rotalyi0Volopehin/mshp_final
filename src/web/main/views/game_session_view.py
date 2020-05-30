@@ -1,8 +1,5 @@
 from django.contrib.auth.decorators import login_required
 
-from main.db_tools.cad import CAD
-from django.http import HttpResponse
-
 from main.views.menu import get_menu_context, get_user_menu_context
 from django.shortcuts import render
 from main.models import UserData
@@ -28,7 +25,7 @@ def game_session_page(request):
         context['error'] = error
     else:
         participation = UserParticipation.objects.filter(user_data=user_data)
-        if len(participation) == 0:
+        if participation.count() == 0:
             context['state'] = 0
         elif participation[0].game_session.phase == 0:
             context['state'] = 1
@@ -36,6 +33,7 @@ def game_session_page(request):
         else:
             context['state'] = 2
             playing_game_session_state(context, participation[0].game_session, user_data)
+    context['state'] = 2
     return render(request, 'pages/current_session/game_session_body.html', context)
 
 
