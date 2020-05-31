@@ -1,11 +1,10 @@
 import asyncio
+import websockets
+import exceptions
+
 from queue import Queue
 from threading import Thread
 from types import FunctionType
-
-import websockets
-
-import exceptions
 
 
 # TODO: задокументировать
@@ -79,7 +78,7 @@ class Channel:
 
     @staticmethod
     def send(data: str):
-        if not isinstance(data, str):
+        if not isinstance(data, (str, bytes)):
             raise exceptions.ArgumentTypeException()
         Channel.__data_to_send.put(data)
 

@@ -34,17 +34,17 @@ class RegistrationForm(forms.Form):
     - password1 (*CharField PasswordInput*) - пароль пользователя
     - password2 (*CharField PasswordInput*) - костыль
     - name (*CharField TextInput*) - ник пользователя
-    - email (*CharField TextInput*) - E-mail пользователя
+    - email (*EmailField EmailInput*) - E-mail пользователя
     - team (*ChoiceField Select*) - фракция пользователя
     """
     login = CommonFields.get_login_field(True, attrs={"class": "form-control"})
     password1 = CommonFields.get_password_field(True, attrs={"class": "form-control"})
     password2 = CommonFields.get_password_field(True, "Повторите пароль", attrs={"class": "form-control"})
     name = CommonFields.get_name_field(True, attrs={"class": "form-control"})
-    email = forms.CharField(label="E-mail", min_length=1, max_length=64,
-                            required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
+    email = forms.EmailField(label="E-mail", min_length=1, max_length=64,
+                             required=True, widget=forms.EmailInput(attrs={"class": "form-control"}))
     team = forms.ChoiceField(widget=forms.Select(attrs={"class": "form-control"}), label="Фракция",
-                             required=True, choices=[(0, "0"), (1, "1"), (2, "2")])
+                             required=True, choices=[(0, "Cyber Corp"), (1, "Добрая воля"), (2, "Зов Свободы")])
 
 
 class ProfileForm(forms.Form):
@@ -66,3 +66,7 @@ class ProfileForm(forms.Form):
 class LoginForm(forms.Form):
     login = CommonFields.get_login_field(True, attrs={"class": "form-control"})
     password = CommonFields.get_password_field(True, attrs={"class": "form-control"})
+
+
+class SessionsForm(forms.Form):
+    session_title = CommonFields.get_name_field(False)

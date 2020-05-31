@@ -1,11 +1,11 @@
 # Desktop application
 pygame==1.9.6
+image==1.5.31
 
 # Web application
 django==3.0.5
 django-bootstrap4==1.1.1
 django_extensions==2.2.8
-image==1.5.31
 
 # Websockets
 websockets==8.1
