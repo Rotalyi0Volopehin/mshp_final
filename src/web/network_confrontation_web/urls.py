@@ -19,7 +19,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.urls import path
 
 from main.views import profile_view, registration_view, fractions_view
-from main.views import views, activation_view
+from main.views import views, activation_view, darknet_view
 from main.views.menu import get_menu_context, get_user_menu_context
 
 urlpatterns = [
@@ -27,7 +27,7 @@ urlpatterns = [
     path('', views.index_page, name='index'),
     path('activate/<str:uid>/<str:token>/', activation_view.activate, name='activate'),
     path('cad/', views.cad_page, name='cad'),
-    path('darknet/', views.darknet_page, name='darknet'),
+    path('darknet/', darknet_view.darknet_page, name='darknet'),
     path('forum/', views.forum_page, name='forum'),
     path('chat/', views.chat_page, name='chat'),
     path('sessions/', views.sessions_page, name='sessions'),
