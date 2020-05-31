@@ -66,3 +66,7 @@ class ProfileForm(forms.Form):
 class LoginForm(forms.Form):
     login = CommonFields.get_login_field(True, attrs={"class": "form-control"})
     password = CommonFields.get_password_field(True, attrs={"class": "form-control"})
+
+
+class SessionsForm(forms.Form):
+    session_title = CommonFields.get_name_field(False)
