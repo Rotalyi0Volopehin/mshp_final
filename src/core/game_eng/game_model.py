@@ -98,7 +98,26 @@ class GameModel:
 
     def __next_team_turn(self):
         self.market.update()
+        print(self.current_team_index, len(self.teams), self.current_team.defeated)
         self.__current_team_index += 1
-        if self.__current_team_index == len(self.teams):
-            self.__current_team_index = 0
+        self.__current_team_index = self.__current_team_index % len(self.teams)
+        while self.current_team.defeated:
+            self.__current_team_index += 1
+            self.__current_team_index = self.__current_team_index % len(self.teams)
+        flag = self.check_winner()
+        if flag:
+            pass
+            #self.grid.game.return_to_upper_scene()
         self.grid.handle_new_team_turn()
+
+    def check_winner(self):
+        lose_count = 0
+        winner = 0
+        for i in self.teams:
+            if i.defeated:
+                lose_count += 1
+            else:
+                winner = i
+        if lose_count >= 2:
+            print("WINNER: ", winner)
+        return True
