@@ -5,7 +5,7 @@ from django.shortcuts import render
 from main.models import UserData
 from main.models import UserParticipation
 from main.models import GameSession
-from main.db_tools.game_session_tools import DBGameSessionTools
+from main.db_tools.user_participation_tools import DBUSerParticipationTools
 from main.db_tools.user_tools import DBUserTools
 
 
@@ -24,15 +24,15 @@ def game_session_page(request):
         context['ok'] = False
         context['error'] = error
     else:
-        participation = UserParticipation.objects.filter(user_data=user_data)
-        if participation.count() == 0:
+        participation = DBUSerParticipationTools.get_user_participation(user_data)
+        if participation is None:
             context['state'] = 0
-        elif participation[0].game_session.phase == 0:
+        elif participation.game_session.phase == 0:
             context['state'] = 1
-            expectation_game_session_state(context, participation[0].game_session)
+            expectation_game_session_state(context, participation.game_session)
         else:
             context['state'] = 2
-            playing_game_session_state(context, participation[0].game_session, user_data)
+            playing_game_session_state(context, participation.game_session, user_data)
     context['state'] = 2
     return render(request, 'pages/current_session/game_session_body.html', context)
 
