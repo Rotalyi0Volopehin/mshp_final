@@ -47,6 +47,19 @@ class RegistrationForm(forms.Form):
                              required=True, choices=[(0, "Cyber Corp"), (1, "Добрая воля"), (2, "Зов Свободы")])
 
 
+class CreateSessionForm(forms.Form):
+    session_name = forms.CharField(label='Название сессии', min_length=1, max_length=64,
+                               required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
+    user_per_team = forms.IntegerField(label='Игроков во фракции', min_value=1, max_value=8,
+                                       required=True, widget=forms.NumberInput(attrs={"class": "form-control"}))
+    turn_period = forms.IntegerField(label='Время хода', min_value=1, required=True,
+                                     widget=forms.NumberInput(attrs={"class": "form-control"}))
+    user_lowest_level = forms.IntegerField(label='Минимальный уровень участников', min_value=-1, max_value=-1,
+                                           required=True, widget=forms.NumberInput(attrs={"class": "form-control"}))
+    user_highest_level = forms.IntegerField(label='Максимальный уровень участников',min_value=-1, max_value=-1,
+                                            required=True, widget=forms.NumberInput(attrs={"class": "form-control"}))
+
+
 class ProfileForm(forms.Form):
     """**Форма для страницы '/profile/<int:uid>/'**\n
     Поля формы:\n

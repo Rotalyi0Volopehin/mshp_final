@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+{% load static %}
+  <style>
+  body {
+      background: linear-gradient(to top right, #9900cc, #000099);
+  }
+
+  .form1 {
+      width: 1000px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      background-color: rgba(0, 0, 0, 0);
+
+  }
+
+  .form1 h1 {
+      margin: 30px 100px;
+      padding: 0;
+      text-align: center;
+      color: #000;
+      font-size: 30px;
+      text-transform: uppercase;
+  }
+  </style>
+    <div class="form1 p-3 rounded-lg border">
+        <h1>Создание сессии</h1>
+        <div class="form">
+            <form method="POST">
+                <div class="container">
+                    <div class="form-group">
+                        {% for item in form %}
+                            <div class="row">
+                                <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ item.label }}</p>
+                                <div class="col form-group cyberfont">{{ item }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col" align="center">
+            <button type="submit" class="btn btn-dark cyberfont" onclick="check_pw()" id="reg_button">
+                Создать сессию
+            </button>
+        </div>
+    </div>
+
+
+
+{% endblock %}
