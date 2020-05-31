@@ -6,26 +6,41 @@ STATS = {
     "{ste :"
 }
 
+CONTACTS = {
+    "{swan",
+    "{krayn",
+    "{smith",
+    "{finch"
+}
+
 
 class ReqHandler:
     def __init__(self, data):
         self.data = data
-        self.requirements = []
+        self.stats_requirements = []
+        self.contacts_requirements = []
 
     def find_requirements(self, now_word):
         self.now_word = now_word
         for word in STATS:
             end_of_line = self.data.find('\n', self.now_word)
             if self.data.find(word, self.now_word, end_of_line) != -1:
-                self.requirements.append(self.data[self.data.find(word, self.now_word) + 1:
+                self.stats_requirements.append(self.data[self.data.find(word, self.now_word) + 1:
+                                         self.data.find('}', self.now_word)])
+                self.now_word = self.data.find('}', self.now_word)
+        self.now_word = now_word
+        for word in CONTACTS:
+            end_of_line = self.data.find('\n', self.now_word)
+            if self.data.find(word, self.now_word, end_of_line) != -1:
+                self.contacts_requirements.append(self.data[self.data.find(word, self.now_word) + 1:
                                          self.data.find('}', self.now_word)])
                 self.now_word = self.data.find('}', self.now_word)
 
     def check_requirements(self):
-        f = open('quests/config', 'r')
+        f = open('quests/stats', 'r')
         stat_data = f.read()
         flag = 2
-        for item in self.requirements:
+        for item in self.stats_requirements:
             print(item)
             if int(stat_data[stat_data.find(item[:5]) + 5:
                             stat_data.find('|', stat_data.find(item[:5]))
@@ -33,6 +48,15 @@ class ReqHandler:
                 flag = 1
             else:
                 flag = 0
+        print(stat_data)
+        for item in self.contacts_requirements:
+            print(item)
+            if stat_data.find(item) == -1:
+                flag = 1
+            else:
+                flag = 0
+            print(stat_data.find(item))
         f.close()
-        self.requirements = []
+        self.contacts_requirements = []
+        self.stats_requirements = []
         return flag

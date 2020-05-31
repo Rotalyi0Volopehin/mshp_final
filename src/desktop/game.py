@@ -9,6 +9,10 @@ from scenes.quests_menu import QuestMenuScene
 from scenes.login import LoginScene
 from scenes.quest import QuestScene
 from scenes.stats import StatsMenuScene
+from scenes.fraction import FractionScene
+from scenes.contacts.call_contact import CallContactScene
+from scenes.contacts.pod_contact import PodContactScene
+from scenes.contacts.cyb_contact import CybContactScene
 
 class Game:
     MENU_SCENE_INDEX = 0
@@ -18,6 +22,10 @@ class Game:
     LOGIN_SCENE_INDEX = 4
     QUEST_MENU_SCENE_INDEX = 5
     STATS_SCENE_INDEX = 6
+    CALL_CONTACT_SCENE_INDEX = 7
+    POD_CONTACT_SCENE_INDEX = 8
+    CYB_CONTACT_SCENE_INDEX = 9
+    FRACTION_SCENE_INDEX = 10
 
     def __init__(self, width=800, height=600):
         self.width = width
@@ -28,7 +36,9 @@ class Game:
         self.wall_collision_count = 0
         self.ticks = 0
         self.scenes = [MenuScene(self), FinalScene(self), QuestScene(self),
-                       MapScene(self), LoginScene(self), QuestMenuScene(self), StatsMenuScene(self)]
+                       MapScene(self), LoginScene(self), QuestMenuScene(self), StatsMenuScene(self),
+                       CallContactScene(self), PodContactScene(self), CybContactScene(self),
+                       FractionScene(self)]
         self.current_scene = 0
 
     def create_window(self):

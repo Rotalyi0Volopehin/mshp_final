@@ -27,5 +27,7 @@ class QuestScene(Scene):
         f.write('moral: ' + '0' + '\n')
         f.write('A: ' + '1')
         f.close()
+        f = open('quests/stats', 'w')
+        f.close()
         self.text_bar.__init__(self.game, file_name='text_0', path_to_file='quests/quest_1/', func=self.back_to_menu)
         self.back_to_menu()

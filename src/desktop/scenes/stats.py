@@ -24,8 +24,8 @@ class StatsMenuScene(Scene):
 
     def set_quest_1(self):
         if self.current_points == 0:
-            self.set_next_scene(self.game.QUEST_SCENE_INDEX)
-            f = open('quests/config', 'a')
+            self.set_next_scene(self.game.FRACTION_SCENE_INDEX)
+            f = open('quests/stats', 'a')
             f.write('\n')
             f.write('str :' + str(self.strength.num) + '|' + '\n')
             f.write('cha :' + str(self.charisma.num) + '|' + '\n')
