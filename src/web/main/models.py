@@ -16,8 +16,13 @@ class UserData(models.Model):
     level = models.IntegerField(default=0)
     exp = models.IntegerField(default=0)
     total_exp = models.IntegerField(default=0)
-    reputation = models.IntegerField(default=0)  # репутация [-50; 50]
     extra_info = models.TextField(default='')
+
+    @property
+    def victory_ratio(self) -> float:
+        if self.played_games_count == 0:
+            return 0.0
+        return self.victories_count / self.played_games_count
 
     @property
     def exp_cap(self) -> int:

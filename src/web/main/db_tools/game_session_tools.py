@@ -1,12 +1,15 @@
 import exceptions
 import os
 
+from struct import error as struct_error_type
 from django.utils import timezone
 from main.db_tools.game_session_error_messages import DBGameSessionErrorMessages
 from .game_session_participation_error_messages import DBGameSessionParticipationErrorMessages
+from .user_tools import DBUserTools
 from django.contrib.auth.models import User
 from main.models import UserData, UserParticipation, GameSession, TeamStats
 from io_tools.binary_writer import BinaryWriter
+from io_tools.binary_reader import BinaryReader
 from game_eng.game_model import GameModel
 from game_eng.team_ders.team_a import TeamA
 from game_eng.team_ders.team_b import TeamB
@@ -82,7 +85,6 @@ class DBGameSessionTools:
     @staticmethod
     def start_session_active_phase(session: GameSession):
         """**Перевод игровой сессии в фазу #1**\n
-        Изменяет поле 'GameSession.phase' на 1 и создаёт соответствующие файл сессии и TeamStats.
         Сессия должна находиться в фазе #0!
 
         :raises ArgumentTypeException: |ArgumentTypeException|
@@ -126,7 +128,6 @@ class DBGameSessionTools:
     @staticmethod
     def end_session_active_phase(session: GameSession):
         """**Переход игровой сессии в фазу #2**\n
-        Изменяет поле 'GameSession.phase' на 2 и удаляет соответствующие файл сессии, TeamStats и UserParticipation.
         Сессия должна находиться в фазе #1!
 
         :raises ArgumentTypeException: |ArgumentTypeException|
@@ -138,9 +139,38 @@ class DBGameSessionTools:
             raise exceptions.ArgumentTypeException()
         if session.phase != 1:
             raise exceptions.InvalidOperationException()
+        session.winning_team = DBGameSessionTools.__get_winning_team(session)
         os.remove(session.file_path)
         TeamStats.objects.filter(game_session=session).delete()
-        UserParticipation.objects.filter(game_session=session).delete()
+        participations = UserParticipation.objects.filter(game_session=session)
+        for participation in participations:
+            victory = participation.user_data.team == session.winning_team
+            DBUserTools.do_game_session_end_user_data_change(participation.user_data, victory)
+        participations.delete()
         session.phase = 2
         session.date_stopped = timezone.now()
         session.save()
+
+    @staticmethod
+    def __get_winning_team(session: GameSession) -> int:
+        gs, error = DBGameSessionTools.try_load_session_model(session)
+        if error is not None:
+            for i in range(3):
+                if not gs.teams[i].defeated:
+                    return i
+        return -1
+
+    @staticmethod
+    def try_load_session_model(session: GameSession) -> (GameModel, str):
+        if not isinstance(session, GameSession):
+            raise exceptions.ArgumentTypeException()
+        try:
+            file = open(session.file_path, "br")
+            stream = BinaryReader(data=file.read())
+            gs = GameModel.read(stream)
+            file.close()
+            return gs, None
+        except FileNotFoundError:
+            return None, DBGameSessionParticipationErrorMessages.gs_file_not_found
+        except struct_error_type:
+            return None, DBGameSessionParticipationErrorMessages.incorrect_gs_file_format

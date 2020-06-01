@@ -174,3 +174,23 @@ class DBUserTools:
             user_data.activated = True
             user_data.save()
         return True
+
+    @staticmethod
+    def do_game_session_end_user_data_change(user_data: UserData, victory: bool):
+        """**Инструмент изменения пользовательских данных по причине окончания игровой сессии**\n
+        Увеличивает поле 'UserData.played_games_count' на 1. Если игрок победил,
+        увеличивает поле 'UserData.victories_count' на 1 и даёт игроку level+1 единиц опыта.
+
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :param user_data: Пользовательских данные, которые требуется изменить
+        :type user_data: UserData
+        :param victory: Факт победы игрока
+        :type victory: bool
+        """
+        if not (isinstance(user_data, UserData) and isinstance(victory, bool)):
+            raise exceptions.ArgumentTypeException()
+        user_data.played_games_count += 1
+        if victory:
+            user_data.victories_count += 1
+            user_data.gain_exp(user_data.level + 1)
+        user_data.save()
