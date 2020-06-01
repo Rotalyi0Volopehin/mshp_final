@@ -35,15 +35,17 @@
         </div>
 
         <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-4">
-            <div class="col-lg-3 cyberfont row" style="font-size: 90%;">
-                <div class="form-group right_padding mb-1 row">
-                    <div class="col-sm-3 col-form-label text-right pr-4 cyberfont">Название сессии</div>
-                    <div>{{ form.session_title }}</div>
-                    <button type="submit" class="btn btn-primary col-form-label btn-block mt-1 mb-3">Найти</button>
-                </div>
+            <div class="row cyberfont pt-2" >
+                        <div class="col-lg-3 text-center" style="margin: auto;">Название сессии</div>
+<!--                        <div class="col-sm-4 ">{{ form.session_title }}</div>-->
+                        <div class="col-lg-6 lg-pb-2" style="margin: auto;">
+                            <input class="col-lg-12 " type="text" name="session_title" maxlength="64" minlength="1" id="id_session_title" value="{{ session_title }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary col-lg-2 d-none d-lg-block" style="margin: auto;">Найти</button>
+                        <button type="submit" class="btn btn-primary col-lg-2  d-lg-none" style="margin: 2%;">Найти</button>
             </div>
 
-            <div class="col-lg-9">
+            <div class="pt-5 pb-5">
                 {% if nothing_found %}
                     <div class="text-center alert alert-warning" role="alert">Ничего не найдено</div>
                 {% else %}
