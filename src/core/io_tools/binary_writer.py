@@ -30,7 +30,7 @@ class BinaryWriter(BinaryStream):
         :type data: int
         """
         bin_ = pack('>I', data)
-        self.__base_stream.write(bin_)
+        self.base_stream.write(bin_)
 
     def write_uint(self, data: int):
         """**Запись UnsignedInt32**\n
@@ -40,7 +40,7 @@ class BinaryWriter(BinaryStream):
         :type data: int
         """
         bin_ = pack('>I', data)
-        self.__base_stream.write(bin_)
+        self.base_stream.write(bin_)
 
     def write_byte(self, data: int):
         """**Запись UnsignedInt8**\n
@@ -50,7 +50,7 @@ class BinaryWriter(BinaryStream):
         :type data: int
         """
         bin_ = pack('B', data)
-        self.__base_stream.write(bin_)
+        self.base_stream.write(bin_)
 
     def write_sbyte(self, data: int):
         """**Запись Int8**\n
@@ -60,7 +60,7 @@ class BinaryWriter(BinaryStream):
         :type data: int
         """
         bin_ = pack('b', data)
-        self.__base_stream.write(bin_)
+        self.base_stream.write(bin_)
 
     def write_bool(self, data: bool):
         """**Запись Boolean**\n
@@ -119,7 +119,7 @@ class BinaryWriter(BinaryStream):
         :type data: str
         """
         bin_ = data.encode()
-        self.__base_stream.write(bin_)
+        self.base_stream.write(bin_)
 
     def write_string(self, data: str):
         """**Запись строки**\n
@@ -146,7 +146,7 @@ class BinaryWriter(BinaryStream):
             def method(data):
                 data_type.write(stream=self, obj=data)
             return method
-        if data_type in self.__base_stream:
+        if data_type in self.base_stream:
             return self.__write_methods[data_type]
         raise exceptions.ArgumentTypeException()
 

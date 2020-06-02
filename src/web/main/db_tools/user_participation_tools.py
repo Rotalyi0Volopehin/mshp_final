@@ -49,12 +49,12 @@ class DBUserParticipationTools:
         ok, error = DBGameSessionTools.can_user_take_part_in_session(user, user_data, game_session)
         if not ok:
             return False, error
-        participation = UserParticipation(user_data=user_data, game_session=game_session)
+        participation = UserParticipation(user=user, user_data=user_data, game_session=game_session)
         participation.save()
         return True, None
 
     @staticmethod
-    def search_sessions_for_user_participation(user) -> (set, str):
+    def search_sessions_for_user_participation(user) -> (list, str):
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
         ok, user_data = DBUserTools.is_user_configuration_correct(user, True)
@@ -65,8 +65,8 @@ class DBUserParticipationTools:
         level = user_data.level
         raw = GameSession.objects.filter(user_lowest_level__lte=level, user_highest_level__gte=level, phase=0)
         from .game_session_tools import DBGameSessionTools
-        sessions = set()
+        sessions = list()
         for session in raw:
             if DBGameSessionTools.can_user_take_part_in_session(user, user_data, session)[0]:
-                sessions.add(session)
+                sessions.append(session)
         return sessions, None

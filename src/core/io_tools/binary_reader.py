@@ -33,7 +33,7 @@ class BinaryReader(BinaryStream):
         :return: Int32
         :rtype: int
         """
-        bin_ = self.__base_stream.read(4)
+        bin_ = self.base_stream.read(4)
         return unpack('>i', bin_)[0]
 
     def read_uint(self) -> int:
@@ -43,7 +43,7 @@ class BinaryReader(BinaryStream):
         :return: UnsignedInt32
         :rtype: int
         """
-        bin_ = self.__base_stream.read(4)
+        bin_ = self.base_stream.read(4)
         return unpack('>I', bin_)[0]
 
     def read_byte(self) -> int:
@@ -53,7 +53,7 @@ class BinaryReader(BinaryStream):
         :return: UnsignedInt8
         :rtype: int
         """
-        bin_ = self.__base_stream.read(1)
+        bin_ = self.base_stream.read(1)
         return unpack('B', bin_)[0]
 
     def read_sbyte(self) -> int:
@@ -63,7 +63,7 @@ class BinaryReader(BinaryStream):
         :return: Int8
         :rtype: int
         """
-        bin_ = self.__base_stream.read(1)
+        bin_ = self.base_stream.read(1)
         return unpack('b', bin_)[0]
 
     def read_bool(self) -> bool:
@@ -128,7 +128,7 @@ class BinaryReader(BinaryStream):
         :return: Строка
         :rtype: str
         """
-        bin_ = self.__base_stream.read(length)
+        bin_ = self.base_stream.read(length)
         return bin_.decode()
 
     def read_string(self) -> str:

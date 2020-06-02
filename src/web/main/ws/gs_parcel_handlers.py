@@ -40,7 +40,7 @@ class GSParcelHandlers:
         participation = DBUserParticipationTools.get_user_participation(user)
         if (participation is None) or (participation.game_session.phase != 1):
             return ErrorResponse(ErrorResponseID.INVALID_OPERATION)
-        stream, _ = DBGameSessionTools.try_load_session_model(participation.game_session, True)
+        stream, _ = DBGameSessionTools.try_load_game_model(participation.game_session, True)
         if stream is None:
             return [ResponseID.FAIL]
         return [ResponseID.DATA, stream]

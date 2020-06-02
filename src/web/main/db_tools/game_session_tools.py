@@ -65,7 +65,7 @@ class DBGameSessionTools:
             raise exceptions.ArgumentValueException()
         if game_session.phase != 0:
             return False, DBGameSessionParticipationErrorMessages.enrollment_closed
-        if (user_data.level < game_session.user_lowest_level) or (user_data.level > game_session.user_highest_level):
+        if (user_data.level > game_session.user_highest_level) or (user_data.level < game_session.user_lowest_level):
             return False, DBGameSessionParticipationErrorMessages.invalid_user_level
         if len(UserParticipation.objects.filter(user=correct_user)) > 0:
             return False, DBGameSessionParticipationErrorMessages.user_already_participates
@@ -97,7 +97,7 @@ class DBGameSessionTools:
         if session.phase != 0:
             raise exceptions.InvalidOperationException()
         game_model = DBGameSessionTools.__create_new_game_model(session)
-        DBGameSessionTools.save_session_model(session, game_model)
+        DBGameSessionTools.save_game_model(session, game_model)
         for i in range(3):
             TeamStats(team=i, game_session=session).save()
         session.phase = 1
@@ -145,7 +145,7 @@ class DBGameSessionTools:
 
     @staticmethod
     def __get_winning_team(session: GameSession) -> int:
-        game_model, error = DBGameSessionTools.try_load_session_model(session)
+        game_model, error = DBGameSessionTools.try_load_game_model(session)
         if error is not None:
             for i in range(3):
                 if not game_model.teams[i].defeated:
@@ -153,22 +153,22 @@ class DBGameSessionTools:
         return -1
 
     @staticmethod
-    def try_load_session_model(session: GameSession, return_stream: bool = False) -> (GameModel, str):
+    def try_load_game_model(session: GameSession, return_stream: bool = False) -> (GameModel, str):
         if not isinstance(session, GameSession):
             raise exceptions.ArgumentTypeException()
         try:
             stream = BinaryReader.get_stream_of_file(session.file_path)
             if return_stream:
                 return stream, None
-            gs = GameModel.read(stream)
-            return gs, None
+            game_model = GameModel.read(stream)
+            return game_model, None
         except FileNotFoundError:
             return None, DBGameSessionParticipationErrorMessages.gs_file_not_found
         except struct_error_type:
             return None, DBGameSessionParticipationErrorMessages.incorrect_gs_file_format
 
     @staticmethod
-    def save_session_model(session: GameSession, game_model: GameModel):
+    def save_game_model(session: GameSession, game_model: GameModel):
         if not (isinstance(session, GameSession) and isinstance(game_model, (GameModel, BinaryWriter))):
             raise exceptions.ArgumentTypeException()
         if isinstance(game_model, GameModel):

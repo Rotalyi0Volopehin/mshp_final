@@ -74,7 +74,7 @@ class GameSession(models.Model):
     turn_of_team = models.IntegerField(default=0)  # фракция, совершающая ход
     turn_period = models.IntegerField(default=0)  # период времени в секундах, выделенный под ход одного игрока
     user_lowest_level = models.IntegerField(default=-1)  # нижний предел уровня игроков; -1 -- без предела
-    user_highest_level = models.IntegerField(default=-1)  # верхний предел уровня игроков; -1 -- без предела
+    user_highest_level = models.IntegerField(default=0xFFFF)  # верхний предел уровня игроков; 0xFFFF -- без предела
     user_per_team_count = models.IntegerField(default=2)  # лимит числа представителей для каждой фракции
     money_limit = models.IntegerField(default=255)  # лимит бюджета фракций
     winning_team = models.IntegerField(default=-1)  # победившая фракция; -1 -- неизвестно/ничья

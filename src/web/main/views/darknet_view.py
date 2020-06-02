@@ -8,7 +8,6 @@ from game_eng.market import Market
 
 
 class DarknetCard:
-
     def __init__(self, name, tag, price, count):
         self.name = name
         self.tag = tag
@@ -29,7 +28,10 @@ def darknet_page(request):
         context['error'] = 'В данный момент вам не доступен DarkNet!'
         return render(request, 'pages/darknet.html', context)
     game_session = user_participation.game_session
-    game_model = DBGameSessionTools.try_load_session_model(game_session)
+    game_model, error = DBGameSessionTools.try_load_game_model(game_session)
+    if error is not None:
+        context["error"] = error
+        return render(request, 'pages/darknet.html', context)
     player = DBUserTools.try_get_player_of_user_from_game_model(request.user, game_model)
 
     assortment = game_model.market.assortment
