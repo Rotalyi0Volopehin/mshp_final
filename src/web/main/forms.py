@@ -69,4 +69,4 @@ class LoginForm(forms.Form):
 
 
 class SessionsForm(forms.Form):
-    session_title = CommonFields.get_name_field(False)
+    session_title = CommonFields.get_name_field(False, attrs={"class": "col-lg-12"})

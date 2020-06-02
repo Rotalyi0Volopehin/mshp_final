@@ -1,13 +1,10 @@
 import main.forms as forms
 
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from main.models import UserParticipation, GameSession
 from main.db_tools.user_tools import DBUserTools
 from main.db_tools.user_participation_tools import DBUSerParticipationTools
 from main.db_tools.game_session_tools import DBGameSessionTools
 from main.views.form_view import FormView
-from main.views.menu import get_user_menu_context
 
 
 class SessionsFormPage(FormView):
@@ -17,6 +14,7 @@ class SessionsFormPage(FormView):
     pagename = "Поиск сессии"
     form_class = forms.SessionsForm
     template_name = "pages/sessions.html"
+    login_required = True
     ROWS_PER_PAGE = 8
 
     @staticmethod

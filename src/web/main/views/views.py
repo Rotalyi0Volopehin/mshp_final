@@ -44,16 +44,3 @@ def chat_page(request):
         'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/chat.html', context)
-
-
-def sessions_page(request):
-    context = {
-        'pagename': 'Сессии',
-        'menu': get_menu_context(),
-        'user_menu': get_user_menu_context(request.user),
-
-    }
-    tmp1 = [1, 2, 3, 4]
-    tmp2 = ['a', 'b', 'c', 'd']
-    context['tables'] = [tmp1, tmp2, tmp2, tmp2]  # sample rows
-    return render(request, 'pages/sessions.html', context)
