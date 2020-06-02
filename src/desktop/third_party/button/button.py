@@ -5,6 +5,7 @@ class Button(object):
     """A fairly straight forward button class."""
 
     def __init__(self, rect, color, function, **kwargs):
+        """Инициалзация кнопки (ее цвет, размер, текст, цвет текста, и настройки текста)"""
         self.rect = pg.Rect(rect)
         self.color = color
         self.function = function
@@ -53,17 +54,20 @@ class Button(object):
             self.on_release(event)
 
     def on_click(self, event):
+        """Выполняющая функция при нажатии на ЛКМ"""
         if self.rect.collidepoint(event.pos):
             self.clicked = True
             if not self.call_on_release:
                 self.function()
 
     def on_release(self, event):
+        """Выполняющая функция при отпускании ЛКМ"""
         if self.clicked and self.call_on_release:
             self.function()
         self.clicked = False
 
     def check_hover(self):
+        """Музычка при нажатии"""
         if self.rect.collidepoint(pg.mouse.get_pos()):
             if not self.hovered:
                 self.hovered = True

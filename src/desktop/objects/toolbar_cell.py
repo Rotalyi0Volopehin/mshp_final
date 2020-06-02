@@ -7,9 +7,11 @@ from objects.text import Text
 
 
 class ToolBarCell(DrawObject):
+    """Класс ячейки в тулбаре"""
     ERROR_SHAKING_DURATION = 10
 
     def __init__(self, game, x, y, width, height, num=0, pt_set=None):
+        """Инициалихация ячейки"""
         super().__init__(game)
         self.pt_set = pt_set
         self.x = x
@@ -27,14 +29,17 @@ class ToolBarCell(DrawObject):
         self.error_shaking_ticks = 0
 
     def update_pt_set(self, new_pt_set):
+        """Обновление набора инструмента"""
         self.pt_set = new_pt_set
         self.update_count()
 
     def update_count(self):
+        """Обновление количества ингструменитов"""
         text = "x0" if self.pt_set is None else "x" + str(self.pt_set.count)
         self.count_label.update_text(text)
 
     def process_draw(self):
+        """Процесс рисования"""
         self.num_label.process_draw()
         self.count_label.process_draw()
         if self.error_shaking_ticks == 0:
@@ -48,21 +53,25 @@ class ToolBarCell(DrawObject):
             self.error_shaking_ticks -= 1
 
     def process_event(self, event):
+        """процесс событий"""
         if event.type == pygame.KEYUP:
             self.on_key_up(event)
         if (event.type == pygame.MOUSEBUTTONUP) and (event.button == 1):
             self.on_click(event)
 
     def on_key_up(self, event):
+        """При отпускании кнопки мыши"""
         num = event.key - 48
         if num == self.num:
             self.__try_invoke_function()
 
     def on_click(self, event):
+        """При нажатии на кнопку мыши"""
         if self.rect.collidepoint(event.pos):
             self.__try_invoke_function()
 
     def __try_invoke_function(self):
+        """1"""
         ok = False
         if self.pt_set is not None:
             target_tile = self.game.current_scene.game_vc.grid_vc.target_tile
@@ -75,4 +84,5 @@ class ToolBarCell(DrawObject):
             self.error_shaking_ticks = ToolBarCell.ERROR_SHAKING_DURATION
 
     def set_img(self, img):
+        """Установка картинки"""
         self.img = pygame.image.load(img)

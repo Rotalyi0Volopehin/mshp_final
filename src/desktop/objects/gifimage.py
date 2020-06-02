@@ -1,12 +1,13 @@
 import time
-
 import pygame
 from PIL import Image
 from pygame.locals import *
 
 
 class GIFImage(object):
+    """Класс гифки"""
     def __init__(self, filename, game):
+        """Инициализация гифки"""
         self.filename = filename
         self.image = Image.open(filename)
         self.frames = []
@@ -22,19 +23,24 @@ class GIFImage(object):
         self.reversed = False
 
     def process_logic(self):
+        """Процесс логики"""
         pass
 
     def process_draw(self):
+        """Процесс отрисовки"""
         self.render(self.screen, (125, 70))
 
     def process_event(self, event):
+        """Процесс событий"""
         pass
 
     def get_rect(self):
+        """Возвращает Rect гифки"""
         print(self.image.size)
         return pygame.rect.Rect((0, 0), self.image.size)
 
     def get_frames(self):
+        """Разделение гиф на кадры"""
         image = self.image
 
         pal = image.getpalette()
@@ -110,6 +116,7 @@ class GIFImage(object):
             pass
 
     def render(self, screen, pos):
+        """Рендер гиф"""
         if self.running:
             if time.time() - self.ptime > self.frames[self.cur][1]:
                 if self.reversed:
@@ -124,6 +131,7 @@ class GIFImage(object):
         screen.blit(self.frames[self.cur][0], pos)
 
     def seek(self, num):
+        """Просмотр данного фрейма"""
         self.cur = num
         if self.cur < 0:
             self.cur = 0
@@ -131,6 +139,7 @@ class GIFImage(object):
             self.cur = len(self.frames) - 1
 
     def set_bounds(self, start, end):
+        """установка точки """
         if start < 0:
             start = 0
         if start >= len(self.frames):
@@ -145,38 +154,49 @@ class GIFImage(object):
         self.breakpoint = end
 
     def pause(self):
+        """Пауза гиф"""
         self.running = False
 
     def play(self):
+        """Запуск гиф"""
         self.running = True
 
     def rewind(self):
+        """Поставить заного гиф"""
         self.seek(0)
 
     def fastforward(self):
+        """Быстрый просмотр"""
         self.seek(self.length() - 1)
 
     def get_height(self):
+        """Высота гифки"""
         return self.image.size[1]
 
     def get_width(self):
+        """Ширина гифки"""
         return self.image.size[0]
 
-    def get_size(self):
+    def get_size(self)
+        """Размер гифки"""
         return self.image.size
 
     def length(self):
+        """Длина"""
         return len(self.frames)
 
     def reverse(self):
+        """Реверс"""
         self.reversed = not self.reversed
 
     def reset(self):
+        """Запуск с начала"""
         self.cur = 0
         self.ptime = time.time()
         self.reversed = False
 
     def copy(self):
+        """Копирует гифку"""
         new = GIFImage(self.filename)
         new.running = self.running
         new.breakpoint = self.breakpoint

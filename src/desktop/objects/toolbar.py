@@ -5,10 +5,12 @@ from objects.toolbar_cell import ToolBarCell
 
 
 class ToolBar(DrawObject):
+    """Класс панели быстрого доступа"""
     PTS_KEYS = None
 
     @staticmethod
     def init_pts_keys():
+        """Инициализация способностей"""
         from game_eng.pressure_tool_set_ders.ddos_pts import DDosPTSet
         from game_eng.pressure_tool_set_ders.phishing_pts import PhishingPTSet
         from game_eng.pressure_tool_set_ders.exploit_pts import ExploitPTSet
@@ -29,6 +31,7 @@ class ToolBar(DrawObject):
         }
 
     def __init__(self, game, geometry: tuple):
+        """Инициалихация бара"""
         super().__init__(game)
         self.cells = []
         self.geometry = geometry
@@ -37,6 +40,7 @@ class ToolBar(DrawObject):
         self.update_tools()
 
     def update_tools(self):
+        """Обновление статуса инструмента"""
         self.tools.clear()
         player = self.game.current_scene.game_vc.model.current_player
         for pts_type, pt_set in player.pressure_tools.items():
@@ -45,6 +49,7 @@ class ToolBar(DrawObject):
         self.__update_cell_tools()
 
     def __init_cells(self):
+        """Инициализация ячеек"""
         for i in range(10):
             num = (i + 1) % 10
             x = self.geometry[0] + i * 74
@@ -52,6 +57,7 @@ class ToolBar(DrawObject):
             self.cells.append(ToolBarCell(self.game, x, y, 64, 64, num))
 
     def __update_cell_tools(self):
+        """Обновление инструментов в ячейке"""
         for i in range(10):
             num = (i + 1) % 10
             key = "K_" + str(num)
@@ -59,6 +65,7 @@ class ToolBar(DrawObject):
             self.cells[i].update_pt_set(tool)
 
     def process_event(self, event):
+        """процесс событий"""
         if event.type == pygame.KEYUP:
             num = event.key - 48
             if num == 0:
@@ -72,6 +79,7 @@ class ToolBar(DrawObject):
                 item.process_event(event)
 
     def process_draw(self):
+        """процесс рисования"""
         for item in self.cells:
             item.process_draw()
 

@@ -28,11 +28,11 @@ class TextInput:
             text_color=(123, 231, 0),
             cursor_color=(0, 123, 132),
             repeat_keys_initial_ms=400,
-            repeat_keys_interval_ms=35,
-            max_string_length=-1):
+            repeat_keys_interval_ms=35,):
         """
         :param initial_string: Initial text to be displayed
-        :param font_family: name or list of names for font (see pygame.font.match_font for precise format)
+        :param font_family: name or list of names for
+        font (see pygame.font.match_font for precise format)
         :param font_size:  Size of font in pixels
         :param antialias: Determines if antialias is applied to font (uses more processing power)
         :param text_color: Color of text (duh)
@@ -74,6 +74,7 @@ class TextInput:
         self.clock = pygame.time.Clock()
 
     def update(self, event):
+        """Основная фунция класса, отвечающая за процесс событий, процесс отрисовки"""
         #for event in events:
         if event.type == pygame.KEYDOWN:
             self.cursor_visible = True  # So the user sees where he writes
@@ -123,7 +124,8 @@ class TextInput:
                 self.cursor_position += len(event.unicode)  # Some are empty, e.g. K_UP
 
         elif event.type == pl.KEYUP:
-            # *** Because KEYUP doesn't include event.unicode, this dict is stored in such a weird way
+            # *** Because KEYUP doesn't include event.unicode,
+            # this dict is stored in such a weird way
             if event.key in self.keyrepeat_counters:
                 del self.keyrepeat_counters[event.key]
 
@@ -139,7 +141,9 @@ class TextInput:
                 )
 
                 event_key, event_unicode = key, self.keyrepeat_counters[key][1]
-                pygame.event.post(pygame.event.Event(pl.KEYDOWN, key=event_key, unicode=event_unicode))
+                pygame.event.post(pygame.event.Event(pl.KEYDOWN,
+                                                     key=event_key,
+                                                     unicode=event_unicode))
 
         # Re-render text surface:
         self.surface = self.font_object.render(self.input_string, self.antialias, self.text_color)
@@ -161,46 +165,26 @@ class TextInput:
         return False
 
     def get_surface(self):
+        """Возвращает поле"""
         return self.surface
 
     def get_text(self):
+        """Возвращает текст"""
         return self.input_string
 
     def get_cursor_position(self):
+        """Возвращает позицию курсора"""
         return self.cursor_position
 
     def set_text_color(self, color):
+        """Устанавливает цвет текста"""
         self.text_color = color
 
     def set_cursor_color(self, color):
+        """Устанавливает цвет курсора"""
         self.cursor_surface.fill(color)
 
     def clear_text(self):
+        '''Стирает весь текст'''
         self.input_string = ""
         self.cursor_position = 0
-
-
-if __name__ == "__main__":
-    pygame.init()
-
-    # Create TextInput-object
-    textinput = TextInput()
-
-    screen = pygame.display.set_mode((1000, 200))
-    clock = pygame.time.Clock()
-
-    while True:
-        screen.fill((225, 225, 225))
-
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                exit()
-
-        # Feed it with events every frame
-        textinput.update(events)
-        # Blit its surface onto the screen
-        screen.blit(textinput.get_surface(), (10, 10))
-
-        pygame.display.update()
-        clock.tick(30)

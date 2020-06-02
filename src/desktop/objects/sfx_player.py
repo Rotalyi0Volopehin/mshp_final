@@ -4,11 +4,13 @@ import sys
 
 
 class SoundPlayer:
+    """Класс звука"""
     sounds = { }
     volume = 0.5
 
     @staticmethod
     def load():
+        """Загрузка мелодии"""
         SoundPlayer.sounds = { }
         if sys.platform == "linux":
             slash = '/'
@@ -20,6 +22,7 @@ class SoundPlayer:
 
     @staticmethod
     def play_sound(name):
+        """Воспроизведение мелолдии"""
         if SoundPlayer.volume > 0.01:
             sound = SoundPlayer.sounds[name]
             sound.set_volume(SoundPlayer.volume)

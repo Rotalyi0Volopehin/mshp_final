@@ -25,7 +25,8 @@ class GameVC(DrawObject):
     def process_logic(self):
         self.grid_vc.process_logic()
         if (self.turn_time_elapsed >= self.model.player_turn_period) or self.__end_turn_flag:
-            self.__next_turn()  # TODO: переписать для сетевой игры (потребуется асинхронная синхронизация)
+            self.__next_turn()  # TODO: переписать
+            # для сетевой игры (потребуется асинхронная синхронизация)
             self.__turn_start_time = time.time()
             self.__end_turn_flag = False
 

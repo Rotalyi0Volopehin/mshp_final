@@ -1,11 +1,11 @@
 import pygame
-
 from pygame_textinput import TextInput as TInput
 from constants import Color
 from objects.base import DrawObject
 
 
 class TextInput(DrawObject):
+    """Класс строки ввода"""
     BUTTON_STYLE = {
         "hover_color": Color.BLUE,
         "font_color": Color.RED,
@@ -15,6 +15,7 @@ class TextInput(DrawObject):
     }
 
     def __init__(self, game, antialias, x, y):
+        """Инициализация"""
         super().__init__(game)
         self.x = x
         self.y = y
@@ -24,9 +25,11 @@ class TextInput(DrawObject):
         self.down_keys = dict()
 
     def set_antialias(self, antialias):
+        """Установка активности поля ввода"""
         self.internal_txtinput.antialias = antialias
 
     def process_event(self, event):
+        """Процесс событий"""
         if event.type == pygame.KEYDOWN:
             if self.internal_txtinput.antialias:
                 self.handle_down_key(event)
@@ -41,13 +44,16 @@ class TextInput(DrawObject):
             self.internal_txtinput.update(event)
 
     def process_draw(self):
+        """Процесс рислоавния"""
         self.game.screen.blit(self.internal_txtinput.get_surface(), self.pos)
 
     def update_internal_txtinput(self):
+        """Обновление текста"""
         mock_event = pygame.event.Event(pygame.WINDOWEVENT, {})
         self.internal_txtinput.update(mock_event)
 
     def handle_down_key(self, event):
+        """Обработка нажатия кнопки"""
         ucode = event.unicode
         text = self.internal_txtinput.input_string
         cur_pos = self.internal_txtinput.cursor_position

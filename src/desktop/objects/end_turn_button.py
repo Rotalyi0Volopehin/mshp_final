@@ -7,11 +7,13 @@ from geometry_tools import triangle_contains_point
 
 
 class EndTurnButton(DrawObject):
+    """Класс кнопки завершения хода"""
     SPRITES = list()
     SIZE = 64
 
     @staticmethod
     def render_sprites():
+    """Обновление текстуры"""
         from game_vc.game_vc import GameVC
         for i in range(3):
             color = GameVC.TEAM_COLORS[i]
@@ -20,6 +22,7 @@ class EndTurnButton(DrawObject):
 
     @staticmethod
     def __render_sprite(color) -> pygame.Surface:
+        """Обновдление текстуры"""
         size = EndTurnButton.SIZE
         sprite = pygame.Surface((size, size))
         sprite.set_colorkey(Color.BLACK)
@@ -30,6 +33,7 @@ class EndTurnButton(DrawObject):
         return sprite
 
     def __init__(self, game, pos_x, pos_y):
+        """Инициализация класса"""
         super().__init__(game)
         self.pos_x = pos_x
         self.pos_y = pos_y
@@ -45,18 +49,21 @@ class EndTurnButton(DrawObject):
         ]
 
     def update_time_left(self):
+        """Обновление оставшегося времени"""
         time_left = int(self.game.current_scene.game_vc.turn_time_left)
         if self.time_left != time_left:
             self.time_left = time_left
             self.time_left_label.update_text(str(time_left))
 
     def update_team(self):
+        """Обновление команды"""
         team = self.game.current_scene.game_vc.model.current_team
         if self.sprite_team != team:
             self.sprite_team = team
             self.sprite = EndTurnButton.SPRITES[team.index]
 
     def process_draw(self):
+        """процесс отрисовки"""
         if not hasattr(self.game.current_scene, "game_vc"):
             return
         self.update_time_left()
@@ -68,6 +75,7 @@ class EndTurnButton(DrawObject):
         self.time_left_label.process_draw()
 
     def process_event(self, event):
+        """процесс событий"""""
         if (event.type == pygame.MOUSEBUTTONUP) and (event.button == 1) and \
                 triangle_contains_point(*self.points, event.pos[0], event.pos[1]):
             self.game.current_scene.game_vc.end_turn()

@@ -6,14 +6,17 @@ from constants import Color
 
 
 class TextAlignment(Enum):
+    """Класс расположение текста"""
     CENTER = "center"
     LEFT = "topleft"
     RIGHT = "topright"
 
 
 class Text(DrawObject):
+    """Класс label"""
     def __init__(self, game, font_name="Consolas", font_size=35, is_bold=True, is_italic=False, text='Define me!',
                  color=Color.WHITE, x=100, y=100, alignment: TextAlignment = TextAlignment.CENTER):
+        """Иниуиализация"""
         super().__init__(game)
         self.font_name = font_name
         self.font_size = font_size
@@ -27,17 +30,21 @@ class Text(DrawObject):
         self.update_text(text)
 
     def update_text(self, text):
+        """Обновление содержания текста"""
         self.text = str(text)
         self.text_surface = self.font.render(self.text, True, self.color)
 
     @property
     def width(self) -> int:
+        """Ширина label"""
         return self.text_surface.get_width()
 
     @property
     def height(self) -> int:
+        """Высота label"""
         return self.text_surface.get_height()
 
     def process_draw(self):
+        """Процесс рисования"""
         params = {self.alignment.value: (self.x, self.y)}
         self.game.screen.blit(self.text_surface, self.text_surface.get_rect(**params))

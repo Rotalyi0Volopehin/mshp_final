@@ -9,7 +9,9 @@ from objects.grid_tile_info_plate import GridTileInfoPlate
 
 
 class MapScene(Scene):
+    """Описание класса игры, карты"""
     def create_objects(self):
+        """Создание объектов сцены карты"""
         width = self.game.width
         height = self.game.height
         button_back = Btn(self.game, (width - 120, 5, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
@@ -28,6 +30,7 @@ class MapScene(Scene):
         self.__init_controls()
 
     def __init_controls(self):
+        """Написание инструкции управления"""
         controls = [
             "ЛКМ - выделение",
             "зажатие ЛКМ - выделение соседа",

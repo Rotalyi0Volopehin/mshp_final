@@ -6,6 +6,7 @@ from constants import Color
 
 
 class CurrentPlayerPlate(DrawObject):
+    """Класс информации об данном игроке"""
     def __init__(self, game, right_border, pos_y):
         super().__init__(game)
         self.right_border = right_border
@@ -16,6 +17,7 @@ class CurrentPlayerPlate(DrawObject):
         self.player_label = Text(game, font_size=20, color=Color.WHITE, y=pos_y + 32)
 
     def update_team_label(self):
+        """Обновление поля для команды"""
         team = self.game.current_scene.game_vc.model.current_team
         if self.team != team:
             self.team = team
@@ -23,6 +25,7 @@ class CurrentPlayerPlate(DrawObject):
             self.team_label.x = self.right_border - (self.team_label.width >> 1) - 20
 
     def update_player_label(self):
+        """Обновление поля для игрока"""
         player = self.game.current_scene.game_vc.model.current_player
         if self.player != player:
             self.player = player
@@ -30,6 +33,7 @@ class CurrentPlayerPlate(DrawObject):
             self.player_label.x = self.right_border - (self.player_label.width >> 1) - 20
 
     def process_draw(self):
+        """Процесс рисования"""
         if not hasattr(self.game.current_scene, "game_vc"):
             return
         self.update_team_label()

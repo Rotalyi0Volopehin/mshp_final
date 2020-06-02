@@ -3,6 +3,7 @@ from pygame.locals import *
 import time
 from PIL import Image
 
+
 class GIFImage(object):
     def __init__(self, filename, game):
         self.filename = filename
@@ -23,7 +24,7 @@ class GIFImage(object):
         pass
 
     def process_draw(self):
-        self.render(self.screen, (125,70))
+        self.render(self.screen, (125, 70))
 
     def process_event(self, event):
         pass
@@ -118,9 +119,6 @@ class GIFImage(object):
                     self.cur += 1
                     if self.cur > self.breakpoint:
                         self.cur = self.startpoint
-
-
-
 
         screen.blit(self.frames[self.cur][0], pos)
 
