@@ -7,7 +7,7 @@ from .user_tools import DBUserTools
 from .user_error_messages import DBUserErrorMessages
 
 
-class DBUSerParticipationTools:
+class DBUserParticipationTools:
     @staticmethod
     def get_user_participation(user: User) -> UserParticipation:
         if not isinstance(user, User):
@@ -26,7 +26,7 @@ class DBUSerParticipationTools:
         """
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
-        participation = DBUSerParticipationTools.get_user_participation(user)
+        participation = DBUserParticipationTools.get_user_participation(user)
         if participation is None:
             status_id = ParticipationStatusID.NO_PARTICIPATION
         else:

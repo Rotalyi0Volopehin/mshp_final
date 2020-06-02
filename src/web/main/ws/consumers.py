@@ -67,10 +67,12 @@ class WebsocketRequestHandler(WebsocketConsumer):
         if exception is not None:
             raise exception
 
-    def send_binary_response(self, response_id, stream):
+    def send_binary_response(self, response_id, stream: BinaryWriter):
+        if isinstance(stream, BinaryReader):
+            stream = BinaryWriter(stream.base_stream)
+        stream.seek(len(stream))
         stream.write_byte(response_id.value)
-        stream.seek(0)
-        response = stream.base_stream.read()
+        response = stream.to_bytes()
         self.send(bytes_data=response)
 
     def send_json_response(self, response_parcel):

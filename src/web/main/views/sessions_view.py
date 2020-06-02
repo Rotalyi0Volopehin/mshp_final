@@ -2,7 +2,7 @@ import main.forms as forms
 
 from main.models import UserParticipation, GameSession
 from main.db_tools.user_tools import DBUserTools
-from main.db_tools.user_participation_tools import DBUSerParticipationTools
+from main.db_tools.user_participation_tools import DBUserParticipationTools
 from main.db_tools.game_session_tools import DBGameSessionTools
 from main.views.form_view import FormView
 
@@ -29,7 +29,7 @@ class SessionsFormPage(FormView):
         """
         page_ind = int(request.GET.get("page", "0"))
         session_offset = page_ind * SessionsFormPage.ROWS_PER_PAGE
-        sessions, error = DBUSerParticipationTools.search_sessions_for_user_participation(request.user)
+        sessions, error = DBUserParticipationTools.search_sessions_for_user_participation(request.user)
         if error is not None:
             raise Exception(error)
         page_count = len(sessions) // SessionsFormPage.ROWS_PER_PAGE

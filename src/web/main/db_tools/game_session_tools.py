@@ -96,8 +96,8 @@ class DBGameSessionTools:
             raise exceptions.ArgumentTypeException()
         if session.phase != 0:
             raise exceptions.InvalidOperationException()
-        gs = DBGameSessionTools.__create_new_game_session(session)
-        DBGameSessionTools.save_session_model(session, gs)
+        game_model = DBGameSessionTools.__create_new_game_model(session)
+        DBGameSessionTools.save_session_model(session, game_model)
         for i in range(3):
             TeamStats(team=i, game_session=session).save()
         session.phase = 1
@@ -105,7 +105,7 @@ class DBGameSessionTools:
         session.save()
 
     @staticmethod
-    def __create_new_game_session(session: GameSession) -> GameModel:
+    def __create_new_game_model(session: GameSession) -> GameModel:
         game = GameModel(session.title, session.turn_period, session.money_limit, 16, 16)
         TeamA(game)
         TeamB(game)
@@ -145,10 +145,10 @@ class DBGameSessionTools:
 
     @staticmethod
     def __get_winning_team(session: GameSession) -> int:
-        gs, error = DBGameSessionTools.try_load_session_model(session)
+        game_model, error = DBGameSessionTools.try_load_session_model(session)
         if error is not None:
             for i in range(3):
-                if not gs.teams[i].defeated:
+                if not game_model.teams[i].defeated:
                     return i
         return -1
 
