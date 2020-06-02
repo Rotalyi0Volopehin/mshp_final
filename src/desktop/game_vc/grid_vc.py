@@ -16,7 +16,7 @@ class GridVC(DrawObject):
         self.__add_vc_to_tile_matrix()
 
     def __add_vc_to_tile_matrix(self):
-        for tile in self.model.foreach():
+        for tile in self.model.foreach:
             GridTileVC(tile, self.game, GridTileVCStatus.DEFAULT)
 
     def get_tile_by_pos_on_screen(self, pos_x, pos_y):
@@ -37,11 +37,11 @@ class GridVC(DrawObject):
             tile.view.status = GridTileVCStatus.TARGET
 
     def process_draw(self):
-        for tile in self.model.foreach():
+        for tile in self.model.foreach:
             tile.view.process_draw()
 
     def process_event(self, event):
-        for tile in self.model.foreach():
+        for tile in self.model.foreach:
             tile.controller.process_event(event)
         if (event.type == pygame.MOUSEBUTTONDOWN) and (4 <= event.button <= 5):
             self.__try_move_power(4 if event.button == 4 else -4)

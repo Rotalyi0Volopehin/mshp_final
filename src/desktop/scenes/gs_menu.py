@@ -5,9 +5,9 @@ from game_vc.game_vc import GameVC
 
 class GSMenuScene(Scene):
     def __init__(self, game, gs=None):
-        super().__init__(game)
         self.gs = gs
         self.game_vc = None
+        super().__init__(game)
 
     def create_objects(self):
         button_exit = Btn(self.game, (350, 305, 100, 40), text='Выход', function=self.game.exit)
