@@ -17,7 +17,7 @@ class FractionPages(View):
             if DBUserTools.try_get_user_data(user) != None and not user.is_superuser:
                 user_data, error = DBUserTools.try_get_user_data(user)
                 if user_data.team == team:
-                    members[user.username] = user_data.reputation
+                    members[user.username] = user_data.victories_count
         members = OrderedDict(sorted(members.items(), reverse=True, key=lambda value: value[1])[:10])
         return members
 

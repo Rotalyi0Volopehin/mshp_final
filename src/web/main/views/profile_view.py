@@ -96,7 +96,6 @@ class ProfileFormPage(FormView):
             context["team"] = 'Зов Свободы'
         context["exp"] = user_data.exp
         context["level"] = user_data.level
-        context["reputation"] = user_data.reputation
         return True, user_data if return_user_data else True
 
     @staticmethod
