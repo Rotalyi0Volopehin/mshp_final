@@ -13,6 +13,15 @@ class BinaryWriter(BinaryStream):
             str: self.write_string,
         }
 
+    def write_to_file(self, file_path: str):
+        """**Запись потока в файл**\n
+        :param file_path: Путь до файла, в который требуется записать поток
+        :type file_path: str
+        """
+        file = open(file_path, "bw")
+        file.write(self.base_stream.getbuffer())
+        file.close()
+
     def write_int(self, data: int):
         """**Запись Int32**\n
         Формат данных : [data<32bit>]

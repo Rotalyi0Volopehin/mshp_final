@@ -97,9 +97,7 @@ class DBGameSessionTools:
         if session.phase != 0:
             raise exceptions.InvalidOperationException()
         gs = DBGameSessionTools.__create_new_game_session(session)
-        stream = BinaryWriter()
-        GameModel.write(stream, gs)
-        DBGameSessionTools.__write_stream_into_file(session.file_path, stream)
+        DBGameSessionTools.save_session_model(session, gs)
         for i in range(3):
             TeamStats(team=i, game_session=session).save()
         session.phase = 1
@@ -118,12 +116,6 @@ class DBGameSessionTools:
             team = game.teams[user_data.team]
             Player(user_data.user.id, user_data.user.username, team)
         return game
-
-    @staticmethod
-    def __write_stream_into_file(file_path: str, stream: BinaryWriter):
-        file = open(file_path, 'w')
-        file.write(stream.base_stream.getbuffer())
-        file.close()
 
     @staticmethod
     def end_session_active_phase(session: GameSession):
@@ -161,16 +153,27 @@ class DBGameSessionTools:
         return -1
 
     @staticmethod
-    def try_load_session_model(session: GameSession) -> (GameModel, str):
+    def try_load_session_model(session: GameSession, return_stream: bool = False) -> (GameModel, str):
         if not isinstance(session, GameSession):
             raise exceptions.ArgumentTypeException()
         try:
-            file = open(session.file_path, "br")
-            stream = BinaryReader(data=file.read())
+            stream = BinaryReader.get_stream_of_file(session.file_path)
+            if return_stream:
+                return stream, None
             gs = GameModel.read(stream)
-            file.close()
             return gs, None
         except FileNotFoundError:
             return None, DBGameSessionParticipationErrorMessages.gs_file_not_found
         except struct_error_type:
             return None, DBGameSessionParticipationErrorMessages.incorrect_gs_file_format
+
+    @staticmethod
+    def save_session_model(session: GameSession, game_model: GameModel):
+        if not (isinstance(session, GameSession) and isinstance(game_model, (GameModel, BinaryWriter))):
+            raise exceptions.ArgumentTypeException()
+        if isinstance(game_model, GameModel):
+            stream = BinaryWriter()
+            GameModel.write(stream, game_model)
+        else:
+            stream = game_model
+        stream.write_to_file(session.file_path)

@@ -13,6 +13,19 @@ class BinaryReader(BinaryStream):
             str: self.read_string,
         }
 
+    @staticmethod
+    def get_stream_of_file(file_path: str):
+        """**Получение потока файла**\n
+        :param file_path: Путь до файла, поток которого требуется получить
+        :type file_path: str
+        :return: Поток
+        :rtype: BinaryReader
+        """
+        file = open(file_path, "br")
+        stream = BinaryReader(data=file.read())
+        file.close()
+        return stream
+
     def read_int(self) -> int:
         """**Чтение Int32**\n
         Формат данных : [data<32bit>]

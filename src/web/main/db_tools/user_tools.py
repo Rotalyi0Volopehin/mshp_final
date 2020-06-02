@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.encoding import force_bytes
 from main.db_tools.user_error_messages import DBUserErrorMessages
 from main.models import UserData
+from game_eng.game_model import GameModel
 # vvv для системы верификации vvv
 from django.utils.http import urlsafe_base64_encode
 from main.db_tools.tokens import account_activation_token
@@ -194,3 +195,13 @@ class DBUserTools:
             user_data.victories_count += 1
             user_data.gain_exp(user_data.level + 1)
         user_data.save()
+
+    @staticmethod
+    def try_get_player_of_user_from_game_model(user: User, game_model: GameModel):
+        if not (isinstance(user, User) and isinstance(game_model, GameModel)):
+            raise exceptions.ArgumentTypeException()
+        for team in game_model.teams:
+            for player in team.players:
+                if player.id == user.id:
+                    return player
+        return None
