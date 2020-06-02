@@ -12,12 +12,13 @@ def fix_project_roots(*root_names):
 
 
 try:
-    import exceptions
+    from net_connection.core_classes import CoreClasses
 except:
     print("Direct import failed. Patching . . . ", end='')
     fix_project_roots("core")
-    import exceptions
+    from net_connection.core_classes import CoreClasses
     print("SUCCESS")
+del CoreClasses
 
 
 def main():
