@@ -18,9 +18,15 @@
 
   }
 
-  #qwe {
-  transform:scale(1.3);
-  opacity:0.9;
+  #qwe1 {
+  transform:scale(3);
+  opacity:1;
+  cursor:pointer;
+  }
+
+  #qwe2 {
+  transform:scale(3);
+  opacity:1;
   cursor:pointer;
   }
 
@@ -53,13 +59,21 @@
                         </div>
                         <div class="row">
                             <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_min_level.label }}</p>
-                            <div class="col form-group cyberfont">{{ form.user_min_level }}</div>
-
+                            <div class="col form-group cyberfont">
+                                <div class="row-2">
+                                    {{ form.user_min_level }}
+                                    <input class='ml-3' type="checkbox" id="qwe1" autocomplete="on"> вкл ограничение
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_max_level.label }}</p>
-                            <div class="col form-group cyberfont">{{ form.user_max_level }}</div>
-
+                            <div class="col form-group cyberfont">
+                                <div class="row-2">
+                                    {{ form.user_max_level }}
+                                    <input class='ml-3' type="checkbox" id="qwe2" autocomplete="on"> вкл ограничение
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.money_limit.label }}</p>
@@ -72,10 +86,13 @@
             </form>
         </div>
         <div class="col" align="center">
-            <button type="submit" class="btn btn-dark cyberfont" onclick="check_pw()" id="reg_button">
+            <button type="submit" class="btn btn-dark cyberfont" >
                 Создать сессию
             </button>
         </div>
+        {% for error in form.non_field_errors %}
+        <p class="help in_danger">{{ error }}</p>
+        {% endfor %}
     </div>
 
 

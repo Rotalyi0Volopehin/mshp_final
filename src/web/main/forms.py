@@ -57,17 +57,18 @@ class CreateSessionForm(forms.Form):
     turn_period = forms.IntegerField(label='Время хода (секунды)', min_value=1, required=True,
                                      widget=forms.NumberInput(attrs={"class": "form-control"}))
     user_min_level = forms.IntegerField(label='Минимальный уровень участников', min_value=0,
-                                           required=True, widget=forms.NumberInput(attrs={"class": "form-control"}))
+                                           required=True, widget=forms.NumberInput(attrs={"class": "input form-control"}))
     user_max_level = forms.IntegerField(label='Максимальный уровень участников',min_value=0,
-                                            required=True, widget=forms.NumberInput(attrs={"class": "form-control"}))
-    money_limit = forms.IntegerField(label='Лимит бюджета',min_value=-1, max_value=-1,
+                                            required=True, widget=forms.NumberInput(attrs={"class": "input form-control"}))
+    money_limit = forms.IntegerField(label='Лимит бюджета',min_value=0,
                                             required=True, widget=forms.NumberInput(attrs={"class": "form-control"}))
 
-    def check_highest_lower_level(self):
-        max_lvl = self.cleaned_data["user_max_level"]
-        min_lvl = self.cleaned_data["user_min_level"]
+    def clean(self):
+        cleaned_data = super().clean()
+        max_lvl = cleaned_data.get["user_max_level"]
+        min_lvl = cleaned_data.get["user_min_level"]
         if not ((max_lvl and min_lvl) or (min_lvl <= max_lvl)):
-            raise forms.ValidationError("Выберите другой минимальный или максимальный уровень игроков!")
+            raise forms.ValidationError("Недопустимые значения")
 
 
 class ProfileForm(forms.Form):
