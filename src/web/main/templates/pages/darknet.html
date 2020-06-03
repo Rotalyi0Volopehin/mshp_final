@@ -46,6 +46,10 @@
 
     <h3 class="text-center">Деньги фракции: <span class="badge badge-secondary">{{ fraction_money }}</span></h3>
 
+    {% if warning %}
+        <div class="text-center alert alert-danger mt-5" role="alert">{{ warning }}</div>
+    {% endif %}
+
     <div class="row mt-5">
         <div class="btn-group" role="group" aria-label="Basic example" style="width: 100%;">
             <button type="button" class="btn btn-secondary" onclick="button_all();">Все</button>

@@ -57,7 +57,9 @@ def darknet_page(request):
                 slot = assortment[tool_type]
                 tool_tag = slot.pt_set.__module__.split('.')[-1]
                 if buy_product == tool_tag:
-                    market.try_buy(player, tool_type, 1)
+                    res = market.try_buy(player, tool_type, 1)
+                    if not res:
+                        context['warning'] = 'У вас недостаточно денег для покупки!'
                     break
 
     return render(request, 'pages/darknet.html', context)
