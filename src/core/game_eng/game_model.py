@@ -50,7 +50,7 @@ class GameModel:
             self.grid = GridModel.read(stream)
             self.market = Market.read(stream)
             for _ in range(3):
-                Team.read(stream)
+                Team.read(stream, self)
 
     @staticmethod
     def read(stream: BinaryReader):
