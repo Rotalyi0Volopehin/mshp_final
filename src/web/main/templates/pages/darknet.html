@@ -79,7 +79,8 @@
                             <form method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="buy_product" value="{{ card.tag }}">
-                                <button type="submit" class="btn btn-primary mt-3 float-right" style="width: 100%;">
+                                <button type="submit" class="btn btn-primary mt-3 float-right" style="width: 100%;"
+                                    {% if card.availability is False %}disabled{% endif %}>
                                     Купить (-{{ card.price }} валюты)
                                 </button>
                             </form>
