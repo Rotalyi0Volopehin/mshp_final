@@ -7,11 +7,13 @@ from game_eng.grid_tile_ders.service_tile import ServiceGridTile
 from game_eng.grid_tile_ders.enhanced_tile_plus import EnhancedGridTilePlus
 from game_eng.grid_tile_ders.defense_tile_plus import DefenseGridTilePlus
 from game_eng.grid_tile_ders.service_tile_plus import ServiceGridTilePlus
+from game_eng.grid_tile_ders.capital_tile import CapitalGridTile
 
 
 class GridTileUpgradeTree:
     tile_upgrade_bases = {
         GridTile: None,
+        CapitalGridTile: None,
         EnhancedGridTile: GridTile,
         DefenseGridTile: EnhancedGridTile,
         ServiceGridTile: EnhancedGridTile,
@@ -33,7 +35,7 @@ class GridTileUpgradeTree:
         return upgrades
 
     @staticmethod
-    def upgrade_tile(tile: GridTile, upgrade: type):
+    def upgrade_tile(tile: GridTile, upgrade: type) -> GridTile:
         if not (isinstance(tile, GridTile) and isinstance(upgrade, type)):
             raise exceptions.ArgumentTypeException()
         if not issubclass(upgrade, GridTile):
@@ -41,5 +43,16 @@ class GridTileUpgradeTree:
         if (tile.team is None) or (tile.team.money < upgrade.get_upgrade_price()) or \
                 (GridTileUpgradeTree.tile_upgrade_bases[upgrade] != type(tile)):
             raise exceptions.InvalidOperationException()
-        tile.upgrade(upgrade)
         tile.team.money -= upgrade.get_upgrade_price()
+        return tile.upgrade(upgrade)
+
+    @staticmethod
+    def downgrade_tile(tile: GridTile, cashback: bool = False) -> GridTile:
+        if not isinstance(tile, GridTile):
+            raise exceptions.ArgumentTypeException()
+        base = GridTileUpgradeTree.tile_upgrade_bases[type(tile)]
+        if base is None:
+            raise exceptions.InvalidOperationException()
+        if cashback:
+            tile.team.earn_money(tile.get_upgrade_price())
+        return tile.upgrade(base)

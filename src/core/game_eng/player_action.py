@@ -21,15 +21,21 @@ class PlayerAction:
         self.target = target
 
     @staticmethod
+    def _read_tile(stream):
+        loc_x, loc_y = stream.read_byte_point()
+        return LoadingDump.game_session.grid.tiles[loc_x][loc_y]
+
+    @staticmethod
     def read(stream: BinaryReader):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
         action_type = CoreClasses.read_class(stream)
         uid = stream.read_uint()
         player = LoadingDump.get_player_by_id(uid)
-        target_loc_x, target_loc_y = stream.read_byte_point()
-        target = LoadingDump.game_session.grid.tiles[target_loc_x][target_loc_y]
+        target = PlayerAction._read_tile(stream)
         obj = action_type(player, target)
+        if hasattr(action_type, "read_ext"):
+            action_type.read_ext(stream, obj)
         return obj
 
     @staticmethod
@@ -40,6 +46,8 @@ class PlayerAction:
         stream.write_uint(obj.player.id)
         target_loc = (obj.target.loc_x, obj.target.loc_y)
         stream.write_byte_point(target_loc)
+        if hasattr(type(obj), "write_ext"):
+            type(obj).write_ext(stream, obj)
 
     def try_do(self) -> bool:
         """**Попытка совершить действие**\n

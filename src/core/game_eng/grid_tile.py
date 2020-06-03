@@ -206,6 +206,7 @@ class GridTile:
         new_tile = tile_type(self.grid, self.loc_x, self.loc_y, self.team)
         new_tile.gain_power(self.power)
         self.grid.tiles[self.loc_x][self.loc_y] = new_tile
+        return new_tile
 
     def take_damage(self, value):
         self.power = max(self.power - value, 0)
