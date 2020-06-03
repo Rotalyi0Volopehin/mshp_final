@@ -1,6 +1,11 @@
+from django.contrib import auth
+
+from main import forms
 from main.db_tools.cad import CAD
 from django.http import HttpResponse
 
+from main.db_tools.user_tools import DBUserTools
+from main.views.form_view import FormView
 from main.views.menu import get_menu_context, get_user_menu_context
 from django.shortcuts import render
 
@@ -44,3 +49,17 @@ def chat_page(request):
         'user_menu': get_user_menu_context(request.user),
     }
     return render(request, 'pages/chat.html', context)
+
+
+class LoginFormPage(FormView):
+
+    pagename = "Вход"
+    form_class = forms.LoginForm
+    template_name = "registration/login.html"
+
+    def LoginView(self, request, form):
+        username = form.data["login"]
+        password = form.data["password"]
+        ok = DBUserTools.check_user_existence(username, password)
+        if ok:
+            auth.login(username, password)

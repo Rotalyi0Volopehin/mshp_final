@@ -35,18 +35,7 @@ urlpatterns = [
     path('fraction0/', fractions_view.FractionPages.fraction0_page, name='fraction0'),
     path('fraction1/', fractions_view.FractionPages.fraction1_page, name='fraction1'),
     path('fraction2/', fractions_view.FractionPages.fraction2_page, name='fraction2'),
-
-    path(
-        'login/',
-        auth_views.LoginView.as_view(
-            extra_context={
-                'menu': get_menu_context(),
-                'user_menu': get_user_menu_context(AnonymousUser()),
-                'pagename': 'Авторизация',
-            }
-        ),
-        name='login'
-    ),
+    path('login/', views.LoginFormPage.as_view(), name='login'),
     path('registration/', registration_view.RegistrationFormPage.as_view(), name='registration'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
