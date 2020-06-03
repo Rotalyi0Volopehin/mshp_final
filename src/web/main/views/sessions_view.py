@@ -49,8 +49,10 @@ class SessionsFormPage(FormView):
         level_limits = ""
         if session.user_lowest_level != -1:
             level_limits += f"от {session.user_lowest_level} "
-        if session.user_highest_level != -1:
+        if session.user_highest_level != 0xFFFF:
             level_limits += f"до {session.user_highest_level}"
+        if len(level_limits) == 0:
+            level_limits = "нет"
         participant_count = len(UserParticipation.objects.filter(game_session=session))
         participant_required = session.user_per_team_count * 3
         player_count = f"{participant_count} из {participant_required}"
@@ -80,7 +82,7 @@ class SessionsFormPage(FormView):
         """
         session_title = form.data["session_title"]
         if len(session_title) == 0:
-            SessionsFormPage.get_handler(context, request)
+            return SessionsFormPage.get_handler(context, request)
         session = GameSession.objects.filter(title=session_title)
         session = None if len(session) == 0 else session[0]
         context["table"] = table = list()

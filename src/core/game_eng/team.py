@@ -41,7 +41,7 @@ class Team:
         obj = team_type(LoadingDump.game_session)
         LoadingDump.add_team(obj)
         obj.__index = stream.read_byte()
-        obj.players = stream.read_iterable(Team.get_player_type())
+        obj.players = stream.read_short_iterable(Team.get_player_type())
         obj.__current_player_index = stream.read_byte()
         obj.money = stream.read_uint()
         tiles = LoadingDump.game_session.grid.tiles
@@ -57,7 +57,7 @@ class Team:
             raise exceptions.ArgumentTypeException()
         CoreClasses.write_class(stream, type(obj))
         stream.write_byte(obj.__index)
-        stream.write_iterable(obj.players, Team.get_player_type())
+        stream.write_short_iterable(obj.players, Team.get_player_type())
         stream.write_byte(obj.__current_player_index)
         stream.write_uint(obj.money)
         stream.write_byte(len(obj.capital_tiles))

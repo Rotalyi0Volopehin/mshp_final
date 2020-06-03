@@ -29,6 +29,8 @@ class Player:
         team = LoadingDump.get_team_by_index(team_ind)
         obj = Player(uid, name, team)
         LoadingDump.add_player(obj)
+        for pts in stream.read_short_iterable(Player.get_pts_type(), {"player": obj}):
+            obj.pressure_tools[type(pts)] = pts
         return obj
 
     @staticmethod
@@ -38,6 +40,7 @@ class Player:
         stream.write_uint(obj.id)
         stream.write_short_string(obj.name)
         stream.write_sbyte(obj.team.index)
+        stream.write_short_iterable(obj.pressure_tools.values(), Player.get_pts_type())
 
     @property
     def team(self) -> Team:
