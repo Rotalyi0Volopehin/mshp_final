@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+from attr import validators
 from django import forms
 
 
@@ -50,14 +52,22 @@ class RegistrationForm(forms.Form):
 class CreateSessionForm(forms.Form):
     session_name = forms.CharField(label='Название сессии', min_length=1, max_length=64,
                                required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
-    user_per_team = forms.IntegerField(label='Игроков во фракции', min_value=1, max_value=8,
+    user_per_team = forms.IntegerField(label='Игроков от фракции', min_value=1, max_value=8,
                                        required=True, widget=forms.NumberInput(attrs={"class": "form-control"}))
-    turn_period = forms.IntegerField(label='Время хода', min_value=1, required=True,
+    turn_period = forms.IntegerField(label='Время хода (секунды)', min_value=1, required=True,
                                      widget=forms.NumberInput(attrs={"class": "form-control"}))
-    user_lowest_level = forms.IntegerField(label='Минимальный уровень участников', min_value=-1, max_value=-1,
+    user_min_level = forms.IntegerField(label='Минимальный уровень участников', min_value=0,
                                            required=True, widget=forms.NumberInput(attrs={"class": "form-control"}))
-    user_highest_level = forms.IntegerField(label='Максимальный уровень участников',min_value=-1, max_value=-1,
+    user_max_level = forms.IntegerField(label='Максимальный уровень участников',min_value=0,
                                             required=True, widget=forms.NumberInput(attrs={"class": "form-control"}))
+    money_limit = forms.IntegerField(label='Лимит бюджета',min_value=-1, max_value=-1,
+                                            required=True, widget=forms.NumberInput(attrs={"class": "form-control"}))
+
+    def check_highest_lower_level(self):
+        max_lvl = self.cleaned_data["user_max_level"]
+        min_lvl = self.cleaned_data["user_min_level"]
+        if not ((max_lvl and min_lvl) or (min_lvl <= max_lvl)):
+            raise forms.ValidationError("Выберите другой минимальный или максимальный уровень игроков!")
 
 
 class ProfileForm(forms.Form):

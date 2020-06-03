@@ -9,13 +9,19 @@
   }
 
   .form1 {
-      width: 1000px;
+      width: 1200px;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%,-50%);
       background-color: rgba(0, 0, 0, 0);
 
+  }
+
+  #qwe {
+  transform:scale(1.3);
+  opacity:0.9;
+  cursor:pointer;
   }
 
   .form1 h1 {
@@ -27,18 +33,40 @@
       text-transform: uppercase;
   }
   </style>
-    <div class="form1 p-3 rounded-lg border">
+    <div class="form1 p-3 rounded-lg border cyberfont">
         <h1>Создание сессии</h1>
         <div class="form">
             <form method="POST">
                 <div class="container">
                     <div class="form-group">
-                        {% for item in form %}
-                            <div class="row">
-                                <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ item.label }}</p>
-                                <div class="col form-group cyberfont">{{ item }}</div>
-                            </div>
-                        {% endfor %}
+                        <div class="row">
+                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.session_name.label }}</p>
+                            <div class="col form-group cyberfont">{{ form.session_name }}</div>
+                        </div>
+                        <div class="row">
+                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_per_team.label }}</p>
+                            <div class="col form-group cyberfont">{{ form.user_per_team }}</div>
+                        </div>
+                        <div class="row">
+                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.turn_period.label }}</p>
+                            <div class="col form-group cyberfont">{{ form.turn_period }}</div>
+                        </div>
+                        <div class="row">
+                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_min_level.label }}</p>
+                            <div class="col form-group cyberfont">{{ form.user_min_level }}</div>
+
+                        </div>
+                        <div class="row">
+                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_max_level.label }}</p>
+                            <div class="col form-group cyberfont">{{ form.user_max_level }}</div>
+
+                        </div>
+                        <div class="row">
+                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.money_limit.label }}</p>
+                            <div class="col form-group cyberfont">{{ form.money_limit }}</div>
+
+                        </div>
+
                     </div>
                 </div>
             </form>

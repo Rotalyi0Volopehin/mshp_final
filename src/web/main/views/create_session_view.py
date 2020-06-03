@@ -13,3 +13,4 @@ class CreateSessionFormPage(FormView):
         turn_period = int(form.data["turn_period"])
         user_lowest_level = int(form.data["user_lowest_level"])
         user_highest_level = int(form.data["user_highest_level"])
+        money_limit = int(form.data["money_limit"])
