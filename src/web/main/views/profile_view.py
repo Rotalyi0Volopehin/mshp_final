@@ -29,7 +29,8 @@ class ProfileFormPage(FormView):
         :type uid: int
         """
         user = ProfileFormPage.__get_user(uid)
-        self = context["self"] = ProfileFormPage.__does_profile_belong_to_current_user(request.user, uid)
+        self = context["self"] = ProfileFormPage.__does_profile_belong_to_current_user\
+            (request.user, uid)
         ProfileFormPage.__try_pull_user_data_to_context(user, context, self)
 
     @staticmethod
@@ -46,12 +47,14 @@ class ProfileFormPage(FormView):
         :param uid: ID пользователя, которому принадлежат данные профиля
         :type uid: int
         """
-        self = context["self"] = ProfileFormPage.__does_profile_belong_to_current_user(request.user, uid)
+        self = context["self"] = ProfileFormPage.__does_profile_belong_to_current_user\
+            (request.user, uid)
         if not self:
             return HttpResponse(status_code=403)
         user = ProfileFormPage.__get_user(uid)
-        ok, user_data = ProfileFormPage.__try_pull_user_data_to_context(user, context, self, return_user_data=True)
-        if not ok:
+        okay, user_data = ProfileFormPage.__try_pull_user_data_to_context\
+            (user, context, self, return_user_data=True)
+        if not okay:
             return
         action = form.data["action"]
         ProfileFormPage.__try_process_post_actions(action, context, form, user_data, user, request)
@@ -70,7 +73,8 @@ class ProfileFormPage(FormView):
         return req_user.is_authenticated and (req_user.id == uid)
 
     @staticmethod
-    def __try_pull_user_data_to_context(user: User, context: dict, self: bool, return_user_data=False):
+    def __try_pull_user_data_to_context(user: User,
+                                        context: dict, self: bool, return_user_data=False):
         user_data, error = DBUserTools.try_get_user_data(user)
         if error is not None:
             context["ok"] = False

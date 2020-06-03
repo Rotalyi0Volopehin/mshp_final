@@ -1,12 +1,12 @@
 from django.contrib.auth import login as log_user_in
-from main import forms
-from main.db_tools.cad import CAD
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from main.views.menu import get_menu_context, get_user_menu_context
+from main import forms
+from main.db_tools.cad import CAD
 from main.db_tools.user_tools import DBUserTools
 from main.views.form_view import FormView
-from main.views.menu import get_menu_context, get_user_menu_context
-from django.shortcuts import render, redirect
 
 
 def index_page(request):
@@ -56,11 +56,12 @@ class LoginFormPage(FormView):
     form_class = forms.LoginForm
     template_name = "registration/login.html"
 
-    def post_handler(self, context: dict, request, form):
+    @staticmethod
+    def post_handler(request, form):
         username = form.data["login"]
         password = form.data["password"]
-        ok = DBUserTools.check_user_existence(username, password)
-        if ok:
+        okay = DBUserTools.check_user_existence(username, password)
+        if okay:
             user = User.objects.get(username=username)
             log_user_in(request, user)
             return redirect('/')

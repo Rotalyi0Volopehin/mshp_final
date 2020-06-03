@@ -15,12 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.models import AnonymousUser
 from django.urls import path
 
 from main.views import profile_view, registration_view, fractions_view, sessions_view
 from main.views import views, activation_view, darknet_view
-from main.views.menu import get_menu_context, get_user_menu_context
 
 urlpatterns = [
     path('admin/', admin.site.urls),
