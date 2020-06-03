@@ -33,8 +33,8 @@ def darknet_page(request):
         context["error"] = error
         return render(request, 'pages/darknet.html', context)
     player = DBUserTools.try_get_player_of_user_from_game_model(request.user, game_model)
-
-    assortment = game_model.market.assortment
+    market = game_model.market
+    assortment = market.assortment
 
     market_assortment = []
     for tool_type in Market.tool_types:
@@ -44,7 +44,7 @@ def darknet_page(request):
         tag = slot.pt_set.__module__.split('.')[-1]
         darknet_cards.append(DarknetCard(slot.pt_set.name, tag, slot.price, slot.pt_set.count))
     context['darknet_cards'] = darknet_cards
-    context['fraction_money'] = game_model.teams[player.team].money
+    context['fraction_money'] = player.team.money
 
     if request.method == 'POST':
         buy_product = request.POST.get('buy_product', None)
@@ -53,7 +53,7 @@ def darknet_page(request):
                 slot = assortment[tool_type]
                 tool_tag = slot.pt_set.__module__.split('.')[-1]
                 if buy_product == tool_tag:
-                    Market.try_buy(player, tool_type, 1)
+                    market.try_buy(player, tool_type, 1)
                     break
 
     return render(request, 'pages/darknet.html', context)

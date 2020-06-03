@@ -2,7 +2,6 @@ import exceptions
 
 # vvv импорты для чтения/записи vvv
 from net_connection.core_classes import CoreClasses
-from net_connection.loading_dump import LoadingDump
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 
@@ -19,17 +18,17 @@ class GridTile:
         self.effects = set()
 
     @staticmethod
-    def read(stream: BinaryReader):
+    def read(stream: BinaryReader, grid):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
         tile_type = CoreClasses.read_class(stream)
         loc_x, loc_y = stream.read_byte_point()
         team_ind = stream.read_sbyte()
-        obj = tile_type(LoadingDump.game_session.grid, loc_x, loc_y)
+        obj = tile_type(grid, loc_x, loc_y)
         obj.team_ind = team_ind
         power = stream.read_byte()
         obj.gain_power(power)
-        for effect in stream.read_short_iterable(GridTile.get_effect_type(), True, {"tile": obj}):
+        for effect in stream.read_short_iterable(GridTile.get_effect_type(), {"tile": obj}):
             obj.add_effect(effect)
         return obj
 

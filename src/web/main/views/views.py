@@ -28,10 +28,12 @@ def cad_page(request):
     from main.models import GameSession
     from main.db_tools.game_session_tools import DBGameSessionTools
     from main.db_tools.user_participation_tools import DBUserParticipationTools
-    gs = GameSession(title="GS01")
+    gs = GameSession(title="GS00")
+    #gs = GameSession.objects.get(title="GS00")
     gs.save()
     DBUserParticipationTools.try_sign_user_up_for_session(request.user, gs)
     DBGameSessionTools.start_session_active_phase(gs)
+    #gs.save()
     return HttpResponse("SUCCESS! All data is cleared")
 
 

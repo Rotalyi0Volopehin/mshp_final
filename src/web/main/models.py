@@ -83,7 +83,7 @@ class GameSession(models.Model):
     def file_path(self) -> str:
         current_path = os.path.abspath(sys.modules[__name__].__file__)
         web_path = current_path[:current_path.find("web") + 4]
-        return os.path.join(web_path, "game_sessions", "{:0>8x}.gs".format(self.id))
+        return os.path.join(web_path, "game_models", "{:0>8x}.gam".format(self.id))
 
     def get_participants(self):
         return UserParticipation.objects.filter(game_session=self)

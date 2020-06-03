@@ -178,52 +178,37 @@ class BinaryReader(BinaryStream):
         """
         return self.__get_read_method(data_type, extra_kwargs)()
 
-    def __read_iterable(self, length: int, elem_type: type, lazy: bool, extra_kwargs: dict):
+    def __read_iterable(self, length: int, elem_type: type, extra_kwargs: dict):
         read_method = self.__get_read_method(elem_type, extra_kwargs)
-        if lazy:
-            for _ in range(length):
-                yield read_method()
-        else:
-            data = length * [None]
-            for i in range(length):
-                data[i] = read_method()
+        data = length * [None]
+        for i in range(length):
+            data[i] = read_method()
+        return data
 
-    def read_iterable(self, elem_type: type, lazy: bool = False, extra_kwargs: dict = None):
+    def read_iterable(self, elem_type: type, extra_kwargs: dict = None):
         """**Чтение последовательности однотипных данных**\n
         Формат данных : [length<32bit>][elem<elem_type>]*length
 
         :param elem_type: Тип данных, поддерживаемый методом read
         :type elem_type: type
-        :param lazy: Факт ленивости
-        :type lazy: bool
         :param extra_kwargs: kwargs для метода 'read' загружаемого типа
         :type extra_kwargs: dict
         :return: Последовательность однотипных данных
-        :rtype: list или generator
+        :rtype: list
         """
         length = self.read_uint()
-        if lazy:
-            for elem in self.__read_iterable(length, elem_type, True, extra_kwargs):
-                yield elem
-        else:
-            return self.__read_iterable(length, elem_type, False, extra_kwargs)
+        return self.__read_iterable(length, elem_type, extra_kwargs)
 
-    def read_short_iterable(self, elem_type: type, lazy: bool = False, extra_kwargs: dict = None):
+    def read_short_iterable(self, elem_type: type, extra_kwargs: dict = None):
         """**Чтение последовательности однотипных данных длиной до 255 элементов**\n
         Формат данных : [length<8bit>][elem<elem_type>]*length
 
         :param elem_type: Тип данных, поддерживаемый методом read
         :type elem_type: type
-        :param lazy: Факт ленивости
-        :type lazy: bool
         :param extra_kwargs: kwargs для метода 'read' загружаемого типа
         :type extra_kwargs: dict
         :return: Последовательность однотипных данных
-        :rtype: list или generator
+        :rtype: list
         """
         length = self.read_byte()
-        if lazy:
-            for elem in self.__read_iterable(length, elem_type, True, extra_kwargs):
-                yield elem
-        else:
-            return self.__read_iterable(length, elem_type, False, extra_kwargs)
+        return self.__read_iterable(length, elem_type, extra_kwargs)
