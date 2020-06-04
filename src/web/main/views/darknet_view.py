@@ -1,9 +1,9 @@
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from main.db_tools.game_session_tools import DBGameSessionTools
 from main.db_tools.user_participation_tools import DBUserParticipationTools
 from main.db_tools.user_tools import DBUserTools
 from main.views.menu import get_menu_context, get_user_menu_context
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from game_eng.market import Market
 
 

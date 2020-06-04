@@ -1,7 +1,6 @@
 import exceptions
-
-from net_connection.request_ids import RequestID
 from types import FunctionType
+from net_connection.request_ids import RequestID
 
 
 class RequestParcelHandlers:

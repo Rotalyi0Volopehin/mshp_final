@@ -140,4 +140,3 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'simplevoting103@gmail.com'
 EMAIL_HOST_PASSWORD = '%sc5V|xBzzmSnsOng~Gd8EkOsnhR5%DcK|1%40KINA'
 EMAIL_PORT = 587
-
