@@ -1,3 +1,4 @@
+"""Роутинг"""
 from django.urls import path
 
 from .ws import consumers

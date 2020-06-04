@@ -69,16 +69,22 @@ class PressureToolSet(models.Model):
 
 
 class GameSession(models.Model):
+    """class GameSession"""
     title = models.TextField(default='')  # название; уникально
-    phase = models.IntegerField(default=0)  # фаза; 0 -- набор игроков, 1 -- основные действия, 2 -- readonly
+    phase = models.IntegerField(default=0)
+    # фаза; 0 -- набор игроков, 1 -- основные действия, 2 -- readonly
     date_created = models.DateTimeField(default=timezone.now)  # дата вступления в фазу #0
     date_started = models.DateTimeField(default=timezone.now)  # дата вступления в фазу #1
     date_stopped = models.DateTimeField(default=timezone.now)  # дата вступления в фазу #2
     turn_of_team = models.IntegerField(default=0)  # фракция, совершающая ход
-    turn_period = models.IntegerField(default=0)  # период времени в секундах, выделенный под ход одного игрока
-    user_lowest_level = models.IntegerField(default=-1)  # нижний предел уровня игроков; -1 -- без предела
-    user_highest_level = models.IntegerField(default=0xFFFF)  # верхний предел уровня игроков; 0xFFFF -- без предела
-    user_per_team_count = models.IntegerField(default=2)  # лимит числа представителей для каждой фракции
+    turn_period = models.IntegerField(default=0)
+    # период времени в секундах, выделенный под ход одного игрока
+    user_lowest_level = models.IntegerField(default=-1)
+    # нижний предел уровня игроков; -1 -- без предела
+    user_highest_level = models.IntegerField(default=0xFFFF)
+    # верхний предел уровня игроков; 0xFFFF -- без предела
+    user_per_team_count = models.IntegerField(default=2)
+    # лимит числа представителей для каждой фракции
     money_limit = models.IntegerField(default=255)  # лимит бюджета фракций
     winning_team = models.IntegerField(default=-1)  # победившая фракция; -1 -- неизвестно/ничья
 

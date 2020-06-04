@@ -46,6 +46,10 @@
 
     <h3 class="text-center">Деньги фракции: <span class="badge badge-secondary">{{ fraction_money }}</span></h3>
 
+    {% if warning %}
+        <div class="text-center alert alert-danger mt-5" role="alert">{{ warning }}</div>
+    {% endif %}
+
     <div class="row mt-5">
         <div class="btn-group" role="group" aria-label="Basic example" style="width: 100%;">
             <button type="button" class="btn btn-secondary" onclick="button_all();">Все</button>
@@ -79,7 +83,8 @@
                             <form method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="buy_product" value="{{ card.tag }}">
-                                <button type="submit" class="btn btn-primary mt-3 float-right" style="width: 100%;">
+                                <button type="submit" class="btn btn-primary mt-3 float-right" style="width: 100%;"
+                                    {% if card.availability is False %}disabled{% endif %}>
                                     Купить (-{{ card.price }} валюты)
                                 </button>
                             </form>
