@@ -1,3 +1,26 @@
-from django.contrib import admin
+# -*- coding: utf-8 -*-
 
-# Register your models here.
+from django.contrib import admin
+from .models import Chat, Message
+
+
+class ChatAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['members']
+    search_fields = ('members',)
+    actions = ['fix_last_messages']
+
+    def fix_last_messages(self, request, queryset):
+        for chat in queryset.all():
+            chat.last_message = chat.message_set.all().order_by('-pub_date').first()
+            chat.save(update_fields=['last_message'])
+
+    fix_last_messages.short_description = "Fix last messages"
+
+
+class MessageAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['chat', 'author']
+    list_display = ('chat', 'author', 'message', 'pub_date', 'is_readed')
+
+
+admin.site.register(Chat, ChatAdmin)
+admin.site.register(Message, MessageAdmin)

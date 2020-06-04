@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import ModelForm
+from .models import Message
 
 
 class CommonFields:
@@ -70,3 +72,11 @@ class LoginForm(forms.Form):
 
 class SessionsForm(forms.Form):
     session_title = CommonFields.get_name_field(False, attrs={"class": "col-lg-12"})
+
+
+class MessageForm(ModelForm):
+    class Meta:
+        model = Message
+        fields = ['message']
+        labels = {'message': ""}
+
