@@ -1,6 +1,9 @@
 import exceptions
 import pygame
 
+from game_eng.player_action_ders.apply_pt_action import ApplyPTPlayerAction
+from game_eng.player_action_ders.move_grid_tile_power_action import MoveGridTilePowerPlayerAction
+from game_eng.player_action_ders.upgrade_grid_tile_action import UpgradeGridTilePlayerAction
 from game_eng.grid_model import GridModel
 from game_vc.grid_tile_vc import GridTileVC, GridTileVCStatus
 from objects.base import DrawObject
@@ -101,5 +104,5 @@ class GridVC(DrawObject):
         self.__move_power(value, True)
 
     def __move_power(self, value, cut_surplus=False):
-        team = self.game.current_scene.game_vc.model.current_team
+        team = self.model.game.current_team
         self.selected_tile.try_move_power_as_team(self.target_tile, value, team, cut_surplus)

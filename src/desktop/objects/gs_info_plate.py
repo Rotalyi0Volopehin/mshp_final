@@ -18,7 +18,7 @@ class GSInfoPlate(DrawObject):
         self.gs_title_label = Text(game, font_size=20, x=pos_x, y=pos_y + 20)
         self.player_count_label = Text(game, font_size=20, x=pos_x, y=pos_y + 40)
         self.update_labels()
-        self.enter_gs_button = Btn(game, (pos_x - 50, pos_y + 30, 100, 40), text="Играть", function=play_button_func)
+        self.enter_gs_button = Btn(game, (pos_x - 50, pos_y + 20, 100, 40), text="Играть", function=play_button_func)
 
     def update_labels(self):
         if self.participation_status == ParticipationStatusID.NO_PARTICIPATION:
@@ -40,6 +40,7 @@ class GSInfoPlate(DrawObject):
                 self.gs_title = parcel[2]
                 self.gathered_players_count = parcel[3]
                 self.players_must_participate = parcel[4]
+        self.update_labels()
 
     def process_logic(self):
         if self.auto_update_period >= 0:
@@ -55,3 +56,7 @@ class GSInfoPlate(DrawObject):
             self.player_count_label.process_draw()
         elif self.participation_status == ParticipationStatusID.PLAYING_GAME:
             self.enter_gs_button.process_draw()
+
+    def process_event(self, event):
+        if self.participation_status == ParticipationStatusID.PLAYING_GAME:
+            self.enter_gs_button.process_event(event)

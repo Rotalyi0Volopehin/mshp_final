@@ -55,7 +55,9 @@ class GameVC(DrawObject):
 
     def __next_turn(self):
         self.model.next_player_turn()
-        self.game.current_scene.toolbar.update_tools()
+        scene = self.game.current_scene
+        if hasattr(scene, "toolbar"):
+            scene.toolbar.update_tools()
 
     @staticmethod
     def get_team_color(team) -> tuple:

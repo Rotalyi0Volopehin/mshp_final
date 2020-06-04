@@ -9,7 +9,7 @@ class EffectGiverPTSet(PressureToolSet):
     def _try_apply(self, target) -> bool:
         if target.has_effect(self.effect_type):
             return False
-        self.__effect = self.effect_type(target)
+        self.__effect = self.effect_type(target, self._player.team)
         self.__target = target
         return True
 
