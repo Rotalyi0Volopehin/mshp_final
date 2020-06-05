@@ -1,0 +1,92 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+{% block extra_js %}
+{% endblock %}
+
+  <style>
+  body {
+      background: linear-gradient(to top right, #9900cc, #000099);
+  }
+
+  .form1 {
+      width: 1200px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      background-color: rgba(0, 0, 0, 0);
+
+  }
+
+  #id_min_level_limit_existence {
+  transform:scale(3);
+  opacity:1;
+  cursor:pointer;
+  }
+
+  #id_max_level_limit_existence {
+  transform:scale(3);
+  opacity:1;
+  cursor:pointer;
+  }
+
+  .form1 h1 {
+      margin: 30px 100px;
+      padding: 0;
+      text-align: center;
+      color: #000;
+      font-size: 30px;
+      text-transform: uppercase;
+  }
+  </style>
+
+<div class="form1 p-3 rounded-lg border cyberfont">
+    <h1>Текущая сессия</h1>
+    <div class="form">
+        <form method="POST"> {% csrf_token %}
+            <div class="container">
+                <div class="form-group">
+                    <div class="row">
+                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.session_name.label }}</p>
+                        <div class="col form-group cyberfont">{{ form.session_name }}</div>
+                    </div>
+                    <div class="row">
+                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_level.label }}</p>
+                        <div class="col form-group cyberfont">{{ form.user_level }}</div>
+                    </div>
+                    <div class="row">
+                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_fill.label }}</p>
+                        <div class="col form-group cyberfont">{{ form.user_fill }}</div>
+                    </div>
+                    <div class="row">
+                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.session_date.label }}</p>
+                        <div class="col form-group cyberfont">{{ form.session_date }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-2" align="center">
+                <button type="submit" class="btn btn-dark cyberfont">Присоединиться</button>
+            </div>
+        </form>
+    </div>
+    {% if error %}
+        <div class="text-center alert alert-danger mt-1" role="alert">{{ error }}</div>
+    {% elif success %}
+        <div class="text-center alert alert-success mt-1" role="alert">Сессия успешно создана</div>
+    {% else %}
+        {% for error_item in form.non_field_errors %}
+            <p class="text-center alert alert-danger">{{ error_item }}</p>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<script>
+    min_limit_checkbox_clicked();
+    max_limit_checkbox_clicked();
+</script>
+
+{% endblock %}
