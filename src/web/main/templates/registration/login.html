@@ -25,6 +25,17 @@
         height: 125px;
     }
 </style>
+
+{% if not ok %}
+<div class="text-center" style="margin-bottom: -15%;">
+    {% if error %}
+    <div class="rounded_border alert alert-danger w-50 mx-auto" role="alert" style="margin-top: 10%;">{{ error }}</div>
+    {% else %}
+    <div class="rounded_border alert alert-danger w-50 mx-auto" role="alert" style="margin-top: 10%;">Что-то пошло не так</div>
+    {% endif %}
+</div>
+{% endif %}
+
 <div class="row main_div">
     <form class="col" action="{% url 'login' %}" method="POST">
         {% csrf_token %}

@@ -7,81 +7,76 @@
 {% block extra_js %}
 {% endblock %}
 
-  <style>
-  body {
-      background: linear-gradient(to top right, #9900cc, #000099);
-  }
+<style>
+    body {
+        background: linear-gradient(to top right, #9FE2BF, #B0E0E6);
+    }
 
-  .form1 {
-      width: 1200px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%,-50%);
-      background-color: rgba(0, 0, 0, 0);
+    #id_min_level_limit_existence {
+        transform:scale(3);
+        opacity:1;
+        cursor:pointer;
+    }
 
-  }
+    #id_max_level_limit_existence {
+        transform:scale(3);
+        opacity:1;
+        cursor:pointer;
+    }
 
-  #id_min_level_limit_existence {
-  transform:scale(3);
-  opacity:1;
-  cursor:pointer;
-  }
+    .rounded_border {
+        border-radius: 40px;
+    }
 
-  #id_max_level_limit_existence {
-  transform:scale(3);
-  opacity:1;
-  cursor:pointer;
-  }
+    .move_everything {
+        margin-top: 12%;
+        padding-bottom: 8%;
+    }
 
-  .form1 h1 {
-      margin: 30px 100px;
-      padding: 0;
-      text-align: center;
-      color: #000;
-      font-size: 30px;
-      text-transform: uppercase;
-  }
-  </style>
+    .dark_part {
+        margin-top: -2%;
+        height: 125px;
+    }
+</style>
 
-<div class="form1 p-3 rounded-lg border cyberfont">
-    <h1>Текущая сессия</h1>
-    <div class="form">
-        <form method="POST"> {% csrf_token %}
-            <div class="container">
-                <div class="form-group">
-                    <div class="row">
-                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.session_name.label }}</p>
-                        <div class="col form-group cyberfont">{{ form.session_name }}</div>
-                    </div>
-                    <div class="row">
-                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_level.label }}</p>
-                        <div class="col form-group cyberfont">{{ form.user_level }}</div>
-                    </div>
-                    <div class="row">
-                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_fill.label }}</p>
-                        <div class="col form-group cyberfont">{{ form.user_fill }}</div>
-                    </div>
-                    <div class="row">
-                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.session_date.label }}</p>
-                        <div class="col form-group cyberfont">{{ form.session_date }}</div>
-                    </div>
+<div class="row move_everything">
+    <form method="POST" class="col"> {% csrf_token %}
+        <div class="dark_part bg-dark cyberfont rounded_border rounded-bottom">
+            <h2 class="text-center text-white cyberfont pt-5" style="font-size: 150%;">Текущая сессия</h2>
+        </div>
+        <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-4">
+            <div class="form-group">
+                <div class="row">
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.session_name.label }}</p>
+                    <div class="col form-group cyberfont">{{ form.session_name }}</div>
+                </div>
+                <div class="row">
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.user_level.label }}</p>
+                    <div class="col form-group cyberfont">{{ form.user_level }}</div>
+                </div>
+                <div class="row">
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.user_fill.label }}</p>
+                    <div class="col form-group cyberfont">{{ form.user_fill }}</div>
+                </div>
+                <div class="row">
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.session_date.label }}</p>
+                    <div class="col form-group cyberfont">{{ form.session_date }}</div>
                 </div>
             </div>
             <div class="col mb-2" align="center">
                 <button type="submit" class="btn btn-dark cyberfont">Присоединиться</button>
             </div>
-        </form>
-    </div>
-    {% if error %}
-        <div class="text-center alert alert-danger mt-1" role="alert">{{ error }}</div>
-    {% elif success %}
-        <div class="text-center alert alert-success mt-1" role="alert">Сессия успешно создана</div>
-    {% else %}
-        {% for error_item in form.non_field_errors %}
+            {% if error %}
+            <div class="text-center alert alert-danger mt-1" role="alert">{{ error }}</div>
+            {% elif success %}
+            <div class="text-center alert alert-success mt-1" role="alert">Сессия успешно создана</div>
+            {% else %}
+            {% for error_item in form.non_field_errors %}
             <p class="text-center alert alert-danger">{{ error_item }}</p>
-        {% endfor %}
-    {% endif %}
+            {% endfor %}
+            {% endif %}
+        </div>
+    </form>
 </div>
 
 <script>

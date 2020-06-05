@@ -23,25 +23,24 @@
         margin-top: -2%;
         height: 125px;
     }
-
 </style>
 
-<div class="text-center" style="margin-bottom: -5%;">
-    {% if not ok %}
-        {% if error %}
-        <div class="rounded_border alert alert-danger mt-5 w-50 mx-auto" role="alert">{{ error }}</div>
-        {% else %}
-        <div class="rounded_border alert alert-danger mt-5 w-50 mx-auto" role="alert">Что-то пошло не так</div>
-        {% endif %}
+{% if not ok %}
+<div class="text-center" style="margin-top: 5%;">
+    {% if error %}
+    <div class="rounded_border alert alert-danger w-50 mx-auto" role="alert">{{ error }}</div>
     {% else %}
-        {% if success %}
-        <div class="rounded_border alert alert-success mt-5 w-50 mx-auto" role="alert">Вы были успешно зарегистрированы</div>
-        <div class="rounded_border alert alert-secondary w-50 mx-auto" role="alert">На указанный E-mail была отправлена ссылка для
-            верификации
-        </div>
-        {% endif %}
+    <div class="rounded_border alert alert-danger w-50 mx-auto" role="alert">Что-то пошло не так</div>
+    {% endif %}
+{% else %}
+    {% if success %}
+    <div class="rounded_border alert alert-success mt-5 w-50 mx-auto" role="alert">Вы были успешно зарегистрированы</div>
+    <div class="rounded_border alert alert-secondary w-50 mx-auto" role="alert">На указанный E-mail была отправлена ссылка для
+        верификации
+    </div>
     {% endif %}
 </div>
+{% endif %}
 
 <div class="row main_div">
     <form class="col" method="POST">
