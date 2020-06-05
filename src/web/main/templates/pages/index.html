@@ -3,69 +3,45 @@
 {% load static %}
 {% block content %}
 
-  <style>
-  #paralaximage {
-          background-image: url('{% static "images/backim.jpg" %}');
-          height: 500px;
-          margin-bottom: 0px;
-          background-attachment: fixed;
-          background-position: center;
-          background-repeat: no-repeat;
-          background-size: cover;
-  }
-  #paralaximage1 {
-          background-image: url('{% static "images/space.jpg" %}');
-          height: 500px;
-          margin-bottom: 0px;
-          background-attachment: fixed;
-          background-position: center;
-          background-repeat: no-repeat;
-          background-size: cover;
-  }
-  </style>
+<style>
+    body {
+        background: linear-gradient(to right, #654ea3, #eaafc8);
+    }
+</style>
 
+<div class="container text-white" style="background-color: rgba(0, 0, 0, 0.6); padding-bottom : 5%;">
+    <h1 class="text-center cyberfont" style="font-size: 250%; padding-top: 10%;">Добро пожаловать в Netwars</h1>
+    <div class="col p-5">
+        <p class="pt-5 cyberfont" style="font-size: 105%;">Перед тем, как войти в игру,
+            убедитесь, что вы зарегистрированы на нашем сайте. Если нет, то нажмите кнопку “регистрация” и зарегистрируйтесь.
+        </p>
 
-  <div id="paralaximage">
-      <div class="row h-100">
-          <div class="col-md-12 align-self-center">
-              <h1 class="text-center text-white cyberfont" style="font-size: 200%">network confrontation</h1>
-          </div>
-      </div>
-  </div>
+        <p class="cyberfont" style="font-size: 105%;">
+            Для того, чтобы начать игру, введите свой логин и пароль в соответствующие поля для заполнения и нажмите кнопку “Войти”.
+        </p>
 
-  <div class="container">
-      <p> Sentiments two occasional affronting solicitude travelling and one contrasted.
-          If in so bred at dare rose lose good. Expression alteration entreaties mrs can terminated estimating.
-          Fat new smallness few supposing suspicion two. Small for ask shade water manor think men begin.
-          Painful so he an comfort is manners. Decisively advantages nor expression unpleasing she led met.
-          He felicity no an at packages answered opinions juvenile. undefined. Ecstatic elegance gay but disposed.
-          Pain son rose more park way that. An stairs as be lovers uneasy. Way own uncommonly travelling now acceptance bed compliment solicitude.
-          Sitting hearted on it without me. As so seeing latter he should thirty whence. In expression an solicitude principles in do.
-          Pain son rose more park way that. Up hung mr we give rest half. Called though excuse length ye needed it he having.
-          Any delicate you how kindness horrible outlived serva
-          Sportsman do offending supported extremity breakfast by listening.
-          Decisively advantages nor expression unpleasing she led met. Their saved linen downs tears son add music.
-          Took sold add play may none him few. Do play they miss give so up. Girl quit if case mr sing as no have. Way own uncommonly travelling now acceptance bed compliment solicitude.
-          Now summer who day looked our behind moment coming. Sitting hearted on it without me. As so seeing latter he should thirty whence. Now summer who day looked our behind moment coming.
-          He felicity no an at packages answered opinions juvenile. Bed uncommonly his discovered for estimating far. Steepest speaking up attended it as. Sitting hearted on it without me.
-          As mr started arrival subject by believe. Polite do object at passed it is. Sportsman do offending supported extremity breakfast by listening. We me rent been part what.
-          Estate was tended ten boy nearer seemed. Steepe
-      </p>
-  </div>
+        <p class="cyberfont" style="font-size: 135%;">После успешного входа вам открываются следующие возможности:</p>
+        <ul class="cyberfont" style="font-size: 105%;">
+            <li>Отправиться проходить квесты и получать бонусы для сетевой игры.</li>
+            <li>Начать новую сетевую игру и присоединиться к конфликту.</li>
+        </ul>
 
-  <div id="paralaximage1">
-      <div class="row h-100">
-          <div class="col-md-12 align-self-center">
-              <h1 class="text-center text-white">Sentiments two occasional affronting solicitude travelling and one contrasted.</h1>
-          </div>
-      </div>
-  </div>
+        <p class="cyberfont" style="font-size: 135%;">Сетевая игра:</p>
+        <ul class="cyberfont" style="font-size: 105%;">
+            <li>В центре экрана находится игровое поле, состоящее из шестиугольников – серверов, которые можно захватить.</li>
+            <li>Цвета клеток обозначают, какой фракции они принадлежат. Каждый ход клетки генерируют очки.
+                В правом нижнем углу находится таймер ходов: он показывает, какая из команд и который из игроков ходит.</li>
+            <li>В нижней панели расположены инструменты взлома – различные способности, влияющие на состояния клеток.</li>
+        </ul>
 
-  <div class="container">
-      <p> Sentiments two occasional affronting solicitude travelling and one contrasted.
-          If in so bred at dare rose lose good. Expression alteration entreaties mrs can terminated estimating.
-          Fat new smallness few supposing suspicion two. Small for ask shade water manor think men begin.
-      </p>
-  </div>
+        <p class="cyberfont" style="font-size: 135%;">Игровой процесс:</p>
+        <ul class="cyberfont" style="font-size: 105%;">
+            <li>Каждый ход игрок может управлять очками своих клеток. Для этого необходимо выбрать клетку левой кнопкой мыши,
+                затем зажать ЛКМ и передвинуть курсор на соседнюю клетку.</li>
+            <li>Прокручиванием колесика мыши можно регулировать, сколько очков вы передадите клетке или получите от нее.
+                Если клетка вражеская, обе клетки будут терять очки.</li>
+        </ul>
+    </div>
+</div>
 
 {% endblock %}

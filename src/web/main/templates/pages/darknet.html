@@ -24,6 +24,7 @@
 <style>
     body {
         background: linear-gradient(to right, #222222, #dddddd);
+        background: linear-gradient(to right, #480607, #9B2D30);
     }
 </style>
 {% endblock %}
@@ -36,10 +37,10 @@
 
 {% else %}
 
-<div class="container card pt-3 p-5 text-white" style="background-color: rgba(0, 0, 0, 0.4);">
+<div class="container card pt-3 p-5 text-white" style="background-color: rgba(30, 30, 30, 0.7);">
     <div class="row">
         <div class="mt-3">
-            <div class="jumbotron cyberfont bg-dark">
+            <div class="jumbotron bg-dark cyberfont">
                 <h1 class="display-4">DarkNet</h1>
                 <p class="lead">Добро пожаловать в DarkNet магазин! Место для нелегальных покупок. Здесь начинается темная сторона интернета...</p>
                 <hr class="my-4">
@@ -64,9 +65,9 @@
 
     <div class="row mt-5 cyberfont">
         <div class="btn-group" role="group" aria-label="Basic example" style="width: 100%;">
-            <button type="button" class="btn btn-secondary" onclick="button_all();">Все</button>
+            <button type="button" class="btn btn-dark" onclick="button_all();">Все</button>
             {% for card in darknet_cards %}
-                <button type="button" class="btn btn-secondary" onclick="button_{{ card.tag }}();">{{ card.name }}</button>
+                <button type="button" class="btn btn-dark" onclick="button_{{ card.tag }}();">{{ card.name }}</button>
             {% endfor %}
         </div>
     </div>
@@ -86,7 +87,7 @@
                                 <h5 class="card-title cyberfont">{{ card.name }}
                                     <font style="font-size: 13pt;">(цена: {{ card.price }})</font>
                                 </h5>
-                                <p class="card-text" style="color: #ac0000; font-weight: bold; font-size: 120%;">
+                                <p class="card-text" style="font-weight: bold; font-size: 120%;">
                                     Осталось: {{ card.count }}
                                 </p>
                             </div>
@@ -95,7 +96,7 @@
                             <form method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="buy_product" value="{{ card.tag }}">
-                                <button type="submit" class="btn btn-primary mt-3 float-right" style="width: 100%;"
+                                <button type="submit" class="btn btn-light mt-3 float-right" style="width: 100%;"
                                     {% if card.availability is False %}disabled{% endif %}>
                                     Купить (-{{ card.price }} валюты)
                                 </button>

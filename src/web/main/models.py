@@ -89,6 +89,23 @@ class GameSession(models.Model):
     def get_participants(self):
         return UserParticipation.objects.filter(game_session=self)
 
+    @property
+    def level_limits_as_string(self) -> str:
+        level_limits = ""
+        if self.user_lowest_level != -1:
+            level_limits += f"от {self.user_lowest_level} "
+        if self.user_highest_level != 0xFFFF:
+            level_limits += f"до {self.user_highest_level}"
+        if len(level_limits) == 0:
+            level_limits = "нет"
+        return level_limits
+
+    @property
+    def players_gathered(self) -> str:
+        participant_count = len(self.get_participants())
+        participant_required = self.user_per_team_count * 3
+        return f"{participant_count} из {participant_required}"
+
 
 class TeamStats(models.Model):
     team = models.IntegerField(default=0)

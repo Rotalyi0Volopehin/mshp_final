@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from main.views import profile_view, registration_view, fractions_view, sessions_view, create_session_view, current_session_view
+from main.views import profile_view, registration_view, fractions_view, sessions_view, create_session_view, \
+    join_session_view, current_gs_view
 from main.views import views, activation_view, darknet_view
 
 urlpatterns = [
@@ -33,7 +34,8 @@ urlpatterns = [
     path('fraction1/', fractions_view.FractionPages.fraction1_page, name='fraction1'),
     path('fraction2/', fractions_view.FractionPages.fraction2_page, name='fraction2'),
     path('cr_session/', create_session_view.CreateSessionFormPage.as_view(), name='create session'),
-    path('current_session/', current_session_view.CreateSessionFormPage.as_view(), name='current session'),
+    path('join_gs/<int:gsid>/', join_session_view.join_gs_page, name='join session'),
+    path("current_gs/", current_gs_view.current_gs_page, name="current session"),
     path('login/', views.LoginFormPage.as_view(), name='login'),
     path('registration/', registration_view.RegistrationFormPage.as_view(), name='registration'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
