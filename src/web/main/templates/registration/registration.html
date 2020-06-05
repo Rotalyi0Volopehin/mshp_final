@@ -25,7 +25,25 @@
     }
 
 </style>
-<div class="row main_div">
+
+<div class="text-center">
+    {% if not ok %}
+        {% if error %}
+        <div class="alert alert-danger mt-5 w-50 mx-auto" role="alert">{{ error }}</div>
+        {% else %}
+        <div class="alert alert-danger mt-5 w-50 mx-auto" role="alert">Что-то пошло не так</div>
+        {% endif %}
+    {% else %}
+        {% if success %}
+        <div class="alert alert-success mt-5 w-50 mx-auto" role="alert">Вы были успешно зарегистрированы</div>
+        <div class="alert alert-secondary w-50 mx-auto" role="alert">На указанный E-mail была отправлена ссылка для
+            верификации
+        </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<div class="row main_div mt-5">
     <form class="col" method="POST">
         {% csrf_token %}
         <div class="dark_part bg-dark cyberfont rounded_border rounded-bottom">
@@ -58,28 +76,5 @@
         </div>
     </form>
 </div>
-
-<p>
-<div class="text-center">
-    {% if not ok %}
-    {% if error %}
-    <div class="alert alert-danger mt-5 w-50 mx-auto" role="alert">
-        {{ error }}
-    </div>
-    {% else %}
-    <div class="alert alert-danger mt-5 w-50 mx-auto" role="alert">
-        Что-то пошло не так
-    </div>
-    {% endif %}
-    {% else %}
-    {% if success %}
-    <div class="alert alert-success mt-5 w-50 mx-auto" role="alert">Вы были успешно зарегистрированы</div>
-    <div class="alert alert-secondary w-50 mx-auto" role="alert">На указанный E-mail была отправлена ссылка для
-        верификации
-    </div>
-    {% endif %}
-    {% endif %}
-</div>
-</p>
 
 {% endblock %}

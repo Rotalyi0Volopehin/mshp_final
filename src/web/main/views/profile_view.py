@@ -15,6 +15,7 @@ class ProfileFormPage(FormView):
     pagename = "Профиль"
     form_class = forms.ProfileForm
     template_name = "pages/profile/profile.html"
+    team_names = ('Cyber Corp', 'Подполье', 'Зов Свободы')
 
     @staticmethod
     def get_handler(context: dict, request, uid: int):
@@ -89,15 +90,7 @@ class ProfileFormPage(FormView):
         context["played_games"] = user_data.played_games_count
         context["activated"] = user_data.activated
         context["about"] = user_data.extra_info
-        if user_data.team == 0:
-            context["team"] = 'Cyber Corp'
-        elif user_data.team == 1:
-            if self:
-                context["team"] = 'Подполье'
-            else:
-                context["team"] = 'Добрая воля'
-        elif user_data.team == 2:
-            context["team"] = 'Зов Свободы'
+        context["team"] = ProfileFormPage.team_names[user_data.team]
         context["exp"] = user_data.exp
         context["level"] = user_data.level
         return True, user_data if return_user_data else True
@@ -107,7 +100,7 @@ class ProfileFormPage(FormView):
         success = False
         error = None
         if action == "save-chan":  # сохранить изменения
-            about = form.data["about"]
+            context["about"] = about = form.data["about"]
             user_data.extra_info = about
             user_data.save()
             success = True

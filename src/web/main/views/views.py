@@ -6,6 +6,7 @@ from main.views.menu import get_menu_context, get_user_menu_context
 from main import forms
 from main.db_tools.cad import CAD
 from main.db_tools.user_tools import DBUserTools
+from main.db_tools.user_error_messages import DBUserErrorMessages
 from main.views.form_view import FormView
 
 
@@ -51,17 +52,17 @@ def chat_page(request):
 
 
 class LoginFormPage(FormView):
-
     pagename = "Вход"
     form_class = forms.LoginForm
     template_name = "registration/login.html"
 
     @staticmethod
-    def post_handler(request, form):
+    def post_handler(context, request, form):
         username = form.data["login"]
         password = form.data["password"]
-        okay = DBUserTools.check_user_existence(username, password)
-        if okay:
+        exists = DBUserTools.check_user_existence(username, password)
+        if exists:
             user = User.objects.get(username=username)
             log_user_in(request, user)
             return redirect('/')
+        raise Exception(DBUserErrorMessages.not_found)

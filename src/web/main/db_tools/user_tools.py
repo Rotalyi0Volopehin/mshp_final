@@ -1,5 +1,8 @@
 import exceptions
 
+from main.db_tools.user_error_messages import DBUserErrorMessages
+from main.models import UserData
+from game_eng.game_model import GameModel
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
@@ -9,11 +12,6 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from main.db_tools.tokens import account_activation_token
 from network_confrontation_web.settings import AUTO_USER_ACTIVATION
-
-from main.db_tools.user_error_messages import DBUserErrorMessages
-from main.models import UserData
-from game_eng.game_model import GameModel
-
 
 
 class DBUserTools:

@@ -24,7 +24,7 @@ def get_user_menu_context(user: User) -> list:
     :return: Контекст навигационной панели пользователя
     :rtype: list
     """
-    if not isinstance(user, User or AnonymousUser):
+    if not isinstance(user, (User, AnonymousUser)):
         raise exceptions.ArgumentTypeException()
     return [
         {"url_name": "sessions", "name": "Сессии"},

@@ -40,7 +40,6 @@ class RegistrationForm(forms.Form):
     - login (*CharField TextInput*) - логин пользователя
     - password1 (*CharField PasswordInput*) - пароль пользователя
     - password2 (*CharField PasswordInput*) - костыль
-    - name (*CharField TextInput*) - ник пользователя
     - email (*EmailField EmailInput*) - E-mail пользователя
     - team (*ChoiceField Select*) - фракция пользователя
     """
@@ -48,7 +47,6 @@ class RegistrationForm(forms.Form):
     password1 = CommonFields.get_password_field(True, attrs={"class": "form-control"})
     password2 = CommonFields.get_password_field(
         True, "Повторите пароль", attrs={"class": "form-control"})
-    name = CommonFields.get_name_field(True, attrs={"class": "form-control"})
     email = forms.EmailField(label="E-mail", min_length=1, max_length=64,
                              required=True,
                              widget=forms.EmailInput(attrs={"class": "form-control"}))
