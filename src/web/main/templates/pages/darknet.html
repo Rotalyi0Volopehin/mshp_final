@@ -44,7 +44,15 @@
         </div>
     </div>
 
-    <h3 class="text-center">Деньги фракции: <span class="badge badge-secondary">{{ fraction_money }}</span></h3>
+    {% if view_mode is False %}
+        <h3 class="text-center">Деньги фракции: <span class="badge badge-secondary">{{ fraction_money }}</span></h3>
+    {% endif %}
+
+    {% if view_mode %}
+        <div class="text-center alert alert-danger mt-3" role="alert">
+            В данный момент вы не можете приобретать инструменты взлома!
+        </div>
+    {% endif %}
 
     {% if warning %}
         <div class="text-center alert alert-danger mt-5" role="alert">{{ warning }}</div>
