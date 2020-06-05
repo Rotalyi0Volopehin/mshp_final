@@ -3,7 +3,6 @@ import exceptions
 from game_eng.grid_tile_ders.capital_tile import CapitalGridTile
 # vvv импорты для чтения/записи vvv
 from net_connection.core_classes import CoreClasses
-from net_connection.loading_dump import LoadingDump
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 
@@ -39,9 +38,7 @@ class Team:
             raise exceptions.ArgumentTypeException()
         team_type = CoreClasses.read_class(stream)
         obj = team_type(game_model)
-        LoadingDump.add_team(obj)
         obj.__index = stream.read_byte()
-        stream.read_short_iterable(Team.get_player_type())
         obj.__current_player_index = stream.read_byte()
         obj.money = stream.read_uint()
         tiles = game_model.grid.tiles
@@ -57,7 +54,6 @@ class Team:
             raise exceptions.ArgumentTypeException()
         CoreClasses.write_class(stream, type(obj))
         stream.write_byte(obj.__index)
-        stream.write_short_iterable(obj.players, Team.get_player_type())
         stream.write_byte(obj.__current_player_index)
         stream.write_uint(obj.money)
         stream.write_byte(len(obj.capital_tiles))

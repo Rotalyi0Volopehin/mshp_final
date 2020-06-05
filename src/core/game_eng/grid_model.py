@@ -2,7 +2,6 @@ import exceptions
 
 from game_eng.grid_tile import GridTile
 # vvv импорты для чтения/записи vvv
-from net_connection.loading_dump import LoadingDump
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 
@@ -19,12 +18,12 @@ class GridModel:
         self.controller = self.view = None
 
     @staticmethod
-    def read(stream: BinaryReader):
+    def read(stream: BinaryReader, game_model):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
         width = stream.read_byte()
         height = stream.read_byte()
-        obj = GridModel(LoadingDump.game_session, width, height)
+        obj = GridModel(game_model, width, height)
         for ix, iy in obj.foreach_loc:
             obj.tiles[ix][iy] = GridTile.read(stream, obj)
         return obj

@@ -14,7 +14,6 @@ class GameVC(DrawObject):
     def __init__(self, game, game_model=None):
         super().__init__(game)
         self.model = create_hardcoded_game_model() if game_model is None else game_model
-        self.model.start_game()
         self.grid = self.model.grid
         self.grid_vc = GridVC(self.grid, self.game)
         self.__end_turn_flag = False
@@ -22,8 +21,13 @@ class GameVC(DrawObject):
     def process_logic(self):
         self.grid_vc.process_logic()
         if (self.model.turn_time_left <= 0.0) or self.__end_turn_flag:
-            self.__next_turn()  # TODO: переписать для сетевой игры (потребуется асинхронная синхронизация)
             self.__end_turn_flag = False
+            if self.game.online:
+                from scenes.gs_sync import GSSyncScene
+                self.game.goto_deeper_scene(GSSyncScene, {"post_changes_func": self.__next_turn,
+                                                          "get_changes_func": self.__apply_changes})
+            else:
+                self.__next_turn()
 
     def end_turn(self):
         self.__end_turn_flag = True
@@ -40,6 +44,10 @@ class GameVC(DrawObject):
     def process_draw(self):
         if self.is_current_scene_map:
             self.grid_vc.process_draw()
+
+    def __apply_changes(self, player_turn):
+        player_turn.try_act()
+        self.__next_turn()
 
     def __next_turn(self):
         self.model.next_player_turn()
@@ -67,6 +75,7 @@ def create_hardcoded_game_model() -> GameModel:
         create_hardcoded_player(f"P{team.index}B", team)
         team.earn_money(999)
         make_capital_tile(team.index << 1, 3, team)
+    game.start_game()
     return game
 
 

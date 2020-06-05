@@ -7,7 +7,6 @@ from game_eng.team import Team
 from game_eng.grid_model import GridModel
 from game_eng.player import Player
 # vvv импорты для чтения/записи vvv
-from net_connection.loading_dump import LoadingDump
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 
@@ -42,17 +41,19 @@ class GameModel:
         self.__current_player_turn = self.__current_player = None
         self.__fixed = False
         self.teams = list()
+        self.player_ids = dict()
         if stream is None:
             self.grid = GridModel(self, grid_width, grid_height)
             self.market = Market()
             self.turn_beginning_time = datetime.utcnow()
         else:
             self.turn_beginning_time = stream.read_datetime()
-            LoadingDump.set_current_game_session(self)
-            self.grid = GridModel.read(stream)
+            self.grid = GridModel.read(stream, self)
             self.market = Market.read(stream)
             for _ in range(3):
                 Team.read(stream, self)
+            stream.read_short_iterable(Player, {"game_model": self})
+            self.start_game()
 
     @staticmethod
     def read(stream: BinaryReader):
@@ -76,11 +77,15 @@ class GameModel:
         Market.write(stream, obj.market)
         for team in obj.teams:
             Team.write(stream, team)
+        stream.write_short_iterable(obj.player_ids.values(), Player)
 
     def start_game(self):
         """**Окончание инициализации**\n
         Запрещает запуск метода add_team.
         """
+        for team in self.teams:
+            for player in team.players:
+                self.player_ids[player.id] = player
         self.__fixed = True
         self.__current_player = self.current_team.current_player
         self.__current_player_turn = PlayerTurn()
@@ -183,4 +188,5 @@ def create_new_game_model(title: str, player_turn_period: int, teams_money_limit
     make_capital_tile(7, 1, game.teams[1])
     make_capital_tile(7, 9, game.teams[2])
     make_capital_tile(5, 5, None)
+    game.start_game()
     return game
