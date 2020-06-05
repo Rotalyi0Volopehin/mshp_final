@@ -12,7 +12,6 @@ def get_menu_context() -> list:
     """
     return [
         {"url_name": "darknet", "name": "darknet"},
-        {"url_name": "forum", "name": "форум"},
         {"url_name": "chat", "name": "чат"},
     ]
 
@@ -27,9 +26,7 @@ def get_user_menu_context(user: User) -> list:
     if not isinstance(user, (User, AnonymousUser)):
         raise exceptions.ArgumentTypeException()
     return [
-        {"url_name": "sessions", "name": "Сессии"},
         {"url": f"/profile/{user.id}/", "name": "Профиль"},
-        {"url_name": "create session", "name": "Создание сессии"},
         {"url_name": "logout", "name": "Выйти"},
     ] if user.is_authenticated else [
         {"url_name": "registration", "name": "Регистрация"},

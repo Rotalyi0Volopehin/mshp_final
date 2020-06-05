@@ -26,7 +26,6 @@ urlpatterns = [
     path('activate/<str:uid>/<str:token>/', activation_view.activate, name='activate'),
     path('cad/', views.cad_page, name='cad'),
     path('darknet/', darknet_view.darknet_page, name='darknet'),
-    path('forum/', views.forum_page, name='forum'),
     path('chat/', views.chat_page, name='chat'),
     path('sessions/', sessions_view.SessionsFormPage.as_view(), name='sessions'),
     path('profile/<int:uid>/', profile_view.ProfileFormPage.as_view(), name='profile'),
