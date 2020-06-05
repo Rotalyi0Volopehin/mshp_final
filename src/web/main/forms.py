@@ -69,17 +69,22 @@ class CreateSessionForm(forms.Form):
     user_max_level = forms.IntegerField(label="Максимальный уровень участников", min_value=0, widget=forms.NumberInput(
         attrs={"class": "input form-control"}), required=False)
     min_level_limit_existence = CommonFields.get_checkbox_field("Применять ограничнение",
-                                {"class": "ml-3 mr-3 mt-4", "onclick": "min_limit_checkbox_clicked()"})
+                                                                {"class": "ml-3 mr-3 mt-4",
+                                                                 "onclick": "min_limit_checkbox_clicked()"})
     max_level_limit_existence = CommonFields.get_checkbox_field("Применять ограничнение",
-                                {"class": "ml-3 mr-3 mt-4", "onclick": "max_limit_checkbox_clicked()"})
+                                                                {"class": "ml-3 mr-3 mt-4",
+                                                                 "onclick": "max_limit_checkbox_clicked()"})
 
-    def clean(self):
-        cleaned_data = super().clean()
-        max_lvl = cleaned_data.get("user_max_level", None)
-        min_lvl = cleaned_data.get("user_min_level", None)
-        if (max_lvl is None) or (min_lvl is None) or (min_lvl <= max_lvl):
-            return cleaned_data
-        raise forms.ValidationError("максимальный уровень не должен быть меньше минимального")
+
+class CurrentSessionForm(forms.Form):
+    session_name = forms.CharField(label='Название', min_length=1, max_length=64,
+                                   widget=forms.TextInput(attrs={"class": "form-control", "disabled": "disabled"}))
+    user_level = forms.CharField(label='Допустимый уровень', min_length=1, max_length=64,
+                                  widget=forms.TextInput(attrs={"class": "form-control", "disabled": "disabled"}))
+    user_fill = forms.CharField(label='Игроков набралось', min_length=1, max_length=64,
+                                widget=forms.TextInput(attrs={"class": "form-control", "disabled": "disabled"}))
+    session_date = forms.CharField(label='Название', min_length=1, max_length=64,
+                                   widget=forms.TextInput(attrs={"class": "form-control", "disabled": "disabled"}))
 
 
 class ProfileForm(forms.Form):
