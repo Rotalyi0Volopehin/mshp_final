@@ -9,7 +9,7 @@ from io_tools.binary_writer import BinaryWriter
 class GridTile:
     def __init__(self, grid, loc_x, loc_y, team=None):
         self.grid = grid
-        self.power = 0
+        self.power = 2
         self.loc_x = loc_x
         self.loc_y = loc_y
         self.team_ind = -1

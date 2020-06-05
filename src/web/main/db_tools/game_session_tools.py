@@ -4,13 +4,10 @@ import os
 from struct import error as struct_error_type
 from django.utils import timezone
 from django.contrib.auth.models import User
-from game_eng.team_ders.team_a import TeamA
-from game_eng.team_ders.team_b import TeamB
-from game_eng.team_ders.team_c import TeamC
 from main.models import UserData, UserParticipation, GameSession, TeamStats
 from io_tools.binary_writer import BinaryWriter
 from io_tools.binary_reader import BinaryReader
-from game_eng.game_model import GameModel
+from game_eng.game_model import GameModel, create_new_game_model
 from game_eng.player import Player
 from main.db_tools.game_session_error_messages import DBGameSessionErrorMessages
 from .user_tools import DBUserTools
@@ -111,16 +108,16 @@ class DBGameSessionTools:
 
     @staticmethod
     def __create_new_game_model(session: GameSession) -> GameModel:
-        game = GameModel(session.title, session.turn_period, session.money_limit, 16, 16)
-        TeamA(game)
-        TeamB(game)
-        TeamC(game)
+        players_data = list()
         participations = UserParticipation.objects.filter(game_session=session)
         for participation in participations:
             user_data = participation.user_data
-            team = game.teams[user_data.team]
-            Player(user_data.user.id, user_data.user.username, team)
-        return game
+            players_data.append({
+                "uid": user_data.user.id,
+                "name": user_data.user.username,
+                "team": user_data.team
+            })
+        return create_new_game_model(session.title, session.turn_period, session.money_limit, players_data)
 
     @staticmethod
     def end_session_active_phase(session: GameSession):

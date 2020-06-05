@@ -150,7 +150,7 @@ class GameModel:
         self.grid.handle_new_team_turn()
 
 
-def create_new_game_model(title: str, player_turn_period: int, teams_money_limit: int, players_data):
+def create_new_game_model(title: str, player_turn_period: int, teams_money_limit: int, players_data) -> GameModel:
     game = GameModel(title, player_turn_period, teams_money_limit, 11, 11)
     from game_eng.team_ders.team_a import TeamA
     from game_eng.team_ders.team_b import TeamB
@@ -160,3 +160,14 @@ def create_new_game_model(title: str, player_turn_period: int, teams_money_limit
     for player_data in players_data:
         team = game.teams[player_data["team"]]
         Player(player_data["uid"], player_data["name"], team)
+    from game_eng.grid_tile_ders.capital_tile import CapitalGridTile
+
+    def make_capital_tile(x, y, team):
+        tile = game.grid.tiles[x][y]
+        tile.upgrade(CapitalGridTile)
+        tile.team = team
+    make_capital_tile(1, 5, game.teams[0])
+    make_capital_tile(7, 1, game.teams[1])
+    make_capital_tile(7, 9, game.teams[2])
+    make_capital_tile(5, 5, None)
+    return game
