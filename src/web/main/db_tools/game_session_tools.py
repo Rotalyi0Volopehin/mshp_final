@@ -3,18 +3,18 @@ import os
 
 from struct import error as struct_error_type
 from django.utils import timezone
-from main.db_tools.game_session_error_messages import DBGameSessionErrorMessages
-from .game_session_participation_error_messages import DBGameSessionParticipationErrorMessages
-from .user_tools import DBUserTools
 from django.contrib.auth.models import User
+from game_eng.team_ders.team_a import TeamA
+from game_eng.team_ders.team_b import TeamB
+from game_eng.team_ders.team_c import TeamC
 from main.models import UserData, UserParticipation, GameSession, TeamStats
 from io_tools.binary_writer import BinaryWriter
 from io_tools.binary_reader import BinaryReader
 from game_eng.game_model import GameModel
-from game_eng.team_ders.team_a import TeamA
-from game_eng.team_ders.team_b import TeamB
-from game_eng.team_ders.team_c import TeamC
 from game_eng.player import Player
+from main.db_tools.game_session_error_messages import DBGameSessionErrorMessages
+from .user_tools import DBUserTools
+from .game_session_participation_error_messages import DBGameSessionParticipationErrorMessages
 
 
 class DBGameSessionTools:
@@ -69,7 +69,8 @@ class DBGameSessionTools:
             raise exceptions.ArgumentValueException()
         if game_session.phase != 0:
             return False, DBGameSessionParticipationErrorMessages.enrollment_closed
-        if (user_data.level > game_session.user_highest_level) or (user_data.level < game_session.user_lowest_level):
+        if (user_data.level > game_session.user_highest_level)\
+                or (user_data.level < game_session.user_lowest_level):
             return False, DBGameSessionParticipationErrorMessages.invalid_user_level
         if len(UserParticipation.objects.filter(user=correct_user)) > 0:
             return False, DBGameSessionParticipationErrorMessages.user_already_participates
@@ -173,7 +174,8 @@ class DBGameSessionTools:
 
     @staticmethod
     def save_game_model(session: GameSession, game_model: GameModel):
-        if not (isinstance(session, GameSession) and isinstance(game_model, (GameModel, BinaryWriter))):
+        if not (isinstance(session, GameSession)
+                and isinstance(game_model, (GameModel, BinaryWriter))):
             raise exceptions.ArgumentTypeException()
         if isinstance(game_model, GameModel):
             stream = BinaryWriter()

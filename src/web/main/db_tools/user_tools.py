@@ -1,13 +1,13 @@
 import exceptions
 
+from main.db_tools.user_error_messages import DBUserErrorMessages
+from main.models import UserData
+from game_eng.game_model import GameModel
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.utils.encoding import force_bytes
-from main.db_tools.user_error_messages import DBUserErrorMessages
-from main.models import UserData
-from game_eng.game_model import GameModel
 # vvv для системы верификации vvv
 from django.utils.http import urlsafe_base64_encode
 from main.db_tools.tokens import account_activation_token
@@ -17,6 +17,7 @@ from network_confrontation_web.settings import AUTO_USER_ACTIVATION
 class DBUserTools:
     """**Инструменты работы в БД с данными о пользователях**
     """
+
     @staticmethod
     def deleted_user_name() -> str:
         """**Особый логин/ник, обозначающий удалённого пользователя**
@@ -28,7 +29,8 @@ class DBUserTools:
         """**Попытка регистрации пользователя**\n
         Пробует зарегистрировать пользователя.
         Когда регистрация удаётся, посылает на указанный адрес письмо с ссылкой для верификации.
-        Если в модуле :mod:`network_confrontation_web.settings` флаг 'AUTO_USER_ACTIVATION' имеет значение True,
+        Если в модуле :mod:`network_confrontation_web.settings`
+         флаг 'AUTO_USER_ACTIVATION' имеет значение True,
         пользователь верифицируется сразу, а письмо не посылается.
 
         :raises ArgumentTypeException: |ArgumentTypeException|
@@ -50,11 +52,13 @@ class DBUserTools:
         if not (isinstance(login, str) and isinstance(password, str) and
                 isinstance(email, str)) and isinstance(team, int):
             raise exceptions.ArgumentTypeException()
-        if not ((0 < len(login) <= 64) and (0 < len(email) <= 64) and (0 < len(password) <= 64) and (0 <= team < 3)):
+        if not ((0 < len(login) <= 64) and (0 < len(email) <= 64) and
+                (0 < len(password) <= 64) and (0 <= team < 3)):
             raise exceptions.ArgumentValueException()
         del_name = DBUserTools.deleted_user_name()
         if login == del_name:
-            raise exceptions.ArgumentValueException(f"Логин не должен принимать значение '{del_name}'!")
+            raise exceptions.ArgumentValueException\
+                (f"Логин не должен принимать значение '{del_name}'!")
         # vvv проверка согласованности аргументов с данными БД vvv
         if len(User.objects.filter(username=login)) > 0:
             return False, DBUserErrorMessages.login_is_already_in_use
@@ -117,10 +121,10 @@ class DBUserTools:
             raise exceptions.ArgumentTypeException()
         # vvv проверка валидности vvv
         user_data = UserData.objects.filter(user=user)
-        ok = len(user_data) == 1
+        okay = len(user_data) == 1
         if return_user_data:
-            return ok, (user_data[0] if ok else None)
-        return ok
+            return okay, (user_data[0] if okay else None)
+        return okay
 
     @staticmethod
     def try_find_user_with_id(uid: int) -> (User, str):

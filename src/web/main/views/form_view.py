@@ -1,8 +1,8 @@
-from main.views.menu import get_menu_context, get_user_menu_context
 from django.shortcuts import render, redirect
 from django.views import View
 from django.forms import Form
 from django.http import HttpResponse, HttpRequest
+from main.views.menu import get_menu_context, get_user_menu_context
 
 
 class FormView(View):
