@@ -1,7 +1,9 @@
+"""Формы для страниц"""
 from django import forms
 
 
 class CommonFields:
+    """Базовый класс"""
     @staticmethod
     def get_description_field(required, label="Описание", attrs=None):
         return forms.CharField(widget=forms.Textarea(attrs=attrs), label=label, min_length=1,
@@ -44,12 +46,15 @@ class RegistrationForm(forms.Form):
     """
     login = CommonFields.get_login_field(True, attrs={"class": "form-control"})
     password1 = CommonFields.get_password_field(True, attrs={"class": "form-control"})
-    password2 = CommonFields.get_password_field(True, "Повторите пароль", attrs={"class": "form-control"})
+    password2 = CommonFields.get_password_field(
+        True, "Повторите пароль", attrs={"class": "form-control"})
     name = CommonFields.get_name_field(True, attrs={"class": "form-control"})
     email = forms.EmailField(label="E-mail", min_length=1, max_length=64,
-                             required=True, widget=forms.EmailInput(attrs={"class": "form-control"}))
+                             required=True,
+                             widget=forms.EmailInput(attrs={"class": "form-control"}))
     team = forms.ChoiceField(widget=forms.Select(attrs={"class": "form-control"}), label="Фракция",
-                             required=True, choices=[(0, "Cyber Corp"), (1, "Добрая воля"), (2, "Зов Свободы")])
+                             required=True, choices=
+                             [(0, "Cyber Corp"), (1, "Добрая воля"), (2, "Зов Свободы")])
 
 
 class CreateSessionForm(forms.Form):
@@ -96,9 +101,11 @@ class ProfileForm(forms.Form):
 
 
 class LoginForm(forms.Form):
+    """Форма для страницы логина"""
     login = CommonFields.get_login_field(True, attrs={"class": "form-control"})
     password = CommonFields.get_password_field(True, attrs={"class": "form-control"})
 
 
 class SessionsForm(forms.Form):
+    """Форма для страницы поиска сессий"""
     session_title = CommonFields.get_name_field(False, attrs={"class": "col-lg-12"})

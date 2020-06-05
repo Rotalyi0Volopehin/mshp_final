@@ -1,11 +1,11 @@
-from net_connection.error_response import ErrorResponse, ErrorResponseID
 from channels.generic.websocket import WebsocketConsumer
+from net_connection.error_response import ErrorResponse, ErrorResponseID
 from main.ws.request_parcel_handlers import RequestParcelHandlers
 from net_connection.request_ids import RequestID
 from net_connection.response_ids import ResponseID
-from .logged_in_sockets import LoggedInSockets
 from main.db_tools.user_participation_tools import DBUserParticipationTools
 from main.db_tools.game_session_tools import DBGameSessionTools
+from .logged_in_sockets import LoggedInSockets
 
 
 class GSParcelHandlers:
@@ -46,5 +46,7 @@ class GSParcelHandlers:
         return [ResponseID.DATA, stream]
 
 
-RequestParcelHandlers.register_handler(GSParcelHandlers.handle_get_gs_info_request, RequestID.GET_GS_INFO)
-RequestParcelHandlers.register_handler(GSParcelHandlers.handle_get_game_model_request, RequestID.GET_GAME_MODEL)
+RequestParcelHandlers.register_handler(
+    GSParcelHandlers.handle_get_gs_info_request, RequestID.GET_GS_INFO)
+RequestParcelHandlers.register_handler(
+    GSParcelHandlers.handle_get_game_model_request, RequestID.GET_GAME_MODEL)
