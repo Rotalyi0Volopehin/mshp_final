@@ -47,33 +47,25 @@
         <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-4">
             <div class="form-group">
                 <div class="row">
-                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.session_name.label }}</p>
-                    <div class="col form-group cyberfont">{{ form.session_name }}</div>
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">Название</p>
+                    <div class="col form-control form-group cyberfont" readonly>{{ title }}</div>
                 </div>
                 <div class="row">
-                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.user_level.label }}</p>
-                    <div class="col form-group cyberfont">{{ form.user_level }}</div>
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">Ограничения по уровню</p>
+                    <div class="col form-control form-group cyberfont" readonly>{{ level_limits }}</div>
                 </div>
                 <div class="row">
-                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.user_fill.label }}</p>
-                    <div class="col form-group cyberfont">{{ form.user_fill }}</div>
-                </div>
-                <div class="row">
-                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.session_date.label }}</p>
-                    <div class="col form-group cyberfont">{{ form.session_date }}</div>
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">Игроков набралось</p>
+                    <div class="col form-control form-group cyberfont" readonly>{{ players_gathered }}</div>
                 </div>
             </div>
             <div class="col mb-2" align="center">
                 <button type="submit" class="btn btn-dark cyberfont">Присоединиться</button>
             </div>
             {% if error %}
-            <div class="text-center alert alert-danger mt-1" role="alert">{{ error }}</div>
+                <div class="text-center alert alert-danger mt-1" role="alert">{{ error }}</div>
             {% elif success %}
-            <div class="text-center alert alert-success mt-1" role="alert">Сессия успешно создана</div>
-            {% else %}
-            {% for error_item in form.non_field_errors %}
-            <p class="text-center alert alert-danger">{{ error_item }}</p>
-            {% endfor %}
+                <div class="text-center alert alert-success mt-1" role="alert">Вы успешно присоединились</div>
             {% endif %}
         </div>
     </form>
