@@ -21,7 +21,11 @@
         {% endfor %}
     }
 </script>
-
+<style>
+    body {
+        background: linear-gradient(to right, #222222, #dddddd);
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -32,10 +36,10 @@
 
 {% else %}
 
-<div class="container">
+<div class="container card pt-3 p-5 text-white" style="background-color: rgba(0, 0, 0, 0.4);">
     <div class="row">
         <div class="mt-3">
-            <div class="jumbotron">
+            <div class="jumbotron cyberfont bg-dark">
                 <h1 class="display-4">DarkNet</h1>
                 <p class="lead">Добро пожаловать в DarkNet магазин! Место для нелегальных покупок. Здесь начинается темная сторона интернета...</p>
                 <hr class="my-4">
@@ -58,7 +62,7 @@
         <div class="text-center alert alert-danger mt-5" role="alert">{{ warning }}</div>
     {% endif %}
 
-    <div class="row mt-5">
+    <div class="row mt-5 cyberfont">
         <div class="btn-group" role="group" aria-label="Basic example" style="width: 100%;">
             <button type="button" class="btn btn-secondary" onclick="button_all();">Все</button>
             {% for card in darknet_cards %}
@@ -69,7 +73,7 @@
 
     {% for card in darknet_cards %}
         <div class="row mt-4 tool-{{ card.tag }}">
-            <div class="card" style="width: 100%;">
+            <div class="card bg-dark" style="width: 100%;">
                 <div class="container">
                     <div class="row">
                         <div class="col">
@@ -79,10 +83,10 @@
                         </div>
                         <div class="col-7">
                             <div class="card-body" style="margin-left: -25px; margin-top: -5px; width: 105%;">
-                                <h5 class="card-title">{{ card.name }}
-                                    <font style="font-size: 11pt;">(цена: {{ card.price }})</font>
+                                <h5 class="card-title cyberfont">{{ card.name }}
+                                    <font style="font-size: 13pt;">(цена: {{ card.price }})</font>
                                 </h5>
-                                <p class="card-text" style="color: #5c0000; font-weight: bold">
+                                <p class="card-text" style="color: #ac0000; font-weight: bold; font-size: 120%;">
                                     Осталось: {{ card.count }}
                                 </p>
                             </div>
