@@ -186,6 +186,7 @@ class TextBar(DrawObject):
         '''
         Функия создает кнопки
         '''
+        self.now_word_b = 0
         button_number = 0
         count = self.search_btns(self.data)
         functions = [self.choice_1, self.choice_2, self.choice_3]
