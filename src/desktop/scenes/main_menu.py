@@ -1,4 +1,6 @@
+from constants import Color
 from objects.button import Btn
+from objects.text import Text
 from scenes.base import Scene
 from ws.parcel_manager import ParcelManager
 from net_connection.request_ids import RequestID
@@ -9,7 +11,16 @@ from game_eng.game_model import GameModel
 
 class MainMenuScene(Scene):
     def create_objects(self):
-        exit_button = Btn(self.game, (350, 255, 100, 40), text="Выход", function=self.game.exit)
+        text_game = Text(self.game, font_size=45, is_bold=True, text='NetWar',
+                         color=Color.WHITE, x=400, y=100)
+        self.objects.append(text_game)
+        button_exit = Btn(self.game, (50, 510, 200, 40), text='Назад',
+                          function=self.__set_login_menu)
+        self.objects.append(button_exit)
+        text_game = Text(self.game, font_size=45, is_bold=True, text='Игрок: '+self.game.username,
+                         color=Color.WHITE, x=400, y=150)
+        self.objects.append(text_game)
+        exit_button = Btn(self.game, (550, 510, 200, 40), text="Выход", function=self.game.exit)
         self.objects.append(exit_button)
         self.gs_info_plate = GSInfoPlate(self.game, 400, 310, self.__set_gs_menu_scene, 120, self.__refresh)
         self.objects.append(self.gs_info_plate)
@@ -44,3 +55,8 @@ class MainMenuScene(Scene):
         else:
             gs = GameModel.read(parcel[1])
             self.__set_gs_menu_scene(gs)
+
+    def __set_login_menu(self):
+        from scenes.login import LoginScene
+        self.game.username = ''
+        self.game.set_origin_scene(LoginScene)

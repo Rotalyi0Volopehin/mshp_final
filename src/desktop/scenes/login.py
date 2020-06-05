@@ -75,6 +75,7 @@ class LoginScene(Scene):
             pass  # TODO: реализовать вывод ошибки
         elif response_id == ResponseID.SUCCESS:
             self.game.current_user_id = parcel[1]
+            self.game.username = self.login_textbox.internal_txtinput.get_text()
             self.set_main_menu_scene()
 
     def on_reg_button_click(self):
