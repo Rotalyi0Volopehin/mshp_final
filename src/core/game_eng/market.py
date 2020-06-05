@@ -5,6 +5,9 @@ import os
 from types import ModuleType
 from game_eng.pressure_tool_set import PressureToolSet
 from game_eng.player import Player
+# vvv импорты для чтения/записи vvv
+from io_tools.binary_reader import BinaryReader
+from io_tools.binary_writer import BinaryWriter
 
 
 class Market:
@@ -43,6 +46,21 @@ class Market:
         for type_ in module.__dict__.values():
             if isinstance(type_, type) and issubclass(type_, PressureToolSet) and hasattr(type_, "__END_PRODUCT__"):
                 Market.tool_types.add(type_)
+
+    @staticmethod
+    def read(stream: BinaryReader):
+        if not isinstance(stream, BinaryReader):
+            raise exceptions.ArgumentTypeException()
+        obj = Market()
+        for slot in stream.read_short_iterable(MarketSlot):
+            obj.assortment[type(slot.pt_set)] = slot
+        return obj
+
+    @staticmethod
+    def write(stream: BinaryWriter, obj):
+        if not (isinstance(stream, BinaryWriter) and isinstance(obj, Market)):
+            raise exceptions.ArgumentTypeException()
+        stream.write_short_iterable(obj.assortment.values(), MarketSlot)
 
     def __init__(self):
         self.assortment = {}
@@ -98,6 +116,22 @@ class MarketSlot:
         self.pt_set = pt_set
         self.price = price
         self.start_count = pt_set.count
+
+    @staticmethod
+    def read(stream: BinaryReader):
+        if not isinstance(stream, BinaryReader):
+            raise exceptions.ArgumentTypeException()
+        pt_set = PressureToolSet.read(stream)
+        price = stream.read_uint()
+        obj = MarketSlot(pt_set, price)
+        return obj
+
+    @staticmethod
+    def write(stream: BinaryWriter, obj):
+        if not (isinstance(stream, BinaryWriter) and isinstance(obj, MarketSlot)):
+            raise exceptions.ArgumentTypeException()
+        PressureToolSet.write(stream, obj.pt_set)
+        stream.write_uint(obj.price)
 
     def update_price_and_count(self):
         """**Обновление цены и количества ИВ этого типа**\n

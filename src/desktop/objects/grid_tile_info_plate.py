@@ -1,5 +1,6 @@
 import pygame
 
+from os import path
 from objects.base import DrawObject
 from objects.text import Text, TextAlignment
 from constants import Color
@@ -7,6 +8,8 @@ from constants import Color
 
 class GridTileInfoPlate(DrawObject):
     EFFECTS_CONTENT_LINE_INDEX = 5
+    money_pictogram = pygame.image.load(path.join("images", "pictograms", "money.png"))
+    power_pictogram = pygame.image.load(path.join("images", "pictograms", "power.png"))
 
     def __init__(self, game, right_border: int, pos_y: int, height: int):
         super().__init__(game)
@@ -33,10 +36,18 @@ class GridTileInfoPlate(DrawObject):
             if label is None:
                 x1 = self.right_border - self.width
                 x2 = self.right_border
-                y = self.pos_y + (i + 1) * self.labels[0].height
+                y = int(self.pos_y + 1.2 * (i + 1) * self.labels[0].height - 4)
                 pygame.draw.line(self.game.screen, Color.WHITE, (x1, y), (x2, y), 2)
             else:
                 label.process_draw()
+        self.__draw_pictogram_before_lable_number(2, GridTileInfoPlate.money_pictogram)
+        self.__draw_pictogram_before_lable_number(3, GridTileInfoPlate.power_pictogram)
+
+    def __draw_pictogram_before_lable_number(self, num: int, pict):
+        rect = pict.get_rect()
+        rect.x = self.labels[num].x
+        rect.y = self.labels[num].y - 8
+        self.game.screen.blit(pict, rect)
 
     def process_event(self, event):
         if (event.type == pygame.MOUSEBUTTONUP) or (event.type == pygame.KEYUP):
@@ -55,8 +66,8 @@ class GridTileInfoPlate(DrawObject):
         self.rect_color = self.game.current_scene.game_vc.get_team_color(tile.team)
         content = [
             tile.name, None,
-            f"Доход : +{tile.owners_income}",
-            "Мощя : {:0>2x}/{:0>2x} (+{:0>2x})".format(tile.power, tile.power_cap, tile.power_growth),
+            f"   +{tile.owners_income}",
+            "   {:0>2x}/{:0>2x} (+{:0>2x})".format(tile.power, tile.power_cap, tile.power_growth),
         ]
         self.__try_create_effects_info(content)
         for content_line in content:
@@ -93,7 +104,7 @@ class GridTileInfoPlate(DrawObject):
         label = self.labels[ind]
         if label is not None:
             label.x = self.right_border - self.width + 4
-            label.y = self.pos_y + ind * label.height + (label.height >> 1)
+            label.y = int(self.pos_y + 1.2 * ind * label.height + (label.height >> 1))
 
     def __find_max_label_width(self) -> int:
         max_width = 0

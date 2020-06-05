@@ -45,7 +45,7 @@ class EndTurnButton(DrawObject):
         ]
 
     def update_time_left(self):
-        time_left = int(self.game.current_scene.game_vc.turn_time_left)
+        time_left = int(self.game.current_scene.game_vc.model.turn_time_left)
         if self.time_left != time_left:
             self.time_left = time_left
             self.time_left_label.update_text(str(time_left))

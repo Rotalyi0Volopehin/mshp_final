@@ -2,6 +2,10 @@ import exceptions
 
 from game_eng.grid_tile import GridTile
 from game_eng.player import Player
+# vvv импорты для чтения/записи vvv
+from net_connection.core_classes import CoreClasses
+from io_tools.binary_reader import BinaryReader
+from io_tools.binary_writer import BinaryWriter
 
 
 class PressureToolSet:
@@ -19,6 +23,23 @@ class PressureToolSet:
                 raise exceptions.InvalidReturnException()
         else:  # у игрока
             self.count = 0
+
+    @staticmethod
+    def read(stream: BinaryReader, player: Player = None):
+        if not (isinstance(stream, BinaryReader) and (isinstance(player, Player) or (player is None))):
+            raise exceptions.ArgumentTypeException()
+        pts_type = CoreClasses.read_class(stream)
+        count = stream.read_uint()
+        obj = pts_type(player)
+        obj.count = count
+        return obj
+
+    @staticmethod
+    def write(stream: BinaryWriter, obj):
+        if not (isinstance(stream, BinaryWriter) and isinstance(obj, PressureToolSet)):
+            raise exceptions.ArgumentTypeException()
+        CoreClasses.write_class(stream, type(obj))
+        stream.write_uint(obj.count)
 
     @property
     def start_market_count(self) -> int:
@@ -75,6 +96,9 @@ class PressureToolSet:
         if ok:
             self.count -= 1
         return ok
+
+    def try_cancel(self) -> bool:
+        raise exceptions.NotImplementedException()
 
     def _try_apply(self, target: GridTile) -> bool:
         """**Попытка применения эффекта ИВ этого типа**\n

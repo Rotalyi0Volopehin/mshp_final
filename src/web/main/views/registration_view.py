@@ -1,3 +1,4 @@
+""" Страница регистрации"""
 from django.contrib.auth import login as log_user_in
 from django.contrib.auth.models import User
 

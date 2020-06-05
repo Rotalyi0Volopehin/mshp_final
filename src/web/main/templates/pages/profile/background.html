@@ -1,0 +1,31 @@
+{% if team == 'Cyber Corp' %}
+    <style>
+        body {
+            background: linear-gradient(to top right, #111111, #dddddd);
+        }
+    </style>
+{% endif %}
+
+{% if team == 'Подполье' %}
+    {% if self %}
+    <style>
+        body {
+            background: linear-gradient(to top right, #C34D0A, #000000);
+        }
+    </style>
+    {% else %}
+    <style>
+        body {
+            background: linear-gradient(to right, #654ea3, #eaafc8);
+        }
+    </style>
+    {% endif %}
+{% endif %}
+
+{% if team == 'Зов Свободы' %}
+    <style>
+        body {
+            background: linear-gradient(to right, #139908, #D6BE01);
+        }
+    </style>
+{% endif %}

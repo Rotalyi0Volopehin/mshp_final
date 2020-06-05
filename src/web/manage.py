@@ -4,31 +4,21 @@ import os
 import sys
 
 
-def fix_project_roots(*roots_names):
-    """**Метод, исправляющий корни проекта**\n
-    Вызывается из модуля :mod:`manage.py`, если корни проекта нарушены.
-
-    Имена корней:\n
-    - core
-    - desktop
-    - web
-
-    :param roots_names: Имена корней, которые нужно подключить
-    :type roots_names: \\*args
-    """
+def fix_project_roots(*root_names):
     current_path = os.path.abspath(sys.modules[__name__].__file__)
-    src_path = current_path[:current_path.find("web")]
-    for root_name in roots_names:
-        sys.path.insert(0, src_path + root_name)
+    src_path = current_path[:current_path.find("src") + 4]
+    for root_name in root_names:
+        sys.path.append(src_path + root_name)
 
 
 try:
-    import exceptions
+    from net_connection.core_classes import CoreClasses
 except:
     print("Direct import failed. Patching . . . ", end='')
     fix_project_roots("core")
-    import exceptions
+    from net_connection.core_classes import CoreClasses
     print("SUCCESS")
+del CoreClasses
 
 
 def main():

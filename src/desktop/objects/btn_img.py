@@ -2,9 +2,11 @@
 import pygame
 
 
+# TODO: удалить по причине ущербности
+
+
 class Button:
-    def __init__(self, game, x, y, text, image_press, image_unpress):
-        super().__init__(game)
+    def __init__(self, x, y, text, image_press, image_unpress):
         self.size = [190, 45]  # Размер кнопки
         self.image_button = image_press # Загружаем изображение исходной кнопки
         self.text = text  # Текст кнопки

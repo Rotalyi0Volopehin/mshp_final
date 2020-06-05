@@ -6,6 +6,7 @@ class Color:
     DARK_GREEN = (16, 128, 16)
     DARK_BLUE = (16, 16, 128)
     BLACK = (0, 0, 0)
+    GRAY = (96, 96, 96)
     WHITE = (255, 255, 255)
     YELLOW = (255, 255, 0)
     CYAN = (0, 255, 255)

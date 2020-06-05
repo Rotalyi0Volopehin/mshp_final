@@ -4,4 +4,4 @@ from game_eng.team import Team
 class TeamA(Team):
     @property
     def name(self) -> str:
-        return "A"
+        return "Cyber Corp"
