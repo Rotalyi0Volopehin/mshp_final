@@ -1,6 +1,7 @@
 from third_party.button import Button
 from constants import Color
 from objects.base import DrawObject
+from objects.yandex_translate import Translator
 
 
 class Btn(DrawObject):
@@ -15,10 +16,15 @@ class Btn(DrawObject):
     def __init__(self, game, geometry=(10, 10, 100, 40), color=(255, 255, 0), text='Test', function=None):
         super().__init__(game)
         self.geometry = geometry
+        self.button_translator = Translator()
+        file = open('quests/language', 'r')
+        self.language = file.read()
+        file.close()
+        self.button_translator.update_translation_data(text, self.language)
         self.color = color
         self.function = function if function else Btn.no_action
         self.internal_button = Button(self.geometry, self.color, self.function, **Btn.BUTTON_STYLE)
-        self.internal_button.text = text
+        self.internal_button.text = self.button_translator.translate()
         self.internal_button.render_text()
 
     @staticmethod

@@ -1,6 +1,7 @@
 import sys
 import pygame
 
+from objects.yandex_translate import Translator
 from scenes.final import FinalScene
 from scenes.main import MainScene
 from scenes.menu import MenuScene
@@ -13,6 +14,7 @@ from scenes.fraction import FractionScene
 from scenes.contacts.call_contact import CallContactScene
 from scenes.contacts.pod_contact import PodContactScene
 from scenes.contacts.cyb_contact import CybContactScene
+
 
 class Game:
     MENU_SCENE_INDEX = 0
@@ -39,7 +41,10 @@ class Game:
                        MapScene(self), LoginScene(self), QuestMenuScene(self), StatsMenuScene(self),
                        CallContactScene(self), PodContactScene(self), CybContactScene(self),
                        FractionScene(self)]
+
         self.current_scene = 0
+        self.language = "en"
+        self.translator = Translator()
 
     def create_window(self):
         pygame.init()

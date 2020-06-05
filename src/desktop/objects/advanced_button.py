@@ -2,6 +2,7 @@ import pygame
 import sys
 from constants import Color
 from objects.button import Btn
+from objects.yandex_translate import Translator
 from third_party.button import Button
 from objects.base import DrawObject
 
@@ -33,7 +34,12 @@ class AdvBtn(DrawObject):
         self.height = geometry[3]
         self.width = geometry[2]
         self.num = num
-        self.text = text
+        file = open('quests/language', 'r')
+        self.language = file.read()
+        file.close()
+        self.adv_button_translator = Translator()
+        self.adv_button_translator.update_translation_data(text, self.language)
+        self.text = self.adv_button_translator.translate()
         self.function = function
         up_button_geometry = (geometry[0] + geometry[2] + geometry[2] / 40,
                               geometry[1],
@@ -50,7 +56,7 @@ class AdvBtn(DrawObject):
         self.up_btn.render_text()
         self.down_btn.text = "-"
         self.down_btn.render_text()
-        self.btn.text = text + " " + str(self.num)
+        self.btn.text = self.text + " " + str(self.num)
         self.btn.render_text()
 
     def process_event(self, event):

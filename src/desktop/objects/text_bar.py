@@ -3,6 +3,7 @@ from constants import Color
 from objects.base import DrawObject
 from objects.button import Btn
 from objects.req_handler import ReqHandler
+from objects.yandex_translate import Translator
 
 
 class TextBar(DrawObject):
@@ -58,6 +59,10 @@ class TextBar(DrawObject):
         self.now_word_b = 0
         self.now_word_f = 0
         self.req_handler = ReqHandler(self.data)
+        file = open('quests/language', 'r')
+        self.language = file.read()
+        file.close()
+        self.translator = Translator()
 
     def process_logic(self):
         if not self.end_quest:
@@ -68,16 +73,19 @@ class TextBar(DrawObject):
         if self.is_start:
             self.lal = 0
             self.is_start = False
+            self.now_word_f = 0
             self.data_strings = []
             self.text_frame = ''
             self.text_frame = self.data[self.data.find('<d>', self.now_word_a) + 3:
                                         self.data.find('</d>', self.now_word_a)]
             self.flag = True
             while self.flag:
-                self.data_strings.append(self.text_frame[self.text_frame.find('<p>',
-                                                         self.now_word_f) + 3:
-                                                         self.text_frame.find('</p>',
-                                                         self.now_word_f)])
+                dialog_string = self.text_frame[self.text_frame.find('<p>',
+                                                self.now_word_f) + 3:
+                                                self.text_frame.find('</p>',
+                                                self.now_word_f)]
+                self.game.translator.update_translation_data(dialog_string, self.language)
+                self.data_strings.append(self.game.translator.translate())
                 self.now_word_f = self.text_frame.find('</p>', self.now_word_f) + 1
                 if self.text_frame.find('</p>', self.now_word_f) == -1:
                     self.flag = False
@@ -160,7 +168,7 @@ class TextBar(DrawObject):
         :return: data
         """
         try:
-            file1 = open(a + b + str(c), 'r', encoding='utf-8')
+            file1 = open(a + b + str(c), 'r')
         except FileNotFoundError or UnboundLocalError or self.end_quest:
             print("END OF JOURNEY")
             self.dialog_index = self.dialog_index[0:len(self.dialog_index) - 1]
@@ -193,6 +201,8 @@ class TextBar(DrawObject):
                 functions[button_number] = self.prohibition
             button_name = self.data[self.data.find('<btn>', self.now_word_b) + 5:
                                     self.data.find('</btn>', self.now_word_b)]
+            self.game.translator.update_translation_data(button_name, self.language)
+            button_name = self.game.translator.translate()
             self.buttons.append(Btn(self.game, (self.x + 10,
                                                 self.y + self.height - count * 35 +
                                                 button_number * 35 - 10,
