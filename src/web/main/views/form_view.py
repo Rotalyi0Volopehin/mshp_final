@@ -24,6 +24,7 @@ class FormView(View):
     template_name = "pages/index.html"
     display_user_menu = True
     login_required = False
+    invalid_form_error = True
 
     get_handler = None
     post_handler = None
@@ -68,7 +69,8 @@ class FormView(View):
         context["form"] = form = self.form_class(request.POST)
         if not form.is_valid():
             context["ok"] = False
-            context["error"] = "Неверный формат отосланных данных!"
+            if self.invalid_form_error:
+                context["error"] = "Неверный формат отосланных данных!"
         elif self.post_handler is not None:
             def handler():
                 return self.post_handler(context, request, form, **kwargs)

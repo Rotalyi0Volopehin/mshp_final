@@ -71,7 +71,6 @@ class GameSession(models.Model):
     date_created = models.DateTimeField(default=timezone.now)  # дата вступления в фазу #0
     date_started = models.DateTimeField(default=timezone.now)  # дата вступления в фазу #1
     date_stopped = models.DateTimeField(default=timezone.now)  # дата вступления в фазу #2
-    turn_of_team = models.IntegerField(default=0)  # фракция, совершающая ход
     turn_period = models.IntegerField(default=0)  # период времени в секундах, выделенный под ход одного игрока
     user_lowest_level = models.IntegerField(default=-1)  # нижний предел уровня игроков; -1 -- без предела
     user_highest_level = models.IntegerField(default=0xFFFF)  # верхний предел уровня игроков; 0xFFFF -- без предела
