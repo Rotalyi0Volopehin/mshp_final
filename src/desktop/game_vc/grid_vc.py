@@ -1,9 +1,6 @@
 import exceptions
 import pygame
 
-from game_eng.player_action_ders.apply_pt_action import ApplyPTPlayerAction
-from game_eng.player_action_ders.move_grid_tile_power_action import MoveGridTilePowerPlayerAction
-from game_eng.player_action_ders.upgrade_grid_tile_action import UpgradeGridTilePlayerAction
 from game_eng.grid_model import GridModel
 from game_vc.grid_tile_vc import GridTileVC, GridTileVCStatus
 from objects.base import DrawObject

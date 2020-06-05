@@ -1,7 +1,6 @@
 import pygame
 import os.path as path
 import request_parcel_helpers.user_logging as user_logging
-import exceptions
 import webbrowser
 from pygame.locals import *
 from constants import Color

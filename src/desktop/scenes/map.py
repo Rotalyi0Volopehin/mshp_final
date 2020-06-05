@@ -10,10 +10,6 @@ from scenes.tech_tree import TreeScene
 
 
 class MapScene(Scene):
-    def __init__(self, game):
-        super().__init__(game)
-
-
     def create_objects(self):
         width = self.game.width
         height = self.game.height

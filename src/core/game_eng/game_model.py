@@ -42,6 +42,7 @@ class GameModel:
         self.__fixed = False
         self.teams = list()
         self.player_ids = dict()
+        self.winner_team = None
         if stream is None:
             self.grid = GridModel(self, grid_width, grid_height)
             self.market = Market()
@@ -108,6 +109,10 @@ class GameModel:
         self.teams.append(team)
 
     @property
+    def game_over(self) -> bool:
+        return self.winner_team is not None
+
+    @property
     def turn_time_elapsed(self) -> float:
         return datetime.utcnow().timestamp() - self.turn_beginning_time.timestamp()
 
@@ -161,17 +166,14 @@ class GameModel:
         return None
 
     def __next_team_turn(self):
+        for i in range(3):
+            self.__current_team_index = (self.__current_team_index + 1) % len(self.teams)
+            if i == 2:
+                self.winner_team = self.current_team
+                return
+            if not self.current_team.defeated:
+                break
         self.market.update()
-        print(self.current_team_index, len(self.teams), self.current_team.defeated)
-        self.__current_team_index += 1
-        self.__current_team_index = self.__current_team_index % len(self.teams)
-        while self.current_team.defeated:
-            self.__current_team_index += 1
-            self.__current_team_index = self.__current_team_index % len(self.teams)
-        flag = self.check_winner()
-        if flag:
-            pass
-            #self.grid.game.return_to_upper_scene()
         self.grid.handle_new_team_turn()
 
     def check_winner(self):
@@ -185,6 +187,7 @@ class GameModel:
         if lose_count >= 2:
             print("WINNER: ", winner)
         return True
+
 
 def create_new_game_model(title: str, player_turn_period: int, teams_money_limit: int, players_data) -> GameModel:
     game = GameModel(title, player_turn_period, teams_money_limit, 11, 11)

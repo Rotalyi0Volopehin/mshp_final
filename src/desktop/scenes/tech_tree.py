@@ -13,7 +13,6 @@ from game_eng.grid_tile_upgrade_tree import GridTileUpgradeTree
 
 
 class TreeScene(Scene):
-
     @staticmethod
     def upload_images(length):
         print("lox")
@@ -90,8 +89,4 @@ class TreeScene(Scene):
                 if self.game_vc.grid_vc.target_tile == tile:
                     self.game_vc.grid_vc.target_tile = new_tile
                 self.game_vc.grid_vc.selected_tile = new_tile
-
         return upgrade
-
-
-
