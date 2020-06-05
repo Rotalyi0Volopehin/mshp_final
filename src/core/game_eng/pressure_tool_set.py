@@ -97,6 +97,9 @@ class PressureToolSet:
             self.count -= 1
         return ok
 
+    def try_cancel(self) -> bool:
+        raise exceptions.NotImplementedException()
+
     def _try_apply(self, target: GridTile) -> bool:
         """**Попытка применения эффекта ИВ этого типа**\n
         abstract method\n

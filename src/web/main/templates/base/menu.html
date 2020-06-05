@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-xl fixed-top navbar-dark bg-dark cyberfont">
-    <a class="navbar-brand d-xl-none" href="{% url 'index' %}" style="font-size: 102%;">HackWorld</a>
+    <a class="navbar-brand d-xl-none" href="{% url 'index' %}" style="font-size: 102%;">NetWars</a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
             aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,10 +25,21 @@
             {% endblock %}
         </ul>
 
-        <a class="navbar-brand d-none d-xl-block" style="font-size: 130%; position: absolute; margin-left: 44%;" href="/">HackWorld</a>
+        <a class="navbar-brand d-none d-xl-block" style="font-size: 130%; position: absolute; margin-left: 45%;" href="/">NetWars</a>
 
         <ul class="navbar-nav">
+
             {% block usermenu %}
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" style="cursor: pointer">Сессии</a>
+                    <ul class="dropdown-menu bg-dark text-center" style="margin-left: -15%;">
+                        <li class="nav-link"><a class="text-light" href="{% url 'sessions' %}">Поиск</a></li>
+                        <li class="nav-link"><a class="text-light" href="{% url 'create session' %}">Создание</a></li>
+                        <li class="nav-link"><a class="text-light" href="{% url 'current session' %}">Текущая</a></li>
+                    </ul>
+                </li>
+                {% endif %}
                 {% for item in user_menu %}
                     <li class="nav-item">
                         {% if item.url_name %}

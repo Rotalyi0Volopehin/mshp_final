@@ -9,7 +9,7 @@ from io_tools.binary_writer import BinaryWriter
 class GridTile:
     def __init__(self, grid, loc_x, loc_y, team=None):
         self.grid = grid
-        self.power = 0
+        self.power = 2
         self.loc_x = loc_x
         self.loc_y = loc_y
         self.team_ind = -1
@@ -21,6 +21,9 @@ class GridTile:
     def read(stream: BinaryReader, grid):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
+        none = stream.read_bool()
+        if none:
+            return None
         tile_type = CoreClasses.read_class(stream)
         loc_x, loc_y = stream.read_byte_point()
         team_ind = stream.read_sbyte()
@@ -34,13 +37,15 @@ class GridTile:
 
     @staticmethod
     def write(stream: BinaryWriter, obj):
-        if not (isinstance(stream, BinaryWriter) and isinstance(obj, GridTile)):
+        if not (isinstance(stream, BinaryWriter) and (isinstance(obj, GridTile) or (obj is None))):
             raise exceptions.ArgumentTypeException()
-        CoreClasses.write_class(stream, type(obj))
-        stream.write_byte_point((obj.loc_x, obj.loc_y))
-        stream.write_sbyte(obj.team_ind)
-        stream.write_byte(obj.power)
-        stream.write_short_iterable(obj.effects, GridTile.get_effect_type())
+        stream.write_bool(obj is None)
+        if obj is not None:
+            CoreClasses.write_class(stream, type(obj))
+            stream.write_byte_point((obj.loc_x, obj.loc_y))
+            stream.write_sbyte(obj.team_ind)
+            stream.write_byte(obj.power)
+            stream.write_short_iterable(obj.effects, GridTile.get_effect_type())
 
     @staticmethod  # костыль для избежания циклического импорта
     def get_effect_type() -> type:
@@ -206,6 +211,7 @@ class GridTile:
         new_tile = tile_type(self.grid, self.loc_x, self.loc_y, self.team)
         new_tile.gain_power(self.power)
         self.grid.tiles[self.loc_x][self.loc_y] = new_tile
+        return new_tile
 
     def take_damage(self, value):
         self.power = max(self.power - value, 0)

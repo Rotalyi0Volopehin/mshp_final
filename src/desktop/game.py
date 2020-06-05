@@ -15,6 +15,7 @@ class Game:
         self.__init_window(width, height)
         self.__init_scenes()
         self.online = False
+        self.logged_user_id = 0
 
     def __init_window(self, width, height):
         self.width = width

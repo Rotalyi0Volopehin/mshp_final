@@ -6,7 +6,6 @@ from types import ModuleType
 from game_eng.pressure_tool_set import PressureToolSet
 from game_eng.player import Player
 # vvv импорты для чтения/записи vvv
-from net_connection.loading_dump import LoadingDump
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 

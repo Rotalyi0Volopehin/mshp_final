@@ -1,8 +1,7 @@
 import exceptions
-
+from django.contrib.auth.models import User
 from net_connection.participation_status_ids import ParticipationStatusID
 from main.models import UserParticipation, GameSession
-from django.contrib.auth.models import User
 from .user_tools import DBUserTools
 from .user_error_messages import DBUserErrorMessages
 
@@ -31,13 +30,14 @@ class DBUserParticipationTools:
             status_id = ParticipationStatusID.NO_PARTICIPATION
         else:
             phase = participation.game_session.phase
-            status_id = ParticipationStatusID.WAITING_FOR_BEGINNING if phase == 0 else ParticipationStatusID.PLAYING_GAME
+            status_id = ParticipationStatusID.WAITING_FOR_BEGINNING if phase == 0 \
+                else ParticipationStatusID.PLAYING_GAME
         if return_participation:
             return status_id, participation
         return status_id
 
     @staticmethod
-    def try_sign_user_up_for_session(user, game_session) -> (bool, str):
+    def try_sign_user_up_for_session(user: User, game_session: GameSession) -> (bool, str):
         if not (isinstance(user, User) and isinstance(game_session, GameSession)):
             raise exceptions.ArgumentTypeException()
         ok, user_data = DBUserTools.is_user_configuration_correct(user, True)
@@ -51,10 +51,13 @@ class DBUserParticipationTools:
             return False, error
         participation = UserParticipation(user=user, user_data=user_data, game_session=game_session)
         participation.save()
+        participations = game_session.get_participants()
+        if len(participations) >= game_session.user_per_team_count * 3:
+            DBGameSessionTools.start_session_active_phase(game_session)
         return True, None
 
     @staticmethod
-    def search_sessions_for_user_participation(user) -> (list, str):
+    def search_sessions_for_user_participation(user: User) -> (list, str):
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
         ok, user_data = DBUserTools.is_user_configuration_correct(user, True)
@@ -63,7 +66,8 @@ class DBUserParticipationTools:
         if not user_data.activated:
             return False, DBUserErrorMessages.not_activated
         level = user_data.level
-        raw = GameSession.objects.filter(user_lowest_level__lte=level, user_highest_level__gte=level, phase=0)
+        raw = GameSession.objects.filter(user_lowest_level__lte=level,
+                                         user_highest_level__gte=level, phase=0)
         from .game_session_tools import DBGameSessionTools
         sessions = list()
         for session in raw:

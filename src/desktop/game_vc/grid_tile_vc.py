@@ -69,7 +69,8 @@ class GridTileVC(DrawObject):
         self.render_number()
         self.update_surface()
         self.game.screen.blit(self.__surface, self.pos)
-        self.number.process_draw()
+        if self.model.power > 0:
+            self.number.process_draw()
         GridTileSpriteExtender.extend_sprite(self, self.game.screen)
 
     def process_event(self, event):
@@ -83,6 +84,6 @@ class GridTileVC(DrawObject):
                 if mouse_down:
                     grid_view.select_target_tile(None)
                     grid_view.select_tile(self.model)
-                elif (self.model == grid_view.selected_tile) or \
-                        (self.model in grid_view.selected_tile.get_neighbours()):
+                elif (grid_view.selected_tile is not None) and ((self.model == grid_view.selected_tile) or
+                     (self.model in grid_view.selected_tile.get_neighbours())):
                     grid_view.select_target_tile(self.model)

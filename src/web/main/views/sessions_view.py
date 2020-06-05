@@ -29,7 +29,8 @@ class SessionsFormPage(FormView):
         """
         page_ind = int(request.GET.get("page", "0"))
         session_offset = page_ind * SessionsFormPage.ROWS_PER_PAGE
-        sessions, error = DBUserParticipationTools.search_sessions_for_user_participation(request.user)
+        sessions, error = DBUserParticipationTools.search_sessions_for_user_participation\
+            (request.user)
         if error is not None:
             raise Exception(error)
         page_count = len(sessions) // SessionsFormPage.ROWS_PER_PAGE
