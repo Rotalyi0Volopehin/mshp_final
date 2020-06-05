@@ -57,4 +57,6 @@ class ParcelManager:
             parcel = json_ser.CoreJSONDecoder.decode_json(response)
         if not is_response_parcel_valid(parcel):
             raise Exception("Incorrect format of response parcel!")
+        if parcel[0] == ResponseID.ERROR:
+            raise exceptions.ErrorResponseException(parcel[1])
         return parcel

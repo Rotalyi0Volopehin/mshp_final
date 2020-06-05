@@ -20,18 +20,18 @@ class LoggedInSockets:
         return None
 
     @staticmethod
-    def try_login_socket(socket: WebsocketConsumer, user_login: str, user_password: str) -> bool:
+    def try_login_socket(socket: WebsocketConsumer, user_login: str, user_password: str) -> int:
         if not (isinstance(socket, WebsocketConsumer) and
                 isinstance(user_login, str) and isinstance(user_password, str)):
             raise exceptions.ArgumentTypeException()
         user_exists = DBUserTools.check_user_existence(user_login, user_password)
         if not user_exists:
-            return False
+            return 0
         user = User.objects.get(username=user_login)
         if user in LoggedInSockets.users_of_sockets.values():
-            return False
+            return 0
         LoggedInSockets.users_of_sockets[socket] = user
-        return True
+        return user.id
 
     @staticmethod
     def try_logout_socket(socket: WebsocketConsumer) -> bool:
@@ -46,8 +46,10 @@ class LoggedInSockets:
 def __login_request_parcel_handler(socket: WebsocketConsumer, parcel: list):
     if not ((len(parcel) == 3) and isinstance(parcel[1], str) and isinstance(parcel[2], str)):
         return err_resp.ErrorResponse(err_resp.ErrorResponseID.WRONG_PARCEL_FORMAT)
-    okay = LoggedInSockets.try_login_socket(socket, parcel[1], parcel[2])
-    return [ResponseID.SUCCESS if okay else ResponseID.FAIL]
+    uid = LoggedInSockets.try_login_socket(socket, parcel[1], parcel[2])
+    if uid == 0:
+        return [ResponseID.FAIL]
+    return [ResponseID.SUCCESS, uid]
 
 
 def __logout_request_parcel_handler(socket: WebsocketConsumer, parcel: list):

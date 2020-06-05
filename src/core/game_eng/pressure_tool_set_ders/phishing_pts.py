@@ -6,6 +6,9 @@ class PhishingPTSet(EffectGiverPTSet):
     __END_PRODUCT__ = None
     effect_type = PhishingGridTileEffect
 
+    def create_effect(self, target):
+        return self.effect_type(target, self._player.team)
+
     @property
     def start_market_count(self) -> int:
         return 10

@@ -15,7 +15,7 @@ class ProfileFormPage(FormView):
     pagename = "Профиль"
     form_class = forms.ProfileForm
     template_name = "pages/profile/profile.html"
-    team_names = ('Cyber Corp', 'Подполье', 'Зов Свободы')
+    team_names = ('Cyber Corp', 'Добрая Воля', 'Зов Свободы')
 
     @staticmethod
     def get_handler(context: dict, request, uid: int):

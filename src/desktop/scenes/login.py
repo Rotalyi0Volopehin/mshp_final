@@ -72,12 +72,10 @@ class LoginScene(Scene):
 
     def login_response_parcel_handler(self, parcel):
         response_id = parcel[0]
-        if response_id == ResponseID.ERROR:
-            error_id = parcel[1]
-            raise exceptions.ErrorResponseException(error_id)
         if response_id == ResponseID.FAIL:
             pass  # TODO: реализовать вывод ошибки
         elif response_id == ResponseID.SUCCESS:
+            self.game.current_user_id = parcel[1]
             self.set_main_menu_scene()
 
     def on_reg_button_click(self):

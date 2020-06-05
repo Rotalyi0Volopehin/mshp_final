@@ -13,7 +13,7 @@
     }
 
     .main_div {
-        margin-top: 10%;
+        margin-top: 12%;
         padding-bottom: 10%;
         margin-left: 19%;
         width: 60%;
@@ -23,27 +23,26 @@
         margin-top: -2%;
         height: 125px;
     }
-
 </style>
 
-<div class="text-center">
-    {% if not ok %}
-        {% if error %}
-        <div class="alert alert-danger mt-5 w-50 mx-auto" role="alert">{{ error }}</div>
-        {% else %}
-        <div class="alert alert-danger mt-5 w-50 mx-auto" role="alert">Что-то пошло не так</div>
-        {% endif %}
+{% if not ok %}
+<div class="text-center" style="margin-top: 5%;">
+    {% if error %}
+    <div class="rounded_border alert alert-danger w-50 mx-auto" role="alert">{{ error }}</div>
     {% else %}
-        {% if success %}
-        <div class="alert alert-success mt-5 w-50 mx-auto" role="alert">Вы были успешно зарегистрированы</div>
-        <div class="alert alert-secondary w-50 mx-auto" role="alert">На указанный E-mail была отправлена ссылка для
-            верификации
-        </div>
-        {% endif %}
+    <div class="rounded_border alert alert-danger w-50 mx-auto" role="alert">Что-то пошло не так</div>
+    {% endif %}
+{% else %}
+    {% if success %}
+    <div class="rounded_border alert alert-success mt-5 w-50 mx-auto" role="alert">Вы были успешно зарегистрированы</div>
+    <div class="rounded_border alert alert-secondary w-50 mx-auto" role="alert">На указанный E-mail была отправлена ссылка для
+        верификации
+    </div>
     {% endif %}
 </div>
+{% endif %}
 
-<div class="row main_div mt-5">
+<div class="row main_div">
     <form class="col" method="POST">
         {% csrf_token %}
         <div class="dark_part bg-dark cyberfont rounded_border rounded-bottom">

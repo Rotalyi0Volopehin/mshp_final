@@ -12,7 +12,7 @@ class UpgradeGridTilePlayerAction(PlayerAction):
         self.__new_tile = None
 
     @staticmethod
-    def read_ext(stream, obj):
+    def read_ext(stream, obj, game_model):
         obj.upgrade_type = CoreClasses.read_class(stream)
 
     @staticmethod

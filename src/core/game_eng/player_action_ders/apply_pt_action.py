@@ -8,7 +8,7 @@ class ApplyPTPlayerAction(PlayerAction):
         self.pt_set = pt_set
 
     @staticmethod
-    def read_ext(stream, obj):
+    def read_ext(stream, obj, game_model):
         pts_type = CoreClasses.read_class(stream)
         obj.pt_set = obj._player.pressure_tools[pts_type]
 

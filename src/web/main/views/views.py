@@ -33,15 +33,6 @@ def cad_page(request):
     return HttpResponse("SUCCESS! All data is cleared")
 
 
-def forum_page(request):
-    context = {
-        'pagename': 'Форум',
-        'menu': get_menu_context(),
-        'user_menu': get_user_menu_context(request.user),
-    }
-    return render(request, 'pages/forum.html', context)
-
-
 def chat_page(request):
     context = {
         'pagename': 'Закрытые каналы',
