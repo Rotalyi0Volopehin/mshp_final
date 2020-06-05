@@ -53,7 +53,7 @@ class Market:
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
         obj = Market()
-        for slot in stream.read_short_iterable(MarketSlot, True):
+        for slot in stream.read_short_iterable(MarketSlot):
             obj.assortment[type(slot.pt_set)] = slot
         return obj
 
@@ -61,8 +61,7 @@ class Market:
     def write(stream: BinaryWriter, obj):
         if not (isinstance(stream, BinaryWriter) and isinstance(obj, Market)):
             raise exceptions.ArgumentTypeException()
-        for slot in obj.assortment.values():
-            MarketSlot.write(stream, slot)
+        stream.write_short_iterable(obj.assortment.values(), MarketSlot)
 
     def __init__(self):
         self.assortment = {}

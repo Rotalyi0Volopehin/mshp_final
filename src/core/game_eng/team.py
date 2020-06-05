@@ -34,17 +34,17 @@ class Team:
         game_model.add_team(self)
 
     @staticmethod
-    def read(stream: BinaryReader):
+    def read(stream: BinaryReader, game_model):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
         team_type = CoreClasses.read_class(stream)
-        obj = team_type(LoadingDump.game_session)
+        obj = team_type(game_model)
         LoadingDump.add_team(obj)
         obj.__index = stream.read_byte()
-        obj.players = stream.read_iterable(Team.get_player_type())
+        obj.players = stream.read_short_iterable(Team.get_player_type())
         obj.__current_player_index = stream.read_byte()
         obj.money = stream.read_uint()
-        tiles = LoadingDump.game_session.grid.tiles
+        tiles = game_model.grid.tiles
         capital_tiles_count = stream.read_byte()
         for _ in range(capital_tiles_count):
             capital_tile_loc_x, capital_tile_loc_y = stream.read_byte_point()
@@ -57,7 +57,7 @@ class Team:
             raise exceptions.ArgumentTypeException()
         CoreClasses.write_class(stream, type(obj))
         stream.write_byte(obj.__index)
-        stream.write_iterable(obj.players, Team.get_player_type())
+        stream.write_short_iterable(obj.players, Team.get_player_type())
         stream.write_byte(obj.__current_player_index)
         stream.write_uint(obj.money)
         stream.write_byte(len(obj.capital_tiles))

@@ -47,7 +47,7 @@ class ParcelManager:
     @staticmethod
     def __convert_response_into_parcel(response) -> list:
         if isinstance(response, bytes):
-            stream = BinaryReader(response)
+            stream = BinaryReader(data=response)
             stream.seek(len(stream) - 1)
             response_id = ResponseID(stream.read_byte())
             stream.seek(0)

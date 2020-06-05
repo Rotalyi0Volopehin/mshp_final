@@ -15,6 +15,7 @@ class ProfileFormPage(FormView):
     pagename = "Профиль"
     form_class = forms.ProfileForm
     template_name = "pages/profile/profile.html"
+    team_names = ('Cyber Corp', 'Подполье', 'Зов Свободы')
 
     @staticmethod
     def get_handler(context: dict, request, uid: int):
@@ -29,7 +30,8 @@ class ProfileFormPage(FormView):
         :type uid: int
         """
         user = ProfileFormPage.__get_user(uid)
-        self = context["self"] = ProfileFormPage.__does_profile_belong_to_current_user(request.user, uid)
+        self = context["self"] = ProfileFormPage.__does_profile_belong_to_current_user\
+            (request.user, uid)
         ProfileFormPage.__try_pull_user_data_to_context(user, context, self)
 
     @staticmethod
@@ -46,12 +48,14 @@ class ProfileFormPage(FormView):
         :param uid: ID пользователя, которому принадлежат данные профиля
         :type uid: int
         """
-        self = context["self"] = ProfileFormPage.__does_profile_belong_to_current_user(request.user, uid)
+        self = context["self"] = ProfileFormPage.__does_profile_belong_to_current_user\
+            (request.user, uid)
         if not self:
             return HttpResponse(status_code=403)
         user = ProfileFormPage.__get_user(uid)
-        ok, user_data = ProfileFormPage.__try_pull_user_data_to_context(user, context, self, return_user_data=True)
-        if not ok:
+        okay, user_data = ProfileFormPage.__try_pull_user_data_to_context\
+            (user, context, self, return_user_data=True)
+        if not okay:
             return
         action = form.data["action"]
         ProfileFormPage.__try_process_post_actions(action, context, form, user_data, user, request)
@@ -70,7 +74,8 @@ class ProfileFormPage(FormView):
         return req_user.is_authenticated and (req_user.id == uid)
 
     @staticmethod
-    def __try_pull_user_data_to_context(user: User, context: dict, self: bool, return_user_data=False):
+    def __try_pull_user_data_to_context(user: User,
+                                        context: dict, self: bool, return_user_data=False):
         user_data, error = DBUserTools.try_get_user_data(user)
         if error is not None:
             context["ok"] = False
@@ -85,15 +90,9 @@ class ProfileFormPage(FormView):
         context["played_games"] = user_data.played_games_count
         context["activated"] = user_data.activated
         context["about"] = user_data.extra_info
-        if user_data.team == 0:
-            context["team"] = 'Cyber Corp'
-        elif user_data.team == 1:
-            context["team"] = 'Underground'
-        elif user_data.team == 2:
-            context["team"] = 'Freedom call'
+        context["team"] = ProfileFormPage.team_names[user_data.team]
         context["exp"] = user_data.exp
         context["level"] = user_data.level
-        context["reputation"] = user_data.reputation
         return True, user_data if return_user_data else True
 
     @staticmethod
@@ -101,7 +100,7 @@ class ProfileFormPage(FormView):
         success = False
         error = None
         if action == "save-chan":  # сохранить изменения
-            about = form.data["about"]
+            context["about"] = about = form.data["about"]
             user_data.extra_info = about
             user_data.save()
             success = True

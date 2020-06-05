@@ -22,79 +22,74 @@
         }
 </style>
 
-<div class="row move_everything">
-    <div class="col">
+{% if error %}
 
+<div class="text-center alert alert-danger rounded_border"
+     role="alert"
+     style="height: 24vh; padding-top: 8%; margin-top: 20%; font-size: 130%;">{{ error }}</div>
+
+{% else %}
+
+<div class="row move_everything">
+    <form action="/sessions/" method="post" class="col"> {% csrf_token %}
         <div class="dark_part bg-dark cyberfont rounded_border rounded-bottom">
             <h2 class="text-center text-white cyberfont pt-5" style="font-size: 150%;">Поиск игровых сессий</h2>
         </div>
 
         <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-4">
-            <div class="row mt-2">
-                <div class="col-lg-3 cyberfont" style="font-size: 90%;">
+            <div class="row cyberfont pt-2" >
+                        <div class="col-lg-3 text-center" style="margin: auto;">Название сессии</div>
+                        <div class="col-lg-6 lg-pb-2" style="margin: auto;"> {{ form.session_title }} </div>
+                        <button type="submit" class="btn btn-primary col-lg-2 d-none d-lg-block"
+                                style="margin: auto;">Найти</button>
+                        <button type="submit" class="btn btn-primary col-lg-2  d-lg-none"
+                                style="margin: 2%;">Найти</button>
+            </div>
 
-                    <div class="btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> К которым можно
-                            присоединиться
-                        </label>
-                        <label class="btn btn-secondary mt-1">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> В которых вы принимали
-                            участие
-                        </label>
-                    </div>
-
-                    <div class="dropdown mt-4">
-                        <button class="btn btn-secondary btn-block dropdown-toggle" type="button"
-                                id="dropdownMenuButton"
-                                data-toggle="dropdown" aria-expanded="false">
-                            Сортировать по
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Дате начала</a>
-                            <a class="dropdown-item" href="#">Длительности</a>
-                            <a class="dropdown-item" href="#">Числу игроков</a>
-                        </div>
-                    </div>
-
-                    <button type="button" class="btn btn-primary btn-block mt-1 mb-3">Найти</button>
-                </div>
-
-                <div class="col-lg-9">
+            <div class="pt-5 pb-5">
+                {% if nothing_found %}
+                    <div class="text-center alert alert-warning" role="alert">Ничего не найдено</div>
+                {% else %}
                     <table class="table">
                         <thead class="thead-dark">
                         <tr class="cyberfont" style="font-size: 120%;">
                             <th scope="col">Название</th>
-                            <th scope="col">Число игроков</th>
-                            <th scope="col">Дата начала</th>
-                            <th scope="col">Дата окончания</th>
+                            <th scope="col">Ограничения по уровню</th>
+                            <th scope="col">Игроков набралось</th>
                         </tr>
                         </thead>
                         <tbody>
 
                         {% block tables %}
-                        {% for item in tables %}
-                        <tr class="table-secondary">
-                            {% for i in item %}
-                            <td>{{ i }}</td>
+                            {% for row in table %}
+                            <tr class="table-secondary">
+                                <td><a href="join_gs/gsid={{ row.0.id }}/">{{ row.0.title }}</a></td>
+                                <td>{{ row.1 }}</td>
+                                <td>{{ row.2 }}</td>
+                            </tr>
                             {% endfor %}
-                        </tr>
-                        {% endfor %}
                         {% endblock %}
                         </tbody>
                     </table>
-                </div>
+                {% endif %}
             </div>
 
+            {% if not nothing_found %}
             <div class="row mt-1 pb-4" style="font-size: 140%;">
                 <div class="col-lg-8"></div>
-                <div class="col-lg-4 cyberfont" style="font-size: 90%;">
-                    <button type="button" class="btn btn-primary" style="width: 20%;"> <</button>
-                    Страница {{ 1 }}
-                    <button type="button" class="btn btn-primary" style="width: 20%;"> ></button>
+                <div class="col-lg-4 cyberfont" style="font-size: 70%;">
+                    <a type="button" class="btn btn-primary {% if cant_back %}disabled{% endif %}" style="width: 20%;"
+                        href="/sessions/?page={{ prev_page }}"> <</a>
+                    Страница {{ page }} из {{ page_count }}
+                    <a type="button" class="btn btn-primary {% if cant_forward %}disabled{% endif %}" style="width: 20%;"
+                        href="/sessions/?page={{ next_page }}"> ></a>
                 </div>
             </div>
+            {% endif %}
         </div>
-    </div>
+    </form>
 </div>
+
+{% endif %}
+
 {% endblock %}

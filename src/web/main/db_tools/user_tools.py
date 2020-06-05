@@ -1,14 +1,13 @@
-import re
 import exceptions
-import main.models
 
+from main.db_tools.user_error_messages import DBUserErrorMessages
+from main.models import UserData
+from game_eng.game_model import GameModel
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.utils.encoding import force_bytes
-from main.db_tools.user_error_messages import DBUserErrorMessages
-from main.models import UserData
 # vvv для системы верификации vvv
 from django.utils.http import urlsafe_base64_encode
 from main.db_tools.tokens import account_activation_token
@@ -18,9 +17,10 @@ from network_confrontation_web.settings import AUTO_USER_ACTIVATION
 class DBUserTools:
     """**Инструменты работы в БД с данными о пользователях**
     """
+
     @staticmethod
     def deleted_user_name() -> str:
-        """Особый логин/ник, обозначающий удалённого пользователя
+        """**Особый логин/ник, обозначающий удалённого пользователя**
         """
         return "$_del"
 
@@ -29,7 +29,8 @@ class DBUserTools:
         """**Попытка регистрации пользователя**\n
         Пробует зарегистрировать пользователя.
         Когда регистрация удаётся, посылает на указанный адрес письмо с ссылкой для верификации.
-        Если в модуле :mod:`network_confrontation_web.settings` флаг 'AUTO_USER_ACTIVATION' имеет значение True,
+        Если в модуле :mod:`network_confrontation_web.settings`
+         флаг 'AUTO_USER_ACTIVATION' имеет значение True,
         пользователь верифицируется сразу, а письмо не посылается.
 
         :raises ArgumentTypeException: |ArgumentTypeException|
@@ -51,13 +52,13 @@ class DBUserTools:
         if not (isinstance(login, str) and isinstance(password, str) and
                 isinstance(email, str)) and isinstance(team, int):
             raise exceptions.ArgumentTypeException()
-        if not ((0 < len(login) <= 64) and (0 < len(email) <= 64) and (0 < len(password) <= 64) and (0 <= team < 3)):
+        if not ((0 < len(login) <= 64) and (0 < len(email) <= 64) and
+                (0 < len(password) <= 64) and (0 <= team < 3)):
             raise exceptions.ArgumentValueException()
-        if not is_email_valid(email):
-            raise exceptions.ArgumentValueException("E-mail некорректен!")
         del_name = DBUserTools.deleted_user_name()
         if login == del_name:
-            raise exceptions.ArgumentValueException(f"Логин не должен принимать значение '{del_name}'!")
+            raise exceptions.ArgumentValueException\
+                (f"Логин не должен принимать значение '{del_name}'!")
         # vvv проверка согласованности аргументов с данными БД vvv
         if len(User.objects.filter(username=login)) > 0:
             return False, DBUserErrorMessages.login_is_already_in_use
@@ -67,7 +68,7 @@ class DBUserTools:
         user = User(username=login, email=email, date_joined=timezone.now())
         user.set_password(password)
         user.save()
-        user_data = main.models.UserData(user=user, team=team)
+        user_data = UserData(user=user, team=team)
         if AUTO_USER_ACTIVATION:
             user_data.activated = True
         else:
@@ -97,7 +98,7 @@ class DBUserTools:
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
         # vvv удаление из БД vvv
-        user_data = main.models.UserData.objects.filter(user=user)
+        user_data = UserData.objects.filter(user=user)
         if len(user_data) > 0:
             user_data.delete()
         user.delete()
@@ -119,11 +120,11 @@ class DBUserTools:
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
         # vvv проверка валидности vvv
-        user_data = main.models.UserData.objects.filter(user=user)
-        ok = len(user_data) == 1
+        user_data = UserData.objects.filter(user=user)
+        okay = len(user_data) == 1
         if return_user_data:
-            return ok, (user_data[0] if ok else None)
-        return ok
+            return okay, (user_data[0] if okay else None)
+        return okay
 
     @staticmethod
     def try_find_user_with_id(uid: int) -> (User, str):
@@ -179,18 +180,32 @@ class DBUserTools:
             user_data.save()
         return True
 
+    @staticmethod
+    def do_game_session_end_user_data_change(user_data: UserData, victory: bool):
+        """**Инструмент изменения пользовательских данных по причине окончания игровой сессии**\n
+        Увеличивает поле 'UserData.played_games_count' на 1. Если игрок победил,
+        увеличивает поле 'UserData.victories_count' на 1 и даёт игроку level+1 единиц опыта.
 
-email_re = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :param user_data: Пользовательских данные, которые требуется изменить
+        :type user_data: UserData
+        :param victory: Факт победы игрока
+        :type victory: bool
+        """
+        if not (isinstance(user_data, UserData) and isinstance(victory, bool)):
+            raise exceptions.ArgumentTypeException()
+        user_data.played_games_count += 1
+        if victory:
+            user_data.victories_count += 1
+            user_data.gain_exp(user_data.level + 1)
+        user_data.save()
 
-
-def is_email_valid(email: str) -> bool:
-    """**Метод для проверки валидности E-mail адреса**\n
-    :raises ArgumentTypeException: |ArgumentTypeException|
-    :param email: E-mail
-    :type email: str
-    :return: Факт валидности E-mail адреса
-    :rtype: bool
-    """
-    if not isinstance(email, str):
-        raise exceptions.ArgumentTypeException()
-    return email_re.match(email)
+    @staticmethod
+    def try_get_player_of_user_from_game_model(user: User, game_model: GameModel):
+        if not (isinstance(user, User) and isinstance(game_model, GameModel)):
+            raise exceptions.ArgumentTypeException()
+        for team in game_model.teams:
+            for player in team.players:
+                if player.id == user.id:
+                    return player
+        return None

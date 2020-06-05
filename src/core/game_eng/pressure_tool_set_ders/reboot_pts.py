@@ -1,9 +1,10 @@
-from game_eng.pressure_tool_set import PressureToolSet
+from .effect_giver_pts import EffectGiverPTSet
 from game_eng.grid_tile_effect_ders.reboot_effect import RebootGridTileEffect
 
 
-class RebootPTSet(PressureToolSet):
+class RebootPTSet(EffectGiverPTSet):
     __END_PRODUCT__ = None
+    effect_type = RebootGridTileEffect
 
     @property
     def start_market_count(self) -> int:
@@ -16,7 +17,3 @@ class RebootPTSet(PressureToolSet):
     @property
     def name(self) -> str:
         return "Перезагрузка"
-
-    def _try_apply(self, target) -> bool:
-        RebootGridTileEffect(target)
-        return True
