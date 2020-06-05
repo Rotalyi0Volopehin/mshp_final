@@ -1,6 +1,5 @@
-from django.db.models import Manager, QuerySet
-
 import exceptions
+from django.db.models import Manager, QuerySet
 from main.models import UserData
 
 
@@ -11,7 +10,8 @@ class DBUserTopTools:
     @staticmethod
     def get_top_by_level(count: int, top_base=UserData.objects) -> list:
         """**Инструмент получения топа пользователей по их уровню**\n
-        Сортирует пользователей по убыванию их уровней, затем в рамках одного уровня по убыванию их опыта.\n
+        Сортирует пользователей по убыванию их уровней,
+        затем в рамках одного уровня по убыванию их опыта.\n
         Возвращаемый топ может иметь длину меньше count, если пользователей не хватает.
 
         :raises ArgumentTypeException: |ArgumentTypeException|
@@ -22,7 +22,7 @@ class DBUserTopTools:
         :return: Топ пользователей
         :rtype: list
         """
-        if not (isinstance(count, int) and (isinstance(top_base, Manager) or isinstance(top_base, QuerySet))):
+        if not (isinstance(count, int) and (isinstance(top_base, QuerySet or Manager))):
             raise exceptions.ArgumentTypeException()
         ordered_by_level = top_base.order_by("-total_exp")[:count]
         return list(ordered_by_level)

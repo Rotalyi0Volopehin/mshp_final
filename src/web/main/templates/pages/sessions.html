@@ -24,7 +24,9 @@
 
 {% if error %}
 
-<div class="text-center alert alert-danger" role="alert">{{ error }}</div>
+<div class="text-center alert alert-danger rounded_border"
+     role="alert"
+     style="height: 24vh; padding-top: 8%; margin-top: 20%; font-size: 130%;">{{ error }}</div>
 
 {% else %}
 
@@ -35,15 +37,16 @@
         </div>
 
         <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-4">
-            <div class="col-lg-3 cyberfont row" style="font-size: 90%;">
-                <div class="form-group right_padding mb-1 row">
-                    <div class="col-sm-3 col-form-label text-right pr-4 cyberfont">Название сессии</div>
-                    <div>{{ form.session_title }}</div>
-                    <button type="submit" class="btn btn-primary col-form-label btn-block mt-1 mb-3">Найти</button>
-                </div>
+            <div class="row cyberfont pt-2" >
+                        <div class="col-lg-3 text-center" style="margin: auto;">Название сессии</div>
+                        <div class="col-lg-6 lg-pb-2" style="margin: auto;"> {{ form.session_title }} </div>
+                        <button type="submit" class="btn btn-primary col-lg-2 d-none d-lg-block"
+                                style="margin: auto;">Найти</button>
+                        <button type="submit" class="btn btn-primary col-lg-2  d-lg-none"
+                                style="margin: 2%;">Найти</button>
             </div>
 
-            <div class="col-lg-9">
+            <div class="pt-5 pb-5">
                 {% if nothing_found %}
                     <div class="text-center alert alert-warning" role="alert">Ничего не найдено</div>
                 {% else %}
@@ -60,9 +63,9 @@
                         {% block tables %}
                             {% for row in table %}
                             <tr class="table-secondary">
-                                <td><a href="join_gs/gsid={{ row.1 }}/">row.0</a></td>
-                                <td>row.2</td>
-                                <td>row.3</td>
+                                <td><a href="/join_gs/{{ row.0.id }}/">{{ row.0.title }}</a></td>
+                                <td>{{ row.1 }}</td>
+                                <td>{{ row.2 }}</td>
                             </tr>
                             {% endfor %}
                         {% endblock %}

@@ -1,19 +1,26 @@
 from scenes.base import Scene
 from objects.button import Btn
-from objects.text import Text
 from constants import Color
 from objects.toolbar import ToolBar
 from objects.end_turn_button import EndTurnButton
 from objects.current_player_plate import CurrentPlayerPlate
 from objects.grid_tile_info_plate import GridTileInfoPlate
+from scenes.main_menu import MainMenuScene
+from scenes.tech_tree import TreeScene
 
 
 class MapScene(Scene):
+    def __init__(self, game):
+        super().__init__(game)
+
+
     def create_objects(self):
         width = self.game.width
         height = self.game.height
-        button_back = Btn(self.game, (width - 120, 5, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
+        button_back = Btn(self.game, (width - 120, 5, 100, 40), Color.WHITE, 'Меню', self.__set_menu_scene)
         self.objects.append(button_back)
+        button_up = Btn(self.game, (width - 240, 5, 100, 40), Color.WHITE, 'Прокачка', self.__set_tech_scene)
+        self.objects.append(button_up)
         self.game_vc = self.game.current_scene.game_vc
         self.objects.append(self.game_vc)
         toolbar_geom = (35, height - 100, width - 70, 80)
@@ -25,18 +32,9 @@ class MapScene(Scene):
         self.objects.append(current_player_plate)
         grid_tile_info_plate = GridTileInfoPlate(self.game, width - 20, 50, 340)
         self.objects.append(grid_tile_info_plate)
-        self.__init_controls()
 
-    def __init_controls(self):
-        controls = [
-            "ЛКМ - выделение",
-            "зажатие ЛКМ - выделение соседа",
-            "колёсико/вверх/вниз/end/home - перемещение мощи",
-            "С - снятие выделения",
-            "цифры - применение ИВ"
-        ]
-        for i in range(len(controls)):
-            line = controls[i]
-            text = Text(self.game, font_name="Consolas", font_size=20, color=Color.WHITE, x=300, y=250 + i * 20,
-                        text=line)
-            self.objects.append(text)
+    def __set_menu_scene(self):
+        self.game.goto_deeper_scene(MainMenuScene)
+
+    def __set_tech_scene(self):
+        self.game.goto_deeper_scene(TreeScene)

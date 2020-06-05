@@ -1,13 +1,10 @@
 import main.forms as forms
 
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from main.models import UserParticipation, GameSession
 from main.db_tools.user_tools import DBUserTools
-from main.db_tools.user_participation_tools import DBUSerParticipationTools
+from main.db_tools.user_participation_tools import DBUserParticipationTools
 from main.db_tools.game_session_tools import DBGameSessionTools
 from main.views.form_view import FormView
-from main.views.menu import get_user_menu_context
 
 
 class SessionsFormPage(FormView):
@@ -17,6 +14,7 @@ class SessionsFormPage(FormView):
     pagename = "Поиск сессии"
     form_class = forms.SessionsForm
     template_name = "pages/sessions.html"
+    login_required = True
     ROWS_PER_PAGE = 8
 
     @staticmethod
@@ -31,7 +29,8 @@ class SessionsFormPage(FormView):
         """
         page_ind = int(request.GET.get("page", "0"))
         session_offset = page_ind * SessionsFormPage.ROWS_PER_PAGE
-        sessions, error = DBUSerParticipationTools.search_sessions_for_user_participation(request.user)
+        sessions, error = DBUserParticipationTools.search_sessions_for_user_participation\
+            (request.user)
         if error is not None:
             raise Exception(error)
         page_count = len(sessions) // SessionsFormPage.ROWS_PER_PAGE
@@ -48,15 +47,7 @@ class SessionsFormPage(FormView):
 
     @staticmethod
     def __get_session_table_row(session) -> tuple:
-        level_limits = ""
-        if session.user_lowest_level != -1:
-            level_limits += f"от {session.user_lowest_level} "
-        if session.user_highest_level != -1:
-            level_limits += f"до {session.user_highest_level}"
-        participant_count = len(UserParticipation.objects.filter(game_session=session))
-        participant_required = session.user_per_team_count * 3
-        player_count = f"{participant_count} из {participant_required}"
-        return session, level_limits, player_count
+        return session, session.level_limits_as_string, session.players_gathered
 
     @staticmethod
     def __put_page_info_into_context(context: dict, page_ind: int, page_count: int):
@@ -82,7 +73,7 @@ class SessionsFormPage(FormView):
         """
         session_title = form.data["session_title"]
         if len(session_title) == 0:
-            SessionsFormPage.get_handler(context, request)
+            return SessionsFormPage.get_handler(context, request)
         session = GameSession.objects.filter(title=session_title)
         session = None if len(session) == 0 else session[0]
         context["table"] = table = list()

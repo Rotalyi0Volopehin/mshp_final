@@ -1,6 +1,9 @@
 import exceptions
 import pygame
 
+from game_eng.player_action_ders.apply_pt_action import ApplyPTPlayerAction
+from game_eng.player_action_ders.move_grid_tile_power_action import MoveGridTilePowerPlayerAction
+from game_eng.player_action_ders.upgrade_grid_tile_action import UpgradeGridTilePlayerAction
 from game_eng.grid_model import GridModel
 from game_vc.grid_tile_vc import GridTileVC, GridTileVCStatus
 from objects.base import DrawObject
@@ -16,9 +19,8 @@ class GridVC(DrawObject):
         self.__add_vc_to_tile_matrix()
 
     def __add_vc_to_tile_matrix(self):
-        for column in self.model.tiles:
-            for tile in column:
-                GridTileVC(tile, self.game, GridTileVCStatus.DEFAULT)
+        for tile in self.model.foreach:
+            GridTileVC(tile, self.game, GridTileVCStatus.DEFAULT)
 
     def get_tile_by_pos_on_screen(self, pos_x, pos_y):
         raise exceptions.NotImplementedException()
@@ -38,14 +40,12 @@ class GridVC(DrawObject):
             tile.view.status = GridTileVCStatus.TARGET
 
     def process_draw(self):
-        for column in self.model.tiles:
-            for tile in column:
-                tile.view.process_draw()
+        for tile in self.model.foreach:
+            tile.view.process_draw()
 
     def process_event(self, event):
-        for column in self.model.tiles:
-            for tile in column:
-                tile.controller.process_event(event)
+        for tile in self.model.foreach:
+            tile.controller.process_event(event)
         if (event.type == pygame.MOUSEBUTTONDOWN) and (4 <= event.button <= 5):
             self.__try_move_power(4 if event.button == 4 else -4)
         elif event.type == pygame.KEYUP:
@@ -104,5 +104,5 @@ class GridVC(DrawObject):
         self.__move_power(value, True)
 
     def __move_power(self, value, cut_surplus=False):
-        team = self.game.current_scene.game_vc.model.current_team
+        team = self.model.game.current_team
         self.selected_tile.try_move_power_as_team(self.target_tile, value, team, cut_surplus)

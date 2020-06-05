@@ -47,7 +47,7 @@ class ParcelManager:
     @staticmethod
     def __convert_response_into_parcel(response) -> list:
         if isinstance(response, bytes):
-            stream = BinaryReader(response)
+            stream = BinaryReader(data=response)
             stream.seek(len(stream) - 1)
             response_id = ResponseID(stream.read_byte())
             stream.seek(0)
@@ -57,4 +57,6 @@ class ParcelManager:
             parcel = json_ser.CoreJSONDecoder.decode_json(response)
         if not is_response_parcel_valid(parcel):
             raise Exception("Incorrect format of response parcel!")
+        if parcel[0] == ResponseID.ERROR:
+            raise exceptions.ErrorResponseException(parcel[1])
         return parcel

@@ -4,7 +4,6 @@ from game_eng.grid_tile import GridTile
 from game_eng.player import Player
 # vvv импорты для чтения/записи vvv
 from net_connection.core_classes import CoreClasses
-from net_connection.loading_dump import LoadingDump
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 
@@ -26,16 +25,13 @@ class PressureToolSet:
             self.count = 0
 
     @staticmethod
-    def read(stream: BinaryReader, player=None):
-        if not isinstance(stream, BinaryReader):
+    def read(stream: BinaryReader, player: Player = None):
+        if not (isinstance(stream, BinaryReader) and (isinstance(player, Player) or (player is None))):
             raise exceptions.ArgumentTypeException()
         pts_type = CoreClasses.read_class(stream)
         count = stream.read_uint()
-        uid = stream.read_uint()
-        player = LoadingDump.get_player_by_id(uid)
         obj = pts_type(player)
         obj.count = count
-        player.pressure_tools[pts_type] = obj
         return obj
 
     @staticmethod
@@ -44,8 +40,6 @@ class PressureToolSet:
             raise exceptions.ArgumentTypeException()
         CoreClasses.write_class(stream, type(obj))
         stream.write_uint(obj.count)
-        uid = 0 if obj._player is None else obj._player.id
-        stream.write_uint(uid)
 
     @property
     def start_market_count(self) -> int:
@@ -102,6 +96,9 @@ class PressureToolSet:
         if ok:
             self.count -= 1
         return ok
+
+    def try_cancel(self) -> bool:
+        raise exceptions.NotImplementedException()
 
     def _try_apply(self, target: GridTile) -> bool:
         """**Попытка применения эффекта ИВ этого типа**\n

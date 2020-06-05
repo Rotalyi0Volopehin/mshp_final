@@ -2,7 +2,7 @@ import pygame
 import os.path as path
 import request_parcel_helpers.user_logging as user_logging
 import exceptions
-
+import webbrowser
 from pygame.locals import *
 from constants import Color
 from net_connection.response_ids import ResponseID
@@ -71,16 +71,14 @@ class LoginScene(Scene):
 
     def login_response_parcel_handler(self, parcel):
         response_id = parcel[0]
-        if response_id == ResponseID.ERROR:
-            error_id = parcel[1]
-            raise exceptions.ErrorResponseException(error_id)
         if response_id == ResponseID.FAIL:
             pass  # TODO: реализовать вывод ошибки
         elif response_id == ResponseID.SUCCESS:
+            self.game.current_user_id = parcel[1]
             self.set_main_menu_scene()
 
     def on_reg_button_click(self):
-        pass  # TODO: сделать редирект в браузер на страницу регистрации
+        webbrowser.open('http://network-conf.gq/registration/', new=1)
 
     def on_closed(self):
         pygame.mixer.music.stop()
