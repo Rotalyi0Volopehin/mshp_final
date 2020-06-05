@@ -25,8 +25,9 @@ class GSInfoPlate(DrawObject):
             participation_status = "Вы не участвуете в игровой сессии"
         elif self.participation_status == ParticipationStatusID.WAITING_FOR_BEGINNING:
             participation_status = "Набор игроков ..."
-            self.gs_title_label = "Название сессии : " + self.gs_title
-            self.player_count_label = f"Игроков набралось {self.gathered_players_count}/{self.players_must_participate}"
+            self.gs_title_label.update_text("Название сессии : " + self.gs_title)
+            self.player_count_label.update_text(
+                f"Игроков набралось {self.gathered_players_count}/{self.players_must_participate}")
         else:
             participation_status = "Игра уже началась"
         self.participation_status_label.update_text(participation_status)

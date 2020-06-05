@@ -41,7 +41,7 @@ class Team:
         obj = team_type(game_model)
         LoadingDump.add_team(obj)
         obj.__index = stream.read_byte()
-        obj.players = stream.read_short_iterable(Team.get_player_type())
+        stream.read_short_iterable(Team.get_player_type())
         obj.__current_player_index = stream.read_byte()
         obj.money = stream.read_uint()
         tiles = game_model.grid.tiles

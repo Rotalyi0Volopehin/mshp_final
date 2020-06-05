@@ -72,9 +72,6 @@ class GameModel:
         Market.write(stream, obj.market)
         for team in obj.teams:
             Team.write(stream, team)
-        for team in obj.teams:
-            for player in team.players:
-                Player.write(stream, player)
 
     def start_game(self):
         """**Окончание инициализации**\n
@@ -151,3 +148,15 @@ class GameModel:
         if self.__current_team_index == len(self.teams):
             self.__current_team_index = 0
         self.grid.handle_new_team_turn()
+
+
+def create_new_game_model(title: str, player_turn_period: int, teams_money_limit: int, players_data):
+    game = GameModel(title, player_turn_period, teams_money_limit, 11, 11)
+    from game_eng.team_ders.team_a import TeamA
+    from game_eng.team_ders.team_b import TeamB
+    from game_eng.team_ders.team_c import TeamC
+    for team_type in (TeamA, TeamB, TeamC):
+        team_type(game)
+    for player_data in players_data:
+        team = game.teams[player_data["team"]]
+        Player(player_data["uid"], player_data["name"], team)

@@ -83,6 +83,6 @@ class GridTileVC(DrawObject):
                 if mouse_down:
                     grid_view.select_target_tile(None)
                     grid_view.select_tile(self.model)
-                elif (self.model == grid_view.selected_tile) or \
-                        (self.model in grid_view.selected_tile.get_neighbours()):
+                elif (grid_view.selected_tile is not None) and ((self.model == grid_view.selected_tile) or
+                     (self.model in grid_view.selected_tile.get_neighbours())):
                     grid_view.select_target_tile(self.model)
