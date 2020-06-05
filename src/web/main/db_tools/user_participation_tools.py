@@ -37,28 +37,31 @@ class DBUserParticipationTools:
         return status_id
 
     @staticmethod
-    def try_sign_user_up_for_session(user, game_session) -> (bool, str):
+    def try_sign_user_up_for_session(user: User, game_session: GameSession) -> (bool, str):
         if not (isinstance(user, User) and isinstance(game_session, GameSession)):
             raise exceptions.ArgumentTypeException()
-        okay, user_data = DBUserTools.is_user_configuration_correct(user, True)
-        if not okay:
+        ok, user_data = DBUserTools.is_user_configuration_correct(user, True)
+        if not ok:
             return False, DBUserErrorMessages.invalid_user_configuration
         if not user_data.activated:
             return False, DBUserErrorMessages.not_activated
         from .game_session_tools import DBGameSessionTools
-        okay, error = DBGameSessionTools.can_user_take_part_in_session(user, user_data, game_session)
-        if not okay:
+        ok, error = DBGameSessionTools.can_user_take_part_in_session(user, user_data, game_session)
+        if not ok:
             return False, error
         participation = UserParticipation(user=user, user_data=user_data, game_session=game_session)
         participation.save()
+        participations = game_session.get_participants()
+        if len(participations) >= game_session.user_per_team_count * 3:
+            DBGameSessionTools.start_session_active_phase(game_session)
         return True, None
 
     @staticmethod
-    def search_sessions_for_user_participation(user) -> (list, str):
+    def search_sessions_for_user_participation(user: User) -> (list, str):
         if not isinstance(user, User):
             raise exceptions.ArgumentTypeException()
-        okay, user_data = DBUserTools.is_user_configuration_correct(user, True)
-        if not okay:
+        ok, user_data = DBUserTools.is_user_configuration_correct(user, True)
+        if not ok:
             return False, DBUserErrorMessages.invalid_user_configuration
         if not user_data.activated:
             return False, DBUserErrorMessages.not_activated

@@ -1,5 +1,6 @@
 import exceptions
 
+from datetime import datetime
 from struct import pack
 from .binary_stream import BinaryStream
 
@@ -11,6 +12,7 @@ class BinaryWriter(BinaryStream):
             int: self.write_int,
             bool: self.write_byte,
             str: self.write_string,
+            datetime: self.write_datetime,
         }
 
     def write_to_file(self, file_path: str):
@@ -110,6 +112,19 @@ class BinaryWriter(BinaryStream):
         """
         self.write_sbyte(data[0])
         self.write_sbyte(data[1])
+
+    def write_datetime(self, data: datetime):
+        """**Запись DateTime**\n
+        Формат данных : [int_part<32bit>][float_part<32bit>]
+
+        :param data: DateTime
+        :type data: datetime
+        """
+        timestamp = data.utcnow().timestamp()
+        int_part = int(timestamp)
+        float_part = int((timestamp - int_part) * 1000000)
+        self.write_uint(int_part)
+        self.write_uint(float_part)
 
     def write_chars(self, data: str):
         """**Запись строки известной длины**\n

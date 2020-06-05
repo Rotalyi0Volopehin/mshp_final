@@ -10,8 +10,8 @@ class MoveGridTilePowerPlayerAction(PlayerAction):
         self.value = value
 
     @staticmethod
-    def read_ext(stream, obj):
-        obj.selected = PlayerAction._read_tile(stream)
+    def read_ext(stream, obj, game_model):
+        obj.selected = PlayerAction._read_tile(stream, game_model.grid.tiles)
         obj.value = stream.read_int()
 
     @staticmethod

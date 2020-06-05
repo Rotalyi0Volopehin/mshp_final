@@ -51,8 +51,7 @@ class RegistrationForm(forms.Form):
                              required=True,
                              widget=forms.EmailInput(attrs={"class": "form-control"}))
     team = forms.ChoiceField(widget=forms.Select(attrs={"class": "form-control"}), label="Фракция",
-                             required=True, choices=
-                             [(0, "Cyber Corp"), (1, "Добрая воля"), (2, "Зов Свободы")])
+                             required=True, choices=[(0, "Cyber Corp"), (1, "Добрая Воля"), (2, "Зов Свободы")])
 
 
 class CreateSessionForm(forms.Form):

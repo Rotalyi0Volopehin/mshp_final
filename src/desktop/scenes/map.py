@@ -1,6 +1,5 @@
 from scenes.base import Scene
 from objects.button import Btn
-from objects.text import Text
 from constants import Color
 from objects.toolbar import ToolBar
 from objects.end_turn_button import EndTurnButton
@@ -25,18 +24,3 @@ class MapScene(Scene):
         self.objects.append(current_player_plate)
         grid_tile_info_plate = GridTileInfoPlate(self.game, width - 20, 50, 340)
         self.objects.append(grid_tile_info_plate)
-        self.__init_controls()
-
-    def __init_controls(self):
-        controls = [
-            "ЛКМ - выделение",
-            "зажатие ЛКМ - выделение соседа",
-            "колёсико/вверх/вниз/end/home - перемещение мощи",
-            "С - снятие выделения",
-            "цифры - применение ИВ"
-        ]
-        for i in range(len(controls)):
-            line = controls[i]
-            text = Text(self.game, font_name="Consolas", font_size=20, color=Color.WHITE, x=300, y=250 + i * 20,
-                        text=line)
-            self.objects.append(text)
