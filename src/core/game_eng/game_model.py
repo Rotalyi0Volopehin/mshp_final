@@ -179,9 +179,10 @@ def create_new_game_model(title: str, player_turn_period: int, teams_money_limit
         team = game.teams[player_data["team"]]
         Player(player_data["uid"], player_data["name"], team)
     from game_eng.grid_tile_ders.capital_tile import CapitalGridTile
+    tiles = game.grid.tiles
 
     def make_capital_tile(x, y, team):
-        tile = game.grid.tiles[x][y]
+        tile = tiles[x][y]
         tile = tile.upgrade(CapitalGridTile)
         tile.team = team
     make_capital_tile(1, 5, game.teams[0])
@@ -189,4 +190,14 @@ def create_new_game_model(title: str, player_turn_period: int, teams_money_limit
     make_capital_tile(7, 9, game.teams[2])
     make_capital_tile(5, 5, None)
     game.start_game()
+    empty_tiles = [(0, 0), (1, 0), (2, 0), (9, 0), (10, 0), (0, 1), (1, 1), (3, 1), (9, 1), (10, 1), (0, 2), (1, 2),
+                   (4, 2), (10, 2), (0, 3), (6, 3), (10, 3), (0, 4), (5, 4), (3, 5), (6, 5), (8, 5), (9, 5), (0, 6),
+                   (5, 6), (0, 7), (6, 7), (10, 7), (0, 8), (1, 8), (4, 8), (10, 8), (0, 9), (1, 9), (3, 9), (9, 9),
+                   (10, 9), (0, 10), (1, 10), (2, 10), (9, 10), (10, 10)]
+    for empty_tile in empty_tiles:
+        x = empty_tile[0]
+        y = empty_tile[1]
+        tiles[x][y] = None
     return game
+
+

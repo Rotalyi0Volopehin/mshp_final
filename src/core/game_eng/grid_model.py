@@ -34,8 +34,8 @@ class GridModel:
             raise exceptions.ArgumentTypeException()
         stream.write_byte(obj.width)
         stream.write_byte(obj.height)
-        for tile in obj.foreach:
-            GridTile.write(stream, tile)
+        for ix, iy in obj.foreach_loc:
+            GridTile.write(stream, obj.tiles[ix][iy])
 
     @property
     def foreach(self):
@@ -67,6 +67,5 @@ class GridModel:
         self.controller = controller
 
     def handle_new_team_turn(self):
-        for column in self.tiles:
-            for tile in column:
-                tile.handle_new_team_turn()
+        for tile in self.foreach:
+            tile.handle_new_team_turn()

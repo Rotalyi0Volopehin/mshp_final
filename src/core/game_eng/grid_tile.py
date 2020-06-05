@@ -21,6 +21,9 @@ class GridTile:
     def read(stream: BinaryReader, grid):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
+        none = stream.read_bool()
+        if none:
+            return None
         tile_type = CoreClasses.read_class(stream)
         loc_x, loc_y = stream.read_byte_point()
         team_ind = stream.read_sbyte()
@@ -34,13 +37,15 @@ class GridTile:
 
     @staticmethod
     def write(stream: BinaryWriter, obj):
-        if not (isinstance(stream, BinaryWriter) and isinstance(obj, GridTile)):
+        if not (isinstance(stream, BinaryWriter) and (isinstance(obj, GridTile) or (obj is None))):
             raise exceptions.ArgumentTypeException()
-        CoreClasses.write_class(stream, type(obj))
-        stream.write_byte_point((obj.loc_x, obj.loc_y))
-        stream.write_sbyte(obj.team_ind)
-        stream.write_byte(obj.power)
-        stream.write_short_iterable(obj.effects, GridTile.get_effect_type())
+        stream.write_bool(obj is None)
+        if obj is not None:
+            CoreClasses.write_class(stream, type(obj))
+            stream.write_byte_point((obj.loc_x, obj.loc_y))
+            stream.write_sbyte(obj.team_ind)
+            stream.write_byte(obj.power)
+            stream.write_short_iterable(obj.effects, GridTile.get_effect_type())
 
     @staticmethod  # костыль для избежания циклического импорта
     def get_effect_type() -> type:
