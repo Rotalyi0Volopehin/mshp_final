@@ -69,9 +69,9 @@ class CreateSessionForm(forms.Form):
     user_max_level = forms.IntegerField(label="Максимальный уровень участников", min_value=0, widget=forms.NumberInput(
         attrs={"class": "input form-control"}), required=False)
     min_level_limit_existence = CommonFields.get_checkbox_field("Применять ограничнение",
-                                {"class": "ml-3 mr-2", "onclick": "min_limit_checkbox_clicked()"})
+                                {"class": "ml-3 mr-3 mt-4", "onclick": "min_limit_checkbox_clicked()"})
     max_level_limit_existence = CommonFields.get_checkbox_field("Применять ограничнение",
-                                {"class": "ml-3 mr-2", "onclick": "max_limit_checkbox_clicked()"})
+                                {"class": "ml-3 mr-3 mt-4", "onclick": "max_limit_checkbox_clicked()"})
 
     def clean(self):
         cleaned_data = super().clean()
