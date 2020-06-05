@@ -26,7 +26,7 @@ class GridModel:
         height = stream.read_byte()
         obj = GridModel(LoadingDump.game_session, width, height)
         for ix, iy in obj.foreach_loc:
-            obj.tiles[ix][iy] = GridTile.read(stream)
+            obj.tiles[ix][iy] = GridTile.read(stream, obj)
         return obj
 
     @staticmethod

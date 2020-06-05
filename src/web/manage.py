@@ -12,7 +12,6 @@ def fix_project_roots(*root_names):
 
 
 try:
-    # vvv этот импорт каким-то образом чинит один маленький баг; я не понимаю vvv
     from net_connection.core_classes import CoreClasses
 except:
     print("Direct import failed. Patching . . . ", end='')

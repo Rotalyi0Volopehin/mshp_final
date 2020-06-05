@@ -13,10 +13,10 @@ from constants import Color
 class GameVC(DrawObject):
     TEAM_COLORS = [Color.DARK_RED, Color.DARK_GREEN, Color.DARK_BLUE]
 
-    def __init__(self, game):
+    def __init__(self, game, game_model=None):
         super().__init__(game)
         self.__turn_start_time = time.time()
-        self.model = create_hardcoded_game_model()
+        self.model = create_hardcoded_game_model() if game_model is None else game_model
         self.model.start_game()
         self.grid = self.model.grid
         self.grid_vc = GridVC(self.grid, self.game)

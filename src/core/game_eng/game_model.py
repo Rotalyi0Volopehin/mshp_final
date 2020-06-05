@@ -51,8 +51,6 @@ class GameModel:
             self.market = Market.read(stream)
             for _ in range(3):
                 Team.read(stream)
-            stream.read_iterable(PlayerTurn)
-            stream.read_iterable(PressureToolSet)
 
     @staticmethod
     def read(stream: BinaryReader):
@@ -68,7 +66,16 @@ class GameModel:
     def write(stream: BinaryWriter, obj):
         if not (isinstance(stream, BinaryWriter) and isinstance(obj, GameModel)):
             raise exceptions.ArgumentTypeException()
-        pass  # TODO: дописать запись игровой сессии
+        stream.write_short_string(obj.title)
+        stream.write_byte(obj.player_turn_period)
+        stream.write_uint(obj.teams_money_limit)
+        GridModel.write(stream, obj.grid)
+        Market.write(stream, obj.market)
+        for team in obj.teams:
+            Team.write(stream, team)
+        for team in obj.teams:
+            for player in team.players:
+                Player.write(stream, player)
 
     def start_game(self):
         """**Окончание инициализации**\n

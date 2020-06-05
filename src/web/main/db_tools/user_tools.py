@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.encoding import force_bytes
 from main.db_tools.user_error_messages import DBUserErrorMessages
 from main.models import UserData
+from game_eng.game_model import GameModel
 # vvv для системы верификации vvv
 from django.utils.http import urlsafe_base64_encode
 from main.db_tools.tokens import account_activation_token
@@ -174,3 +175,33 @@ class DBUserTools:
             user_data.activated = True
             user_data.save()
         return True
+
+    @staticmethod
+    def do_game_session_end_user_data_change(user_data: UserData, victory: bool):
+        """**Инструмент изменения пользовательских данных по причине окончания игровой сессии**\n
+        Увеличивает поле 'UserData.played_games_count' на 1. Если игрок победил,
+        увеличивает поле 'UserData.victories_count' на 1 и даёт игроку level+1 единиц опыта.
+
+        :raises ArgumentTypeException: |ArgumentTypeException|
+        :param user_data: Пользовательских данные, которые требуется изменить
+        :type user_data: UserData
+        :param victory: Факт победы игрока
+        :type victory: bool
+        """
+        if not (isinstance(user_data, UserData) and isinstance(victory, bool)):
+            raise exceptions.ArgumentTypeException()
+        user_data.played_games_count += 1
+        if victory:
+            user_data.victories_count += 1
+            user_data.gain_exp(user_data.level + 1)
+        user_data.save()
+
+    @staticmethod
+    def try_get_player_of_user_from_game_model(user: User, game_model: GameModel):
+        if not (isinstance(user, User) and isinstance(game_model, GameModel)):
+            raise exceptions.ArgumentTypeException()
+        for team in game_model.teams:
+            for player in team.players:
+                if player.id == user.id:
+                    return player
+        return None

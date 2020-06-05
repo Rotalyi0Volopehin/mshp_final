@@ -3,6 +3,11 @@
 {% block content %}
 
 {% load static %}
+
+{% block extra_js %}
+<script src="{% static 'create_session.js' %}"></script>
+{% endblock %}
+
   <style>
   body {
       background: linear-gradient(to top right, #9900cc, #000099);
@@ -18,13 +23,13 @@
 
   }
 
-  #qwe1 {
+  #id_min_level_limit_existence {
   transform:scale(3);
   opacity:1;
   cursor:pointer;
   }
 
-  #qwe2 {
+  #id_max_level_limit_existence {
   transform:scale(3);
   opacity:1;
   cursor:pointer;
@@ -39,62 +44,70 @@
       text-transform: uppercase;
   }
   </style>
-    <div class="form1 p-3 rounded-lg border cyberfont">
-        <h1>Создание сессии</h1>
-        <div class="form">
-            <form method="POST">
-                <div class="container">
-                    <div class="form-group">
-                        <div class="row">
-                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.session_name.label }}</p>
-                            <div class="col form-group cyberfont">{{ form.session_name }}</div>
-                        </div>
-                        <div class="row">
-                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_per_team.label }}</p>
-                            <div class="col form-group cyberfont">{{ form.user_per_team }}</div>
-                        </div>
-                        <div class="row">
-                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.turn_period.label }}</p>
-                            <div class="col form-group cyberfont">{{ form.turn_period }}</div>
-                        </div>
-                        <div class="row">
-                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_min_level.label }}</p>
-                            <div class="col form-group cyberfont">
-                                <div class="row-2">
-                                    {{ form.user_min_level }}
-                                    <input class='ml-3' type="checkbox" id="qwe1" autocomplete="on"> вкл ограничение
-                                </div>
+
+<div class="form1 p-3 rounded-lg border cyberfont">
+    <h1>Создание игровой сессии</h1>
+    <div class="form">
+        <form method="POST"> {% csrf_token %}
+            <div class="container">
+                <div class="form-group">
+                    <div class="row">
+                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.session_name.label }}</p>
+                        <div class="col form-group cyberfont">{{ form.session_name }}</div>
+                    </div>
+                    <div class="row">
+                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_per_team.label }}</p>
+                        <div class="col form-group cyberfont">{{ form.user_per_team }}</div>
+                    </div>
+                    <div class="row">
+                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.turn_period.label }}</p>
+                        <div class="col form-group cyberfont">{{ form.turn_period }}</div>
+                    </div>
+                    <div class="row">
+                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.money_limit.label }}</p>
+                        <div class="col form-group cyberfont">{{ form.money_limit }}</div>
+                    </div>
+                    <div class="row">
+                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_min_level.label }}</p>
+                        <div class="col form-group cyberfont">
+                            <div class="row-2">
+                                {{ form.user_min_level }}
+                                {{ form.min_level_limit_existence }}
+                                {{ form.min_level_limit_existence.label }}
                             </div>
                         </div>
-                        <div class="row">
-                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_max_level.label }}</p>
-                            <div class="col form-group cyberfont">
-                                <div class="row-2">
-                                    {{ form.user_max_level }}
-                                    <input class='ml-3' type="checkbox" id="qwe2" autocomplete="on"> вкл ограничение
-                                </div>
+                    </div>
+                    <div class="row">
+                        <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.user_max_level.label }}</p>
+                        <div class="col form-group cyberfont">
+                            <div class="row-2">
+                                {{ form.user_max_level }}
+                                {{ form.max_level_limit_existence }}
+                                {{ form.max_level_limit_existence.label }}
                             </div>
                         </div>
-                        <div class="row">
-                            <p class="col-5 mr-4 mt-1 text-right text-white cyberfont">{{ form.money_limit.label }}</p>
-                            <div class="col form-group cyberfont">{{ form.money_limit }}</div>
-
-                        </div>
-
                     </div>
                 </div>
-            </form>
-        </div>
-        <div class="col" align="center">
-            <button type="submit" class="btn btn-dark cyberfont" >
-                Создать сессию
-            </button>
-        </div>
-        {% for error in form.non_field_errors %}
-        <p class="help in_danger">{{ error }}</p>
-        {% endfor %}
+            </div>
+            <div class="col mb-2" align="center">
+                <button type="submit" class="btn btn-dark cyberfont">Создать сессию</button>
+            </div>
+        </form>
     </div>
+    {% if error %}
+        <div class="text-center alert alert-danger mt-1" role="alert">{{ error }}</div>
+    {% elif success %}
+        <div class="text-center alert alert-success mt-1" role="alert">Сессия успешно создана</div>
+    {% else %}
+        {% for error_item in form.non_field_errors %}
+            <p class="text-center alert alert-danger">{{ error_item }}</p>
+        {% endfor %}
+    {% endif %}
+</div>
 
-
+<script>
+    min_limit_checkbox_clicked();
+    max_limit_checkbox_clicked();
+</script>
 
 {% endblock %}
