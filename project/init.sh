@@ -7,7 +7,7 @@ source venv/bin/activate
 
 # requirements
 pip install --upgrade pip
-pip install -r ../src/web/requirements.txt
+pip install -r ../project/requirements.txt
 pip install -r ../src/desktop/requirements.txt
 
 # django init
