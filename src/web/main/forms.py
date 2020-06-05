@@ -67,23 +67,12 @@ class CreateSessionForm(forms.Form):
         attrs={"class": "input form-control"}), required=False)
     user_max_level = forms.IntegerField(label="Максимальный уровень участников", min_value=0, widget=forms.NumberInput(
         attrs={"class": "input form-control"}), required=False)
-    min_level_limit_existence = CommonFields.get_checkbox_field("Применять ограничнение",
+    min_level_limit_existence = CommonFields.get_checkbox_field("Применять ограничение",
                                                                 {"class": "ml-3 mr-3 mt-4",
                                                                  "onclick": "min_limit_checkbox_clicked()"})
-    max_level_limit_existence = CommonFields.get_checkbox_field("Применять ограничнение",
+    max_level_limit_existence = CommonFields.get_checkbox_field("Применять ограничение",
                                                                 {"class": "ml-3 mr-3 mt-4",
                                                                  "onclick": "max_limit_checkbox_clicked()"})
-
-
-class CurrentSessionForm(forms.Form):
-    session_name = forms.CharField(label='Название', min_length=1, max_length=64,
-                                   widget=forms.TextInput(attrs={"class": "form-control", "disabled": "disabled"}))
-    user_level = forms.CharField(label='Допустимый уровень', min_length=1, max_length=64,
-                                  widget=forms.TextInput(attrs={"class": "form-control", "disabled": "disabled"}))
-    user_fill = forms.CharField(label='Игроков набралось', min_length=1, max_length=64,
-                                widget=forms.TextInput(attrs={"class": "form-control", "disabled": "disabled"}))
-    session_date = forms.CharField(label='Название', min_length=1, max_length=64,
-                                   widget=forms.TextInput(attrs={"class": "form-control", "disabled": "disabled"}))
 
 
 class ProfileForm(forms.Form):

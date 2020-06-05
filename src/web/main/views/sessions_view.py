@@ -47,17 +47,7 @@ class SessionsFormPage(FormView):
 
     @staticmethod
     def __get_session_table_row(session) -> tuple:
-        level_limits = ""
-        if session.user_lowest_level != -1:
-            level_limits += f"от {session.user_lowest_level} "
-        if session.user_highest_level != 0xFFFF:
-            level_limits += f"до {session.user_highest_level}"
-        if len(level_limits) == 0:
-            level_limits = "нет"
-        participant_count = len(UserParticipation.objects.filter(game_session=session))
-        participant_required = session.user_per_team_count * 3
-        player_count = f"{participant_count} из {participant_required}"
-        return session, level_limits, player_count
+        return session, session.level_limits_as_string, session.players_gathered
 
     @staticmethod
     def __put_page_info_into_context(context: dict, page_ind: int, page_count: int):
