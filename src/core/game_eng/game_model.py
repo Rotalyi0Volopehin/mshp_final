@@ -1,5 +1,6 @@
 import exceptions
 
+from datetime import datetime
 from game_eng.player_turn import PlayerTurn
 from game_eng.market import Market
 from game_eng.team import Team
@@ -44,7 +45,9 @@ class GameModel:
         if stream is None:
             self.grid = GridModel(self, grid_width, grid_height)
             self.market = Market()
+            self.turn_beginning_time = datetime.utcnow()
         else:
+            self.turn_beginning_time = stream.read_datetime()
             LoadingDump.set_current_game_session(self)
             self.grid = GridModel.read(stream)
             self.market = Market.read(stream)
@@ -68,6 +71,7 @@ class GameModel:
         stream.write_short_string(obj.title)
         stream.write_byte(obj.player_turn_period)
         stream.write_uint(obj.teams_money_limit)
+        stream.write_datetime(obj.turn_beginning_time)
         GridModel.write(stream, obj.grid)
         Market.write(stream, obj.market)
         for team in obj.teams:
@@ -97,6 +101,14 @@ class GameModel:
         if (len(self.teams) >= 3) or self.__fixed:
             raise exceptions.InvalidOperationException()
         self.teams.append(team)
+
+    @property
+    def turn_time_elapsed(self) -> float:
+        return datetime.utcnow().timestamp() - self.turn_beginning_time.timestamp()
+
+    @property
+    def turn_time_left(self) -> float:
+        return self.player_turn_period - self.turn_time_elapsed
 
     @property
     def current_team(self) -> Team:
@@ -132,6 +144,7 @@ class GameModel:
             self.__next_team_turn()
         self.__current_player = self.current_team.current_player
         self.__current_player_turn.reset()
+        self.turn_beginning_time = datetime.utcnow()
 
     def find_player_by_name(self, name: str):
         if not isinstance(name, str):
@@ -164,7 +177,7 @@ def create_new_game_model(title: str, player_turn_period: int, teams_money_limit
 
     def make_capital_tile(x, y, team):
         tile = game.grid.tiles[x][y]
-        tile.upgrade(CapitalGridTile)
+        tile = tile.upgrade(CapitalGridTile)
         tile.team = team
     make_capital_tile(1, 5, game.teams[0])
     make_capital_tile(7, 1, game.teams[1])

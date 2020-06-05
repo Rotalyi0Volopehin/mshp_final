@@ -29,7 +29,7 @@ def index_page(request):
 
 
 def cad_page(request):
-    CAD.clear_all_data()
+    #CAD.clear_all_data()
     """
     from django.contrib.auth.models import User
     from main.db_tools.user_participation_tools import DBUserParticipationTools
@@ -39,12 +39,13 @@ def cad_page(request):
     for user in users:
         DBUserParticipationTools.try_sign_user_up_for_session(user, gs)
     """
-    """
+    #"""
     from main.db_tools.game_session_tools import DBGameSessionTools
     from main.models import GameSession
     gs = GameSession.objects.get(title="GS01")
+    gs.phase = 0
     DBGameSessionTools.start_session_active_phase(gs)
-    """
+    #"""
     return HttpResponse("SUCCESS! All data is cleared")
 
 

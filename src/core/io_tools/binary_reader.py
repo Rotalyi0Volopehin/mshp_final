@@ -1,5 +1,6 @@
 import exceptions
 
+from datetime import datetime
 from struct import unpack
 from .binary_stream import BinaryStream
 
@@ -118,6 +119,18 @@ class BinaryReader(BinaryStream):
         x = self.read_sbyte()
         y = self.read_sbyte()
         return x, y
+
+    def read_datetime(self):
+        """**Чтение DateTime**\n
+        Формат данных : [int_part<32bit>][float_part<32bit>]
+
+        :return: DateTime
+        :rtype: datetime
+        """
+        int_part = self.read_uint()
+        float_part = self.read_uint()
+        timestamp = int_part + float_part / 1000000
+        return datetime.fromtimestamp(timestamp)
 
     def read_chars(self, length: int) -> str:
         """**Чтение строки известной длины**\n

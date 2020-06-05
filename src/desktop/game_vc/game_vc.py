@@ -1,5 +1,3 @@
-import time
-
 from game_eng.game_model import GameModel
 from game_eng.team_ders.team_a import TeamA
 from game_eng.team_ders.team_b import TeamB
@@ -15,7 +13,6 @@ class GameVC(DrawObject):
 
     def __init__(self, game, game_model=None):
         super().__init__(game)
-        self.__turn_start_time = time.time()
         self.model = create_hardcoded_game_model() if game_model is None else game_model
         self.model.start_game()
         self.grid = self.model.grid
@@ -24,21 +21,12 @@ class GameVC(DrawObject):
 
     def process_logic(self):
         self.grid_vc.process_logic()
-        if (self.turn_time_elapsed >= self.model.player_turn_period) or self.__end_turn_flag:
+        if (self.model.turn_time_left <= 0.0) or self.__end_turn_flag:
             self.__next_turn()  # TODO: переписать для сетевой игры (потребуется асинхронная синхронизация)
-            self.__turn_start_time = time.time()
             self.__end_turn_flag = False
 
     def end_turn(self):
         self.__end_turn_flag = True
-
-    @property
-    def turn_time_left(self) -> float:
-        return self.model.player_turn_period - self.turn_time_elapsed
-
-    @property
-    def turn_time_elapsed(self) -> float:
-        return time.time() - self.__turn_start_time
 
     @property
     def is_current_scene_map(self) -> bool:
@@ -75,8 +63,8 @@ def create_hardcoded_game_model() -> GameModel:
     TeamB(game)
     TeamC(game)
     for team in game.teams:
-        team.add_player(create_hardcoded_player(f"P{team.index}A", team))
-        team.add_player(create_hardcoded_player(f"P{team.index}B", team))
+        create_hardcoded_player(f"P{team.index}A", team)
+        create_hardcoded_player(f"P{team.index}B", team)
         team.earn_money(999)
         make_capital_tile(team.index << 1, 3, team)
     return game

@@ -69,7 +69,8 @@ class GridTileVC(DrawObject):
         self.render_number()
         self.update_surface()
         self.game.screen.blit(self.__surface, self.pos)
-        self.number.process_draw()
+        if self.model.power > 0:
+            self.number.process_draw()
         GridTileSpriteExtender.extend_sprite(self, self.game.screen)
 
     def process_event(self, event):
