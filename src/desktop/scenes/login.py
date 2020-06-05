@@ -2,7 +2,7 @@ import pygame
 import os.path as path
 import request_parcel_helpers.user_logging as user_logging
 import exceptions
-
+import webbrowser
 from pygame.locals import *
 from constants import Color
 from net_connection.response_ids import ResponseID
@@ -78,7 +78,7 @@ class LoginScene(Scene):
             self.set_main_menu_scene()
 
     def on_reg_button_click(self):
-        pass  # TODO: сделать редирект в браузер на страницу регистрации
+        webbrowser.open('http://network-conf.gq/registration/', new=1)
 
     def on_closed(self):
         pygame.mixer.music.stop()
