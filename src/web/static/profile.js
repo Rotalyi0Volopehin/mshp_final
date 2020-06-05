@@ -3,7 +3,7 @@ $('#myModal').on('shown.bs.modal', function () {
     })
 
 function progress_bar() {
-    document.getElementById('progress-bar').style.width = '50' + '%';
+    document.getElementById('progress-bar').style.width = exp + '%';
 }
 function clear_pw_change_form() {
     OldPassword.value = "";

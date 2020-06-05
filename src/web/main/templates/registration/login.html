@@ -5,22 +5,49 @@
 
 
 {% block content %}
+<style>
+    body {
+        background: linear-gradient(to top right, #1560E0, #AFEEEE);
+    }
 
-    <h1 class="mt-4">Авторизация ( Требуется переделать стили )</h1>
-    <hr>
+    .rounded_border {
+        border-radius: 40px;
+    }
 
-    <div class="row">
-        <div class="col-4 offset-4">
-            <form action="{% url 'login' %}" method="POST">
-                {% csrf_token %}
+    .main_div {
+        margin-top: 20%;
+        padding-bottom: 15%;
+        margin-left: 19%;
+        width: 60%;
+    }
 
-                {% bootstrap_form form %}
-                {% buttons %}
-                    <button type="submit" class="btn btn-primary float-right btn-block">Войти</button>
-                {% endbuttons %}
-            </form>
+    .dark_part {
+        margin-top: -2%;
+        height: 125px;
+    }
+
+</style>
+<div class="row main_div">
+    <form class="col" action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <div class="dark_part bg-dark cyberfont rounded_border rounded-bottom">
+            <h2 class="text-center text-white cyberfont pt-5" style="font-size: 150%;">Вход</h2>
         </div>
-    </div>
+        <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-5">
+            <div class="form-group">
+                {% for item in form %}
+                <div class="row">
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ item.label }}</p>
+                    <div class="col form-group">{{ item }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% buttons %}
+            <button type="submit" class="btn btn-dark float-right btn-block cyberfont">Войти</button>
+            {% endbuttons %}
+        </div>
+    </form>
+</div>
 
 {% endblock %}
 

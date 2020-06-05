@@ -1,8 +1,15 @@
+links.txt
+docs/
+project/venv
+project/.idea
+.idea
 
 # Created by https://www.gitignore.io/api/linux,macos,python,django,windows,virtualenv,pycharm
 # Edit at https://www.gitignore.io/?templates=linux,macos,python,django,windows,virtualenv,pycharm
 
-.dia~
+*.gam
+*.dia~
+!.gitkeep
 
 ### Django ###
 *.log
@@ -341,4 +348,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.gitignore.io/api/linux,macos,python,django,windows,virtualenv,pycharm
+/docs/

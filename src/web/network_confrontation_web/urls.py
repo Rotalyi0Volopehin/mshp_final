@@ -21,27 +21,23 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import AnonymousUser
 from main.views.menu import get_menu_context, get_user_menu_context
 
+from main.views import profile_view, registration_view, fractions_view, sessions_view
+from main.views import views, activation_view, darknet_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index_page, name='index'),
     path('activate/<str:uid>/<str:token>/', activation_view.activate, name='activate'),
     path('cad/', views.cad_page, name='cad'),
-    path('darknet/', views.darknet_page, name='darknet'),
+    path('darknet/', darknet_view.darknet_page, name='darknet'),
     path('forum/', views.forum_page, name='forum'),
-    path('profile/<int:uid>/', views.ProfileFormPage.as_view(), name='profile'),
-    path(
-        'login/',
-        auth_views.LoginView.as_view(
-            extra_context={
-                'menu': get_menu_context(),
-                'usermenu': get_user_menu_context(AnonymousUser()),
-                'pagename': 'Авторизация',
-            }
-        ),
-        name='login'
-    ),
-    path('registration/', views.RegistrationFormPage.as_view(), name='registration'),
+    path('sessions/', sessions_view.SessionsFormPage.as_view(), name='sessions'),
+    path('profile/<int:uid>/', profile_view.ProfileFormPage.as_view(), name='profile'),
+    path('fraction0/', fractions_view.FractionPages.fraction0_page, name='fraction0'),
+    path('fraction1/', fractions_view.FractionPages.fraction1_page, name='fraction1'),
+    path('fraction2/', fractions_view.FractionPages.fraction2_page, name='fraction2'),
+    path('login/', views.LoginFormPage.as_view(), name='login'),
+    path('registration/', registration_view.RegistrationFormPage.as_view(), name='registration'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
     path('chat/room/<str:room_name>/', chat.room, name='chat_room'),

@@ -1,9 +1,6 @@
 from enum import Enum
 
 
-# TODO: задокументировать
-
-
 class ResponseID(Enum):
     SUCCESS = 0  # parcel[1] { response_id<ResponseID> }
     FAIL = 1  # parcel[1] { response_id<ResponseID> }

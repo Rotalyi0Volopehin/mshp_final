@@ -1,8 +1,8 @@
-from main.views.menu import get_menu_context, get_user_menu_context
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.forms import Form
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
+from main.views.menu import get_menu_context, get_user_menu_context
 
 
 class FormView(View):
@@ -23,11 +23,12 @@ class FormView(View):
     form_class = Form
     template_name = "pages/index.html"
     display_user_menu = True
+    login_required = False
 
     get_handler = None
     post_handler = None
 
-    def get(self, request, **kwargs):
+    def get(self, request: HttpRequest, **kwargs):
         """**Обработчик get-запросов**\n
         Вызывает дополнительный обработчик get-запросов со следующими аргументами:\n
         - context (*dict*) - контекст
@@ -38,6 +39,8 @@ class FormView(View):
         :type request: HttpRequest
         :return: http-респонс страницы с пустой формой
         """
+        if self.login_required and not request.user.is_authenticated:
+            return redirect("login")
         context = self.collect_default_context(request)
         context["form"] = self.form_class()
         if self.get_handler is not None:

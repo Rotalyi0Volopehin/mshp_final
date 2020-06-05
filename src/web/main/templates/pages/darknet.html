@@ -1,14 +1,103 @@
 {% extends 'base/base.html' %}
 
+{% load static %}
+
+{% block extra_js %}
+<script src="{% static 'darknet.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    {% for card in darknet_cards %}
+        function button_{{ card.tag }}() {
+            hide_all_cards();
+            set_cards_state('tool-{{ card.tag }}', 'visible');
+        }
+    {% endfor %}
+
+    function set_all_cards_state(state) {
+        {% for card in darknet_cards %}
+            set_cards_state('tool-{{ card.tag }}', state);
+        {% endfor %}
+    }
+</script>
+
+{% endblock %}
 
 {% block content %}
-    <div class="mt-3">
-        <div class="jumbotron">
-            <h1 class="display-4">DarkNet</h1>
-            <p class="lead">В общем, нужен здесь крутой текст, чтобы мы рил были, будто в Даркнете, а ещё темная тема! Используйте нестандартное, новое!
-            Нам нужно выделится среди всех проектов!</p>
-            <hr class="my-4">
-            <p>Описание страницы, что-нить красивенькое.</p>
+
+{% if error %}
+
+<div class="text-center alert alert-danger mt-4" role="alert">{{ error }}</div>
+
+{% else %}
+
+<div class="container">
+    <div class="row">
+        <div class="mt-3">
+            <div class="jumbotron">
+                <h1 class="display-4">DarkNet</h1>
+                <p class="lead">Добро пожаловать в DarkNet магазин! Место для нелегальных покупок. Здесь начинается темная сторона интернета...</p>
+                <hr class="my-4">
+                <p>Приобритай инструменты взлома анонимно...</p>
+            </div>
         </div>
     </div>
+
+    <h3 class="text-center">Деньги фракции: <span class="badge badge-secondary">{{ fraction_money }}</span></h3>
+
+    {% if warning %}
+        <div class="text-center alert alert-danger mt-5" role="alert">{{ warning }}</div>
+    {% endif %}
+
+    <div class="row mt-5">
+        <div class="btn-group" role="group" aria-label="Basic example" style="width: 100%;">
+            <button type="button" class="btn btn-secondary" onclick="button_all();">Все</button>
+            {% for card in darknet_cards %}
+                <button type="button" class="btn btn-secondary" onclick="button_{{ card.tag }}();">{{ card.name }}</button>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% for card in darknet_cards %}
+        <div class="row mt-4 tool-{{ card.tag }}">
+            <div class="card" style="width: 100%;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            {% static '/images/darknet/' as staticImagesDarknet %}
+                            <img src="{{ staticImagesDarknet }}/{{ card.tag }}.png"
+                                 class="card-img-top mt-2" alt="..." style="margin-bottom: 9px; width: 60%">
+                        </div>
+                        <div class="col-7">
+                            <div class="card-body" style="margin-left: -25px; margin-top: -5px; width: 105%;">
+                                <h5 class="card-title">{{ card.name }}
+                                    <font style="font-size: 11pt;">(цена: {{ card.price }})</font>
+                                </h5>
+                                <p class="card-text" style="color: #5c0000; font-weight: bold">
+                                    Осталось: {{ card.count }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="buy_product" value="{{ card.tag }}">
+                                <button type="submit" class="btn btn-primary mt-3 float-right" style="width: 100%;"
+                                    {% if card.availability is False %}disabled{% endif %}>
+                                    Купить (-{{ card.price }} валюты)
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div style="margin-bottom: 300px;"></div>
+</div>
+
+{% endif %}
+
 {% endblock %}

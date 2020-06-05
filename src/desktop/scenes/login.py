@@ -1,75 +1,86 @@
-from pygame_textinput import TextInput
-from PIL import Image
 import pygame
+import os.path as path
+import request_parcel_helpers.user_logging as user_logging
+import exceptions
+
 from pygame.locals import *
-import json
-import time
 from constants import Color
-from scenes.base import Scene
-import socket
-from objects.text_input import Txtinput
+from net_connection.response_ids import ResponseID
 from objects.button import Btn
-from objects.text import Text
+from objects.gifimage import GIFImage
 from objects.gifimg import GIFImage
+from objects.text import Text
+from objects.text_input import TextInput
+from objects.password_input import PasswordInput
+from scenes.base import Scene
+from ws.channel import Channel
+from ws.parcel_manager import ParcelManager
+
 
 class LoginScene(Scene):
+    def init_form(self):
+        self.login_textbox = TextInput(self.game, False, 170, 20)
+        self.password_textbox = PasswordInput(self.game, False, 180, 80)
+        button_enter = Btn(self.game, (350, 300, 100, 40), Color.WHITE, "Войти", self.on_enter_button_click)
+        button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
+        trailer = GIFImage(path.join("images", "login_backimage.gif"), self.game)
+        login_label = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False, is_italic=False,
+                           text='Логин : ', color=Color.YELLOW, x=125, y=30)
+        password_label = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False, is_italic=False,
+                              text='Пароль : ', color=Color.YELLOW, x=125, y=90)
+        multiplayer_enter_color = Color.WHITE if self.game.online else Color.BLACK
+        button_multiplayer_enter = Btn(self.game, (350, 350, 100, 40), multiplayer_enter_color, "Сетевая игра",
+                                       self.on_login_button_click if self.game.online else None)
+        self.objects.extend([
+            trailer,
+            self.login_textbox,
+            self.password_textbox,
+            button_enter,
+            button_multiplayer_enter,
+            button_register,
+            login_label,
+            password_label,
+        ])
+
+    def load_sound(self):
+        pygame.mixer.music.load(path.join("sounds", "login_bgm.wav"))
+
     def create_objects(self):
-        self.login = Txtinput(self.game, False, 170, 20)
-        self.password = Txtinput(self.game, False, 180, 80)
-        #self.trailer = GIFImage("backimage.gif", self.game)
+        self.game.online = Channel.try_connect()  # TODO: заменить на сообщение с кнопкой для повторной попытки
+        self.init_form()
+        self.load_sound()
+        pygame.mixer.music.play(-1)
 
-        self.button_enter = Btn(self.game, (350, 350, 100, 40), Color.WHITE, "Войти", self.lg_on_click)
-        self.button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.rg_on_click)
-        self.text_login = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False,
-                               is_italic=False, text='Логин:',
-                               color=(255, 255, 100), x=125, y=30)
-        self.text_reg = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False,
-                             is_italic=False, text='Пароль:',
-                             color=(255, 255, 100), x=125, y=90)
+    def set_gs_menu_scene(self):
+        from scenes.gs_menu import GSMenuScene
+        self.game.set_origin_scene(GSMenuScene)
 
-        self.objects = [
-                   # self.trailer,
-                    self.password,
-                    self.button_enter, self.button_register,
-                    self.text_login, self.text_reg,
-                    self.login
-                        ]
+    def set_main_menu_scene(self):
+        from scenes.main_menu import MainMenuScene
+        self.game.set_origin_scene(MainMenuScene)
 
-    def set_menu_scene(self):
-        self.set_next_scene(self.game.MENU_SCENE_INDEX)
+    def on_login_button_click(self):
+        login = self.login_textbox.internal_txtinput.get_text()
+        password = self.password_textbox.internal_txtinput.get_text()
+        user_logging.send_login_request(login, password)
+        ParcelManager.receive_parcel_async(self.login_response_parcel_handler)
 
-    def lg_on_click(self):
-        pass
-        # тODO проверка сервера...
-        # TODO:
-        # DATA = {"data":
-        #            {"hostname":"localhost",
-        #             "ipaddress":"serverhost",
-        #             "login":login.get_text(),
-        #             "password":password.get_text()}}
-        # raw_data = json.dumps(DATA, ensure_ascii=False).encode("utf-8")
-        # socket = socket.socket()
-        # a.connect(('serverhost', 'port'))
-        # socket.send(raw_data)
-        # print((socket.recv(1000)).decode('utf-8'))
-        # Server responses us
-        # IF DATA.ISVALID == TRUE -> THEN GO PLAY CS:GO
+    def on_enter_button_click(self):
+        self.game.online = False
+        self.set_gs_menu_scene()
 
-        self.set_menu_scene()  # если авторизировался выполнить
+    def login_response_parcel_handler(self, parcel):
+        response_id = parcel[0]
+        if response_id == ResponseID.ERROR:
+            error_id = parcel[1]
+            raise exceptions.ErrorResponseException(error_id)
+        if response_id == ResponseID.FAIL:
+            pass  # TODO: реализовать вывод ошибки
+        elif response_id == ResponseID.SUCCESS:
+            self.set_main_menu_scene()
 
-    def rg_on_click(self):
-        pass
-        # ODO зарегистрировать на сервере...
-        # TODO:
-        # DATA = {"data":
-        #            {"hostname":"localhost",
-        #             "ipaddress":"serverhost",
-        #             "login":login.get_text(),
-        #             "password":password.get_text()}}
-        # raw_data = json.dumps(DATA, ensure_ascii=False).encode("utf-8")
-        # socket = socket.socket()
-        # a.connect(('serverhost', 'port'))
-        # socket.send(raw_data)
-        # print((socket.recv(1000)).decode('utf-8'))
-        # Server responses us
-        # IF DATA.ISVALID == TRUE -> THEN GO PLAY CS:GO
+    def on_reg_button_click(self):
+        pass  # TODO: сделать редирект в браузер на страницу регистрации
+
+    def on_closed(self):
+        pygame.mixer.music.stop()

@@ -1,7 +1,11 @@
+"""Формы для страниц"""
 from django import forms
+from django.forms import ModelForm
+from .models import Message
 
 
 class CommonFields:
+    """Базовый класс"""
     @staticmethod
     def get_description_field(required, label="Описание", attrs=None):
         return forms.CharField(widget=forms.Textarea(attrs=attrs), label=label, min_length=1,
@@ -34,17 +38,20 @@ class RegistrationForm(forms.Form):
     - password1 (*CharField PasswordInput*) - пароль пользователя
     - password2 (*CharField PasswordInput*) - костыль
     - name (*CharField TextInput*) - ник пользователя
-    - email (*CharField TextInput*) - E-mail пользователя
+    - email (*EmailField EmailInput*) - E-mail пользователя
     - team (*ChoiceField Select*) - фракция пользователя
     """
     login = CommonFields.get_login_field(True, attrs={"class": "form-control"})
     password1 = CommonFields.get_password_field(True, attrs={"class": "form-control"})
-    password2 = CommonFields.get_password_field(True, "Повторите пароль", attrs={"class": "form-control"})
+    password2 = CommonFields.get_password_field(
+        True, "Повторите пароль", attrs={"class": "form-control"})
     name = CommonFields.get_name_field(True, attrs={"class": "form-control"})
-    email = forms.CharField(label="E-mail", min_length=1, max_length=64,
-                            required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
-    team = forms.ChoiceField(widget=forms.Select(attrs={"class": "custom-select col-sm-9 ml-4"}), label="Фракция",
-                             required=True, choices=[(0, "0"), (1, "1"), (2, "2")])
+    email = forms.EmailField(label="E-mail", min_length=1, max_length=64,
+                             required=True,
+                             widget=forms.EmailInput(attrs={"class": "form-control"}))
+    team = forms.ChoiceField(widget=forms.Select(attrs={"class": "form-control"}), label="Фракция",
+                             required=True, choices=
+                             [(0, "Cyber Corp"), (1, "Добрая воля"), (2, "Зов Свободы")])
 
 
 class ProfileForm(forms.Form):
@@ -61,3 +68,22 @@ class ProfileForm(forms.Form):
     password = CommonFields.get_password_field(False)
     new_password = CommonFields.get_password_field(False)
     action = CommonFields.get_invisible_field(forms.CharField, "action_tag", '')
+
+
+class LoginForm(forms.Form):
+    """Форма для страницы логина"""
+    login = CommonFields.get_login_field(True, attrs={"class": "form-control"})
+    password = CommonFields.get_password_field(True, attrs={"class": "form-control"})
+
+
+class SessionsForm(forms.Form):
+    """Форма для страницы поиска сессий"""
+    session_title = CommonFields.get_name_field(False, attrs={"class": "col-lg-12"})
+
+
+class MessageForm(ModelForm):
+    class Meta:
+        model = Message
+        fields = ['message']
+        labels = {'message': ""}
+
