@@ -1,6 +1,7 @@
 import os
 import exceptions
 
+from zlib import crc32
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 
@@ -15,7 +16,10 @@ class CoreClasses:
             if file_name.endswith(".py") and not file_name.endswith("__init__.py"):
                 module_name = file_name[:-3].replace(os.path.sep, '.')
                 module = CoreClasses.__load_module(module_name)
-                CoreClasses.classes[module_name] = CoreClasses.__get_classes_of_module(module)
+                module_hash = crc32(module_name.encode())
+                if module_hash in CoreClasses.classes:
+                    raise exceptions.CoreModuleHashOverlapException()
+                CoreClasses.classes[module_hash] = CoreClasses.__get_classes_of_module(module)
         CoreClasses.__list_files(core_dir_path, file_handler)
 
     @staticmethod
@@ -40,22 +44,23 @@ class CoreClasses:
         classes = {}
         for name, elem in module.__dict__.items():
             if isinstance(elem, type):
-                classes[name] = elem
+                class_hash = crc32(name.encode())
+                if class_hash in classes:
+                    raise exceptions.CoreClassHashOverlapException()
+                classes[class_hash] = elem
         return classes
 
     @staticmethod
     def read_class(stream: BinaryReader) -> type:
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
-        module_name = stream.read_short_string()
-        class_name = stream.read_short_string()
-        return CoreClasses.classes[module_name][class_name]
+        module_hash = stream.read_uint()
+        class_hash = stream.read_uint()
+        return CoreClasses.classes[module_hash][class_hash]
 
     @staticmethod
     def write_class(stream: BinaryWriter, cls: type):
         if not (isinstance(stream, BinaryWriter) and isinstance(cls, type)):
             raise exceptions.ArgumentTypeException()
-        if (len(cls.__module__) > 255) or (len(cls.__name__) > 255):
-            raise exceptions.ArgumentValueException("Module and class names must be shorter than 256 symbols!")
-        stream.write_short_string(cls.__module__)
-        stream.write_short_string(cls.__name__)
+        stream.write_uint(crc32(cls.__module__.encode()))
+        stream.write_uint(crc32(cls.__name__.encode()))

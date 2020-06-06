@@ -15,10 +15,9 @@ from game_eng.grid_tile_upgrade_tree import GridTileUpgradeTree
 class TreeScene(Scene):
     @staticmethod
     def upload_images(length):
-        print("lox")
         images = list()
         for i in range(length):
-            images.append(pygame.image.load(os.path.join("images", f"Color{i+1}.png")))
+            images.append(pygame.image.load(os.path.join("images", f"Color{i + 1}.png")))
         return images
 
     def create_objects(self):

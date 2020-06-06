@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .menu import get_menu_context, get_user_menu_context
 from main.models import GameSession
 from main.db_tools.user_tools import DBUserTools
 from main.db_tools.user_error_messages import DBUserErrorMessages
 from main.db_tools.user_participation_tools import DBUserParticipationTools
+from main.db_tools.game_session_error_messages import DBGameSessionErrorMessages
 
 
 @login_required
@@ -39,7 +40,7 @@ def get_data(user, gsid, context):
             gs = GameSession.objects.filter(id=gsid)
             ok = len(gs) == 1
             if not ok:
-                context["error"] = DBUserErrorMessages.not_found
+                context["error"] = DBGameSessionErrorMessages.not_found
             else:
                 return ok, user_data, gs[0]
     return ok, user_data, None

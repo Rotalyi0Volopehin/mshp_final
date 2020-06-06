@@ -2,12 +2,11 @@ import pygame
 import os.path as path
 import request_parcel_helpers.user_logging as user_logging
 import webbrowser
-from pygame.locals import *
+
 from constants import Color
 from net_connection.response_ids import ResponseID
 from objects.button import Btn
 from objects.gifimage import GIFImage
-from objects.gifimg import GIFImage
 from objects.text import Text
 from objects.text_input import TextInput
 from objects.password_input import PasswordInput
@@ -76,7 +75,8 @@ class LoginScene(Scene):
             self.game.current_user_id = parcel[1]
             self.set_main_menu_scene()
 
-    def on_reg_button_click(self):
+    @staticmethod
+    def on_reg_button_click():
         webbrowser.open('http://network-conf.gq/registration/', new=1)
 
     def on_closed(self):

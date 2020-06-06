@@ -181,11 +181,3 @@ class Team:
             self.money = min(self.money + value, self.money_limit)
         else:
             self.money = max(self.money + value, 0)
-
-    def find_player_by_name(self, name: str):
-        if not isinstance(name, str):
-            raise exceptions.ArgumentTypeException()
-        for player in self.players:
-            if player.name == name:
-                return player
-        return None

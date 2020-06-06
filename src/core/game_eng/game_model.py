@@ -37,7 +37,6 @@ class GameModel:
         self.player_turn_period = player_turn_period
         self.teams_money_limit = teams_money_limit
         # vvv переменные полЯ vvv
-        self.__current_team_index = 0
         self.__current_player_turn = self.__current_player = None
         self.__fixed = False
         self.teams = list()
@@ -47,10 +46,12 @@ class GameModel:
             self.grid = GridModel(self, grid_width, grid_height)
             self.market = Market()
             self.turn_beginning_time = datetime.utcnow()
+            self.__current_team_index = 0
         else:
             self.turn_beginning_time = stream.read_datetime()
             self.grid = GridModel.read(stream, self)
             self.market = Market.read(stream)
+            self.__current_team_index = stream.read_byte()
             for _ in range(3):
                 Team.read(stream, self)
             stream.read_short_iterable(Player, {"game_model": self})
@@ -76,6 +77,7 @@ class GameModel:
         stream.write_datetime(obj.turn_beginning_time)
         GridModel.write(stream, obj.grid)
         Market.write(stream, obj.market)
+        stream.write_byte(obj.__current_team_index)
         for team in obj.teams:
             Team.write(stream, team)
         stream.write_short_iterable(obj.player_ids.values(), Player)
@@ -83,7 +85,12 @@ class GameModel:
     def start_game(self):
         """**Окончание инициализации**\n
         Запрещает запуск метода add_team.
+        Требуется наличие трёх фракций.
+
+        :raises InvalidOperationException: |InvalidOperationException|
         """
+        if len(self.teams) != 3:
+            raise exceptions.InvalidOperationException()
         for team in self.teams:
             for player in team.players:
                 self.player_ids[player.id] = player
@@ -156,15 +163,6 @@ class GameModel:
         self.__current_player_turn.reset()
         self.turn_beginning_time = datetime.utcnow()
 
-    def find_player_by_name(self, name: str):
-        if not isinstance(name, str):
-            raise exceptions.ArgumentTypeException()
-        for team in self.teams:
-            player = team.find_player_by_name(name)
-            if player is not None:
-                return player
-        return None
-
     def __next_team_turn(self):
         for i in range(3):
             self.__current_team_index = (self.__current_team_index + 1) % len(self.teams)
@@ -175,18 +173,6 @@ class GameModel:
                 break
         self.market.update()
         self.grid.handle_new_team_turn()
-
-    def check_winner(self):
-        lose_count = 0
-        winner = 0
-        for i in self.teams:
-            if i.defeated:
-                lose_count += 1
-            else:
-                winner = i
-        if lose_count >= 2:
-            print("WINNER: ", winner)
-        return True
 
 
 def create_new_game_model(title: str, player_turn_period: int, teams_money_limit: int, players_data) -> GameModel:
