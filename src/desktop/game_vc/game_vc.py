@@ -24,8 +24,9 @@ class GameVC(DrawObject):
             self.__end_turn_flag = False
             if self.game.online:
                 from scenes.gs_sync import GSSyncScene
-                self.game.goto_deeper_scene(GSSyncScene, {"post_changes_func": self.__next_turn,
-                                                          "get_changes_func": self.__apply_changes})
+                extra_kwargs = {"game_model": self.model, "post_changes_func": self.__next_turn,
+                                "get_changes_func": self.__apply_changes}
+                self.game.goto_deeper_scene(GSSyncScene, extra_kwargs)
             else:
                 self.__next_turn()
 

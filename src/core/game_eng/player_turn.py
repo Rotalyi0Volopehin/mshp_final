@@ -66,9 +66,3 @@ class PlayerTurn:
         for action in self.actions:
             if not action.try_do():
                 raise exceptions.InvalidOperationException(f"Sync failed on execution of '{type(action)}'!")
-
-    def reset(self):
-        """**Обнуление состояния**\n
-        Очищает стэк.
-        """
-        self.actions.clear()

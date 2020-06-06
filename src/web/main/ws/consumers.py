@@ -37,7 +37,10 @@ class WebsocketRequestHandler(WebsocketConsumer):
     def try_get_parcel_from_bytes(self, bytes_data) -> (bool, object):  # (ok, parcel)
         try:
             stream = BinaryReader(bytes_data)
+            stream.seek(len(stream) - 1)
             request_id = RequestID(stream.read_byte())
+            stream.seek(0)
+            stream.base_stream.truncate(len(stream) - 1)
             parcel = [request_id, stream]
             return True, parcel
         except:

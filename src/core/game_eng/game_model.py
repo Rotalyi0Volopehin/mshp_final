@@ -37,7 +37,7 @@ class GameModel:
         self.player_turn_period = player_turn_period
         self.teams_money_limit = teams_money_limit
         # vvv переменные полЯ vvv
-        self.__current_player_turn = self.__current_player = None
+        self.__prev_player_turn = self.current_player_turn = self.__current_player = None
         self.__fixed = False
         self.teams = list()
         self.player_ids = dict()
@@ -55,6 +55,7 @@ class GameModel:
             for _ in range(3):
                 Team.read(stream, self)
             stream.read_short_iterable(Player, {"game_model": self})
+            self.prev_player_turn = PlayerTurn.read(stream, self)
             self.__resume_game()
 
     @staticmethod
@@ -81,6 +82,7 @@ class GameModel:
         for team in obj.teams:
             Team.write(stream, team)
         stream.write_short_iterable(obj.player_ids.values(), Player)
+        PlayerTurn.write(stream, obj.prev_player_turn)
 
     def __resume_game(self):
         if len(self.teams) != 3:
@@ -90,7 +92,7 @@ class GameModel:
                 self.player_ids[player.id] = player
         self.__fixed = True
         self.__current_player = self.current_team.current_player
-        self.__current_player_turn = PlayerTurn()
+        self.current_player_turn = PlayerTurn()
 
     def start_game(self):
         """**Окончание инициализации**\n
@@ -119,6 +121,10 @@ class GameModel:
         self.teams.append(team)
 
     @property
+    def prev_player_turn(self) -> PlayerTurn:
+        return self.__prev_player_turn
+
+    @property
     def game_over(self) -> bool:
         return self.winner_team is not None
 
@@ -129,10 +135,6 @@ class GameModel:
     @property
     def turn_time_left(self) -> float:
         return self.player_turn_period - self.turn_time_elapsed
-
-    @property
-    def current_player_turn(self) -> PlayerTurn:
-        return self.__current_player_turn
 
     @property
     def current_team(self) -> Team:
@@ -167,7 +169,8 @@ class GameModel:
         if team.current_player_index == 0:
             self.__next_team_turn()
         self.__current_player = self.current_team.current_player
-        self.__current_player_turn.reset()
+        self.__prev_player_turn = self.current_player_turn
+        self.current_player_turn = PlayerTurn()
         self.turn_beginning_time = datetime.utcnow()
 
     def __next_team_turn(self):

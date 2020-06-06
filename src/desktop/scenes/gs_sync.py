@@ -8,8 +8,9 @@ from io_tools.binary_writer import BinaryWriter
 
 
 class GSSyncScene(Scene):
-    def __init__(self, game, post_changes_func, get_changes_func):
+    def __init__(self, game, game_model, post_changes_func, get_changes_func):
         super().__init__(game)
+        self.game_model = game_model
         self.post_changes_func = post_changes_func
         self.get_changes_func = get_changes_func
         if self.game.current_scene.game_vc.model.current_player.id == self.game.logged_user_id:
@@ -41,6 +42,6 @@ class GSSyncScene(Scene):
     def __get_response_parcel_handler(self, parcel):
         if parcel[0] == ResponseID.DATA:
             stream = parcel[1]
-            player_turn = PlayerTurn.read(stream)
+            player_turn = PlayerTurn.read(stream, self.game_model)
             self.get_changes_func(player_turn)
         self.game.return_to_upper_scene()
