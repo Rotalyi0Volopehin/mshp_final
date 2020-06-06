@@ -65,7 +65,7 @@ class GSParcelHandlers:
         if err_resp is not None:
             return err_resp
         game_model, _ = DBGameSessionTools.try_load_game_model(participation.game_session)
-        if game_model.turn_time_left < -5.0:
+        if game_model.turn_time_left < -1.0:
             return [ResponseID.FAIL]  # post timeout
         if game_model.current_player.id != participation.user.id:
             return [ResponseID.FAIL]  # post не в свой ход
@@ -91,12 +91,13 @@ class GSParcelHandlers:
             return err_resp
         game_model, _ = DBGameSessionTools.try_load_game_model(participation.game_session)
         stream = BinaryWriter()
-        if game_model.turn_time_left < -5.0:  # post timeout
+        if game_model.turn_time_left < -2.0:  # post timeout
             game_model.next_player_turn()
             DBGameSessionTools.save_game_model(participation.game_session, game_model)
         if game_model.prev_player_turn is None:
             return [ResponseID.FAIL]  # предыдущего хода не было
         PlayerTurn.write(stream, game_model.prev_player_turn)
+        stream.write_datetime(game_model.turn_beginning_time)
         return [ResponseID.DATA, stream]
 
 

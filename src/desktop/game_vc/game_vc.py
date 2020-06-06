@@ -9,6 +9,7 @@ from .grid_vc import GridVC
 from .player_controller import PlayerController
 from objects.base import DrawObject
 from constants import Color
+from ws.parcel_manager import ParcelManager
 
 
 class GameVC(DrawObject):
@@ -28,8 +29,11 @@ class GameVC(DrawObject):
             self.__end_turn_flag = False
             if user_info.online:
                 from scenes.gs_sync import GSSyncScene
-                extra_kwargs = {"game_model": self.model, "post_changes_func": self.__next_turn,
-                                "get_changes_func": self.__apply_changes}
+                extra_kwargs = {
+                    "game_model": self.model,
+                    "post_changes_func": self.__next_turn,
+                    "get_changes_func": self.__apply_changes
+                }
                 self.game.goto_deeper_scene(GSSyncScene, extra_kwargs)
             else:
                 self.__next_turn()
@@ -50,9 +54,10 @@ class GameVC(DrawObject):
         if self.is_current_scene_map:
             self.grid_vc.process_draw()
 
-    def __apply_changes(self, player_turn):
+    def __apply_changes(self, player_turn, gs_turn_time):
         player_turn.sync()
         self.__next_turn()
+        self.model.turn_beginning_time = gs_turn_time
 
     def __next_turn(self):
         self.model.next_player_turn()
