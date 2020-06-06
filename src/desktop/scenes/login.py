@@ -49,9 +49,9 @@ class LoginScene(Scene):
         self.load_sound()
         pygame.mixer.music.play(-1)
 
-    def set_gs_menu_scene(self):
-        from scenes.gs_menu import GSMenuScene
-        self.game.set_origin_scene(GSMenuScene)
+    def set_map_scene(self):
+        from scenes.map import MapScene
+        self.game.set_origin_scene(MapScene)
 
     def set_main_menu_scene(self):
         from scenes.main_menu import MainMenuScene
@@ -65,7 +65,7 @@ class LoginScene(Scene):
 
     def on_enter_button_click(self):
         self.game.online = False
-        self.set_gs_menu_scene()
+        self.set_map_scene()
 
     def login_response_parcel_handler(self, parcel):
         response_id = parcel[0]

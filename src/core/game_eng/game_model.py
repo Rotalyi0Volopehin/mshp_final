@@ -42,12 +42,12 @@ class GameModel:
         self.teams = list()
         self.player_ids = dict()
         self.winner_team = None
-        if stream is None:
+        if stream is None:  # первичная иницмализация
             self.grid = GridModel(self, grid_width, grid_height)
             self.market = Market()
             self.turn_beginning_time = datetime.utcnow()
             self.__current_team_index = 0
-        else:
+        else:  # иницмализация из потока
             self.turn_beginning_time = stream.read_datetime()
             self.grid = GridModel.read(stream, self)
             self.market = Market.read(stream)
@@ -128,6 +128,10 @@ class GameModel:
         return self.player_turn_period - self.turn_time_elapsed
 
     @property
+    def current_player_turn(self) -> PlayerTurn:
+        return self.__current_player_turn
+
+    @property
     def current_team(self) -> Team:
         """**Фракция, игроки которой сейчас ходят**\n
         :return: Фракция под номером 'current_team_index'
@@ -175,7 +179,8 @@ class GameModel:
         self.grid.handle_new_team_turn()
 
 
-def create_new_game_model(title: str, player_turn_period: int, teams_money_limit: int, players_data) -> GameModel:
+def create_new_game_model(title: str, player_turn_period: int, teams_money_limit: int, players_data,
+                          time_before_first_turn: float = 30.0) -> GameModel:
     game = GameModel(title, player_turn_period, teams_money_limit, 11, 11)
     from game_eng.team_ders.team_a import TeamA
     from game_eng.team_ders.team_b import TeamB
@@ -196,7 +201,6 @@ def create_new_game_model(title: str, player_turn_period: int, teams_money_limit
     make_capital_tile(7, 1, game.teams[1])
     make_capital_tile(7, 9, game.teams[2])
     make_capital_tile(5, 5, None)
-    game.start_game()
     empty_tiles = [(0, 0), (1, 0), (2, 0), (9, 0), (10, 0), (0, 1), (1, 1), (3, 1), (9, 1), (10, 1), (0, 2), (1, 2),
                    (4, 2), (10, 2), (0, 3), (6, 3), (10, 3), (0, 4), (5, 4), (3, 5), (6, 5), (8, 5), (9, 5), (0, 6),
                    (5, 6), (0, 7), (6, 7), (10, 7), (0, 8), (1, 8), (4, 8), (10, 8), (0, 9), (1, 9), (3, 9), (9, 9),
@@ -205,4 +209,6 @@ def create_new_game_model(title: str, player_turn_period: int, teams_money_limit
         x = empty_tile[0]
         y = empty_tile[1]
         tiles[x][y] = None
+    game.turn_beginning_time = datetime.fromtimestamp(game.turn_beginning_time.timestamp() + time_before_first_turn)
+    game.start_game()
     return game

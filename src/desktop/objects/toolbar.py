@@ -28,17 +28,18 @@ class ToolBar(DrawObject):
             RebootPTSet: "K_0",
         }
 
-    def __init__(self, game, geometry: tuple):
+    def __init__(self, game, geometry: tuple, game_model):
         super().__init__(game)
         self.cells = []
         self.geometry = geometry
+        self.game_model = game_model
         self.tools = dict()
         self.__init_cells()
         self.update_tools()
 
     def update_tools(self):
         self.tools.clear()
-        player = self.game.current_scene.game_vc.model.current_player
+        player = self.game_model.current_player
         for pts_type, pt_set in player.pressure_tools.items():
             key = ToolBar.PTS_KEYS[pts_type]
             self.tools[key] = pt_set
