@@ -13,7 +13,7 @@ class CommonFields:
                                required=required, widget=forms.TextInput(attrs=attrs))
 
     @staticmethod
-    def get_name_field(required, label="Имя", attrs=None):
+    def get_name_field(required, label="Псевдоним", attrs=None):
         return forms.CharField(label=label, min_length=1, max_length=64,
                                required=required, widget=forms.TextInput(attrs=attrs))
 
@@ -36,3 +36,11 @@ class RegistrationForm(forms.Form):
                             required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
     team = forms.ChoiceField(widget=forms.Select(attrs={"class": "custom-select col-sm-9 ml-4"}), label="Фракция",
                              required=True, choices=[(0, "0"), (1, "1"), (2, "2")])
+
+
+class ProfileForm(forms.Form):
+    name = CommonFields.get_name_field(False)
+    about = CommonFields.get_description_field(False, label="О себе")
+    password = CommonFields.get_password_field(False)
+    new_password = CommonFields.get_password_field(False)
+    action = CommonFields.get_invisible_field(forms.CharField, "action_tag", '')

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'bootstrap4',
+    'channels',
     'django_extensions',
 ]
 
@@ -71,6 +72,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'network_confrontation_web.wsgi.application'
+
+ASGI_APPLICATION = "network_confrontation_web.routing.application"
 
 
 # Database
