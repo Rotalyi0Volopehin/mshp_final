@@ -16,8 +16,7 @@ class MapScene(Scene):
     def create_objects(self):
         width = self.game.width
         height = self.game.height
-        upgrade_button = Btn(self.game, (width - 240, 5, 100, 40), Color.WHITE, 'Прокачка', self.__set_tech_scene)
-        self.objects.append(upgrade_button)
+        self.upgrade_button = Btn(self.game, (width - 240, 5, 100, 40), Color.WHITE, 'Прокачка', self.__set_tech_scene)
         self.game_vc = GameVC(self.game, self.game_model)
         self.game_model = self.game_vc.model
         self.objects.append(self.game_vc)
@@ -34,3 +33,23 @@ class MapScene(Scene):
     def __set_tech_scene(self):
         from scenes.tech_tree import TreeScene
         self.game.goto_deeper_scene(TreeScene)
+
+    def process_all_draw(self):
+        can_upgrade = self.can_upgrade
+        if can_upgrade:
+            self.objects.append(self.upgrade_button)
+        super().process_all_draw()
+        if can_upgrade:
+            self.objects.pop()
+
+    def process_all_events(self, eventlist):
+        is_downgrade = self.can_upgrade
+        if is_downgrade:
+            self.objects.append(self.upgrade_button)
+        super().process_all_events(eventlist)
+        if is_downgrade:
+            self.objects.pop()
+
+    @property
+    def can_upgrade(self):
+        return self.game_vc.grid_vc.selected_tile is not None
