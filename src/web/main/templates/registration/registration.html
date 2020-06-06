@@ -3,6 +3,7 @@
 {% block content %}
 
 {% load static %}
+
 <style>
     body {
         background: linear-gradient(to top right, #1560E0, #AFEEEE);
@@ -24,7 +25,7 @@
         height: 125px;
     }
 </style>
-
+<main role="main" class="container">
 {% if not ok %}
 <div class="text-center" style="margin-top: 5%;">
     {% if error %}
@@ -75,5 +76,5 @@
         </div>
     </form>
 </div>
-
+</main>
 {% endblock %}

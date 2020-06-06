@@ -18,6 +18,7 @@
 
 
 {% block content %}
+
 {% include 'pages/profile/background.html' %}
 
 {% if error %}
@@ -27,7 +28,7 @@
      style="height: 24vh; padding-top: 8%; margin-top: 20%; font-size: 130%;">{{ error }}</div>
 
 {% else %}
-
+<main role="main" class="container">
 <form class="form-padding" method="post"> {% csrf_token %}
     <div class="row mb-5 pb-5">
         <div class="col-lg-10 mx-auto">
@@ -42,6 +43,6 @@
         </div>
     </div>
 </form>
-
+</main>
 {% endif %}
 {% endblock %}
