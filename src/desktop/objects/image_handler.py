@@ -39,6 +39,7 @@ class ImageHandler:
         return self.handle_characters()
 
     def handle_characters(self):
+
         self.response = []
         iterator = 0
         if len(self.found_characters) == 1:
