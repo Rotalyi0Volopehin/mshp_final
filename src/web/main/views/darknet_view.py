@@ -8,7 +8,6 @@ from game_eng.market import Market
 
 
 class DarknetCard:
-
     def __init__(self, name, tag, price, count, availability):
         self.name = name
         self.tag = tag
@@ -53,17 +52,18 @@ def get_db_page_data(request):
         view_mode = True
         return view_mode, None, None
 
-    return view_mode, player, market
+    return view_mode, player, game_model, game_session
 
 
 @login_required
 def darknet_page(request):
     context = {
-        'pagename': 'DarkNet',
+        'pagename': 'Darknet',
         'menu': get_menu_context(),
         'user_menu': get_user_menu_context(request.user),
     }
-    view_mode, player, market = get_db_page_data(request)
+    view_mode, player, game_model, gs = get_db_page_data(request)
+    market = game_model.market
     context['view_mode'] = view_mode
 
     if view_mode:
@@ -81,7 +81,7 @@ def darknet_page(request):
         tag = slot.pt_set.__module__.split('.')[-1]
         if view_mode:
             availability = False
-            count = '∞'
+            count = '-'
         else:
             availability = True if team_money >= slot.price else False
             count = slot.pt_set.count
@@ -96,8 +96,10 @@ def darknet_page(request):
                     slot = assortment[tool_type]
                     tool_tag = slot.pt_set.__module__.split('.')[-1]
                     if buy_product == tool_tag:
-                        res = market.try_buy(player, tool_type, 1)
-                        if not res:
+                        success = market.try_buy(player, tool_type, 1)
+                        if success:
+                            DBGameSessionTools.save_game_model(gs, game_model)
+                        else:
                             context['warning'] = 'У вас недостаточно денег для покупки!'
                         break
 

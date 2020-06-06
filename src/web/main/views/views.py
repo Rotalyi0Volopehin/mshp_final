@@ -31,14 +31,14 @@ def index_page(request):
 def cad_page(request):
     #CAD.clear_all_data()
     """
-        from django.contrib.auth.models import User
-        from main.db_tools.user_participation_tools import DBUserParticipationTools
-        from main.models import GameSession
-        users = User.objects.all()[:3]
-        gs = GameSession.objects.get(title="GS01")
-        for user in users:
-            DBUserParticipationTools.try_sign_user_up_for_session(user, gs)
-        """
+    from django.contrib.auth.models import User
+    from main.db_tools.user_participation_tools import DBUserParticipationTools
+    from main.models import GameSession
+    users = User.objects.all()[:3]
+    gs = GameSession.objects.get(title="GS01")
+    for user in users:
+        DBUserParticipationTools.try_sign_user_up_for_session(user, gs)
+    """
     # """
     from main.db_tools.game_session_tools import DBGameSessionTools
     from main.models import GameSession

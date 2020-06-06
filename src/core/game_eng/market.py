@@ -98,6 +98,7 @@ class Market:
         # vvv выполнение покупки vvv
         buyer.add_pressure_tools(tool_type, count)
         buyer.team.money -= total_price
+        return True
 
     def update(self):
         """**Обновление ассортимента**\n
