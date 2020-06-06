@@ -14,7 +14,6 @@ from game_eng.grid_tile_upgrade_tree import GridTileUpgradeTree
 
 
 class TreeScene(Scene):
-
     def create_objects(self):
         self.start_team = None
         self.width = self.game.width
@@ -120,11 +119,7 @@ class TreeScene(Scene):
                 if tile.team == self.current_player_plate.team:
                     if (tile.team.money >= typee.get_upgrade_price()):
                         if (GridTileUpgradeTree.tile_upgrade_bases[typee] == type(tile)):
-                            new_tile = GridTileUpgradeTree.upgrade_tile(tile, typee)
-                            GridTileVC(new_tile, self.game, tile.view.status)
-                            if self.game_vc.grid_vc.target_tile == tile:
-                                self.game_vc.grid_vc.target_tile = new_tile
-                            self.game_vc.grid_vc.selected_tile = new_tile
+                            self.game_vc.player_controller.try_upgrade_grid_tile(typee)
                             self.money_text.update_text("Деньги: "+str(self.game.current_scene.game_vc.model.current_team.money))
                         else:
                             self.info_text.update_text("Улучшение недоступно")
@@ -136,12 +131,7 @@ class TreeScene(Scene):
         return upgrade
 
     def downgrade(self):
-        def lol():
-
-            tile = self.game_vc.grid_vc.selected_tile
-            new_tile = GridTileUpgradeTree.downgrade_tile(self.game_vc.grid_vc.selected_tile)
-            GridTileVC(new_tile, self.game, tile.view.status)
-        return lol
+        return self.game_vc.player_controller.try_downgrade_grid_tile
 
     def process_all_draw(self):
         is_downgrade = self.is_downgrade
