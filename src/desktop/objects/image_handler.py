@@ -8,6 +8,8 @@ CHARACTERS = {
     "Картер:",
     "Никки:",
     "Симмонс:",
+    "Лилия Свон:",
+    "Рон Даггет:"
 }
 
 CHARACTERS_TO_NAMES = {
@@ -18,6 +20,8 @@ CHARACTERS_TO_NAMES = {
     "Картер:": "karter.png",
     "Никки:": "nikki.png",
     "Симмонс:": "simmons.png",
+    "Лилия Свон:": "swa.png",
+    "Рон Даггет:": "karter.png",
 }
 
 
