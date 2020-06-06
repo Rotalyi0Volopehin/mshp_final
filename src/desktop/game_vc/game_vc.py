@@ -56,6 +56,7 @@ class GameVC(DrawObject):
 
     def __apply_changes(self, player_turn, gs_turn_time):
         player_turn.sync()
+        self.grid_vc.repair()
         self.__next_turn()
         self.model.turn_beginning_time = gs_turn_time
 
