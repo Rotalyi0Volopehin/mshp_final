@@ -61,6 +61,7 @@ class Game:
             for event in events:
                 if event.type == pygame.QUIT:
                     Game.exit()
+
             self.current_scene.process_frame(events)
             self.clock.tick(self.main_loop_duration)  # это не "sleep(dur)", а "sleep(dur - elapsed)"
 

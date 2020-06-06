@@ -25,6 +25,7 @@ class TextInput:
             font_family="",
             font_size=35,
             antialias=True,
+            m_str_len=10,
             text_color=(123, 231, 0),
             cursor_color=(0, 123, 132),
             repeat_keys_initial_ms=400,
@@ -48,7 +49,7 @@ class TextInput:
         self.font_size = font_size
         self.max_string_length = 17  # костыль
         self.input_string = initial_string  # Inputted text
-
+        self.m_str_len = m_str_len
         if not os.path.isfile(font_family):
             font_family = pygame.font.match_font(font_family)
 
@@ -67,7 +68,7 @@ class TextInput:
         self.cursor_surface = pygame.Surface((int(self.font_size / 20 + 1), self.font_size))
         self.cursor_surface.fill(cursor_color)
         self.cursor_position = len(initial_string)  # Inside text
-        self.cursor_visible = True  # Switches every self.cursor_switch_ms ms
+        self.cursor_visible = False  # Switches every self.cursor_switch_ms ms
         self.cursor_switch_ms = 500  # /|\
         self.cursor_ms_counter = 0
 
@@ -77,7 +78,6 @@ class TextInput:
         #for event in events:
         if event.type == pygame.KEYDOWN:
             self.cursor_visible = True  # So the user sees where he writes
-
             # If none exist, create counter for that key:
             if event.key not in self.keyrepeat_counters:
                 self.keyrepeat_counters[event.key] = [0, event.unicode]
@@ -142,7 +142,10 @@ class TextInput:
                 pygame.event.post(pygame.event.Event(pl.KEYDOWN, key=event_key, unicode=event_unicode))
 
         # Re-render text surface:
-        self.surface = self.font_object.render(self.input_string, self.antialias, self.text_color)
+        if len(self.input_string) > self.m_str_len:
+            self.surface = self.font_object.render(self.input_string[len(self.input_string)- self.m_str_len: ], self.antialias, self.text_color)
+        else:
+            self.surface = self.font_object.render(self.input_string, self.antialias, self.text_color)
 
         # Update self.cursor_visible
         self.cursor_ms_counter += self.clock.get_time()
@@ -154,7 +157,7 @@ class TextInput:
             cursor_y_pos = self.font_object.size(self.input_string[:self.cursor_position])[0]
             # Without this, the cursor is invisible when self.cursor_position > 0:
             if self.cursor_position > 0:
-                cursor_y_pos -= self.cursor_surface.get_width()
+                    cursor_y_pos -= self.cursor_surface.get_width()
             self.surface.blit(self.cursor_surface, (cursor_y_pos, 0))
 
         self.clock.tick()
