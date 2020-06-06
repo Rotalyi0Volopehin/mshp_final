@@ -22,35 +22,35 @@ def get_db_page_data(request):
     user_participation = DBUserParticipationTools.get_user_participation(request.user)
     if user_participation is None:
         view_mode = True
-        return view_mode, None, None
+        return view_mode, None, None, None
 
     game_session = user_participation.game_session
     if game_session is None:
         view_mode = True
-        return view_mode, None, None
+        return view_mode, None, None, None
 
     game_model, error = DBGameSessionTools.try_load_game_model(game_session)
     if game_session is None:
         view_mode = True
-        return view_mode, None, None
+        return view_mode, None, None, None
     if error is not None:
         view_mode = True
-        return view_mode, None, None
+        return view_mode, None, None, None
 
     player = DBUserTools.try_get_player_of_user_from_game_model(request.user, game_model)
     if player is None:
         view_mode = True
-        return view_mode, None, None
+        return view_mode, None, None, None
 
     market = game_model.market
     if market is None:
         view_mode = True
-        return view_mode, None, None
+        return view_mode, None, None, None
 
     team_money = player.team.money
     if team_money is None:
         view_mode = True
-        return view_mode, None, None
+        return view_mode, None, None, None
 
     return view_mode, player, game_model, game_session
 
@@ -63,13 +63,13 @@ def darknet_page(request):
         'user_menu': get_user_menu_context(request.user),
     }
     view_mode, player, game_model, gs = get_db_page_data(request)
-    market = game_model.market
     context['view_mode'] = view_mode
 
     if view_mode:
         market = Market()
     else:
         team_money = player.team.money
+        market = game_model.market
         context['fraction_money'] = team_money
     assortment = market.assortment
 
