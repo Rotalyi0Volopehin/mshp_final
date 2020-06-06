@@ -49,15 +49,6 @@ def cad_page(request):
     return HttpResponse("SUCCESS! All data is cleared")
 
 
-def chat_page(request):
-    context = {
-        'pagename': 'Закрытые каналы',
-        'menu': get_menu_context(),
-        'user_menu': get_user_menu_context(request.user),
-    }
-    return render(request, 'pages/chat.html', context)
-
-
 class LoginFormPage(FormView):
     pagename = "Вход"
     form_class = forms.LoginForm
