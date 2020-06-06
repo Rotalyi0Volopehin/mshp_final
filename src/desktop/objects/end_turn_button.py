@@ -68,6 +68,7 @@ class EndTurnButton(DrawObject):
         self.time_left_label.process_draw()
 
     def process_event(self, event):
+        return  # всё очень плохо
         if (event.type == pygame.MOUSEBUTTONUP) and (event.button == 1) and \
                 triangle_contains_point(*self.points, event.pos[0], event.pos[1]) and \
                 self.game.current_scene.game_vc.player_controller.changes_available:
