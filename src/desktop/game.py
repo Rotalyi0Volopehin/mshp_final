@@ -65,4 +65,3 @@ class Game:
     def exit():  # TODO: починить exit
         pygame.quit()
         exit()
-

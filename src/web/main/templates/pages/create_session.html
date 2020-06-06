@@ -1,0 +1,111 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+{% block extra_js %}
+<script src="{% static 'create_session.js' %}"></script>
+{% endblock %}
+
+<style>
+    body {
+        background: linear-gradient(to top right, #9FE2BF, #B0E0E6);
+    }
+
+    #id_min_level_limit_existence {
+        transform:scale(3);
+        opacity:1;
+        cursor:pointer;
+    }
+
+    #id_max_level_limit_existence {
+        transform:scale(3);
+        opacity:1;
+        cursor:pointer;
+    }
+
+    .rounded_border {
+        border-radius: 40px;
+    }
+
+    .move_everything {
+        margin-top: 12%;
+        padding-bottom: 8%;
+    }
+
+    .dark_part {
+        margin-top: -2%;
+        height: 125px;
+    }
+</style>
+<main role="main" class="container">
+<div class="row move_everything">
+    <form method="POST" class="col"> {% csrf_token %}
+        <div class="dark_part bg-dark cyberfont rounded_border rounded-bottom">
+            <h2 class="text-center text-white cyberfont pt-5" style="font-size: 150%;">Создание игровой сессии</h2>
+        </div>
+        <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-4">
+            <div class="form-group">
+                <div class="row">
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.session_name.label }}</p>
+                    <div class="col form-group">{{ form.session_name }}</div>
+                </div>
+                <div class="row">
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.user_per_team.label }}</p>
+                    <div class="col form-group cyberfont">{{ form.user_per_team }}</div>
+                </div>
+                <div class="row">
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.turn_period.label }}</p>
+                    <div class="col form-group cyberfont">{{ form.turn_period }}</div>
+                </div>
+                <div class="row">
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.money_limit.label }}</p>
+                    <div class="col form-group cyberfont">{{ form.money_limit }}</div>
+                </div>
+                <div class="row">
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.user_min_level.label }}</p>
+                    <div class="col form-group cyberfont">
+                        <div class="row-2">
+                            {{ form.user_min_level }}
+                            {{ form.min_level_limit_existence }}
+                            {{ form.min_level_limit_existence.label }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <p class="col-5 mr-4 mt-1 text-right cyberfont">{{ form.user_max_level.label }}</p>
+                    <div class="col form-group cyberfont">
+                        <div class="row-2">
+                            {{ form.user_max_level }}
+                            {{ form.max_level_limit_existence }}
+                            {{ form.max_level_limit_existence.label }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-2" align="center">
+                <button type="submit" class="btn btn-dark cyberfont">Создать сессию</button>
+            </div>
+            {% if error %}
+            <div class="text-center alert alert-danger mt-4" role="alert">{{ error }}</div>
+            {% elif success %}
+            <div class="text-center alert alert-success mt-4" role="alert">Сессия успешно создана</div>
+            {% else %}
+            {% for error_item in form.non_field_errors %}
+            <p class="text-center alert alert-danger mt-4">{{ error_item }}</p>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </form>
+</div>
+</main>
+<script>
+    min_limit_checkbox_clicked();
+    max_limit_checkbox_clicked();
+
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}

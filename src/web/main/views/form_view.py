@@ -1,8 +1,8 @@
-from main.views.menu import get_menu_context, get_user_menu_context
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.forms import Form
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
+from main.views.menu import get_menu_context, get_user_menu_context
 
 
 class FormView(View):
@@ -23,11 +23,13 @@ class FormView(View):
     form_class = Form
     template_name = "pages/index.html"
     display_user_menu = True
+    login_required = False
+    invalid_form_error = True
 
     get_handler = None
     post_handler = None
 
-    def get(self, request, **kwargs):
+    def get(self, request: HttpRequest, **kwargs):
         """**Обработчик get-запросов**\n
         Вызывает дополнительный обработчик get-запросов со следующими аргументами:\n
         - context (*dict*) - контекст
@@ -38,6 +40,8 @@ class FormView(View):
         :type request: HttpRequest
         :return: http-респонс страницы с пустой формой
         """
+        if self.login_required and not request.user.is_authenticated:
+            return redirect("login")
         context = self.collect_default_context(request)
         context["form"] = self.form_class()
         if self.get_handler is not None:
@@ -65,7 +69,8 @@ class FormView(View):
         context["form"] = form = self.form_class(request.POST)
         if not form.is_valid():
             context["ok"] = False
-            context["error"] = "Неверный формат отосланных данных!"
+            if self.invalid_form_error:
+                context["error"] = "Неверный формат отосланных данных!"
         elif self.post_handler is not None:
             def handler():
                 return self.post_handler(context, request, form, **kwargs)
@@ -75,8 +80,7 @@ class FormView(View):
         return render(request, self.template_name, context)
 
     def collect_default_context(self, request) -> dict:
-        """**Метод, собирающий контекст по умолчанию**
-
+        """**Метод, собирающий контекст по умолчанию**\n
         :return: контекст по умолчанию
         :rtype: dict
         """

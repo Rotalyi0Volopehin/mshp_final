@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+
+
+{% load bootstrap4 %}
+
+
+{% block content %}
+
+<div class="form1 p-3 rounded-lg  container">
+    <div class="text-center alert alert-success" role="alert">
+            <h1>Вы участвуете в сессии {{ title }}</h1>
+    </div>
+        <div class="row">
+            <div class="col-9 text-center">
+                <span class="cyberfont">
+                    Представители фракций, участвующие в сессии:
+                </span>
+                <div class="row m-2">
+                    {% for team in teams %}
+                        <div class="col-4 mt-2 border-right">
+                            <span class="cyberfont">{{ team.0 }}</span>
+                            <div class="align-middle ">
+                                {% for player in team.1 %}
+                                <div class="cyberfont ml-5 row {% if player.1 %}text-danger{% endif %}"> {{ player.0 }} </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-3 text-right">
+                <a href="/chat/_/" role="button" class="m-1 cyberfont mt-4 btn btn-light">Чат фракции</a>
+                <a href="/chat/=/" role="button" class="m-1 cyberfont btn btn-light">Общий чат</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

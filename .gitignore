@@ -2,6 +2,10 @@
 # Created by https://www.gitignore.io/api/linux,macos,python,django,windows,virtualenv,pycharm
 # Edit at https://www.gitignore.io/?templates=linux,macos,python,django,windows,virtualenv,pycharm
 
+*.gam
+*.dia~
+!.gitkeep
+
 ### Django ###
 *.log
 *.pot

@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+
+
+{% load bootstrap4 %}
+
+
+{% block content %}
+
+    <div class="form1 rounded-lg text-center container">
+        <div class="text-center alert alert-warning" role="alert">
+            <h1>Вы не участвуете в сессии</h1>
+        </div>
+        <div class="fixed-bottom mb-2">
+            <div class="cyberfont">Вы можете присоедениться к одной </div>
+            <a type="button" class="cyberfont mt-3 btn btn-light" href="/sessions/">Поиск сессии</a>
+        </div>
+    </div>
+
+{% endblock %}
+

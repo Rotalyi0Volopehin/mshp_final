@@ -1,0 +1,23 @@
+{% extends 'base/base.html' %}
+
+
+{% load bootstrap4 %}
+
+
+{% block content %}
+
+    <div class="form1 rounded-lg text-center container">
+        <div class="text-center alert alert-success" role="alert">
+            <h1>Вы присоеденились к сессии {{ title }}</h1>
+        </div>
+        <p class="col-5 mr-4 mt-1 text-right cyberfont">Участников набралось</p>
+        <div class="col form-control form-group" readonly>{{ players_gathered }}</div>
+        <div class="fixed-bottom mb-2">
+            <label class="cyberfont btn btn-light">
+                <input type="radio" name="radioOption" id="Value3" autocomplete="off"> прислать email уведомление о начале сессии
+            </label>
+        </div>
+    </div>
+
+{% endblock %}
+

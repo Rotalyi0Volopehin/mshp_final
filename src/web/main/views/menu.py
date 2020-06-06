@@ -1,3 +1,5 @@
+"""Контекст для навигации сайта"""
+
 import exceptions
 
 from django.contrib.auth.models import User, AnonymousUser
@@ -9,9 +11,7 @@ def get_menu_context() -> list:
     :rtype: list
     """
     return [
-        {"url_name": "index", "name": "Главная"},
         {"url_name": "darknet", "name": "darknet"},
-        {"url_name": "forum", "name": "форум"},
         {"url_name": "chat", "name": "чат"},
     ]
 
@@ -23,7 +23,7 @@ def get_user_menu_context(user: User) -> list:
     :return: Контекст навигационной панели пользователя
     :rtype: list
     """
-    if not (isinstance(user, User) or isinstance(user, AnonymousUser)):
+    if not isinstance(user, (User, AnonymousUser)):
         raise exceptions.ArgumentTypeException()
     return [
         {"url": f"/profile/{user.id}/", "name": "Профиль"},

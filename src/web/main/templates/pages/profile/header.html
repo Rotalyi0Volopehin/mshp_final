@@ -1,0 +1,11 @@
+{% load static %}
+
+<img src="{% static 'profilepic.png' %}" alt="..." width="130"
+     class="profile_pic rounded-circle mb-2 img-thumbnail">
+
+<div class="dark_part px-4 bg-dark cyberfont">
+    <h1 class="text-white mb-1 pt-3 name">{{ login }}</h1>
+    <input type="text" class="info form-control bg-dark col-sm-7 text-white-50"
+           {% if not self %} readonly {% endif %}
+           placeholder="Изменить описание" maxlength="32" value="{{ about }}" name="about">
+</div>
