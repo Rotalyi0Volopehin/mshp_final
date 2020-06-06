@@ -104,3 +104,5 @@ RequestParcelHandlers.register_handler(
     GSParcelHandlers.handle_get_gs_info_request, RequestID.GET_GS_INFO)
 RequestParcelHandlers.register_handler(
     GSParcelHandlers.handle_get_game_model_request, RequestID.GET_GAME_MODEL)
+RequestParcelHandlers.register_handler(GSParcelHandlers.handle_post_changes_request, RequestID.POST_CHANGES)
+RequestParcelHandlers.register_handler(GSParcelHandlers.handle_get_changes_request, RequestID.GET_CHANGES)

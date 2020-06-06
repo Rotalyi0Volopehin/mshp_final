@@ -47,7 +47,7 @@ class GameVC(DrawObject):
             self.grid_vc.process_draw()
 
     def __apply_changes(self, player_turn):
-        player_turn.try_act()
+        player_turn.sync()
         self.__next_turn()
 
     def __next_turn(self):

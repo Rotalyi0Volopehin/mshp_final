@@ -11,11 +11,11 @@ class Game:
         return 25
 
     def __init__(self, width=800, height=600):
+        self.online = False
+        self.logged_user_id = 0
         self.clock = pygame.time.Clock()
         self.__init_window(width, height)
         self.__init_scenes()
-        self.online = False
-        self.logged_user_id = 0
 
     def __init_window(self, width, height):
         self.width = width

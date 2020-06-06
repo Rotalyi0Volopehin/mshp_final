@@ -28,7 +28,7 @@ class MapScene(Scene):
         self.objects.append(self.end_turn_button)
         current_player_plate = CurrentPlayerPlate(self.game, width - 90, height - 183)
         self.objects.append(current_player_plate)
-        grid_tile_info_plate = GridTileInfoPlate(self.game, width - 20, 50, 340)
+        grid_tile_info_plate = GridTileInfoPlate(self.game, self.game_vc, width - 20, 50, 340)
         self.objects.append(grid_tile_info_plate)
 
     def __set_tech_scene(self):

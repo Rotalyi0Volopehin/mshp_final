@@ -11,8 +11,9 @@ class GridTileInfoPlate(DrawObject):
     money_pictogram = pygame.image.load(path.join("images", "pictograms", "money.png"))
     power_pictogram = pygame.image.load(path.join("images", "pictograms", "power.png"))
 
-    def __init__(self, game, right_border: int, pos_y: int, height: int):
+    def __init__(self, game, game_vc, right_border: int, pos_y: int, height: int):
         super().__init__(game)
+        self.game_vc = game_vc
         self.right_border = right_border
         self.pos_y = pos_y
         self.width = 0
@@ -23,7 +24,7 @@ class GridTileInfoPlate(DrawObject):
 
     def process_draw(self):
         self.try_update_info()
-        if self.game.current_scene.game_vc.grid_vc.selected_tile is None:
+        if self.game_vc.grid_vc.selected_tile is None:
             self.rect_color = None
             return
         if self.rect_color is None:
@@ -40,10 +41,10 @@ class GridTileInfoPlate(DrawObject):
                 pygame.draw.line(self.game.screen, Color.WHITE, (x1, y), (x2, y), 2)
             else:
                 label.process_draw()
-        self.__draw_pictogram_before_lable_number(2, GridTileInfoPlate.money_pictogram)
-        self.__draw_pictogram_before_lable_number(3, GridTileInfoPlate.power_pictogram)
+        self.__draw_pictogram_before_label_number(2, GridTileInfoPlate.money_pictogram)
+        self.__draw_pictogram_before_label_number(3, GridTileInfoPlate.power_pictogram)
 
-    def __draw_pictogram_before_lable_number(self, num: int, pict):
+    def __draw_pictogram_before_label_number(self, num: int, pict):
         rect = pict.get_rect()
         rect.x = self.labels[num].x
         rect.y = self.labels[num].y - 8
@@ -59,11 +60,11 @@ class GridTileInfoPlate(DrawObject):
             self.update_labels()
 
     def update_labels(self):
-        tile = self.game.current_scene.game_vc.grid_vc.selected_tile
+        tile = self.game_vc.grid_vc.selected_tile
         if tile is None:
             return
         self.labels.clear()
-        self.rect_color = self.game.current_scene.game_vc.get_team_color(tile.team)
+        self.rect_color = self.game_vc.get_team_color(tile.team)
         content = [
             tile.name, None,
             f"   +{tile.owners_income}",

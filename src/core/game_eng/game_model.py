@@ -55,7 +55,8 @@ class GameModel:
             for _ in range(3):
                 Team.read(stream, self)
             stream.read_short_iterable(Player, {"game_model": self})
-            self.prev_player_turn = PlayerTurn.read(stream, self)
+            prev_player_turn_existence = stream.read_bool()
+            self.__prev_player_turn = PlayerTurn.read(stream, self) if prev_player_turn_existence else None
             self.__resume_game()
 
     @staticmethod
@@ -82,7 +83,11 @@ class GameModel:
         for team in obj.teams:
             Team.write(stream, team)
         stream.write_short_iterable(obj.player_ids.values(), Player)
-        PlayerTurn.write(stream, obj.prev_player_turn)
+        if obj.prev_player_turn is None:
+            stream.write_bool(False)
+        else:
+            stream.write_bool(True)
+            PlayerTurn.write(stream, obj.prev_player_turn)
 
     def __resume_game(self):
         if len(self.teams) != 3:
@@ -202,11 +207,11 @@ def create_new_game_model(title: str, player_turn_period: int, teams_money_limit
     def make_capital_tile(x, y, team):
         tile = tiles[x][y]
         tile = tile.upgrade(CapitalGridTile)
-        tile.team = team
+        tile.conquer(team)
     make_capital_tile(1, 5, game.teams[0])
     make_capital_tile(7, 1, game.teams[1])
     make_capital_tile(7, 9, game.teams[2])
-    make_capital_tile(5, 5, None)
+    tiles[5][5].upgrade(CapitalGridTile)
     empty_tiles = [(0, 0), (1, 0), (2, 0), (9, 0), (10, 0), (0, 1), (1, 1), (3, 1), (9, 1), (10, 1), (0, 2), (1, 2),
                    (4, 2), (10, 2), (0, 3), (6, 3), (10, 3), (0, 4), (5, 4), (3, 5), (6, 5), (8, 5), (9, 5), (0, 6),
                    (5, 6), (0, 7), (6, 7), (10, 7), (0, 8), (1, 8), (4, 8), (10, 8), (0, 9), (1, 9), (3, 9), (9, 9),
