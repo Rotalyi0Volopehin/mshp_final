@@ -73,7 +73,7 @@ class LoginScene(Scene):
         if response_id == ResponseID.FAIL:
             pass  # TODO: реализовать вывод ошибки
         elif response_id == ResponseID.SUCCESS:
-            self.game.current_user_id = parcel[1]
+            user_info.user_id = parcel[1]
             self.set_main_menu_scene()
 
     @staticmethod

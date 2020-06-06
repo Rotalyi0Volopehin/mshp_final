@@ -79,7 +79,7 @@ class GridTileInfoPlate(DrawObject):
         self.__try_locate_effects_info()
 
     def __try_create_effects_info(self, content: list):
-        tile = self.game.current_scene.game_vc.grid_vc.selected_tile
+        tile = self.game_vc.grid_vc.selected_tile
         if len(tile.effects) > 0:
             content.append(None)
             content.append("Эффекты:")
@@ -87,7 +87,7 @@ class GridTileInfoPlate(DrawObject):
                 content.append(f"- {effect.name}")
 
     def __try_locate_effects_info(self):
-        tile = self.game.current_scene.game_vc.grid_vc.selected_tile
+        tile = self.game_vc.grid_vc.selected_tile
         if len(tile.effects) > 0:
             effects_label = self.labels[GridTileInfoPlate.EFFECTS_CONTENT_LINE_INDEX]
             effects_label.alignment = TextAlignment.CENTER

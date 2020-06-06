@@ -15,7 +15,7 @@ class GSSyncScene(Scene):
         self.game_model = game_model
         self.post_changes_func = post_changes_func
         self.get_changes_func = get_changes_func
-        if self.game.current_scene.game_vc.model.current_player.id == user_info.user_id:
+        if game_model.current_player.id == user_info.user_id:
             self.__post_changes()
         else:
             self.__get_changes()
@@ -25,7 +25,7 @@ class GSSyncScene(Scene):
 
     def __post_changes(self):
         stream = BinaryWriter()
-        PlayerTurn.write(stream, self.game.current_scene.game_vc.model.player_action)
+        PlayerTurn.write(stream, self.game_model.current_player_turn)
         ParcelManager.send_parcel([RequestID.POST_CHANGES, stream])
         ParcelManager.receive_parcel_async(self.__post_response_parcel_handler)
 

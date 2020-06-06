@@ -25,6 +25,10 @@ class PlayerAction:
         return tiles[loc_x][loc_y]
 
     @staticmethod
+    def _write_tile(stream, tile):
+        stream.write_byte_point((tile.loc_x, tile.loc_y))
+
+    @staticmethod
     def read(stream: BinaryReader, game_model):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()

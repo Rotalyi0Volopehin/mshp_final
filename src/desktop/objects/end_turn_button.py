@@ -69,7 +69,8 @@ class EndTurnButton(DrawObject):
 
     def process_event(self, event):
         if (event.type == pygame.MOUSEBUTTONUP) and (event.button == 1) and \
-                triangle_contains_point(*self.points, event.pos[0], event.pos[1]):
+                triangle_contains_point(*self.points, event.pos[0], event.pos[1]) and \
+                self.game.current_scene.game_vc.player_controller.changes_available:
             self.game.current_scene.game_vc.end_turn()
 
 
