@@ -62,6 +62,9 @@ class GameVC(DrawObject):
 
     def __next_turn(self):
         self.model.next_player_turn()
+        self.__update_toolbar()
+
+    def __update_toolbar(self):
         scene = self.game.current_scene
         if hasattr(scene, "toolbar"):
             scene.toolbar.update_tools()

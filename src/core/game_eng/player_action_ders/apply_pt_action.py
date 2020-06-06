@@ -10,7 +10,7 @@ class ApplyPTPlayerAction(PlayerAction):
     @staticmethod
     def read_ext(stream, obj, game_model):
         pts_type = CoreClasses.read_class(stream)
-        obj.pt_set = obj._player.pressure_tools[pts_type]
+        obj.pt_set = obj.player.pressure_tools[pts_type]
 
     @staticmethod
     def write_ext(stream, obj):
