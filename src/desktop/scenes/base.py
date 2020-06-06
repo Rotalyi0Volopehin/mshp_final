@@ -39,15 +39,23 @@ class Scene:
         pass
 
     def process_all_draw(self):
-        self.screen.fill(Color.BLACK)
+        self.screen.fill(Color.BG_GRAY2)  # Color.BG_GRAY1
         for item in self.objects:
             item.process_draw()
         self.additional_draw()
         pygame.display.flip()  # double buffering
-        pygame.time.wait(10)  # подождать 10 миллисекунд
 
     def additional_draw(self):
         pass
 
-    def set_next_scene(self, index):
-        self.game.current_scene = index
+    # event
+    def on_gone_to_deeper_scene_from_this(self):
+        pass
+
+    # event
+    def on_closed(self):
+        pass
+
+    # event
+    def on_returned_to_this_scene(self):
+        pass
