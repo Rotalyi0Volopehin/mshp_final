@@ -120,7 +120,7 @@ class BinaryWriter(BinaryStream):
         :param data: DateTime
         :type data: datetime
         """
-        timestamp = data.utcnow().timestamp()
+        timestamp = data.timestamp()
         int_part = int(timestamp)
         float_part = int((timestamp - int_part) * 1000000)
         self.write_uint(int_part)
