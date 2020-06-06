@@ -29,13 +29,12 @@ class PlayerController:
         except exceptions.InvalidOperationException:
             return False
 
-    def try_apply_pressure_tool(self, pts_type) -> bool:
+    def try_apply_pressure_tool(self, pt_set) -> bool:
         if not self.changes_available:
             return False
         try:
             player = self.game_vc.model.current_player
             target = self.game_vc.grid_vc.target_tile
-            pt_set = player.pressure_tools[pts_type]
             action = ApplyPTPlayerAction(player, target, pt_set)
             return self.game_vc.model.current_player_turn.try_act(action)
         except (exceptions.InvalidOperationException, KeyError):
