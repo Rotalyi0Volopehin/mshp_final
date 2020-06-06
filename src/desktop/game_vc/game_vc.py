@@ -1,3 +1,5 @@
+import user_info
+
 from game_eng.game_model import GameModel
 from game_eng.team_ders.team_a import TeamA
 from game_eng.team_ders.team_b import TeamB
@@ -22,7 +24,7 @@ class GameVC(DrawObject):
         self.grid_vc.process_logic()
         if (self.model.turn_time_left <= 0.0) or self.__end_turn_flag:
             self.__end_turn_flag = False
-            if self.game.online:
+            if user_info.online:
                 from scenes.gs_sync import GSSyncScene
                 extra_kwargs = {"game_model": self.model, "post_changes_func": self.__next_turn,
                                 "get_changes_func": self.__apply_changes}

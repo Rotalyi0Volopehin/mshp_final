@@ -7,6 +7,8 @@ from net_connection.core_classes import CoreClasses
 
 class UpgradeGridTilePlayerAction(PlayerAction):
     def __init__(self, player, target, upgrade_type=None):
+        if target.team != player.team:
+            raise exceptions.InvalidOperationException()
         super().__init__(player, target)
         self.upgrade_type = upgrade_type
         self.__new_tile = None

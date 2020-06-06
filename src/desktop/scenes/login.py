@@ -2,6 +2,7 @@ import pygame
 import os.path as path
 import request_parcel_helpers.user_logging as user_logging
 import webbrowser
+import user_info
 
 from constants import Color
 from net_connection.response_ids import ResponseID
@@ -26,9 +27,9 @@ class LoginScene(Scene):
                            text='Логин : ', color=Color.YELLOW, x=125, y=30)
         password_label = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False, is_italic=False,
                               text='Пароль : ', color=Color.YELLOW, x=125, y=90)
-        multiplayer_enter_color = Color.WHITE if self.game.online else Color.BLACK
+        multiplayer_enter_color = Color.WHITE if user_info.online else Color.BLACK
         button_multiplayer_enter = Btn(self.game, (350, 350, 100, 40), multiplayer_enter_color, "Сетевая игра",
-                                       self.on_login_button_click if self.game.online else None)
+                                       self.on_login_button_click if user_info.online else None)
         self.objects.extend([
             trailer,
             self.login_textbox,
@@ -44,7 +45,7 @@ class LoginScene(Scene):
         pygame.mixer.music.load(path.join("sounds", "login_bgm.wav"))
 
     def create_objects(self):
-        self.game.online = Channel.try_connect()  # TODO: заменить на сообщение с кнопкой для повторной попытки
+        user_info.online = Channel.try_connect()  # TODO: заменить на сообщение с кнопкой для повторной попытки
         self.init_form()
         self.load_sound()
         pygame.mixer.music.play(-1)
@@ -64,7 +65,7 @@ class LoginScene(Scene):
         ParcelManager.receive_parcel_async(self.login_response_parcel_handler)
 
     def on_enter_button_click(self):
-        self.game.online = False
+        user_info.online = False
         self.set_map_scene()
 
     def login_response_parcel_handler(self, parcel):

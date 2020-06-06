@@ -5,6 +5,8 @@ from game_eng.player_action import PlayerAction
 
 class MoveGridTilePowerPlayerAction(PlayerAction):
     def __init__(self, player, target, selected=None, value=0):
+        if target.team != player.team:
+            raise exceptions.InvalidOperationException()
         super().__init__(player, target)
         self.selected = selected
         self.value = value

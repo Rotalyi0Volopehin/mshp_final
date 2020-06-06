@@ -1,3 +1,5 @@
+import user_info
+
 from scenes.base import Scene
 from objects.text import Text
 from ws.parcel_manager import ParcelManager
@@ -13,7 +15,7 @@ class GSSyncScene(Scene):
         self.game_model = game_model
         self.post_changes_func = post_changes_func
         self.get_changes_func = get_changes_func
-        if self.game.current_scene.game_vc.model.current_player.id == self.game.logged_user_id:
+        if self.game.current_scene.game_vc.model.current_player.id == user_info.user_id:
             self.__post_changes()
         else:
             self.__get_changes()
