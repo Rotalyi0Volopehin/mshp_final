@@ -32,3 +32,11 @@ class ErrorResponseException(Exception):
                 raise ArgumentTypeException()
             error_id = error_id.value
         super().__init__(f"ErrorResponse #{error_id}")
+
+
+class CoreModuleHashOverlapException(Exception):
+    DESCRIPTION = "Хэши модулей core накладываются!"
+
+
+class CoreClassHashOverlapException(Exception):
+    DESCRIPTION = "Хэши классов core накладываются!"

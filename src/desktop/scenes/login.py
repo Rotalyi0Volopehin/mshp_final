@@ -1,14 +1,12 @@
 import pygame
 import os.path as path
 import request_parcel_helpers.user_logging as user_logging
-import exceptions
+import webbrowser
 
-from pygame.locals import *
 from constants import Color
 from net_connection.response_ids import ResponseID
 from objects.button import Btn
 from objects.gifimage import GIFImage
-from objects.gifimg import GIFImage
 from objects.text import Text
 from objects.text_input import TextInput
 from objects.password_input import PasswordInput
@@ -19,8 +17,8 @@ from ws.parcel_manager import ParcelManager
 
 class LoginScene(Scene):
     def init_form(self):
-        self.login_textbox = TextInput(self.game, False, 170, 20)
-        self.password_textbox = PasswordInput(self.game, False, 180, 80)
+        self.login_textbox = TextInput(self.game, False, 170, 20, 11)
+        self.password_textbox = PasswordInput(self.game, False, 180, 80, 18)
         button_enter = Btn(self.game, (350, 300, 100, 40), Color.WHITE, "Войти", self.on_enter_button_click)
         button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
         trailer = GIFImage(path.join("images", "login_backimage.gif"), self.game)
@@ -51,9 +49,9 @@ class LoginScene(Scene):
         self.load_sound()
         pygame.mixer.music.play(-1)
 
-    def set_gs_menu_scene(self):
-        from scenes.gs_menu import GSMenuScene
-        self.game.set_origin_scene(GSMenuScene)
+    def set_map_scene(self):
+        from scenes.map import MapScene
+        self.game.set_origin_scene(MapScene)
 
     def set_main_menu_scene(self):
         from scenes.main_menu import MainMenuScene
@@ -67,20 +65,19 @@ class LoginScene(Scene):
 
     def on_enter_button_click(self):
         self.game.online = False
-        self.set_gs_menu_scene()
+        self.set_map_scene()
 
     def login_response_parcel_handler(self, parcel):
         response_id = parcel[0]
-        if response_id == ResponseID.ERROR:
-            error_id = parcel[1]
-            raise exceptions.ErrorResponseException(error_id)
         if response_id == ResponseID.FAIL:
             pass  # TODO: реализовать вывод ошибки
         elif response_id == ResponseID.SUCCESS:
+            self.game.current_user_id = parcel[1]
             self.set_main_menu_scene()
 
-    def on_reg_button_click(self):
-        pass  # TODO: сделать редирект в браузер на страницу регистрации
+    @staticmethod
+    def on_reg_button_click():
+        webbrowser.open('http://network-conf.gq/registration/', new=1)
 
     def on_closed(self):
         pygame.mixer.music.stop()

@@ -1,13 +1,12 @@
 import exceptions
 
+from datetime import datetime
 from game_eng.player_turn import PlayerTurn
 from game_eng.market import Market
 from game_eng.team import Team
 from game_eng.grid_model import GridModel
 from game_eng.player import Player
-from game_eng.pressure_tool_set import PressureToolSet
 # vvv импорты для чтения/записи vvv
-from net_connection.loading_dump import LoadingDump
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 
@@ -38,21 +37,25 @@ class GameModel:
         self.player_turn_period = player_turn_period
         self.teams_money_limit = teams_money_limit
         # vvv переменные полЯ vvv
-        self.__current_team_index = 0
         self.__current_player_turn = self.__current_player = None
         self.__fixed = False
         self.teams = list()
-        if stream is None:
+        self.player_ids = dict()
+        self.winner_team = None
+        if stream is None:  # первичная иницмализация
             self.grid = GridModel(self, grid_width, grid_height)
             self.market = Market()
-        else:
-            LoadingDump.set_current_game_session(self)
-            self.grid = GridModel.read(stream)
+            self.turn_beginning_time = datetime.utcnow()
+            self.__current_team_index = 0
+        else:  # иницмализация из потока
+            self.turn_beginning_time = stream.read_datetime()
+            self.grid = GridModel.read(stream, self)
             self.market = Market.read(stream)
+            self.__current_team_index = stream.read_byte()
             for _ in range(3):
-                Team.read(stream)
-            stream.read_iterable(PlayerTurn)
-            stream.read_iterable(PressureToolSet)
+                Team.read(stream, self)
+            stream.read_short_iterable(Player, {"game_model": self})
+            self.__resume_game()
 
     @staticmethod
     def read(stream: BinaryReader):
@@ -68,15 +71,35 @@ class GameModel:
     def write(stream: BinaryWriter, obj):
         if not (isinstance(stream, BinaryWriter) and isinstance(obj, GameModel)):
             raise exceptions.ArgumentTypeException()
-        pass  # TODO: дописать запись игровой сессии
+        stream.write_short_string(obj.title)
+        stream.write_byte(obj.player_turn_period)
+        stream.write_uint(obj.teams_money_limit)
+        stream.write_datetime(obj.turn_beginning_time)
+        GridModel.write(stream, obj.grid)
+        Market.write(stream, obj.market)
+        stream.write_byte(obj.__current_team_index)
+        for team in obj.teams:
+            Team.write(stream, team)
+        stream.write_short_iterable(obj.player_ids.values(), Player)
+
+    def __resume_game(self):
+        if len(self.teams) != 3:
+            raise exceptions.InvalidOperationException()
+        for team in self.teams:
+            for player in team.players:
+                self.player_ids[player.id] = player
+        self.__fixed = True
+        self.__current_player = self.current_team.current_player
+        self.__current_player_turn = PlayerTurn()
 
     def start_game(self):
         """**Окончание инициализации**\n
         Запрещает запуск метода add_team.
+        Требуется наличие трёх фракций.
+
+        :raises InvalidOperationException: |InvalidOperationException|
         """
-        self.__fixed = True
-        self.__current_player = self.current_team.current_player
-        self.__current_player_turn = PlayerTurn()
+        self.__resume_game()
         self.grid.handle_new_team_turn()
 
     def add_team(self, team: Team):
@@ -94,6 +117,22 @@ class GameModel:
         if (len(self.teams) >= 3) or self.__fixed:
             raise exceptions.InvalidOperationException()
         self.teams.append(team)
+
+    @property
+    def game_over(self) -> bool:
+        return self.winner_team is not None
+
+    @property
+    def turn_time_elapsed(self) -> float:
+        return datetime.utcnow().timestamp() - self.turn_beginning_time.timestamp()
+
+    @property
+    def turn_time_left(self) -> float:
+        return self.player_turn_period - self.turn_time_elapsed
+
+    @property
+    def current_player_turn(self) -> PlayerTurn:
+        return self.__current_player_turn
 
     @property
     def current_team(self) -> Team:
@@ -129,19 +168,50 @@ class GameModel:
             self.__next_team_turn()
         self.__current_player = self.current_team.current_player
         self.__current_player_turn.reset()
-
-    def find_player_by_name(self, name: str):
-        if not isinstance(name, str):
-            raise exceptions.ArgumentTypeException()
-        for team in self.teams:
-            player = team.find_player_by_name(name)
-            if player is not None:
-                return player
-        return None
+        self.turn_beginning_time = datetime.utcnow()
 
     def __next_team_turn(self):
+        for i in range(3):
+            self.__current_team_index = (self.__current_team_index + 1) % len(self.teams)
+            if i == 2:
+                self.winner_team = self.current_team
+                return
+            if not self.current_team.defeated:
+                break
         self.market.update()
-        self.__current_team_index += 1
-        if self.__current_team_index == len(self.teams):
-            self.__current_team_index = 0
         self.grid.handle_new_team_turn()
+
+
+def create_new_game_model(title: str, player_turn_period: int, teams_money_limit: int, players_data,
+                          time_before_first_turn: float = 30.0) -> GameModel:
+    game = GameModel(title, player_turn_period, teams_money_limit, 11, 11)
+    from game_eng.team_ders.team_a import TeamA
+    from game_eng.team_ders.team_b import TeamB
+    from game_eng.team_ders.team_c import TeamC
+    for team_type in (TeamA, TeamB, TeamC):
+        team_type(game)
+    for player_data in players_data:
+        team = game.teams[player_data["team"]]
+        Player(player_data["uid"], player_data["name"], team)
+    from game_eng.grid_tile_ders.capital_tile import CapitalGridTile
+    tiles = game.grid.tiles
+
+    def make_capital_tile(x, y, team):
+        tile = tiles[x][y]
+        tile = tile.upgrade(CapitalGridTile)
+        tile.team = team
+    make_capital_tile(1, 5, game.teams[0])
+    make_capital_tile(7, 1, game.teams[1])
+    make_capital_tile(7, 9, game.teams[2])
+    make_capital_tile(5, 5, None)
+    empty_tiles = [(0, 0), (1, 0), (2, 0), (9, 0), (10, 0), (0, 1), (1, 1), (3, 1), (9, 1), (10, 1), (0, 2), (1, 2),
+                   (4, 2), (10, 2), (0, 3), (6, 3), (10, 3), (0, 4), (5, 4), (3, 5), (6, 5), (8, 5), (9, 5), (0, 6),
+                   (5, 6), (0, 7), (6, 7), (10, 7), (0, 8), (1, 8), (4, 8), (10, 8), (0, 9), (1, 9), (3, 9), (9, 9),
+                   (10, 9), (0, 10), (1, 10), (2, 10), (9, 10), (10, 10)]
+    for empty_tile in empty_tiles:
+        x = empty_tile[0]
+        y = empty_tile[1]
+        tiles[x][y] = None
+    game.turn_beginning_time = datetime.fromtimestamp(game.turn_beginning_time.timestamp() + time_before_first_turn)
+    game.start_game()
+    return game

@@ -10,6 +10,7 @@ class ErrorResponseID(Enum):
     WRONG_PARCEL_FORMAT = 2  # если request - это не лист, пустой лист или первый элемент не request id
     WRONG_PARCEL_CONTENT = 3  # если содержание request parcel является неправильным
     LOGGING_IN_REQUIRED = 4  # если операция требует авторизации, но её не было
+    INVALID_OPERATION = 5  # если операция не может быть произведена в данный момент
 
 
 class ErrorResponse:

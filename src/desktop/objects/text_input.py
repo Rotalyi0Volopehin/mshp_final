@@ -14,12 +14,12 @@ class TextInput(DrawObject):
         "hover_font_color": Color.ORANGE
     }
 
-    def __init__(self, game, antialias, x, y):
+    def __init__(self, game, antialias, x, y, m_str_len):
         super().__init__(game)
         self.x = x
         self.y = y
         self.pos = (x, y)
-        self.internal_txtinput = TInput(self.game, antialias=antialias)
+        self.internal_txtinput = TInput(self.game, antialias=antialias, m_str_len=m_str_len)
         self.internal_txtinput.keyrepeat_interval_ms = 500
         self.down_keys = dict()
 
@@ -41,6 +41,8 @@ class TextInput(DrawObject):
             self.internal_txtinput.update(event)
 
     def process_draw(self):
+        pygame.draw.rect(self.game.screen, Color.WHITE, (self.x-5, self.y-2, 175, 27))
+        pygame.draw.rect(self.game.screen, Color.BLACK, (self.x-5, self.y-2, 175, 27), 2)
         self.game.screen.blit(self.internal_txtinput.get_surface(), self.pos)
 
     def update_internal_txtinput(self):

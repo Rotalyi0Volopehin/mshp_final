@@ -15,6 +15,7 @@ class Game:
         self.__init_window(width, height)
         self.__init_scenes()
         self.online = False
+        self.logged_user_id = 0
 
     def __init_window(self, width, height):
         self.width = width
@@ -28,19 +29,19 @@ class Game:
         self.scene_stack = []
         self.set_origin_scene(LoginScene)
 
-    def set_origin_scene(self, new_scene_type: type):
+    def set_origin_scene(self, new_scene_type: type, extra_kwargs: dict = None):
         if not issubclass(new_scene_type, Scene):
             raise exceptions.ArgumentTypeException()
         for scene in self.scene_stack:
             scene.on_closed()
-        self.__current_scene = new_scene_type(self)
+        self.__current_scene = new_scene_type(self) if extra_kwargs is None else new_scene_type(self, **extra_kwargs)
         self.scene_stack = [self.__current_scene]
 
-    def goto_deeper_scene(self, new_scene_type: type):
+    def goto_deeper_scene(self, new_scene_type: type, extra_kwargs: dict = None):
         if not issubclass(new_scene_type, Scene):
             raise exceptions.ArgumentTypeException()
         prev_scene = self.__current_scene
-        self.__current_scene = new_scene_type(self)
+        self.__current_scene = new_scene_type(self) if extra_kwargs is None else new_scene_type(self, **extra_kwargs)
         self.scene_stack.append(self.__current_scene)
         prev_scene.on_gone_to_deeper_scene_from_this()
 

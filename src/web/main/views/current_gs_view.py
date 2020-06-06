@@ -5,12 +5,12 @@ from django.shortcuts import render
 from main.models import UserData
 from main.models import UserParticipation
 from main.models import GameSession
-from main.db_tools.user_participation_tools import DBUSerParticipationTools
+from main.db_tools.user_participation_tools import DBUserParticipationTools
 from main.db_tools.user_tools import DBUserTools
 
 
 @login_required
-def game_session_page(request):
+def current_gs_page(request):
     context = {
         'pagename': 'Текущая сессия',
         'menu': get_menu_context(),
@@ -24,7 +24,7 @@ def game_session_page(request):
         context['ok'] = False
         context['error'] = error
     else:
-        participation = DBUSerParticipationTools.get_user_participation(user_data)
+        participation = DBUserParticipationTools.get_user_participation(request.user)
         if participation is None:
             context['state'] = 0
         elif participation.game_session.phase == 0:
@@ -33,28 +33,25 @@ def game_session_page(request):
         else:
             context['state'] = 2
             playing_game_session_state(context, participation.game_session, user_data)
-    context['state'] = 2
     return render(request, 'pages/current_session/game_session_body.html', context)
 
 
 def expectation_game_session_state(context, game_session):
     add_game_session_name_to_context(context, game_session)
-    participations = UserParticipation.objects.filter(game_session=game_session)
-    context['player_count'] = len(participations)
-    context['players_must_be'] = game_session.user_per_team_count * 3
+    context['players_gathered'] = game_session.players_gathered
 
 
 def playing_game_session_state(context, game_session, user_data):
     add_game_session_name_to_context(context, game_session)
-    participants = ([], [], [])
-    participations = UserParticipation.objects.filter(game_session=game_session)
+    teams = (("Cyber Corp", []), ("Добрая Воля", []), ("Зов Свободы", []))
+    participations = game_session.get_participants()
     for participation in participations:
         name = participation.user_data.user.username
         self = participation.user_data == user_data
-        participants[participation.user_data.team].append((name, self))
-    context['players'] = participants
+        teams[participation.user_data.team][1].append((name, self))
+    context['teams'] = teams
     # TODO: передать ссылки на чаты
 
 
 def add_game_session_name_to_context(context, game_session):
-    context['session_name'] = game_session.title
+    context['title'] = game_session.title

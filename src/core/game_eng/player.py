@@ -2,7 +2,6 @@ import exceptions
 
 from game_eng.team import Team
 # vvv импорты для чтения/записи vvv
-from net_connection.loading_dump import LoadingDump
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 
@@ -20,15 +19,17 @@ class Player:
         team.add_player(self)
 
     @staticmethod
-    def read(stream: BinaryReader):
+    def read(stream: BinaryReader, game_model):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
         uid = stream.read_uint()
         name = stream.read_short_string()
         team_ind = stream.read_sbyte()
-        team = LoadingDump.get_team_by_index(team_ind)
+        team = game_model.teams[team_ind]
         obj = Player(uid, name, team)
-        LoadingDump.add_player(obj)
+        game_model.player_ids[uid] = obj
+        for pts in stream.read_short_iterable(Player.get_pts_type(), {"player": obj}):
+            obj.pressure_tools[type(pts)] = pts
         return obj
 
     @staticmethod
@@ -38,6 +39,7 @@ class Player:
         stream.write_uint(obj.id)
         stream.write_short_string(obj.name)
         stream.write_sbyte(obj.team.index)
+        stream.write_short_iterable(obj.pressure_tools.values(), Player.get_pts_type())
 
     @property
     def team(self) -> Team:

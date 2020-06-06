@@ -1,6 +1,7 @@
 import json
 import exceptions
 
+from zlib import crc32
 from net_connection.core_classes import CoreClasses
 from enum import Enum
 from types import FunctionType
@@ -33,9 +34,9 @@ class CoreJSONEncoder(json.JSONEncoder):
         return encoded
 
     @staticmethod
-    def __get_info_module(obj) -> (str, str):  # (obj_module, obj_type)
-        obj_module = str(obj.__module__)
-        obj_type = type(obj).__name__
+    def __get_info_module(obj) -> (int, int):  # (obj_module_hash, obj_type_hash)
+        obj_module = crc32(str(obj.__module__).encode())
+        obj_type = crc32(type(obj).__name__.encode())
         return obj_module, obj_type
 
 
@@ -117,11 +118,11 @@ class CoreJSONDecoder:
     @staticmethod
     def __decode_object_info(encoded: str) -> (type, str):  # (obj_type, obj_data)
         module_end = encoded.find('^', 3)
-        obj_module_name = encoded[3:module_end]
+        obj_module_hash = int(encoded[3:module_end])
         type_origin = module_end + 1
         type_end = encoded.find(':', type_origin)
-        obj_type_name = encoded[type_origin:type_end]
+        obj_type_hash = int(encoded[type_origin:type_end])
         data_origin = type_end + 1
         obj_data = CoreJSONDecoder.decode_json(encoded[data_origin:])
-        type_ = CoreClasses.classes[obj_module_name][obj_type_name]
+        type_ = CoreClasses.classes[obj_module_hash][obj_type_hash]
         return type_, obj_data

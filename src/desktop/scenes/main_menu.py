@@ -1,30 +1,30 @@
-from objects.button import Btn
 from scenes.base import Scene
-from ws.parcel_manager import ParcelManager
-from net_connection.request_ids import RequestID
-from net_connection.response_ids import ResponseID
-from objects.gs_info_plate import GSInfoPlate
+from objects.button import Btn
 
 
 class MainMenuScene(Scene):
     def create_objects(self):
-        exit_button = Btn(self.game, (350, 255, 100, 40), text="Выход", function=self.game.exit)
-        self.objects.append(exit_button)
-        self.gs_info_plate = GSInfoPlate(self.game, 400, 310, self.__set_gs_menu_scene, 120, self.__refresh)
-        self.objects.append(self.gs_info_plate)
+        waiting_room_button = Btn(self.game, (300, 255, 100, 40), text="Текущая сессия",
+                                  function=self.__goto_waiting_room)
+        quest_button = Btn(self.game, (400, 255, 100, 40), text="Квесты", function=self.__set_quest_scene)
+        quit_account_button = Btn(self.game, (400, 305, 100, 40), text="из аккаунта",
+                                  function=self.__quit_account)
+        exit_button = Btn(self.game, (300, 305, 100, 40), text="Выход", function=self.game.exit)
+        self.objects.extend([
+            waiting_room_button,
+            quest_button,
+            quit_account_button,
+            exit_button,
+        ])
 
-    def __set_gs_menu_scene(self):
-        from scenes.gs_menu import GSMenuScene
-        self.game.goto_deeper_scene(GSMenuScene)
+    def __quit_account(self):
+        from scenes.login import LoginScene
+        self.game.set_origin_scene(LoginScene)
 
-    def __refresh(self):
-        parcel = [RequestID.GET_GS_INFO]
-        ParcelManager.send_parcel(parcel)
-        ParcelManager.receive_parcel_async(self.__refresh_response_receiver)
+    def __goto_waiting_room(self):
+        from scenes.waiting_room import WaitingRoomScene
+        self.game.goto_deeper_scene(WaitingRoomScene)
 
-    def __refresh_response_receiver(self, parcel):
-        response_id = parcel[0]
-        if response_id == ResponseID.FAIL:
-            pass  # TODO: реализовать вывод ошибки
-        else:
-            self.gs_info_plate.update_info_from_parcel(parcel)
+    def __set_quest_scene(self):
+        from scenes.quests import QuestScene
+        self.game.goto_deeper_scene(QuestScene)

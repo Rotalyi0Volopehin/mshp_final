@@ -33,6 +33,13 @@ class BinaryStream:
         """
         self.__base_stream.seek(pos)
 
+    def to_bytes(self) -> bytes:
+        """**Получение всех данных, хранящихся в буфере**\n
+        :return: Все данные
+        :rtype: bytes
+        """
+        return self.base_stream.getbuffer().tobytes()
+
     def __len__(self) -> int:
         """**Длина потока бинарных данных**\n
         :return: Длина потока

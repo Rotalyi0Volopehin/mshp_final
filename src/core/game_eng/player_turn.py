@@ -2,7 +2,6 @@ import exceptions
 
 from game_eng.player_action import PlayerAction
 # vvv импорты для чтения/записи vvv
-from net_connection.loading_dump import LoadingDump
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 
@@ -15,11 +14,11 @@ class PlayerTurn:
         self.actions = []
 
     @staticmethod
-    def read(stream: BinaryReader):
+    def read(stream: BinaryReader, game_model):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
         obj = PlayerTurn()
-        obj.actions = stream.read_iterable(PlayerAction)
+        obj.actions = stream.read_iterable(PlayerAction, {"game_model": game_model})
         return obj
 
     @staticmethod

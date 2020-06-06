@@ -19,17 +19,19 @@
 
 {% block content %}
 
-{% if error %}
-
-<div class="text-center alert alert-danger" role="alert">{{ error }}</div>
-
-{% else %}
-
 {% include 'pages/profile/background.html' %}
 
+{% if error %}
+
+<div class="text-center alert alert-danger rounded_border"
+     role="alert"
+     style="height: 24vh; padding-top: 8%; margin-top: 20%; font-size: 130%;">{{ error }}</div>
+
+{% else %}
+<main role="main" class="container">
 <form class="form-padding" method="post"> {% csrf_token %}
-    <div class="row px-1 mb-5 pb-5">
-        <div class="col-xl-10 col-md-10 col-sm-10 mx-auto">
+    <div class="row mb-5 pb-5">
+        <div class="col-lg-10 mx-auto">
             <div class="bg-dark shadow rounded_border overflow-hidden">
                 {% include 'pages/profile/header.html' %}
                 {% include 'pages/profile/body.html' %}
@@ -41,6 +43,6 @@
         </div>
     </div>
 </form>
-
+</main>
 {% endif %}
 {% endblock %}

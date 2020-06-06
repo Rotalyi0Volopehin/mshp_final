@@ -1,9 +1,10 @@
-from game_eng.pressure_tool_set import PressureToolSet
+from .effect_giver_pts import EffectGiverPTSet
 from game_eng.grid_tile_effect_ders.virus_effect import VirusGridTileEffect
 
 
-class VirusPTSet(PressureToolSet):
+class VirusPTSet(EffectGiverPTSet):
     __END_PRODUCT__ = None
+    effect_type = VirusGridTileEffect
 
     @property
     def start_market_count(self) -> int:
@@ -16,7 +17,3 @@ class VirusPTSet(PressureToolSet):
     @property
     def name(self) -> str:
         return "Вирус"
-
-    def _try_apply(self, target) -> bool:
-        VirusGridTileEffect(target)
-        return True

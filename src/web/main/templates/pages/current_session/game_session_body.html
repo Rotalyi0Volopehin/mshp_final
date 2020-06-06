@@ -47,22 +47,10 @@
 
 </style>
 
-{% if error %}
-
-<div class="text-center alert alert-danger" role="alert">{{ error }}</div>
-
-{% elif state == 0 %}
-
-{% include 'pages/current_session/afk.html' %}
-
-{% elif state == 1 %}
-
-{% include 'pages/current_session/expectation.html' %}
-
-{% elif state == 2 %}
-
-{% include 'pages/current_session/playing.html' %}
-
+{% if error %}<div class="text-center alert alert-danger" role="alert">{{ error }}</div>
+{% elif state == 0 %}{% include 'pages/current_session/afk.html' %}
+{% elif state == 1 %}{% include 'pages/current_session/expectation.html' %}
+{% elif state == 2 %}{% include 'pages/current_session/playing.html' %}
 {% endif %}
 
 {% endblock %}
