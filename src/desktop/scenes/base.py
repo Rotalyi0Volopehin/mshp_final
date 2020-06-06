@@ -39,7 +39,7 @@ class Scene:
         pass
 
     def process_all_draw(self):
-        self.screen.fill(Color.BLUE_GREY)
+        self.screen.fill(Color.BG_GRAY2)  # Color.BG_GRAY1
         for item in self.objects:
             item.process_draw()
         self.additional_draw()

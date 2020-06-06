@@ -55,7 +55,7 @@ class GameModel:
             for _ in range(3):
                 Team.read(stream, self)
             stream.read_short_iterable(Player, {"game_model": self})
-            self.start_game()
+            self.__resume_game()
 
     @staticmethod
     def read(stream: BinaryReader):
@@ -82,13 +82,7 @@ class GameModel:
             Team.write(stream, team)
         stream.write_short_iterable(obj.player_ids.values(), Player)
 
-    def start_game(self):
-        """**Окончание инициализации**\n
-        Запрещает запуск метода add_team.
-        Требуется наличие трёх фракций.
-
-        :raises InvalidOperationException: |InvalidOperationException|
-        """
+    def __resume_game(self):
         if len(self.teams) != 3:
             raise exceptions.InvalidOperationException()
         for team in self.teams:
@@ -97,6 +91,15 @@ class GameModel:
         self.__fixed = True
         self.__current_player = self.current_team.current_player
         self.__current_player_turn = PlayerTurn()
+
+    def start_game(self):
+        """**Окончание инициализации**\n
+        Запрещает запуск метода add_team.
+        Требуется наличие трёх фракций.
+
+        :raises InvalidOperationException: |InvalidOperationException|
+        """
+        self.__resume_game()
         self.grid.handle_new_team_turn()
 
     def add_team(self, team: Team):

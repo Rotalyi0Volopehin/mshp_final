@@ -12,4 +12,6 @@ class Color:
     CYAN = (0, 255, 255)
     MAGENTA = (255, 0, 255)
     ORANGE = (255, 180, 0)
-    BLUE_GREY = (44, 49, 54)
+    # vvv фоновый цвет vvv
+    BG_GRAY1 = (44, 49, 54)
+    BG_GRAY2 = (26, 20, 20)

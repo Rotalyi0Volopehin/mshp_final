@@ -4,11 +4,10 @@ import os
 from struct import error as struct_error_type
 from django.utils import timezone
 from django.contrib.auth.models import User
-from main.models import UserData, UserParticipation, GameSession, TeamStats
+from main.models import UserData, UserParticipation, GameSession
 from io_tools.binary_writer import BinaryWriter
 from io_tools.binary_reader import BinaryReader
 from game_eng.game_model import GameModel, create_new_game_model
-from game_eng.player import Player
 from main.db_tools.game_session_error_messages import DBGameSessionErrorMessages
 from .user_tools import DBUserTools
 from .game_session_participation_error_messages import DBGameSessionParticipationErrorMessages
@@ -100,8 +99,6 @@ class DBGameSessionTools:
             raise exceptions.InvalidOperationException()
         game_model = DBGameSessionTools.__create_new_game_model(session)
         DBGameSessionTools.save_game_model(session, game_model)
-        for i in range(3):
-            TeamStats(team=i, game_session=session).save()
         session.phase = 1
         session.date_started = timezone.now()
         session.save()
@@ -135,7 +132,6 @@ class DBGameSessionTools:
             raise exceptions.InvalidOperationException()
         session.winning_team = DBGameSessionTools.__get_winning_team(session)
         os.remove(session.file_path)
-        TeamStats.objects.filter(game_session=session).delete()
         participations = UserParticipation.objects.filter(game_session=session)
         for participation in participations:
             victory = participation.user_data.team == session.winning_team

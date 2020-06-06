@@ -107,12 +107,6 @@ class GameSession(models.Model):
         return f"{participant_count} из {participant_required}"
 
 
-class TeamStats(models.Model):
-    team = models.IntegerField(default=0)
-    game_session = models.ForeignKey(to=GameSession, on_delete=models.CASCADE)
-    money = models.IntegerField(default=0)  # бюджет фракции
-
-
 class UserParticipation(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     user_data = models.ForeignKey(to=UserData, on_delete=models.CASCADE)

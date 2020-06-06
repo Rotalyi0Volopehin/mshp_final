@@ -9,7 +9,7 @@ from datetime import datetime
 class GSInfoPlate(DrawObject):
     def __init__(self, game, pos_x, pos_y, play_button_func, get_gs_func, auto_update_period=-1, auto_update_func=None):
         super().__init__(game)
-        self.participation_status = ParticipationStatusID.NO_PARTICIPATION
+        self.participation_status = None
         self.gs_title = None
         self.gathered_players_count = self.players_must_participate = None
         self.auto_update_period = auto_update_period
@@ -25,7 +25,9 @@ class GSInfoPlate(DrawObject):
         self.get_gs_func = get_gs_func
 
     def update_labels(self):
-        if self.participation_status == ParticipationStatusID.NO_PARTICIPATION:
+        if self.participation_status is None:
+            participation_status = "..."
+        elif self.participation_status == ParticipationStatusID.NO_PARTICIPATION:
             participation_status = "Вы не участвуете в игровой сессии"
         elif self.participation_status == ParticipationStatusID.WAITING_FOR_BEGINNING:
             participation_status = "Набор игроков ..."
@@ -33,7 +35,7 @@ class GSInfoPlate(DrawObject):
             self.player_count_label.update_text(
                 f"Игроков набралось {self.gathered_players_count}/{self.players_must_participate}")
         elif self.waiting_for_first_turn_state_end_time is None:
-            participation_status = "Игра начнётся через несколько секунд"
+            participation_status = "..."
         elif self.waiting_for_first_turn_time_left > 0.0:
             participation_status = f"Игра начнётся через {self.waiting_for_first_turn_time_left} секунд"
         else:
