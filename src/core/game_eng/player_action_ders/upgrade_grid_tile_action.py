@@ -27,10 +27,3 @@ class UpgradeGridTilePlayerAction(PlayerAction):
             return True
         except exceptions.InvalidOperationException:
             return False
-
-    def try_undo(self) -> bool:
-        try:
-            self.target = GridTileUpgradeTree.downgrade_tile(self.__new_tile)
-            return True
-        except exceptions.InvalidOperationException:
-            return False

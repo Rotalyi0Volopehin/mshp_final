@@ -55,11 +55,3 @@ class PlayerAction:
         :rtype: bool
         """
         raise exceptions.NotImplementedException()
-
-    def try_undo(self) -> bool:
-        """**Попытка отменить действие**\n
-        :raises NotImplementedException: |NotImplementedException|
-        :return: ok
-        :rtype: bool
-        """
-        raise exceptions.NotImplementedException()

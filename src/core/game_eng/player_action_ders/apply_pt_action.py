@@ -18,6 +18,3 @@ class ApplyPTPlayerAction(PlayerAction):
 
     def try_do(self) -> bool:
         return self.pt_set.try_use(self.target)
-
-    def try_undo(self) -> bool:
-        return self.pt_set.try_cancel()

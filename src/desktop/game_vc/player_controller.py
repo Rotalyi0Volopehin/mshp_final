@@ -13,7 +13,7 @@ class PlayerController:
 
     @property
     def changes_available(self) -> bool:
-        return self.game_vc.model.current_player.id == user_info.user_id
+        return (self.game_vc.model.current_player.id == user_info.user_id) or not user_info.online
 
     def try_move_power(self, value: int) -> bool:
         if not isinstance(value, int):
@@ -48,7 +48,7 @@ class PlayerController:
             return False
         try:
             player = self.game_vc.model.current_player
-            target = self.game_vc.grid_vc.target_tile
+            target = self.game_vc.grid_vc.selected_tile
             action = UpgradeGridTilePlayerAction(player, target, upgrade)
             return self.game_vc.model.current_player_turn.try_act(action)
         except exceptions.InvalidOperationException:
@@ -59,7 +59,7 @@ class PlayerController:
             return False
         try:
             player = self.game_vc.model.current_player
-            target = self.game_vc.grid_vc.target_tile
+            target = self.game_vc.grid_vc.selected_tile
             action = DowngradeGridTilePlayerAction(player, target)
             return self.game_vc.model.current_player_turn.try_act(action)
         except exceptions.InvalidOperationException:

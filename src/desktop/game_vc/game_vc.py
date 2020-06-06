@@ -5,7 +5,8 @@ from game_eng.team_ders.team_a import TeamA
 from game_eng.team_ders.team_b import TeamB
 from game_eng.team_ders.team_c import TeamC
 from game_eng.player import Player
-from game_vc.grid_vc import GridVC
+from .grid_vc import GridVC
+from .player_controller import PlayerController
 from objects.base import DrawObject
 from constants import Color
 
@@ -17,7 +18,8 @@ class GameVC(DrawObject):
         super().__init__(game)
         self.model = create_hardcoded_game_model() if game_model is None else game_model
         self.grid = self.model.grid
-        self.grid_vc = GridVC(self.grid, self.game)
+        self.grid_vc = GridVC(self.game, self.grid, self)
+        self.player_controller = PlayerController(self)
         self.__end_turn_flag = False
 
     def process_logic(self):
