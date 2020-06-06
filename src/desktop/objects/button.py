@@ -17,14 +17,10 @@ class Btn(DrawObject):
         super().__init__(game)
         self.geometry = geometry
         self.button_translator = Translator()
-        file = open('quests/language', 'r')
-        self.language = file.read()
-        file.close()
-        self.button_translator.update_translation_data(text, self.language)
         self.color = color
         self.function = function if function else Btn.no_action
         self.internal_button = Button(self.geometry, self.color, self.function, **Btn.BUTTON_STYLE)
-        self.internal_button.text = self.button_translator.translate()
+        self.internal_button.text = text
         self.internal_button.render_text()
 
     @staticmethod

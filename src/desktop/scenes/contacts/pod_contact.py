@@ -23,56 +23,56 @@ class PodContactScene(Scene):
         f.write('\n')
         f.write('contacts :' + str("swan") + '|' + '\n')
         f.close()
-        self.set_next_scene(self.game.QUEST_SCENE_INDEX)
+        self.set_next_scene(self.game.QUEST_MENU_SCENE_INDEX)
 
     def set_finch(self):
         f = open('quests/stats', 'a')
         f.write('\n')
         f.write('contacts :' + str("finch") + '|' + '\n')
         f.close()
-        self.set_next_scene(self.game.QUEST_SCENE_INDEX)
+        self.set_next_scene(self.game.QUEST_MENU_SCENE_INDEX)
 
     def set_krayn(self):
         f = open('quests/stats', 'a')
         f.write('\n')
         f.write('contacts :' + str("krayn") + '|' + '\n')
         f.close()
-        self.set_next_scene(self.game.QUEST_SCENE_INDEX)
+        self.set_next_scene(self.game.QUEST_MENU_SCENE_INDEX)
 
     def set_smith(self):
         f = open('quests/stats', 'a')
         f.write('\n')
         f.write('contacts :' + str("smith") + '|' + '\n')
         f.close()
-        self.set_next_scene(self.game.QUEST_SCENE_INDEX)
+        self.set_next_scene(self.game.QUEST_MENU_SCENE_INDEX)
 
     def set_stein(self):
         f = open('quests/stats', 'a')
         f.write('\n')
         f.write('contacts :' + str("stein") + '|' + '\n')
         f.close()
-        self.set_next_scene(self.game.QUEST_SCENE_INDEX)
+        self.set_next_scene(self.game.QUEST_MENU_SCENE_INDEX)
 
     def set_will(self):
         f = open('quests/stats', 'a')
         f.write('\n')
         f.write('contacts :' + str("will") + '|' + '\n')
         f.close()
-        self.set_next_scene(self.game.QUEST_SCENE_INDEX)
+        self.set_next_scene(self.game.QUEST_MENU_SCENE_INDEX)
 
     def set_achill(self):
         f = open('quests/stats', 'a')
         f.write('\n')
         f.write('contacts :' + str("achill") + '|' + '\n')
         f.close()
-        self.set_next_scene(self.game.QUEST_SCENE_INDEX)
+        self.set_next_scene(self.game.QUEST_MENU_SCENE_INDEX)
 
     def set_jim(self):
         f = open('quests/stats', 'a')
         f.write('\n')
         f.write('contacts :' + str("jim") + '|' + '\n')
         f.close()
-        self.set_next_scene(self.game.QUEST_SCENE_INDEX)
+        self.set_next_scene(self.game.QUEST_MENU_SCENE_INDEX)
 
     def exit(self):
         self.game.game_over = True

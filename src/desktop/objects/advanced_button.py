@@ -38,8 +38,7 @@ class AdvBtn(DrawObject):
         self.language = file.read()
         file.close()
         self.adv_button_translator = Translator()
-        self.adv_button_translator.update_translation_data(text, self.language)
-        self.text = self.adv_button_translator.translate()
+        self.text = self.adv_button_translator.translate(text, self.language)
         self.function = function
         up_button_geometry = (geometry[0] + geometry[2] + geometry[2] / 40,
                               geometry[1],

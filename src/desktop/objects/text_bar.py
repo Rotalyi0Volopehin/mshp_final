@@ -1,7 +1,9 @@
 import pygame
 from constants import Color
 from objects.base import DrawObject
+from objects.image import Image
 from objects.button import Btn
+from objects.image_handler import ImageHandler
 from objects.req_handler import ReqHandler
 from objects.yandex_translate import Translator
 
@@ -58,6 +60,7 @@ class TextBar(DrawObject):
         self.next_act = False
         self.now_word_b = 0
         self.now_word_f = 0
+        self.image_handler = ImageHandler(self.game)
         self.req_handler = ReqHandler(self.data)
         file = open('quests/language', 'r')
         self.language = file.read()
@@ -74,18 +77,22 @@ class TextBar(DrawObject):
             self.lal = 0
             self.is_start = False
             self.now_word_f = 0
+            print('set_next_dialog')
             self.data_strings = []
             self.text_frame = ''
             self.text_frame = self.data[self.data.find('<d>', self.now_word_a) + 3:
                                         self.data.find('</d>', self.now_word_a)]
+            while len(self.game.scenes[self.game.QUEST_SCENE_INDEX].objects) > 3:
+                self.game.scenes[self.game.QUEST_SCENE_INDEX].objects.pop()
+            for item in self.image_handler.find_characters(self.text_frame):
+                self.game.scenes[self.game.QUEST_SCENE_INDEX].objects.append(item)
             self.flag = True
             while self.flag:
                 dialog_string = self.text_frame[self.text_frame.find('<p>',
                                                 self.now_word_f) + 3:
                                                 self.text_frame.find('</p>',
                                                 self.now_word_f)]
-                self.game.translator.update_translation_data(dialog_string, self.language)
-                self.data_strings.append(self.game.translator.translate())
+                self.data_strings.append(self.translator.translate(dialog_string, self.language))
                 self.now_word_f = self.text_frame.find('</p>', self.now_word_f) + 1
                 if self.text_frame.find('</p>', self.now_word_f) == -1:
                     self.flag = False
@@ -132,10 +139,6 @@ class TextBar(DrawObject):
                 text_surface = self.font.render(self.data_strings[i], True, self.color)
                 self.game.screen.blit(text_surface, [self.x + 10, self.y + 10 + count])
                 count += self.font_size
-            moral_text = self.font.render('Мораль: ' + str(self.moral), True, self.color)
-            reputation_text = self.font.render('Репутация: ' + str(self.reputation), True, self.color)
-            self.game.screen.blit(moral_text, [self.game.width - 150, 40])
-            self.game.screen.blit(reputation_text, [self.game.width - 150, 60])
 
     def process_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -168,7 +171,7 @@ class TextBar(DrawObject):
         :return: data
         """
         try:
-            file1 = open(a + b + str(c), 'r')
+            file1 = open(a + b + str(c), 'r', encoding='utf-8')
         except FileNotFoundError or UnboundLocalError or self.end_quest:
             print("END OF JOURNEY")
             self.dialog_index = self.dialog_index[0:len(self.dialog_index) - 1]
@@ -202,8 +205,7 @@ class TextBar(DrawObject):
                 functions[button_number] = self.prohibition
             button_name = self.data[self.data.find('<btn>', self.now_word_b) + 5:
                                     self.data.find('</btn>', self.now_word_b)]
-            self.game.translator.update_translation_data(button_name, self.language)
-            button_name = self.game.translator.translate()
+            button_name = self.translator.translate(button_name, self.language)
             self.buttons.append(Btn(self.game, (self.x + 10,
                                                 self.y + self.height - count * 35 +
                                                 button_number * 35 - 10,

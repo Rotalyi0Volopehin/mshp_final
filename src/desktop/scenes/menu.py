@@ -21,7 +21,7 @@ class MenuScene(Scene):
         f = open('quests/stats', 'r')
         data = f.read()
         if data == "":
-            self.set_next_scene(self.game.STATS_SCENE_INDEX)
+            self.set_next_scene(self.game.LANGUAGE_SELECT_SCENE_INDEX)
         else:
             self.set_next_scene(self.game.QUEST_SCENE_INDEX)
 

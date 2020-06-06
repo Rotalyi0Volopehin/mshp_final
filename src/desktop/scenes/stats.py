@@ -15,6 +15,9 @@ class StatsMenuScene(Scene):
         :return:
         """
         self.current_points = 0
+        file = open('quests/language', 'r')
+        language = file.read()
+        file.close()
         self.strength = AdvBtn(self.game, (320, 25, 160, 70),
                                Color.WHITE, "Физическая сила", self.apply_point, 24)
         self.charisma = AdvBtn(self.game, (320, 105, 160, 70),
@@ -26,11 +29,14 @@ class StatsMenuScene(Scene):
         self.stealth = AdvBtn(self.game, (320, 345, 160, 70),
                               Color.WHITE, "Скрытность", self.apply_point, 24)
         self.skill_points = Btn(self.game, (150, 500, 200, 40),
-                                Color.WHITE, "Оставшиеся очки: 0", None)
+                                Color.WHITE,
+                                self.game.translator.translate("Оставшиеся очки: 0", language), None)
         self.button_back = Btn(self.game, (350, 500, 100, 40),
-                               Color.WHITE, "Меню", self.back_to_menu)
-        self.quest = Btn(self.game, (450, 500, 100, 40),
-                         Color.WHITE, "Начать задания", self.set_quest_1)
+                               Color.WHITE,
+                               self.game.translator.translate("Меню", language), self.back_to_menu)
+        self.quest = Btn(self.game, (450, 500, 200, 40),
+                         Color.WHITE,
+                         self.game.translator.translate("Начать задания", language), self.set_quest_1)
 
         self.objects = [self.strength, self.charisma,
                         self.dexterity, self.savvy, self.stealth,

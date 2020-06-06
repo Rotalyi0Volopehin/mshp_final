@@ -5,10 +5,21 @@ from scenes.base import Scene
 
 class FractionScene(Scene):
     def create_objects(self):
-        self.button_pod = Btn(self.game, (350, 155, 100, 40), Color.WHITE, "Подполье", self.frac_pod)
-        self.button_call = Btn(self.game, (350, 205, 100, 40), Color.BLUE, "Зов Свободы", self.frac_call)
-        self.button_cyb = Btn(self.game, (350, 255, 100, 40), Color.ORANGE, "Cyber corp", self.frac_cyb)
-        self.button_exit = Btn(self.game, (350, 305, 100, 40), Color.WHITE, 'Выход', self.exit)
+        file = open('quests/language', 'r')
+        language = file.read()
+        file.close()
+        self.button_pod = Btn(self.game, (300, 155, 200, 40), Color.WHITE,
+                              self.game.translator.translate("Подполье", language),
+                              self.frac_pod)
+        self.button_call = Btn(self.game, (300, 205, 200, 40), Color.BLUE,
+                               self.game.translator.translate("Зов Свободы", language),
+                               self.frac_call)
+        self.button_cyb = Btn(self.game, (300, 255, 200, 40), Color.ORANGE,
+                              self.game.translator.translate("Cyber corp", language),
+                              self.frac_cyb)
+        self.button_exit = Btn(self.game, (300, 305, 200, 40), Color.WHITE,
+                               self.game.translator.translate("Выход", language),
+                               self.exit)
         self.objects = [self.button_pod, self.button_call, self.button_cyb, self.button_exit]
 
     def frac_pod(self):

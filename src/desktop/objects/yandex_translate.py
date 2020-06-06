@@ -15,14 +15,12 @@ class Translator:
             "targetLanguageCode": "ru"
         }
 
-    def update_translation_data(self, text="Привет", target_language="en"):
+    def translate(self, text="Привет", target_language="en"):
         self.translate_data = {
             "folder_id": "b1gb641rullkr99au8k2",
             "texts": [text],
             "targetLanguageCode": target_language
         }
-
-    def translate(self):
         response = requests.post(self.url, json=self.translate_data,
                                  headers=self.headers)
         if response.status_code == 200:
