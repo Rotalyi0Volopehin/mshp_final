@@ -1,10 +1,11 @@
-import main.forms as forms
+""" View функции страницы сессий """
 
-from main.models import UserParticipation, GameSession
+from main.models import GameSession
 from main.db_tools.user_tools import DBUserTools
 from main.db_tools.user_participation_tools import DBUserParticipationTools
 from main.db_tools.game_session_tools import DBGameSessionTools
 from main.views.form_view import FormView
+import main.forms as forms
 
 
 class SessionsFormPage(FormView):
@@ -47,10 +48,26 @@ class SessionsFormPage(FormView):
 
     @staticmethod
     def __get_session_table_row(session) -> tuple:
+        """**Получение строки сессии для таблицы**
+
+        :param session: игровая сессия
+        :type session: GameSession
+        :return: строка сессии для талицы
+        :rtype: tuple
+        """
         return session, session.level_limits_as_string, session.players_gathered
 
     @staticmethod
     def __put_page_info_into_context(context: dict, page_ind: int, page_count: int):
+        """**Установка информации о страницы в context**
+
+        :param context: context страницы
+        :type context: dict
+        :param page_ind: идентификатор страницы
+        :type page_ind: int
+        :param page_count: количество страниц
+        :type page_count: int
+        """
         context["nothing_found"] = page_count == 0
         context["cant_back"] = page_ind <= 0
         context["cant_forward"] = page_ind >= page_count - 1
