@@ -1,3 +1,5 @@
+""" Обработка страниц с формами """
+
 from django.shortcuts import render, redirect
 from django.views import View
 from django.forms import Form

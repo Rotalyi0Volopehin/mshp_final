@@ -1,3 +1,5 @@
+""" Страница профиля """
+
 from django.contrib.auth import login as log_user_in, logout as log_user_out
 from django.contrib.auth.models import User
 from django.http import HttpResponse

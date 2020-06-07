@@ -1,14 +1,29 @@
+""" Страница активации почты юзера """
+
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.shortcuts import render
-from .menu import get_menu_context, get_user_menu_context
+
 from main.db_tools.tokens import account_activation_token
 from main.db_tools.user_tools import DBUserTools
 
+from .menu import get_menu_context, get_user_menu_context
+
 
 def activate(request, uid, token):
+    """**View-функция страницы чата**
+
+    :param request: request на страницу активации почты
+    :type request: HttpRequest
+    :param uid: ID пользователя
+    :type uid: int
+    :param token: токен активации почты
+    :type token: string
+    :return: response
+    :rtype: HttpResponse
+    """
     if request.method == "GET":
         context = {
             "pagename": "Верификация",

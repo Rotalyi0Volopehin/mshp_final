@@ -1,13 +1,19 @@
+""" Страница DarkNet'а """
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+
 from main.db_tools.game_session_tools import DBGameSessionTools
 from main.db_tools.user_participation_tools import DBUserParticipationTools
 from main.db_tools.user_tools import DBUserTools
 from main.views.menu import get_menu_context, get_user_menu_context
+
 from game_eng.market import Market
 
 
 class DarknetCard:
+    """**Карточка товара на стринице даркнета**"""
+
     def __init__(self, name, tag, price, count, availability):
         self.name = name
         self.tag = tag
@@ -17,6 +23,13 @@ class DarknetCard:
 
 
 def get_db_page_data(request):
+    """**Получение данных из базы данных для страницы даркнета**
+
+    :param request: request на страницу '/chat/'
+    :type request: HttpRequest
+    :return: набор данных для страницы
+    :rtype: tuple
+    """
     view_mode = False
 
     user_participation = DBUserParticipationTools.get_user_participation(request.user)
@@ -57,12 +70,20 @@ def get_db_page_data(request):
 
 @login_required
 def darknet_page(request):
+    """**View функция даркнета**
+
+    :param request: request на страницу даркнета
+    :type request: HttpRequest
+    :return: response
+    :rtype: HttpResponse
+    """
+
     context = {
         'pagename': 'Darknet',
         'menu': get_menu_context(),
         'user_menu': get_user_menu_context(request.user),
     }
-    view_mode, player, game_model, gs = get_db_page_data(request)
+    view_mode, player, game_model, game_session = get_db_page_data(request)
     context['view_mode'] = view_mode
 
     if view_mode:
@@ -83,7 +104,9 @@ def darknet_page(request):
             availability = False
             count = '-'
         else:
-            availability = True if team_money >= slot.price else False
+            availability = False
+            if team_money >= slot.price:
+                availability = True
             count = slot.pt_set.count
         darknet_cards.append(DarknetCard(slot.pt_set.name, tag, slot.price, count, availability))
     context['darknet_cards'] = darknet_cards
@@ -98,7 +121,7 @@ def darknet_page(request):
                     if buy_product == tool_tag:
                         success = market.try_buy(player, tool_type, 1)
                         if success:
-                            DBGameSessionTools.save_game_model(gs, game_model)
+                            DBGameSessionTools.save_game_model(game_session, game_model)
                             context['fraction_money'] = game_model.current_team.money
                         else:
                             context['warning'] = 'У вас недостаточно денег для покупки!'
