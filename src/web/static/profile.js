@@ -22,6 +22,3 @@ function close_pw_warning() {
     change_pw_warning_footer.hidden = true;
     change_pw_button_footer.hidden = false;
 }
-function open_chat() {
-    document.location.href = '/chat/user/' + window.location.href.split('/')[4] + '/';
-}

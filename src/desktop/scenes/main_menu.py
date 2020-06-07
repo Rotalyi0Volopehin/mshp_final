@@ -1,15 +1,16 @@
 from scenes.base import Scene
 from objects.button import Btn
+import os.path as path
 
 
 class MainMenuScene(Scene):
     def create_objects(self):
         waiting_room_button = Btn(self.game, (300, 255, 100, 40), text="Текущая сессия",
                                   function=self.__goto_waiting_room)
-        quest_button = Btn(self.game, (400, 255, 100, 40), text="Квесты", function=self.__set_quest_scene)
+        quest_button = Btn(self.game, (400, 255, 100, 40), text="Квесты", function=self.__set_quests_scene)
         quit_account_button = Btn(self.game, (400, 305, 100, 40), text="из аккаунта",
                                   function=self.__quit_account)
-        exit_button = Btn(self.game, (300, 305, 100, 40), text="Выход", function=self.game.exit)
+        exit_button = Btn(self.game, (300, 305, 100, 40), text="Назад", function=self.game.return_to_upper_scene)
         self.objects.extend([
             waiting_room_button,
             quest_button,
@@ -25,6 +26,9 @@ class MainMenuScene(Scene):
         from scenes.waiting_room import WaitingRoomScene
         self.game.goto_deeper_scene(WaitingRoomScene)
 
-    def __set_quest_scene(self):
-        from scenes.quests import QuestScene
-        self.game.goto_deeper_scene(QuestScene)
+    def __set_quests_scene(self):
+        path_1 = path.join("quests", "stats")
+        file = open(path_1, 'r')
+        from scenes.language_selection import LanguageScene
+        file.close()
+        self.game.goto_deeper_scene(LanguageScene)

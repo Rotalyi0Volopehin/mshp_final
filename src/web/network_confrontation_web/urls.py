@@ -18,7 +18,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from main.views import profile_view, registration_view, fractions_view, sessions_view, create_session_view, \
-    join_session_view, current_gs_view, chat_view
+    join_session_view, current_gs_view
 from main.views import views, activation_view, darknet_view
 
 urlpatterns = [
@@ -26,10 +26,7 @@ urlpatterns = [
     path('', views.index_page, name='index'),
     path('activate/<str:uid>/<str:token>/', activation_view.activate, name='activate'),
     path('darknet/', darknet_view.darknet_page, name='darknet'),
-    path('chat/room/<str:room_name>/', chat_view.room, name='chat_room'),
-    path('chat/user/<int:user_id>/', chat_view.open_user_chat, name='chat_open_user'),
-    path('chat/list/', chat_view.chats_list, name='chat'),
-    path('chat/', chat_view.chats_list, name='chat'),
+    path('chat/', views.chat_page, name='chat'),
     path('sessions/', sessions_view.SessionsFormPage.as_view(), name='sessions'),
     path('profile/<int:uid>/', profile_view.ProfileFormPage.as_view(), name='profile'),
     path('fraction0/', fractions_view.FractionPages.fraction0_page, name='fraction0'),

@@ -6,7 +6,6 @@ from scenes.stats import StatsMenuScene
 
 
 class LanguageScene(Scene):
-
     def create_objects(self):
         self.language_path = os.path.join('quests', 'language')
         self.button_spanish = Btn(self.game, (350, 105, 100, 40), Color.WHITE, "Español", self.set_spanish)
@@ -14,7 +13,7 @@ class LanguageScene(Scene):
         self.button_english = Btn(self.game, (350, 205, 100, 40), Color.WHITE, 'English', self.set_english)
         self.button_german = Btn(self.game, (350, 255, 100, 40), Color.WHITE, 'Deutsch', self.set_german)
         self.button_french = Btn(self.game, (350, 305, 100, 40), Color.WHITE, 'Français', self.set_french)
-        self.button_exit = Btn(self.game, (350, 405, 100, 40), Color.WHITE, 'Выход', self.exit)
+        self.button_exit = Btn(self.game, (350, 405, 100, 40), Color.WHITE, 'Меню', self.game.return_to_upper_scene)
         self.objects = [self.button_spanish, self.button_exit,  self.button_russian,
                         self.button_english, self.button_german, self.button_french]
 
@@ -47,6 +46,3 @@ class LanguageScene(Scene):
         file.write('fr')
         file.close()
         self.game.set_origin_scene(StatsMenuScene)
-
-    def exit(self):
-        self.game.game_over = True
