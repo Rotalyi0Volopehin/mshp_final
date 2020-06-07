@@ -42,7 +42,6 @@ class ToolBar(DrawObject):
     def update_tools(self):
         self.tools.clear()
         player = self.game_model.current_player
-        print(len(player.pressure_tools))
         for pts_type, pt_set in player.pressure_tools.items():
             key = ToolBar.PTS_KEYS[pts_type]
             self.tools[key] = pt_set

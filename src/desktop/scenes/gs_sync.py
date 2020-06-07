@@ -14,6 +14,7 @@ class GSSyncScene(Scene):
     def __init__(self, game, game_model, post_changes_func, get_changes_func):
         super().__init__(game)
         self.game_model = game_model
+        self.toolbar = game.current_scene.toolbar
         self.post_changes_func = post_changes_func
         self.get_changes_func = get_changes_func
         if game_model.current_player.id == user_info.user_id:
