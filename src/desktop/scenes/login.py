@@ -88,6 +88,9 @@ class LoginScene(Scene):
         user_info.online = False
         self.set_map_scene()
 
+    def on_quests_button_click(self):
+        self.set_quests_scene()
+
     def login_response_parcel_handler(self, parcel):
         response_id = parcel[0]
         if response_id == ResponseID.FAIL:
