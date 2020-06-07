@@ -55,9 +55,17 @@ class GameVC(DrawObject):
 
     def __apply_changes(self, player_turn, gs_turn_time):
         player_turn.sync()
+        if self.model.game_over:
+            self.__set_game_over_scene()
+            return
         self.grid_vc.repair()
         self.__next_turn()
         self.model.turn_beginning_time = gs_turn_time
+
+    def __set_game_over_scene(self):
+        from scenes.game_over import GameOverScene
+        self.game.return_to_upper_scene()
+        self.game.goto_deeper_scene(GameOverScene, {"game_model": self.model})
 
     def __next_turn(self):
         self.model.next_player_turn()

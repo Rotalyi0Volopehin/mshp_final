@@ -46,6 +46,13 @@ class GSParcelHandlers:
         ]
 
     @staticmethod
+    def process_game_turn(gs, game_model):
+        game_model.next_player_turn()
+        DBGameSessionTools.save_game_model(gs, game_model)
+        if game_model.game_over:
+            DBGameSessionTools.end_session_active_phase(gs)
+
+    @staticmethod
     def handle_get_game_model_request(socket: WebsocketConsumer, parcel: list):
         if len(parcel) != 1:
             return ErrorResponse(ErrorResponseID.WRONG_PARCEL_FORMAT)
@@ -64,10 +71,11 @@ class GSParcelHandlers:
         err_resp, participation = GSParcelHandlers.__try_get_participation(socket)
         if err_resp is not None:
             return err_resp
+        if participation.game_session.phase != 1:
+            return [ResponseID.FAIL]
         game_model, _ = DBGameSessionTools.try_load_game_model(participation.game_session)
         if game_model.turn_time_left < -1.0:
-            game_model.next_player_turn()
-            DBGameSessionTools.save_game_model(participation.game_session, game_model)
+            GSParcelHandlers.process_game_turn(participation.game_session, game_model)
             return [ResponseID.FAIL]  # post timeout
         if game_model.current_player.id != participation.user.id:
             return [ResponseID.FAIL]  # post не в свой ход
@@ -78,8 +86,7 @@ class GSParcelHandlers:
         try:
             player_turn.sync()
             game_model.current_player_turn = player_turn
-            game_model.next_player_turn()
-            DBGameSessionTools.save_game_model(participation.game_session, game_model)
+            GSParcelHandlers.process_game_turn(participation.game_session, game_model)
         except exceptions.InvalidOperationException:
             return [ResponseID.FAIL]  # провал синхронизации
         return [ResponseID.SUCCESS]
@@ -91,11 +98,12 @@ class GSParcelHandlers:
         err_resp, participation = GSParcelHandlers.__try_get_participation(socket)
         if err_resp is not None:
             return err_resp
+        if participation.game_session.phase == 0:
+            return [ResponseID.FAIL]
         game_model, _ = DBGameSessionTools.try_load_game_model(participation.game_session)
         stream = BinaryWriter()
         if game_model.turn_time_left < -1.0:  # post timeout
-            game_model.next_player_turn()
-            DBGameSessionTools.save_game_model(participation.game_session, game_model)
+            GSParcelHandlers.process_game_turn(participation.game_session, game_model)
         if game_model.prev_player_turn is None:
             return [ResponseID.FAIL]  # предыдущего хода не было
         PlayerTurn.write(stream, game_model.prev_player_turn)

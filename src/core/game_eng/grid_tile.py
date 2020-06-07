@@ -30,7 +30,7 @@ class GridTile:
         obj = tile_type(grid, loc_x, loc_y)
         obj.team_ind = team_ind
         power = stream.read_byte()
-        obj.gain_power(power)
+        obj.power = power
         for effect in stream.read_short_iterable(GridTile.get_effect_type(), {"tile": obj}):
             obj.add_effect(effect)
         return obj
@@ -214,6 +214,7 @@ class GridTile:
         if not issubclass(tile_type, GridTile):
             raise exceptions.ArgumentValueException()
         new_tile = tile_type(self.grid, self.loc_x, self.loc_y, self.team)
+        new_tile.power = 0
         new_tile.gain_power(self.power)
         self.grid.tiles[self.loc_x][self.loc_y] = new_tile
         return new_tile
