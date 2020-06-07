@@ -16,6 +16,11 @@ class GridVC(DrawObject):
         self.selected_tile = self.target_tile = None
         self.__add_vc_to_tile_matrix()
 
+    def repair(self):
+        for tile in self.model.foreach:
+            if tile.view is None:
+                GridTileVC(tile, self.game, GridTileVCStatus.DEFAULT)
+
     def __add_vc_to_tile_matrix(self):
         for tile in self.model.foreach:
             GridTileVC(tile, self.game, GridTileVCStatus.DEFAULT)

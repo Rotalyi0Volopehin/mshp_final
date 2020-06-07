@@ -5,11 +5,11 @@ from game_eng.team_ders.team_a import TeamA
 from game_eng.team_ders.team_b import TeamB
 from game_eng.team_ders.team_c import TeamC
 from game_eng.player import Player
+from game_eng.player_turn import PlayerTurn
 from .grid_vc import GridVC
 from .player_controller import PlayerController
 from objects.base import DrawObject
 from constants import Color
-from ws.parcel_manager import ParcelManager
 
 
 class GameVC(DrawObject):
@@ -54,13 +54,29 @@ class GameVC(DrawObject):
         if self.is_current_scene_map:
             self.grid_vc.process_draw()
 
-    def __apply_changes(self, player_turn, gs_turn_time):
+    def __apply_changes(self, stream):
+        player_turn = PlayerTurn.read(stream, self.model)
+        gs_turn_time = stream.read_datetime()
         player_turn.sync()
+        if self.model.game_over or (self.player_controller.changes_available and self.model.current_team.defeated):
+            self.__set_game_over_scene()
+            return
+        self.grid_vc.repair()
         self.__next_turn()
+        self.model.current_player.read_pressure_tools(stream)
+        self.__update_toolbar()
         self.model.turn_beginning_time = gs_turn_time
+
+    def __set_game_over_scene(self):
+        from scenes.game_over import GameOverScene
+        self.game.return_to_upper_scene()
+        self.game.goto_deeper_scene(GameOverScene, {"game_model": self.model})
 
     def __next_turn(self):
         self.model.next_player_turn()
+        self.__update_toolbar()
+
+    def __update_toolbar(self):
         scene = self.game.current_scene
         if hasattr(scene, "toolbar"):
             scene.toolbar.update_tools()
@@ -103,6 +119,7 @@ def create_hardcoded_player(name, team) -> Player:
     from game_eng.pressure_tool_set_ders.virus_pts import VirusPTSet
     from game_eng.pressure_tool_set_ders.encryption_pts import EncryptionPTSet
     # ...
+    from game_eng.pressure_tool_set_ders.antivirus_pts import AntivirusPTSet
     from game_eng.pressure_tool_set_ders.mining_farm_pts import MiningFarmPTSet
     from game_eng.pressure_tool_set_ders.reboot_pts import RebootPTSet
     player.add_pressure_tools(DDosPTSet, 1)
@@ -111,6 +128,7 @@ def create_hardcoded_player(name, team) -> Player:
     player.add_pressure_tools(VirusPTSet, 1)
     player.add_pressure_tools(EncryptionPTSet, 1)
     # ...
+    player.add_pressure_tools(AntivirusPTSet, 1)
     player.add_pressure_tools(MiningFarmPTSet, 1)
     player.add_pressure_tools(RebootPTSet, 2)
     return player

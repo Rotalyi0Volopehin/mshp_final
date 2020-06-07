@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from main.views.menu import get_menu_context, get_user_menu_context
 from main import forms
-from main.db_tools.cad import CAD
 from main.db_tools.user_tools import DBUserTools
 from main.db_tools.user_error_messages import DBUserErrorMessages
 from main.views.form_view import FormView
@@ -47,15 +46,6 @@ def cad_page(request):
     DBGameSessionTools.start_session_active_phase(gs)
     # """
     return HttpResponse("SUCCESS! All data is cleared")
-
-
-def chat_page(request):
-    context = {
-        'pagename': 'Закрытые каналы',
-        'menu': get_menu_context(),
-        'user_menu': get_user_menu_context(request.user),
-    }
-    return render(request, 'pages/chat.html', context)
 
 
 class LoginFormPage(FormView):

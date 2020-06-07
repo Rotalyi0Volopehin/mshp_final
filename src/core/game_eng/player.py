@@ -28,8 +28,7 @@ class Player:
         team = game_model.teams[team_ind]
         obj = Player(uid, name, team)
         game_model.player_ids[uid] = obj
-        for pts in stream.read_short_iterable(Player.get_pts_type(), {"player": obj}):
-            obj.pressure_tools[type(pts)] = pts
+        obj.read_pressure_tools(stream)
         return obj
 
     @staticmethod
@@ -39,7 +38,14 @@ class Player:
         stream.write_uint(obj.id)
         stream.write_short_string(obj.name)
         stream.write_sbyte(obj.team.index)
-        stream.write_short_iterable(obj.pressure_tools.values(), Player.get_pts_type())
+        obj.write_pressure_tools(stream)
+
+    def read_pressure_tools(self, stream):
+        for pts in stream.read_short_iterable(Player.get_pts_type(), {"player": self}):
+            self.pressure_tools[type(pts)] = pts
+
+    def write_pressure_tools(self, stream):
+        stream.write_short_iterable(self.pressure_tools.values(), Player.get_pts_type())
 
     @property
     def team(self) -> Team:

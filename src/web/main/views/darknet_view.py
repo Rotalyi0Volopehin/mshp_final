@@ -99,6 +99,7 @@ def darknet_page(request):
                         success = market.try_buy(player, tool_type, 1)
                         if success:
                             DBGameSessionTools.save_game_model(gs, game_model)
+                            context['fraction_money'] = game_model.current_team.money
                         else:
                             context['warning'] = 'У вас недостаточно денег для покупки!'
                         break

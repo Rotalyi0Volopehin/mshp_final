@@ -30,7 +30,7 @@ class GridTile:
         obj = tile_type(grid, loc_x, loc_y)
         obj.team_ind = team_ind
         power = stream.read_byte()
-        obj.gain_power(power)
+        obj.power = power
         for effect in stream.read_short_iterable(GridTile.get_effect_type(), {"tile": obj}):
             obj.add_effect(effect)
         return obj
@@ -58,14 +58,19 @@ class GridTile:
         if not isinstance(effect, GridTile.get_effect_type()):
             raise exceptions.ArgumentTypeException()
         # vvv необходимо, чтобы на одной клетке было не долее одного эффекта одного типа
-        self.__remove_effect_with_type(type(effect))
+        self.try_remove_effect_with_type(type(effect))
         self.effects.add(effect)
 
-    def __remove_effect_with_type(self, effect_type: type):
+    def try_remove_effect_with_type(self, effect_type: type) -> bool:
+        if not isinstance(effect_type, type):
+            raise exceptions.ArgumentTypeException()
+        if not issubclass(effect_type, GridTile.get_effect_type()):
+            raise exceptions.ArgumentValueException()
         for effect in self.effects:
             if type(effect) == effect_type:
                 self.effects.remove(effect)
-                break
+                return True
+        return False
 
     def remove_effect(self, effect):
         if not isinstance(effect, GridTile.get_effect_type()):
@@ -144,9 +149,19 @@ class GridTile:
         value = self.__check_and_correct_value_for_power_movement(value, cut_surplus)
         if self.team == target.team:
             value = -target.__check_and_correct_value_for_power_movement(-value, cut_surplus)
+            if target.power_cap < target.power + value:
+                if cut_surplus:
+                    value = target.power_cap - target.power
+                else:
+                    raise exceptions.ArgumentOutOfRangeException()
             self.__ally_power_movement(target, value)
         else:
             value = target.__check_and_correct_value_for_power_movement(value, cut_surplus, True)
+            if target.power_cap < value - target.power:
+                if cut_surplus:
+                    value = target.power_cap + target.power
+                else:
+                    raise exceptions.ArgumentOutOfRangeException()
             self.__foe_power_movement(target, value)
 
     def __check_and_correct_value_for_power_movement(self, value: int, cut_surplus: bool, foe: bool = False) -> int:
@@ -209,6 +224,7 @@ class GridTile:
         if not issubclass(tile_type, GridTile):
             raise exceptions.ArgumentValueException()
         new_tile = tile_type(self.grid, self.loc_x, self.loc_y, self.team)
+        new_tile.power = 0
         new_tile.gain_power(self.power)
         self.grid.tiles[self.loc_x][self.loc_y] = new_tile
         return new_tile

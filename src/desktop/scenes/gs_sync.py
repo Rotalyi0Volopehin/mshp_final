@@ -14,6 +14,7 @@ class GSSyncScene(Scene):
     def __init__(self, game, game_model, post_changes_func, get_changes_func):
         super().__init__(game)
         self.game_model = game_model
+        self.toolbar = game.current_scene.toolbar
         self.post_changes_func = post_changes_func
         self.get_changes_func = get_changes_func
         if game_model.current_player.id == user_info.user_id:
@@ -56,7 +57,5 @@ class GSSyncScene(Scene):
             return
         if parcel[0] == ResponseID.DATA:
             stream = parcel[1]
-            player_turn = PlayerTurn.read(stream, self.game_model)
-            gs_turn_time = stream.read_datetime()
-            self.get_changes_func(player_turn, gs_turn_time)
+            self.get_changes_func(stream)
             self.game.return_to_upper_scene()

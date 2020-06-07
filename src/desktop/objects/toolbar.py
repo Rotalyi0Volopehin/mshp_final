@@ -14,7 +14,7 @@ class ToolBar(DrawObject):
         from game_eng.pressure_tool_set_ders.exploit_pts import ExploitPTSet
         from game_eng.pressure_tool_set_ders.virus_pts import VirusPTSet
         from game_eng.pressure_tool_set_ders.encryption_pts import EncryptionPTSet
-        # ...
+        from game_eng.pressure_tool_set_ders.antivirus_pts import AntivirusPTSet
         from game_eng.pressure_tool_set_ders.mining_farm_pts import MiningFarmPTSet
         from game_eng.pressure_tool_set_ders.reboot_pts import RebootPTSet
         ToolBar.PTS_KEYS = {
@@ -23,9 +23,9 @@ class ToolBar(DrawObject):
             ExploitPTSet: "K_3",
             VirusPTSet: "K_4",
             EncryptionPTSet: "K_5",
-            # ...
-            MiningFarmPTSet: "K_9",
-            RebootPTSet: "K_0",
+            AntivirusPTSet: "K_6",
+            MiningFarmPTSet: "K_7",
+            RebootPTSet: "K_8",
         }
 
     def __init__(self, game, geometry: tuple, game_model):
@@ -46,28 +46,22 @@ class ToolBar(DrawObject):
         self.__update_cell_tools()
 
     def __init_cells(self):
-        for i in range(10):
-            num = (i + 1) % 10
+        for i in range(8):
             x = self.geometry[0] + i * 74
             y = self.geometry[1]
-            self.cells.append(ToolBarCell(self.game, x, y, 64, 64, num))
+            self.cells.append(ToolBarCell(self.game, x, y, 64, 64, i + 1))
 
     def __update_cell_tools(self):
-        for i in range(10):
-            num = (i + 1) % 10
-            key = "K_" + str(num)
+        for i in range(8):
+            key = "K_" + str(i + 1)
             tool = self.tools[key] if key in self.tools else None
             self.cells[i].update_pt_set(tool)
 
     def process_event(self, event):
         if event.type == pygame.KEYUP:
             num = event.key - 48
-            if num == 0:
-                num = 9
-            else:
-                num -= 1
-            if 9 >= num >= 0:
-                self.cells[num].process_event(event)
+            if 8 >= num >= 1:
+                self.cells[num - 1].process_event(event)
         else:
             for item in self.cells:
                 item.process_event(event)

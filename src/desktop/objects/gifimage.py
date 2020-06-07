@@ -25,13 +25,12 @@ class GIFImage(object):
         pass
 
     def process_draw(self):
-        self.render(self.screen, (125, 70))
+        self.render(self.screen, (-200, -10))
 
     def process_event(self, event):
         pass
 
     def get_rect(self):
-        print(self.image.size)
         return pygame.rect.Rect((0, 0), self.image.size)
 
     def get_frames(self):

@@ -9,13 +9,12 @@ from scenes.base import Scene
 from objects.button import Btn
 from constants import Color
 from objects.grid_tile_info_plate import GridTileInfoPlate
-from game_vc.grid_tile_vc import GridTileVC
 from game_eng.grid_tile_upgrade_tree import GridTileUpgradeTree
 
 
 class TreeScene(Scene):
-
     def create_objects(self):
+        self.toolber = self.game.current_scene.toolbar
         self.start_team = None
         self.width = self.game.width
         self.height = self.game.height
@@ -36,7 +35,6 @@ class TreeScene(Scene):
         self.objects.append(self.game_vc)
         self.test_button = Btn(self.game, (30, 30, 100, 40), Color.WHITE,"Снять улучшение", self.downgrade())
         self.add_buttons()
-        #self.images = TreeScene.upload_images(len(self.types))
         button_back = Btn(self.game, (self.width - 240, 5, 100, 40), Color.WHITE, 'Карта',
                           self.game.return_to_upper_scene)
         self.objects.append(button_back)
@@ -120,11 +118,7 @@ class TreeScene(Scene):
                 if tile.team == self.current_player_plate.team:
                     if (tile.team.money >= typee.get_upgrade_price()):
                         if (GridTileUpgradeTree.tile_upgrade_bases[typee] == type(tile)):
-                            new_tile = GridTileUpgradeTree.upgrade_tile(tile, typee)
-                            GridTileVC(new_tile, self.game, tile.view.status)
-                            if self.game_vc.grid_vc.target_tile == tile:
-                                self.game_vc.grid_vc.target_tile = new_tile
-                            self.game_vc.grid_vc.selected_tile = new_tile
+                            self.game_vc.player_controller.try_upgrade_grid_tile(typee)
                             self.money_text.update_text("Деньги: "+str(self.game.current_scene.game_vc.model.current_team.money))
                         else:
                             self.info_text.update_text("Улучшение недоступно")
@@ -136,12 +130,7 @@ class TreeScene(Scene):
         return upgrade
 
     def downgrade(self):
-        def lol():
-
-            tile = self.game_vc.grid_vc.selected_tile
-            new_tile = GridTileUpgradeTree.downgrade_tile(self.game_vc.grid_vc.selected_tile)
-            GridTileVC(new_tile, self.game, tile.view.status)
-        return lol
+        return self.game_vc.player_controller.try_downgrade_grid_tile
 
     def process_all_draw(self):
         is_downgrade = self.is_downgrade

@@ -1,5 +1,4 @@
 import exceptions
-import os
 
 from struct import error as struct_error_type
 from django.utils import timezone
@@ -131,7 +130,6 @@ class DBGameSessionTools:
         if session.phase != 1:
             raise exceptions.InvalidOperationException()
         session.winning_team = DBGameSessionTools.__get_winning_team(session)
-        os.remove(session.file_path)
         participations = UserParticipation.objects.filter(game_session=session)
         for participation in participations:
             victory = participation.user_data.team == session.winning_team
