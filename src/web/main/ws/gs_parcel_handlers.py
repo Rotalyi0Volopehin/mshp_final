@@ -91,7 +91,7 @@ class GSParcelHandlers:
             return err_resp
         game_model, _ = DBGameSessionTools.try_load_game_model(participation.game_session)
         stream = BinaryWriter()
-        if game_model.turn_time_left < -2.0:  # post timeout
+        if game_model.turn_time_left < -1.0:  # post timeout
             game_model.next_player_turn()
             DBGameSessionTools.save_game_model(participation.game_session, game_model)
         if game_model.prev_player_turn is None:
