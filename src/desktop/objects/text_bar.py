@@ -110,7 +110,7 @@ class TextBar(DrawObject):
 
         """
         self.dialog_index += choice
-        print(self.dialog_index)
+        #print(self.dialog_index)
         self.data = self.get_data_ff(self.path_to_file, self.file_name, self.dialog_index)
         if not self.end_quest:
             print("NEW FILE")
@@ -300,7 +300,11 @@ class TextBar(DrawObject):
             #print(self.path_to_file, self.file_name)
             self.dialog_index = '0'
             self.next_act = True
-        if self.data.find('<END>') != -1:
+        if self.data.find('<WIN>') != -1:
+            self.end_quest = True
+            print("Миссия выполнена!")
+        elif self.data.find('<LOSE>') != -1:
+            print("Миссия провалена!")
             self.end_quest = True
         self.end_quest_func()
 

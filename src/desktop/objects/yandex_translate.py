@@ -1,11 +1,17 @@
+"""
+Переводчик текста квестов
+"""
 import requests
 
 
 class Translator:
+    """
+    Класс переводчика, для работы необходимо облако yandex cloud и токен
+    """
     def __init__(self):
         self.url = 'https://translate.api.cloud.yandex.net/translate/v2/translate'
-        f = open('quests/token', 'r')
-        data = f.read()
+        file = open('quests/token', 'r')
+        data = file.read()
         self.token_string = 'Bearer ' + data
         self.headers = {'Content-Type': 'application/json',
                         'Authorization': self.token_string}
@@ -14,6 +20,7 @@ class Translator:
             "texts": ["Hello"],
             "targetLanguageCode": "ru"
         }
+        file.close()
 
     def translate(self, text="Привет", target_language="en"):
         self.translate_data = {

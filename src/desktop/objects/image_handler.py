@@ -1,3 +1,7 @@
+"""
+Класс, ищущий упоминания персонажей в тексте
+"""
+
 from objects.image import Image
 
 CHARACTERS = {
@@ -28,12 +32,20 @@ CHARACTERS_TO_NAMES = {
 
 
 class ImageHandler:
+    """
+    Класс поиска персонажей в тексте
+    """
     def __init__(self, game):
         self.found_characters = []
         self.response = []
         self.game = game
 
     def find_characters(self, data):
+        """
+        Ищет имена и записывает их в массив
+        :param data:
+        :return:
+        """
         self.found_characters = []
         for word in CHARACTERS:
             if data.find(word) != -1:
@@ -41,7 +53,10 @@ class ImageHandler:
         return self.handle_characters()
 
     def handle_characters(self):
-
+        """
+        Берет имена из массива и возвращает объекты картинок
+        :return:
+        """
         self.response = []
         iterator = 0
         if len(self.found_characters) == 1:
