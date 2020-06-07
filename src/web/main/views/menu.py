@@ -12,7 +12,6 @@ def get_menu_context() -> list:
     """
     return [
         {"url_name": "darknet", "name": "darknet"},
-        {"url_name": "chat", "name": "чат"},
     ]
 
 
