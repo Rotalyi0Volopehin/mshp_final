@@ -85,12 +85,12 @@ class GSParcelHandlers:
             player_turn = PlayerTurn.read(parcel[1], game_model)
         except:
             return ErrorResponse(ErrorResponseID.INCORRECT_BYTE_DATA)
-        #try:
-        player_turn.sync()
-        game_model.current_player_turn = player_turn
-        GSParcelHandlers.process_game_turn(participation.game_session, game_model)
-        #except exceptions.InvalidOperationException:
-        #    return [ResponseID.FAIL]  # провал синхронизации
+        try:
+            player_turn.sync()
+            game_model.current_player_turn = player_turn
+            GSParcelHandlers.process_game_turn(participation.game_session, game_model)
+        except exceptions.InvalidOperationException:
+            return [ResponseID.FAIL]  # провал синхронизации
         return [ResponseID.SUCCESS]
 
     @staticmethod
