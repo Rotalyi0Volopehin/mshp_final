@@ -66,6 +66,8 @@ class GSParcelHandlers:
             return err_resp
         game_model, _ = DBGameSessionTools.try_load_game_model(participation.game_session)
         if game_model.turn_time_left < -1.0:
+            game_model.next_player_turn()
+            DBGameSessionTools.save_game_model(participation.game_session, game_model)
             return [ResponseID.FAIL]  # post timeout
         if game_model.current_player.id != participation.user.id:
             return [ResponseID.FAIL]  # post не в свой ход

@@ -42,14 +42,13 @@ class GridTileVC(DrawObject):
 
     def __calc_screen_pos(self):
         side = GridTileVC.HEXAGON.side
-        sq = Hexagon.SQ
         x = self.model.loc_x
         y = self.model.loc_y
         pos_x = x * (GridTileVC.DIST_BETWEEN_TILES + (side << 1))
         if self.model.odd_row:
             pos_x += side
         pos_y = y * int(1.5 * (side + GridTileVC.DIST_BETWEEN_TILES))
-        return int(pos_x), int(pos_y)
+        return int(pos_x), int(pos_y) + 16
 
     def contains_point(self, x: int, y: int) -> bool:
         return GridTileVC.HEXAGON.contains_point(x - self.pos_x, y - self.pos_y)
