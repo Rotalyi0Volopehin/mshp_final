@@ -20,7 +20,9 @@ class GSParcelHandlers:
         if user is None:
             return ErrorResponse(ErrorResponseID.LOGGING_IN_REQUIRED), None
         participation = DBUserParticipationTools.get_user_participation(user)
-        if (participation is None) or (participation.game_session.phase != 1):
+        if participation is None:
+            return [ResponseID.DEFEATED], None
+        if participation.game_session.phase == 0:
             return ErrorResponse(ErrorResponseID.INVALID_OPERATION), None
         return None, participation
 

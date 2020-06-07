@@ -32,11 +32,14 @@ class GameVC(DrawObject):
                 extra_kwargs = {
                     "game_model": self.model,
                     "post_changes_func": self.__next_turn,
-                    "get_changes_func": self.__apply_changes
+                    "get_changes_func": self.__apply_changes,
+                    "defeated_func": self.__defeated_func,
                 }
                 self.game.goto_deeper_scene(GSSyncScene, extra_kwargs)
             else:
                 self.__next_turn()
+        if self.model.game_over:
+            self.__set_game_over_scene()
 
     def end_turn(self):
         self.__end_turn_flag = True
@@ -54,11 +57,14 @@ class GameVC(DrawObject):
         if self.is_current_scene_map:
             self.grid_vc.process_draw()
 
+    def __defeated_func(self):
+        self.__set_game_over_scene(True)
+
     def __apply_changes(self, stream):
         player_turn = PlayerTurn.read(stream, self.model)
         gs_turn_time = stream.read_datetime()
         player_turn.sync()
-        if self.model.game_over or (self.player_controller.changes_available and self.model.current_team.defeated):
+        if self.model.game_over:
             self.__set_game_over_scene()
             return
         self.grid_vc.repair()
@@ -67,10 +73,10 @@ class GameVC(DrawObject):
         self.__update_toolbar()
         self.model.turn_beginning_time = gs_turn_time
 
-    def __set_game_over_scene(self):
+    def __set_game_over_scene(self, defeated=False):
         from scenes.game_over import GameOverScene
         self.game.return_to_upper_scene()
-        self.game.goto_deeper_scene(GameOverScene, {"game_model": self.model})
+        self.game.goto_deeper_scene(GameOverScene, {"game_model": self.model, "defeated": defeated})
 
     def __next_turn(self):
         self.model.next_player_turn()

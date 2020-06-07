@@ -32,8 +32,11 @@
 
 <div class="row move_everything">
     <form action="/sessions/" method="post" class="col"> {% csrf_token %}
-        <div class="dark_part bg-dark cyberfont rounded_border rounded-bottom">
+        <div class="dark_part bg-dark rounded_border rounded-bottom">
             <h2 class="text-center text-white cyberfont pt-5" style="font-size: 150%;">Поиск игровых сессий</h2>
+            <p class="mb-5 text-center text-white">
+                В этом списке могут быть показаны только те игровые сессии, в которых вы можете принять участие
+            </p>
         </div>
 
         <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-4">
