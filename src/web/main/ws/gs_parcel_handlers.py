@@ -108,6 +108,7 @@ class GSParcelHandlers:
             return [ResponseID.FAIL]  # предыдущего хода не было
         PlayerTurn.write(stream, game_model.prev_player_turn)
         stream.write_datetime(game_model.turn_beginning_time)
+        game_model.current_player.write_pressure_tools(stream)
         return [ResponseID.DATA, stream]
 
 

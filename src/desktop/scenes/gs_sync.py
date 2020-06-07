@@ -57,7 +57,5 @@ class GSSyncScene(Scene):
             return
         if parcel[0] == ResponseID.DATA:
             stream = parcel[1]
-            player_turn = PlayerTurn.read(stream, self.game_model)
-            gs_turn_time = stream.read_datetime()
-            self.get_changes_func(player_turn, gs_turn_time)
+            self.get_changes_func(stream)
             self.game.return_to_upper_scene()

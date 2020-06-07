@@ -5,6 +5,7 @@ from game_eng.team_ders.team_a import TeamA
 from game_eng.team_ders.team_b import TeamB
 from game_eng.team_ders.team_c import TeamC
 from game_eng.player import Player
+from game_eng.player_turn import PlayerTurn
 from .grid_vc import GridVC
 from .player_controller import PlayerController
 from objects.base import DrawObject
@@ -53,13 +54,17 @@ class GameVC(DrawObject):
         if self.is_current_scene_map:
             self.grid_vc.process_draw()
 
-    def __apply_changes(self, player_turn, gs_turn_time):
+    def __apply_changes(self, stream):
+        player_turn = PlayerTurn.read(stream, self.model)
+        gs_turn_time = stream.read_datetime()
         player_turn.sync()
         if self.model.game_over or (self.player_controller.changes_available and self.model.current_team.defeated):
             self.__set_game_over_scene()
             return
         self.grid_vc.repair()
         self.__next_turn()
+        self.model.current_player.read_pressure_tools(stream)
+        self.__update_toolbar()
         self.model.turn_beginning_time = gs_turn_time
 
     def __set_game_over_scene(self):
