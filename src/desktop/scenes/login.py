@@ -53,7 +53,8 @@ class LoginScene(Scene):
         pygame.mixer.music.play(-1)
 
     def set_quests_scene(self):
-        file = open('quests/stats', 'r')
+        path_1 = path.join("quests", "stats")
+        file = open(path_1, 'r')
         if file.read() == '':
             from scenes.language_selection import LanguageScene
             file.close()
@@ -62,7 +63,6 @@ class LoginScene(Scene):
             from scenes.quest import QuestScene
             file.close()
             self.game.set_origin_scene(QuestScene)
-
 
     def set_map_scene(self):
         from scenes.map import MapScene

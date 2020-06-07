@@ -1,3 +1,4 @@
+import os
 """
 Позволяет находить требования выбора определённых опций диалогов и проверяет,
 удовлетворяют ли характеристики и знакомства персонажа требованиям.
@@ -53,7 +54,8 @@ class ReqHandler:
         Проверяет возможность выбора диалоговой ветки.
         :return:
         """
-        file = open('quests/stats', 'r')
+        path = os.path.join("quests", "stats")
+        file = open(path, 'r')
         stat_data = file.read()
         flag = 2
         for item in self.stats_requirements:

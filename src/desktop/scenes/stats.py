@@ -1,3 +1,4 @@
+import os
 from constants import Color
 from objects.button import Btn
 from objects.yandex_translate import Translator
@@ -16,7 +17,8 @@ class StatsMenuScene(Scene):
         :return:
         """
         self.current_points = 0
-        file = open('quests/language', 'r')
+        lang_path = os.path.join('quests', 'language')
+        file = open(lang_path, 'r')
         language = file.read()
         file.close()
         translator = Translator()
@@ -50,14 +52,15 @@ class StatsMenuScene(Scene):
         :return:
         """
         if self.current_points == 0:
-            file = open('quests/stats', 'a')
+            stat_path = os.path.join('quests', 'stats')
+            file = open(stat_path, 'a')
             file.write('\n')
             file.write('str :' + str(self.strength.num) + '|' + '\n')
             file.write('cha :' + str(self.charisma.num) + '|' + '\n')
             file.write('dex :' + str(self.dexterity.num) + '|' + '\n')
             file.write('sav :' + str(self.savvy.num) + '|' + '\n')
-            file.write('ste :' + str(self.stealth.num) + '|')
-            file.write('fraction :' + str("pod") + '|')
+            file.write('ste :' + str(self.stealth.num) + '|' + '\n')
+            file.write('fraction :' + str("pod") + '|' + '\n')
             file.write('contacts :' + str("swan") + '|' + '\n')
             file.close()
             from scenes.quest import QuestScene

@@ -31,61 +31,63 @@ from objects.text_bar import TextBar
 from objects.image_handler import ImageHandler
 from objects.image import Image
 
+
 class TextBarTester(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.g = Game()
         self.TextBarT = TextBar(self.g, file_name='test_data_0', path_to_file='quests/test/')
+        self.path_test = os.path.join('quests', 'test', '')
 
     def test_simple(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_0', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_0', '')
         self.assertEqual(TextBar.search_btns(self.TextBarT, self.TextBarT.data), 2)
 
     def test_empty(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_1', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_1', '')
         self.assertEqual(TextBar.search_btns(self.TextBarT, self.TextBarT.data), 1)
 
     def test_big(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_2', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_2', '')
         self.assertEqual(TextBar.search_btns(self.TextBarT, self.TextBarT.data), 49)
 
     def test_set_next_dialog(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_3', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_3', '')
         self.TextBarT.is_start = True
         self.assertEqual(self.TextBarT.set_next_dialog(), None)
 
     def test_choose_option(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_3', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_3', '')
         self.TextBarT.choose_option()
         self.assertEqual(len(self.TextBarT.buttons), 1)
 
     def test_draw(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_3', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_3', '')
         self.TextBarT.set_next_dialog()
         self.assertEqual(self.TextBarT.process_draw(), None)
 
     def test_process_logic_null(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_3', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_3', '')
         self.assertEqual(self.TextBarT.process_logic(), None)
 
     def test_next_event_unbound(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_0', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_0', '')
         self.assertRaises(UnboundLocalError, self.TextBarT.set_next_ev, '3')
 
     def test_choice_1_unbound(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_0', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_0', '')
         self.assertRaises(UnboundLocalError, self.TextBarT.choice_1)
 
     def test_choice_2_unbound(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_0', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_0', '')
         self.assertRaises(UnboundLocalError, self.TextBarT.choice_2)
 
     def test_choice_3_unbound(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_0', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_0', '')
         self.assertRaises(UnboundLocalError, self.TextBarT.choice_3)
 
     def test_process_empty_event(self):
-        self.TextBarT.data = self.TextBarT.get_data_ff('quests/test/', 'test_data_0', '')
+        self.TextBarT.data = self.TextBarT.get_data_ff(self.path_test, 'test_data_0', '')
         self.assertRaises(AttributeError, self.TextBarT.process_event, pygame.event)
 
 

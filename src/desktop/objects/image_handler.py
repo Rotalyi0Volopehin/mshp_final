@@ -1,7 +1,7 @@
 """
 Класс, ищущий упоминания персонажей в тексте
 """
-
+import os
 from objects.image import Image
 
 CHARACTERS = {
@@ -61,11 +61,11 @@ class ImageHandler:
         iterator = 0
         if len(self.found_characters) == 1:
             char = self.found_characters[0]
-            self.response.append(Image(self.game, "images/" + CHARACTERS_TO_NAMES[char],
+            self.response.append(Image(self.game, os.path.join("images", CHARACTERS_TO_NAMES[char]),
                                        400, 250))
         else:
             for char in self.found_characters:
-                self.response.append(Image(self.game, "images/" + CHARACTERS_TO_NAMES[char],
+                self.response.append(Image(self.game, os.path.join("images", CHARACTERS_TO_NAMES[char]),
                                            100 + (400*iterator), 250))
                 iterator += 1
         return self.response

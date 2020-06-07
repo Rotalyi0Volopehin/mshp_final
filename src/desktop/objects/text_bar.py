@@ -1,4 +1,5 @@
 import pygame
+import os
 from constants import Color
 from objects.base import DrawObject
 from objects.image import Image
@@ -14,7 +15,8 @@ class TextBar(DrawObject):
                  is_italic=False, color=(255, 255, 255),
                  x=10, y=350, width=780, height=240, func=None):
         super().__init__(game)
-        file = open('quests/config', 'r')
+        path = os.path.join("quests", "config")
+        file = open(path, 'r')
         self.sex = str(file.readline().split()[1])
         self.end_quest = file.readline().split()[1]
         if self.end_quest == 'True':
@@ -30,8 +32,8 @@ class TextBar(DrawObject):
         self.color = color
         self.func = func
         self.path_to_file_qu = path_to_file
-        self.path_to_file = path_to_file + 'A' + str(self.act) \
-                                         + '/' + self.sex + '/'
+        self.path_to_file = os.path.join(path_to_file + 'A' + str(self.act),
+                                         self.sex, '')
         print(self.path_to_file)
         self.file_name = file_name[0:len(file_name) - 1]
         self.font_name = font_name
@@ -63,7 +65,8 @@ class TextBar(DrawObject):
         self.image_handler = ImageHandler(self.game)
         self.req_handler = ReqHandler(self.data)
         self.characters = []
-        file = open('quests/language', 'r')
+        path_2 = os.path.join("quests", "language")
+        file = open(path_2, 'r')
         self.language = file.read()
         file.close()
         self.translator = Translator()
@@ -274,7 +277,8 @@ class TextBar(DrawObject):
         Функция записывает статус игрока
         в момент когда игрока кикают с квеста или он переходит к следующей главе
         '''
-        f = open('quests/config', 'w')
+        path = os.path.join("quests", "config")
+        f = open(path, 'w')
         f.write('sex: ' + str(self.sex) + '\n')
         if self.end_quest:
             f.write('end: True' + '\n')
@@ -295,8 +299,8 @@ class TextBar(DrawObject):
         '''
         if self.data.find('<A') != -1:
             self.act = int(self.data[self.data.find('<A') + 2])
-            self.path_to_file = self.path_to_file_qu + 'A' + str(self.act) \
-                                + '/' + self.sex + '/'
+            self.path_to_file = os.path.join((self.path_to_file_qu + 'A' + str(self.act)),
+                                self.sex,)
             #print(self.path_to_file, self.file_name)
             self.dialog_index = '0'
             self.next_act = True

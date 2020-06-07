@@ -1,5 +1,6 @@
 import pygame
 import sys
+import os
 from constants import Color
 from objects.button import Btn
 from objects.yandex_translate import Translator
@@ -34,7 +35,8 @@ class AdvBtn(DrawObject):
         self.height = geometry[3]
         self.width = geometry[2]
         self.num = num
-        file = open('quests/language', 'r')
+        path = os.path.join('quests', 'language')
+        file = open(path, 'r')
         self.language = file.read()
         file.close()
         self.adv_button_translator = Translator()

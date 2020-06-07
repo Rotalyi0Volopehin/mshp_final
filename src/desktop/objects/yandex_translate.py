@@ -2,6 +2,7 @@
 Переводчик текста квестов
 """
 import requests
+import os
 
 
 class Translator:
@@ -10,7 +11,8 @@ class Translator:
     """
     def __init__(self):
         self.url = 'https://translate.api.cloud.yandex.net/translate/v2/translate'
-        file = open('quests/token', 'r')
+        token_path = os.path.join('quests', 'token')
+        file = open(token_path, 'r')
         data = file.read()
         self.token_string = 'Bearer ' + data
         self.headers = {'Content-Type': 'application/json',

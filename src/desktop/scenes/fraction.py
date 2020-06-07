@@ -1,3 +1,4 @@
+import os
 from constants import Color
 from objects.button import Btn
 from objects.yandex_translate import Translator
@@ -6,9 +7,11 @@ from scenes.base import Scene
 
 class FractionScene(Scene):
     def create_objects(self):
-        file = open('quests/language', 'r')
+        lang_path = os.path.join("quests", "language")
+        file = open(lang_path, 'r')
         language = file.read()
         file.close()
+        self.path = os.path.join("quests", "stats")
         translator = Translator()
         self.button_pod = Btn(self.game, (300, 155, 200, 40), Color.WHITE,
                               translator.translate("Подполье", language),
@@ -25,7 +28,7 @@ class FractionScene(Scene):
         self.objects = [self.button_pod, self.button_call, self.button_cyb, self.button_exit]
 
     def frac_pod(self):
-        f = open('quests/stats', 'a')
+        f = open(self.path, 'a')
         f.write('\n')
         f.write('fraction :' + str("pod") + '|')
         f.write('contacts :' + str("swan") + '|' + '\n')
@@ -33,7 +36,7 @@ class FractionScene(Scene):
         self.set_next_scene(self.game.POD_CONTACT_SCENE_INDEX)
 
     def frac_call(self):
-        f = open('quests/stats', 'a')
+        f = open(self.path, 'a')
         f.write('\n')
         f.write('fraction :' + str("call") + '|')
         f.write('contacts :' + str("swan") + '|' + '\n')
@@ -41,7 +44,7 @@ class FractionScene(Scene):
         self.set_next_scene(self.game.CALL_CONTACT_SCENE_INDEX)
 
     def frac_cyb(self):
-        f = open('quests/stats', 'a')
+        f = open(self.path, 'a')
         f.write('\n')
         f.write('fraction :' + str("cyb") + '|')
         f.write('contacts :' + str("swan") + '|' + '\n')
