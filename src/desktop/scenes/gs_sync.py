@@ -11,12 +11,13 @@ from io_tools.binary_writer import BinaryWriter
 
 
 class GSSyncScene(Scene):
-    def __init__(self, game, game_model, post_changes_func, get_changes_func):
+    def __init__(self, game, game_model, post_changes_func, get_changes_func, defeated_func):
         super().__init__(game)
         self.game_model = game_model
         self.toolbar = game.current_scene.toolbar
         self.post_changes_func = post_changes_func
         self.get_changes_func = get_changes_func
+        self.defeated_func = defeated_func
         if game_model.current_player.id == user_info.user_id:
             self.__get_delay_start = None
             self.__post_changes()
@@ -54,8 +55,9 @@ class GSSyncScene(Scene):
         if parcel[0] == ResponseID.FAIL:
             from scenes.main_menu import MainMenuScene
             self.game.set_origin_scene(MainMenuScene)
-            return
-        if parcel[0] == ResponseID.DATA:
+        elif parcel[0] == ResponseID.DEFEATED:
+            self.defeated_func()
+        elif parcel[0] == ResponseID.DATA:
             stream = parcel[1]
             self.get_changes_func(stream)
             self.game.return_to_upper_scene()

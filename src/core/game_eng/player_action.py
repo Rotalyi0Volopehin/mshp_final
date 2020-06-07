@@ -17,16 +17,18 @@ class PlayerAction:
         if not isinstance(player, Player):
             raise exceptions.ArgumentTypeException()
         self.player = player
+        self.grid = target.grid
+        self.__target_x = self.__target_y = 0
         self.target = target
 
-    @staticmethod
-    def _read_tile(stream, tiles):
-        loc_x, loc_y = stream.read_byte_point()
-        return tiles[loc_x][loc_y]
+    @property
+    def target(self) -> GridTile:
+        return self.grid.tiles[self.__target_x][self.__target_y]
 
-    @staticmethod
-    def _write_tile(stream, tile):
-        stream.write_byte_point((tile.loc_x, tile.loc_y))
+    @target.setter
+    def target(self, value):
+        self.__target_x = value.loc_x
+        self.__target_y = value.loc_y
 
     @staticmethod
     def read(stream: BinaryReader, game_model):
@@ -35,7 +37,8 @@ class PlayerAction:
         action_type = CoreClasses.read_class(stream)
         uid = stream.read_uint()
         player = game_model.player_ids[uid]
-        target = PlayerAction._read_tile(stream, game_model.grid.tiles)
+        target_loc = stream.read_byte_point()
+        target = game_model.grid.tiles[target_loc[0]][target_loc[1]]
         obj = action_type(player, target)
         if hasattr(action_type, "read_ext"):
             action_type.read_ext(stream, obj, game_model)
@@ -47,7 +50,7 @@ class PlayerAction:
             raise exceptions.ArgumentTypeException()
         CoreClasses.write_class(stream, type(obj))
         stream.write_uint(obj.player.id)
-        target_loc = (obj.target.loc_x, obj.target.loc_y)
+        target_loc = (obj.__target_x, obj.__target_y)
         stream.write_byte_point(target_loc)
         if hasattr(type(obj), "write_ext"):
             type(obj).write_ext(stream, obj)

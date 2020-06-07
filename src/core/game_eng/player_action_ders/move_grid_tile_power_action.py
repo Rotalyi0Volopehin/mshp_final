@@ -11,12 +11,13 @@ class MoveGridTilePowerPlayerAction(PlayerAction):
 
     @staticmethod
     def read_ext(stream, obj, game_model):
-        obj.selected = PlayerAction._read_tile(stream, game_model.grid.tiles)
+        selected_loc = stream.read_byte_point()
+        obj.selected = game_model.grid.tiles[selected_loc[0]][selected_loc[1]]
         obj.value = stream.read_int()
 
     @staticmethod
     def write_ext(stream, obj):
-        PlayerAction._write_tile(stream, obj.selected)
+        stream.write_byte_point((obj.selected.loc_x, obj.selected.loc_y))
         stream.write_int(obj.value)
 
     def try_do(self) -> bool:

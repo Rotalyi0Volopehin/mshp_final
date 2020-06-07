@@ -20,7 +20,9 @@ class GSParcelHandlers:
         if user is None:
             return ErrorResponse(ErrorResponseID.LOGGING_IN_REQUIRED), None
         participation = DBUserParticipationTools.get_user_participation(user)
-        if (participation is None) or (participation.game_session.phase != 1):
+        if participation is None:
+            return [ResponseID.DEFEATED], None
+        if participation.game_session.phase == 0:
             return ErrorResponse(ErrorResponseID.INVALID_OPERATION), None
         return None, participation
 
@@ -83,12 +85,12 @@ class GSParcelHandlers:
             player_turn = PlayerTurn.read(parcel[1], game_model)
         except:
             return ErrorResponse(ErrorResponseID.INCORRECT_BYTE_DATA)
-        try:
-            player_turn.sync()
-            game_model.current_player_turn = player_turn
-            GSParcelHandlers.process_game_turn(participation.game_session, game_model)
-        except exceptions.InvalidOperationException:
-            return [ResponseID.FAIL]  # провал синхронизации
+        #try:
+        player_turn.sync()
+        game_model.current_player_turn = player_turn
+        GSParcelHandlers.process_game_turn(participation.game_session, game_model)
+        #except exceptions.InvalidOperationException:
+        #    return [ResponseID.FAIL]  # провал синхронизации
         return [ResponseID.SUCCESS]
 
     @staticmethod
