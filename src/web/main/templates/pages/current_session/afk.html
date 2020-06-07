@@ -1,24 +1,22 @@
-{% extends 'base/base.html' %}
-
 
 {% load bootstrap4 %}
 
 
 {% block content %}
 
-    <div class="row move_everything">
-        <div class="col">
-            <div class="dark_part bg-dark cyberfont rounded_border rounded-bottom">
-                <h2 class="text-center text-white cyberfont pt-5" style="font-size: 150%;">Вы не участвуете в сессии</h2>
-            </div>
-            <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-5">
-                <div class="mb-2  text-center">
-                    <div class="cyberfont">Вы можете присоединиться к одной из сессий</div>
-                    <a role="button" class="cyberfont mt-3 btn btn-dark" href="/sessions/">Поиск сессии</a>
-                </div>
+<div class="row move_everything">
+    <div class="col">
+        <div class="dark_part bg-dark cyberfont rounded_border rounded-bottom">
+            <h2 class="text-center text-white cyberfont pt-5" style="font-size: 150%;">Вы не участвуете в сессии</h2>
+        </div>
+        <div class="container bg-white shadow rounded_border rounded-top overflow-hidden p-5">
+            <div class="mb-2  text-center">
+                <div class="cyberfont">Вы можете присоединиться к одной из сессий</div>
+                <a role="button" class="cyberfont mt-3 btn btn-dark" href="/sessions/">Поиск сессии</a>
             </div>
         </div>
     </div>
+</div>
 
 {% endblock %}
 
