@@ -1,5 +1,6 @@
 from scenes.base import Scene
 from objects.button import Btn
+from objects.text import Text
 import os.path as path
 
 
@@ -11,11 +12,13 @@ class MainMenuScene(Scene):
         quit_account_button = Btn(self.game, (400, 305, 100, 40), text="из аккаунта",
                                   function=self.__quit_account)
         exit_button = Btn(self.game, (300, 305, 100, 40), text="Назад", function=self.game.return_to_upper_scene)
+        title = Text(self.game, font_size=72, text="NetWars", x=self.game.width >> 1, y=200)
         self.objects.extend([
             waiting_room_button,
             quest_button,
             quit_account_button,
             exit_button,
+            title,
         ])
 
     def __quit_account(self):

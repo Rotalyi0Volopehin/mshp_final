@@ -28,6 +28,7 @@ class LoginScene(Scene):
                               text='Пароль:', color=Color.YELLOW, x=225, y=90, alignment=TextAlignment.RIGHT)
         self.warning_label = Text(self.game, font_size=20, color=Color.RED,
                                   x=self.game.width >> 1, y=(self.game.height >> 1) + 20)
+        title = Text(self.game, font_size=72, text="NetWars", x=self.game.width >> 1, y=(self.game.height >> 1) - 50)
         self.objects.extend([
             trailer,
             self.login_textbox,
@@ -36,6 +37,7 @@ class LoginScene(Scene):
             login_label,
             password_label,
             self.warning_label,
+            title,
         ])
         self.create_multiplayer_button()
 
