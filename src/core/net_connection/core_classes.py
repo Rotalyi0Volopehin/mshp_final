@@ -1,7 +1,7 @@
 import os
 import exceptions
 
-from zlib import crc32
+from .hash_algos import HashAlgos
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 
@@ -16,11 +16,17 @@ class CoreClasses:
             if file_name.endswith(".py") and not file_name.endswith("__init__.py"):
                 module_name = file_name[:-3].replace(os.path.sep, '.')
                 module = CoreClasses.__load_module(module_name)
-                module_hash = crc32(module_name.encode())
+                module_hash = HashAlgos.hash_str(module_name)
                 if module_hash in CoreClasses.classes:
                     raise exceptions.CoreModuleHashOverlapException()
                 CoreClasses.classes[module_hash] = CoreClasses.__get_classes_of_module(module)
-        CoreClasses.__list_files(core_dir_path, file_handler)
+        while True:
+            try:
+                CoreClasses.__list_files(core_dir_path, file_handler)
+                break
+            except (exceptions.CoreModuleHashOverlapException, exceptions.CoreClassHashOverlapException) as e:
+                if not HashAlgos.try_next_algo():
+                    raise e
 
     @staticmethod
     def __load_module(name):
@@ -44,7 +50,7 @@ class CoreClasses:
         classes = {}
         for name, elem in module.__dict__.items():
             if isinstance(elem, type):
-                class_hash = crc32(name.encode())
+                class_hash = HashAlgos.hash_str(name)
                 if class_hash in classes:
                     raise exceptions.CoreClassHashOverlapException()
                 classes[class_hash] = elem
@@ -64,5 +70,5 @@ class CoreClasses:
             raise exceptions.ArgumentTypeException()
         if isinstance(None, cls):
             raise Exception("NoneType is not supported!")
-        stream.write_uint(crc32(cls.__module__.encode()))
-        stream.write_uint(crc32(cls.__name__.encode()))
+        stream.write_uint(HashAlgos.hash_str(cls.__module__))
+        stream.write_uint(HashAlgos.hash_str(cls.__name__))
