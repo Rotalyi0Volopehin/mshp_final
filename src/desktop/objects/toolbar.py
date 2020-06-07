@@ -15,6 +15,7 @@ class ToolBar(DrawObject):
         from game_eng.pressure_tool_set_ders.virus_pts import VirusPTSet
         from game_eng.pressure_tool_set_ders.encryption_pts import EncryptionPTSet
         # ...
+        from game_eng.pressure_tool_set_ders.antivirus_pts import AntivirusPTSet
         from game_eng.pressure_tool_set_ders.mining_farm_pts import MiningFarmPTSet
         from game_eng.pressure_tool_set_ders.reboot_pts import RebootPTSet
         ToolBar.PTS_KEYS = {
@@ -24,6 +25,7 @@ class ToolBar(DrawObject):
             VirusPTSet: "K_4",
             EncryptionPTSet: "K_5",
             # ...
+            AntivirusPTSet: "K_8",
             MiningFarmPTSet: "K_9",
             RebootPTSet: "K_0",
         }
@@ -40,7 +42,7 @@ class ToolBar(DrawObject):
     def update_tools(self):
         self.tools.clear()
         player = self.game_model.current_player
-        print(player.pressure_tools)
+        print(len(player.pressure_tools))
         for pts_type, pt_set in player.pressure_tools.items():
             key = ToolBar.PTS_KEYS[pts_type]
             self.tools[key] = pt_set

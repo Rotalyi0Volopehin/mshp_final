@@ -58,14 +58,19 @@ class GridTile:
         if not isinstance(effect, GridTile.get_effect_type()):
             raise exceptions.ArgumentTypeException()
         # vvv необходимо, чтобы на одной клетке было не долее одного эффекта одного типа
-        self.__remove_effect_with_type(type(effect))
+        self.try_remove_effect_with_type(type(effect))
         self.effects.add(effect)
 
-    def __remove_effect_with_type(self, effect_type: type):
+    def try_remove_effect_with_type(self, effect_type: type) -> bool:
+        if not isinstance(effect_type, type):
+            raise exceptions.ArgumentTypeException()
+        if not issubclass(effect_type, GridTile.get_effect_type()):
+            raise exceptions.ArgumentValueException()
         for effect in self.effects:
             if type(effect) == effect_type:
                 self.effects.remove(effect)
-                break
+                return True
+        return False
 
     def remove_effect(self, effect):
         if not isinstance(effect, GridTile.get_effect_type()):

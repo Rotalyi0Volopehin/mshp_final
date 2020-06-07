@@ -9,7 +9,6 @@ from .grid_vc import GridVC
 from .player_controller import PlayerController
 from objects.base import DrawObject
 from constants import Color
-from ws.parcel_manager import ParcelManager
 
 
 class GameVC(DrawObject):
@@ -107,6 +106,7 @@ def create_hardcoded_player(name, team) -> Player:
     from game_eng.pressure_tool_set_ders.virus_pts import VirusPTSet
     from game_eng.pressure_tool_set_ders.encryption_pts import EncryptionPTSet
     # ...
+    from game_eng.pressure_tool_set_ders.antivirus_pts import AntivirusPTSet
     from game_eng.pressure_tool_set_ders.mining_farm_pts import MiningFarmPTSet
     from game_eng.pressure_tool_set_ders.reboot_pts import RebootPTSet
     player.add_pressure_tools(DDosPTSet, 1)
@@ -115,6 +115,7 @@ def create_hardcoded_player(name, team) -> Player:
     player.add_pressure_tools(VirusPTSet, 1)
     player.add_pressure_tools(EncryptionPTSet, 1)
     # ...
+    player.add_pressure_tools(AntivirusPTSet, 1)
     player.add_pressure_tools(MiningFarmPTSet, 1)
     player.add_pressure_tools(RebootPTSet, 2)
     return player

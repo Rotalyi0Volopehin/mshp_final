@@ -62,5 +62,7 @@ class CoreClasses:
     def write_class(stream: BinaryWriter, cls: type):
         if not (isinstance(stream, BinaryWriter) and isinstance(cls, type)):
             raise exceptions.ArgumentTypeException()
+        if isinstance(None, cls):
+            raise Exception("NoneType is not supported!")
         stream.write_uint(crc32(cls.__module__.encode()))
         stream.write_uint(crc32(cls.__name__.encode()))
