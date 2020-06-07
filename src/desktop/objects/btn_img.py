@@ -42,6 +42,7 @@ class Button:
 
 import pygame
 
+from constants import Color
 from objects.button import Btn
 
 
@@ -49,6 +50,7 @@ class ImageButton(Btn):
     def __init__(self, game, image, geometry=(10, 10, 100, 100), text=None, function=None):
         super(ImageButton, self).__init__(game,geometry)
         self.image = image
+        self.color = Color.BG_GRAY2
         self.internal_button.function = function
         self.internal_button.text = text
         self.internal_button.render_text()

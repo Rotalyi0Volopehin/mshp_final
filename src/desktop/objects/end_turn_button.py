@@ -1,4 +1,5 @@
 import pygame
+import user_info
 
 from objects.base import DrawObject
 from objects.text import Text
@@ -68,6 +69,8 @@ class EndTurnButton(DrawObject):
         self.time_left_label.process_draw()
 
     def process_event(self, event):
+        if user_info.online:
+            return  # всё очень плохо
         if (event.type == pygame.MOUSEBUTTONUP) and (event.button == 1) and \
                 triangle_contains_point(*self.points, event.pos[0], event.pos[1]):
             self.game.current_scene.game_vc.end_turn()

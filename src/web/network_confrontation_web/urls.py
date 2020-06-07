@@ -25,7 +25,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index_page, name='index'),
     path('activate/<str:uid>/<str:token>/', activation_view.activate, name='activate'),
-    path('cad/', views.cad_page, name='cad'),
     path('darknet/', darknet_view.darknet_page, name='darknet'),
     path('chat/room/<str:room_name>/', chat_view.room, name='chat_room'),
     path('chat/user/<int:user_id>/', chat_view.open_user_chat, name='chat_open_user'),

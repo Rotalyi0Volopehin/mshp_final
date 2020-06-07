@@ -65,12 +65,10 @@ class ToolBarCell(DrawObject):
     def __try_invoke_function(self):
         ok = False
         if self.pt_set is not None:
-            target_tile = self.game.current_scene.game_vc.grid_vc.target_tile
-            if target_tile is not None:
-                if self.pt_set.try_use(target_tile):
-                    self.error_shaking_ticks = 0
-                    self.update_count()
-                    ok = True
+            if self.game.current_scene.game_vc.player_controller.try_apply_pressure_tool(self.pt_set):
+                self.error_shaking_ticks = 0
+                self.update_count()
+                ok = True
         if not ok:
             self.error_shaking_ticks = ToolBarCell.ERROR_SHAKING_DURATION
 

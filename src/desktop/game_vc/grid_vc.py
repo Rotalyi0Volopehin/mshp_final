@@ -1,19 +1,25 @@
 import exceptions
 import pygame
 
+from .grid_tile_vc import GridTileVC, GridTileVCStatus
 from game_eng.grid_model import GridModel
-from game_vc.grid_tile_vc import GridTileVC, GridTileVCStatus
 from objects.base import DrawObject
 
 
 class GridVC(DrawObject):
-    def __init__(self, model: GridModel, game):
+    def __init__(self, game, model: GridModel, game_vc):
         super().__init__(game)
         self.model = model
+        self.game_vc = game_vc
         model.set_view(self)
         model.set_controller(self)
         self.selected_tile = self.target_tile = None
         self.__add_vc_to_tile_matrix()
+
+    def repair(self):
+        for tile in self.model.foreach:
+            if tile.view is None:
+                GridTileVC(tile, self.game, GridTileVCStatus.DEFAULT)
 
     def __add_vc_to_tile_matrix(self):
         for tile in self.model.foreach:
@@ -44,7 +50,7 @@ class GridVC(DrawObject):
         for tile in self.model.foreach:
             tile.controller.process_event(event)
         if (event.type == pygame.MOUSEBUTTONDOWN) and (4 <= event.button <= 5):
-            self.__try_move_power(4 if event.button == 4 else -4)
+            self.__move_power(4 if event.button == 4 else -4)
         elif event.type == pygame.KEYUP:
             self.__handle_key_up(event.key)
 
@@ -61,30 +67,11 @@ class GridVC(DrawObject):
                 if selected.team == target.team:
                     self.__move_power(-target.power)
                 else:
-                    self.__move_power(-(selected.power_cap + target.power_cap), True)
+                    self.__move_power(-(selected.power_cap + target.power_cap))
             elif key == pygame.K_UP:
                 self.__move_power(1)
             elif key == pygame.K_DOWN:
                 self.__move_power(-1)
-        if selected is not None:
-            if key == pygame.K_F1:
-                from game_eng.grid_tile_ders.enhanced_tile import EnhancedGridTile
-                self.__try_upgrade_tile(EnhancedGridTile)
-            elif key == pygame.K_F2:
-                from game_eng.grid_tile_ders.defense_tile import DefenseGridTile
-                self.__try_upgrade_tile(DefenseGridTile)
-            elif key == pygame.K_F3:
-                from game_eng.grid_tile_ders.service_tile import ServiceGridTile
-                self.__try_upgrade_tile(ServiceGridTile)
-            elif key == pygame.K_F4:
-                from game_eng.grid_tile_ders.enhanced_tile_plus import EnhancedGridTilePlus
-                self.__try_upgrade_tile(EnhancedGridTilePlus)
-            elif key == pygame.K_F5:
-                from game_eng.grid_tile_ders.defense_tile_plus import DefenseGridTilePlus
-                self.__try_upgrade_tile(DefenseGridTilePlus)
-            elif key == pygame.K_F6:
-                from game_eng.grid_tile_ders.service_tile_plus import ServiceGridTilePlus
-                self.__try_upgrade_tile(ServiceGridTilePlus)
 
     def __try_upgrade_tile(self, upgrade):
         from game_eng.grid_tile_upgrade_tree import GridTileUpgradeTree
@@ -95,11 +82,7 @@ class GridVC(DrawObject):
             self.target_tile = new_tile
         self.selected_tile = new_tile
 
-    def __try_move_power(self, value):
+    def __move_power(self, value):
         if (self.selected_tile is None) or (self.target_tile is None):
             return
-        self.__move_power(value, True)
-
-    def __move_power(self, value, cut_surplus=False):
-        team = self.model.game.current_team
-        self.selected_tile.try_move_power_as_team(self.target_tile, value, team, cut_surplus)
+        self.game_vc.player_controller.try_move_power(value)

@@ -16,7 +16,7 @@ class Btn(DrawObject):
         "hover_font_color": Color.ORANGE,
     }
 
-    def __init__(self, game, geometry=(10, 10, 100, 40), color=Color.WHITE, text='Test', function=None,
+    def __init__(self, game, geometry=(10, 10, 100, 40), color=Color.BG_GRAY2, text='Test', function=None,
                  font=DEFAULT_FONT):
         super().__init__(game)
         self.geometry = geometry

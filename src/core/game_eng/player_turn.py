@@ -44,21 +44,6 @@ class PlayerTurn:
             return True
         return False
 
-    def try_undo(self) -> bool:
-        """**Попытка отмены действия**\n
-        Пробует отменить последнее действие. Убирает его из стэка, если удачно.
-
-        :return: ok
-        :rtype: bool
-        """
-        if len(self.actions) == 0:
-            return False
-        action = self.actions[-1]
-        if action.try_undo():
-            self.actions.pop(-1)
-            return True
-        return False
-
     def sync(self):
         """**Выполняет все действия стэка**\n
         Используется для синхронизации игрового состояния у всех игроков.

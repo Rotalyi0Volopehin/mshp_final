@@ -29,7 +29,6 @@ class CapitalGridTile(GridTile):
             self.__conquer_all_tiles_of_team(prev_team)
 
     def __conquer_all_tiles_of_team(self, team):
-        for column in self.grid.tiles:
-            for tile in column:
-                if tile.team == team:
-                    tile.conquer(self.team)
+        for tile in self.grid.foreach:
+            if tile.team == team:
+                tile.conquer(self.team)

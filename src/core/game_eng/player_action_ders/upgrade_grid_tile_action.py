@@ -7,8 +7,6 @@ from net_connection.core_classes import CoreClasses
 
 class UpgradeGridTilePlayerAction(PlayerAction):
     def __init__(self, player, target, upgrade_type=None):
-        if target.team != player.team:
-            raise exceptions.InvalidOperationException()
         super().__init__(player, target)
         self.upgrade_type = upgrade_type
         self.__new_tile = None
@@ -22,15 +20,10 @@ class UpgradeGridTilePlayerAction(PlayerAction):
         CoreClasses.write_class(stream, obj.upgrade_type)
 
     def try_do(self) -> bool:
+        if self.target.team != self.player.team:
+            raise exceptions.InvalidOperationException()
         try:
             self.__new_tile = GridTileUpgradeTree.upgrade_tile(self.target, self.upgrade_type)
-            return True
-        except exceptions.InvalidOperationException:
-            return False
-
-    def try_undo(self) -> bool:
-        try:
-            self.target = GridTileUpgradeTree.downgrade_tile(self.__new_tile)
             return True
         except exceptions.InvalidOperationException:
             return False

@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from main.views.menu import get_menu_context, get_user_menu_context
 from main import forms
-from main.db_tools.cad import CAD
 from main.db_tools.user_tools import DBUserTools
 from main.db_tools.user_error_messages import DBUserErrorMessages
 from main.views.form_view import FormView

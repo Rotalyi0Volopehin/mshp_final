@@ -25,6 +25,10 @@ class PlayerAction:
         return tiles[loc_x][loc_y]
 
     @staticmethod
+    def _write_tile(stream, tile):
+        stream.write_byte_point((tile.loc_x, tile.loc_y))
+
+    @staticmethod
     def read(stream: BinaryReader, game_model):
         if not isinstance(stream, BinaryReader):
             raise exceptions.ArgumentTypeException()
@@ -50,14 +54,6 @@ class PlayerAction:
 
     def try_do(self) -> bool:
         """**Попытка совершить действие**\n
-        :raises NotImplementedException: |NotImplementedException|
-        :return: ok
-        :rtype: bool
-        """
-        raise exceptions.NotImplementedException()
-
-    def try_undo(self) -> bool:
-        """**Попытка отменить действие**\n
         :raises NotImplementedException: |NotImplementedException|
         :return: ok
         :rtype: bool

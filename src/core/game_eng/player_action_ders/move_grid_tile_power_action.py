@@ -5,8 +5,6 @@ from game_eng.player_action import PlayerAction
 
 class MoveGridTilePowerPlayerAction(PlayerAction):
     def __init__(self, player, target, selected=None, value=0):
-        if target.team != player.team:
-            raise exceptions.InvalidOperationException()
         super().__init__(player, target)
         self.selected = selected
         self.value = value
@@ -18,19 +16,13 @@ class MoveGridTilePowerPlayerAction(PlayerAction):
 
     @staticmethod
     def write_ext(stream, obj):
-        stream.write_byte_point(obj.selected)
+        PlayerAction._write_tile(stream, obj.selected)
         stream.write_int(obj.value)
 
     def try_do(self) -> bool:
+        if self.selected.team != self.player.team:
+            raise exceptions.InvalidOperationException()
         try:
-            self.selected.move_power(self.target, self.value)
-            return True
-        except exceptions.ArgumentOutOfRangeException:
-            return False
-
-    def try_undo(self) -> bool:
-        try:
-            self.target.move_power(self.selected, self.value)
-            return True
+            return self.selected.try_move_power_as_team(self.target, self.value, self.player.team, True)
         except exceptions.ArgumentOutOfRangeException:
             return False
