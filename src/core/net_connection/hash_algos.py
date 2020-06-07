@@ -32,7 +32,7 @@ class HashAlgos:
 
     @staticmethod
     def try_next_algo() -> bool:
-        print(f"Using of {HashAlgos.get_current_algo().__name__} hash algo failed")
+        print(f"Using of '{HashAlgos.get_current_algo().__name__}' hash algo failed")
         if len(HashAlgos.algos) - 1 == HashAlgos.__current_algo_ind:
             return False
         HashAlgos.__current_algo_ind += 1

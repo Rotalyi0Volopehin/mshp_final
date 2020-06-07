@@ -1,8 +1,8 @@
 import json
 import exceptions
 
-from zlib import crc32
-from net_connection.core_classes import CoreClasses
+from .hash_algos import HashAlgos
+from .core_classes import CoreClasses
 from enum import Enum
 from types import FunctionType
 
@@ -35,8 +35,8 @@ class CoreJSONEncoder(json.JSONEncoder):
 
     @staticmethod
     def __get_info_module(obj) -> (int, int):  # (obj_module_hash, obj_type_hash)
-        obj_module = crc32(str(obj.__module__).encode())
-        obj_type = crc32(type(obj).__name__.encode())
+        obj_module = HashAlgos.hash_str(str(obj.__module__))
+        obj_type = HashAlgos.hash_str(type(obj).__name__)
         return obj_module, obj_type
 
 
