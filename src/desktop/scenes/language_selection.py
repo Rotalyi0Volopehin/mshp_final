@@ -1,6 +1,7 @@
 from constants import Color
 from objects.button import Btn
 from scenes.base import Scene
+from scenes.stats import StatsMenuScene
 
 
 class LanguageScene(Scene):
@@ -17,48 +18,33 @@ class LanguageScene(Scene):
 
     def set_spanish(self):
         file = open('quests/language', 'w')
-        file.write('ru')
+        file.write('es')
         file.close()
-        self.update_scenes()
-        self.set_next_scene(self.game.STATS_SCENE_INDEX)
+        self.game.set_origin_scene(StatsMenuScene)
 
     def set_russian(self):
         file = open('quests/language', 'w')
         file.write('ru')
         file.close()
-        self.update_scenes()
-        self.set_next_scene(self.game.STATS_SCENE_INDEX)
+        self.game.set_origin_scene(StatsMenuScene)
 
     def set_english(self):
         file = open('quests/language', 'w')
         file.write('en')
         file.close()
-        self.game.scenes[1] = 0
-        self.update_scenes()
-        self.set_next_scene(self.game.STATS_SCENE_INDEX)
+        self.game.set_origin_scene(StatsMenuScene)
 
     def set_german(self):
         file = open('quests/language', 'w')
         file.write('de')
         file.close()
-        self.update_scenes()
-        self.set_next_scene(self.game.STATS_SCENE_INDEX)
+        self.game.set_origin_scene(StatsMenuScene)
 
     def set_french(self):
         file = open('quests/language', 'w')
         file.write('fr')
         file.close()
-        self.update_scenes()
-        self.set_next_scene(self.game.STATS_SCENE_INDEX)
-
-    def update_scenes(self):
-        self.game.scenes[self.game.STATS_SCENE_INDEX].create_objects()
-        self.game.scenes[self.game.QUEST_SCENE_INDEX].create_objects()
-        self.game.scenes[self.game.FRACTION_SCENE_INDEX].create_objects()
-        self.game.scenes[self.game.CALL_CONTACT_SCENE_INDEX].create_objects()
-        self.game.scenes[self.game.CYB_CONTACT_SCENE_INDEX].create_objects()
-        self.game.scenes[self.game.POD_CONTACT_SCENE_INDEX].create_objects()
-
+        self.game.set_origin_scene(StatsMenuScene)
 
     def exit(self):
         self.game.game_over = True

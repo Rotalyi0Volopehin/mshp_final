@@ -1,5 +1,6 @@
 from constants import Color
 from objects.button import Btn
+from objects.yandex_translate import Translator
 from objects.advanced_button import AdvBtn
 
 from scenes.base import Scene
@@ -18,6 +19,7 @@ class StatsMenuScene(Scene):
         file = open('quests/language', 'r')
         language = file.read()
         file.close()
+        translator = Translator()
         self.strength = AdvBtn(self.game, (320, 25, 160, 70),
                                Color.WHITE, "Физическая сила", self.apply_point, 24)
         self.charisma = AdvBtn(self.game, (320, 105, 160, 70),
@@ -30,28 +32,24 @@ class StatsMenuScene(Scene):
                               Color.WHITE, "Скрытность", self.apply_point, 24)
         self.skill_points = Btn(self.game, (150, 500, 200, 40),
                                 Color.WHITE,
-                                self.game.translator.translate("Оставшиеся очки: 0", language), None)
-        self.button_back = Btn(self.game, (350, 500, 100, 40),
-                               Color.WHITE,
-                               self.game.translator.translate("Меню", language), self.back_to_menu)
+                                translator.translate("Оставшиеся очки: 0", language), None)
         self.quest = Btn(self.game, (450, 500, 200, 40),
                          Color.WHITE,
-                         self.game.translator.translate("Начать задания", language), self.set_quest_1)
+                         translator.translate("Начать задания", language), self.set_quest)
+        self.objects.extend([self.strength,
+                             self.charisma,
+                             self.dexterity,
+                             self.savvy,
+                             self.stealth,
+                             self.skill_points,
+                             self.quest])
 
-        self.objects = [self.strength, self.charisma,
-                        self.dexterity, self.savvy, self.stealth,
-                        self.button_back, self.skill_points, self.quest]
-
-    def back_to_menu(self):
-        self.set_next_scene(self.game.MENU_SCENE_INDEX)
-
-    def set_quest_1(self):
+    def set_quest(self):
         """
         Запись характеристик в файл конфига и переход к сцене выбора фракций.
         :return:
         """
         if self.current_points == 0:
-            self.set_next_scene(self.game.FRACTION_SCENE_INDEX)
             file = open('quests/stats', 'a')
             file.write('\n')
             file.write('str :' + str(self.strength.num) + '|' + '\n')
@@ -59,7 +57,11 @@ class StatsMenuScene(Scene):
             file.write('dex :' + str(self.dexterity.num) + '|' + '\n')
             file.write('sav :' + str(self.savvy.num) + '|' + '\n')
             file.write('ste :' + str(self.stealth.num) + '|')
+            file.write('fraction :' + str("pod") + '|')
+            file.write('contacts :' + str("swan") + '|' + '\n')
             file.close()
+            from scenes.quest import QuestScene
+            self.game.set_origin_scene(QuestScene)
 
     def apply_point(self, func=None):
         """

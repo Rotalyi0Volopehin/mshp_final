@@ -21,6 +21,7 @@ class LoginScene(Scene):
         self.login_textbox = TextInput(self.game, False, 170, 20, 11)
         self.password_textbox = PasswordInput(self.game, False, 180, 80, 18)
         button_enter = Btn(self.game, (350, 300, 100, 40), Color.WHITE, "Войти", self.on_enter_button_click)
+        button_quest = Btn(self.game, (350, 500, 100, 40), Color.WHITE, "Квесты", self.on_quests_button_click)
         button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
         trailer = GIFImage(path.join("images", "login_backimage.gif"), self.game)
         login_label = Text(self.game, font_name='Comic Sans', font_size=36, is_bold=False, is_italic=False,
@@ -37,6 +38,7 @@ class LoginScene(Scene):
             button_enter,
             button_multiplayer_enter,
             button_register,
+            button_quest,
             login_label,
             password_label,
         ])
@@ -49,6 +51,18 @@ class LoginScene(Scene):
         self.init_form()
         self.load_sound()
         pygame.mixer.music.play(-1)
+
+    def set_quests_scene(self):
+        file = open('quests/stats', 'r')
+        if file.read() == '':
+            from scenes.language_selection import LanguageScene
+            file.close()
+            self.game.set_origin_scene(LanguageScene)
+        else:
+            from scenes.quest import QuestScene
+            file.close()
+            self.game.set_origin_scene(QuestScene)
+
 
     def set_map_scene(self):
         from scenes.map import MapScene
@@ -67,6 +81,9 @@ class LoginScene(Scene):
     def on_enter_button_click(self):
         user_info.online = False
         self.set_map_scene()
+
+    def on_quests_button_click(self):
+        self.set_quests_scene()
 
     def login_response_parcel_handler(self, parcel):
         response_id = parcel[0]

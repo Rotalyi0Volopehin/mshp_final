@@ -62,6 +62,7 @@ class TextBar(DrawObject):
         self.now_word_f = 0
         self.image_handler = ImageHandler(self.game)
         self.req_handler = ReqHandler(self.data)
+        self.characters = []
         file = open('quests/language', 'r')
         self.language = file.read()
         file.close()
@@ -82,10 +83,9 @@ class TextBar(DrawObject):
             self.text_frame = ''
             self.text_frame = self.data[self.data.find('<d>', self.now_word_a) + 3:
                                         self.data.find('</d>', self.now_word_a)]
-            while len(self.game.scenes[self.game.QUEST_SCENE_INDEX].objects) > 3:
-                self.game.scenes[self.game.QUEST_SCENE_INDEX].objects.pop()
+            self.characters = []
             for item in self.image_handler.find_characters(self.text_frame):
-                self.game.scenes[self.game.QUEST_SCENE_INDEX].objects.append(item)
+                self.characters.append(item)
             self.flag = True
             while self.flag:
                 dialog_string = self.text_frame[self.text_frame.find('<p>',
@@ -126,6 +126,8 @@ class TextBar(DrawObject):
 
     def process_draw(self):
         if not self.end_quest:
+            for image in self.characters:
+                image.process_draw()
             pygame.draw.rect(self.game.screen, Color.GREY_BLUE,
                              (self.x, self.y, self.width, self.height))
             pygame.draw.rect(self.game.screen, Color.GREEN,
