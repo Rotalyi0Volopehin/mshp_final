@@ -115,6 +115,7 @@ class TextBar(DrawObject):
         self.dialog_index += choice
         #print(self.dialog_index)
         self.data = self.get_data_ff(self.path_to_file, self.file_name, self.dialog_index)
+
         if not self.end_quest:
             print("NEW FILE")
             self.buttons.clear()
@@ -176,7 +177,8 @@ class TextBar(DrawObject):
         :return: data
         """
         try:
-            file1 = open(a + b + str(c), 'r', encoding='utf-8')
+            path = os.path.join(a + b + str(c))
+            file1 = open(path, 'r', encoding='utf-8')
         except FileNotFoundError or UnboundLocalError or self.end_quest:
             print("END OF JOURNEY")
             self.dialog_index = self.dialog_index[0:len(self.dialog_index) - 1]
@@ -300,8 +302,8 @@ class TextBar(DrawObject):
         if self.data.find('<A') != -1:
             self.act = int(self.data[self.data.find('<A') + 2])
             self.path_to_file = os.path.join((self.path_to_file_qu + 'A' + str(self.act)),
-                                self.sex,)
-            #print(self.path_to_file, self.file_name)
+                                              self.sex, '')
+            print(self.path_to_file, self.file_name)
             self.dialog_index = '0'
             self.next_act = True
         if self.data.find('<WIN>') != -1:
