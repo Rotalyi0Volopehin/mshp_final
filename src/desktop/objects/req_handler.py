@@ -59,21 +59,17 @@ class ReqHandler:
         stat_data = file.read()
         flag = 2
         for item in self.stats_requirements:
-            print(item)
             if int(stat_data[stat_data.find(item[:5]) + 5:
                              stat_data.find('|', stat_data.find(item[:5]))
                              ]) < int(item[5:]):
                 flag = 1
             else:
                 flag = 0
-        print(stat_data)
         for item in self.contacts_requirements:
-            print(item)
             if stat_data.find(item) == -1:
                 flag = 1
             else:
                 flag = 0
-            print(stat_data.find(item))
         file.close()
         self.contacts_requirements = []
         self.stats_requirements = []

@@ -13,8 +13,11 @@ class TextBar(DrawObject):
     def __init__(self, game, file_name, path_to_file,
                  font_name='Comic Sans', font_size=24, is_bold=True,
                  is_italic=False, color=(255, 255, 255),
-                 x=10, y=350, width=780, height=240, func=None):
+                 x=10, y=350, width=780, height=240, func=None, win_func=None, fail_func=None, end_func=None):
         super().__init__(game)
+        self.win_func = win_func
+        self.fail_func = fail_func
+        self.end_func = end_func
         path = os.path.join("quests", "config")
         file = open(path, 'r')
         self.sex = str(file.readline().split()[1])
@@ -28,13 +31,11 @@ class TextBar(DrawObject):
         self.moral = int(file.readline().split()[1])
         self.act = int(file.readline().split()[1])
         file.close()
-        print("INIT")
         self.color = color
         self.func = func
         self.path_to_file_qu = path_to_file
         self.path_to_file = os.path.join(path_to_file + 'A' + str(self.act),
                                          self.sex, '')
-        print(self.path_to_file)
         self.file_name = file_name[0:len(file_name) - 1]
         self.font_name = font_name
         self.font_size = font_size
@@ -81,7 +82,6 @@ class TextBar(DrawObject):
             self.lal = 0
             self.is_start = False
             self.now_word_f = 0
-            print('set_next_dialog')
             self.data_strings = []
             self.text_frame = ''
             self.text_frame = self.data[self.data.find('<d>', self.now_word_a) + 3:
@@ -113,11 +113,9 @@ class TextBar(DrawObject):
 
         """
         self.dialog_index += choice
-        #print(self.dialog_index)
         self.data = self.get_data_ff(self.path_to_file, self.file_name, self.dialog_index)
 
         if not self.end_quest:
-            print("NEW FILE")
             self.buttons.clear()
             self.moral_choices_costs.clear()
             self.now_word_a = 0
@@ -180,7 +178,7 @@ class TextBar(DrawObject):
             path = os.path.join(a + b + str(c))
             file1 = open(path, 'r', encoding='utf-8')
         except FileNotFoundError or UnboundLocalError or self.end_quest:
-            print("END OF JOURNEY")
+            self.end_func()
             self.dialog_index = self.dialog_index[0:len(self.dialog_index) - 1]
             self.func()
             self.end_quest = True
@@ -226,11 +224,9 @@ class TextBar(DrawObject):
                 self.moral_choices_costs.append(self.data[self.data.find('[M', self.now_word_b) + 2:
                                                           self.data.find(']', self.data.find('[M', self.now_word_b))])
             if self.data.find('[R', self.now_word_b, self.now_word_b + 15) != -1:
-                print("MORALEMORALE!")
                 self.reputation_choices_costs.append(self.data[self.data.find('[R', self.now_word_b) + 2:
                                                      self.data.find(']', self.data.find('[R', self.now_word_b))])
             button_number += 1
-            print(button_name)
 
     def choice_1(self):
         """
@@ -303,16 +299,22 @@ class TextBar(DrawObject):
             self.act = int(self.data[self.data.find('<A') + 2])
             self.path_to_file = os.path.join((self.path_to_file_qu + 'A' + str(self.act)),
                                               self.sex, '')
-            print(self.path_to_file, self.file_name)
             self.dialog_index = '0'
             self.next_act = True
         if self.data.find('<WIN>') != -1:
             self.end_quest = True
-            print("Миссия выполнена!")
+            self.give_exp()
+            self.win_func()
         elif self.data.find('<LOSE>') != -1:
-            print("Миссия провалена!")
+            self.fail_func()
             self.end_quest = True
         self.end_quest_func()
+
+    def give_exp(self):
+        from ws.parcel_manager import ParcelManager
+        from net_connection.request_ids import RequestID
+        ParcelManager.send_parcel([RequestID.GAIN_EXP, 1])
+        ParcelManager.receive_parcel_now()
 
     def search_btns(self, data):
         """
