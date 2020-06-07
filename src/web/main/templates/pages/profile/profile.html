@@ -21,14 +21,15 @@
 
 {% include 'pages/profile/background.html' %}
 
+<main role="main" class="container">
 {% if error %}
 
 <div class="text-center alert alert-danger rounded_border"
      role="alert"
      style="height: 24vh; padding-top: 8%; margin-top: 20%; font-size: 130%;">{{ error }}</div>
+</main>
 
 {% else %}
-<main role="main" class="container">
 <form class="form-padding" method="post"> {% csrf_token %}
     <div class="row mb-5 pb-5">
         <div class="col-lg-10 mx-auto">
