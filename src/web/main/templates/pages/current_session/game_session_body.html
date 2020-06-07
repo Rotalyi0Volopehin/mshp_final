@@ -21,37 +21,36 @@
 
 {% block content %}
 <style>
-  body {
-      background: linear-gradient(to top right, #0000ff, #ffffff);
-  }
+    body {
+        background: linear-gradient(to top right, #9FE2BF, #B0E0E6);
+    }
 
-  .form1 {
-      width: 700px;
-      height: 300px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%,-50%);
-      background-color: rgba(220, 220, 220, 0.3);
+    .rounded_border {
+        border-radius: 40px;
+    }
 
-  }
+    .move_everything {
+        margin-top: 12%;
+        padding-bottom: 8%;
+    }
 
-  .form1 h1 {
-      margin: 30px 100px;
-      padding: 0;
-      text-align: center;
-      color: #000;
-      font-size: 30px;
-      text-transform: uppercase;
-  }
-
+    .dark_part {
+        margin-top: -2%;
+        height: 125px;
+    }
 </style>
 
-{% if error %}<div class="text-center alert alert-danger" role="alert">{{ error }}</div>
-{% elif state == 0 %}{% include 'pages/current_session/afk.html' %}
-{% elif state == 1 %}{% include 'pages/current_session/expectation.html' %}
-{% elif state == 2 %}{% include 'pages/current_session/playing.html' %}
-{% endif %}
+<main role="main" class="container">
+    {% if error %}
+    <div class="text-center alert alert-danger rounded_border"
+         role="alert"
+         style="height: 24vh; padding-top: 8%; margin-top: 20%; font-size: 130%;">{{ error }}</div>
+
+    {% elif state == 0 %}{% include 'pages/current_session/afk.html' %}
+    {% elif state == 1 %}{% include 'pages/current_session/expectation.html' %}
+    {% elif state == 2 %}{% include 'pages/current_session/playing.html' %}
+    {% endif %}
+</main>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
