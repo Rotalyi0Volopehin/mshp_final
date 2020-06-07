@@ -77,7 +77,7 @@ class GSParcelHandlers:
         if game_model.turn_time_left < -1.0:
             GSParcelHandlers.process_game_turn(participation.game_session, game_model)
             return [ResponseID.FAIL]  # post timeout
-        if game_model.current_player.id != participation.user.id:
+        if (game_model.current_player.id != participation.user.id) or game_model.current_team.defeated:
             return [ResponseID.FAIL]  # post не в свой ход
         try:
             player_turn = PlayerTurn.read(parcel[1], game_model)

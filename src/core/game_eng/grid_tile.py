@@ -149,9 +149,19 @@ class GridTile:
         value = self.__check_and_correct_value_for_power_movement(value, cut_surplus)
         if self.team == target.team:
             value = -target.__check_and_correct_value_for_power_movement(-value, cut_surplus)
+            if target.power_cap < target.power + value:
+                if cut_surplus:
+                    value = target.power_cap - target.power
+                else:
+                    raise exceptions.ArgumentOutOfRangeException()
             self.__ally_power_movement(target, value)
         else:
             value = target.__check_and_correct_value_for_power_movement(value, cut_surplus, True)
+            if target.power_cap < value - target.power:
+                if cut_surplus:
+                    value = target.power_cap + target.power
+                else:
+                    raise exceptions.ArgumentOutOfRangeException()
             self.__foe_power_movement(target, value)
 
     def __check_and_correct_value_for_power_movement(self, value: int, cut_surplus: bool, foe: bool = False) -> int:

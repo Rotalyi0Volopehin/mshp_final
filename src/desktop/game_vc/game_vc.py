@@ -55,7 +55,7 @@ class GameVC(DrawObject):
 
     def __apply_changes(self, player_turn, gs_turn_time):
         player_turn.sync()
-        if self.model.game_over:
+        if self.model.game_over or (self.player_controller.changes_available and self.model.current_team.defeated):
             self.__set_game_over_scene()
             return
         self.grid_vc.repair()

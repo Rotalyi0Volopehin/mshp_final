@@ -9,12 +9,12 @@ from scenes.base import Scene
 from objects.button import Btn
 from constants import Color
 from objects.grid_tile_info_plate import GridTileInfoPlate
-from game_vc.grid_tile_vc import GridTileVC
 from game_eng.grid_tile_upgrade_tree import GridTileUpgradeTree
 
 
 class TreeScene(Scene):
     def create_objects(self):
+        self.toolber = self.game.current_scene.toolbar
         self.start_team = None
         self.width = self.game.width
         self.height = self.game.height
@@ -35,7 +35,6 @@ class TreeScene(Scene):
         self.objects.append(self.game_vc)
         self.test_button = Btn(self.game, (30, 30, 100, 40), Color.WHITE,"Снять улучшение", self.downgrade())
         self.add_buttons()
-        #self.images = TreeScene.upload_images(len(self.types))
         button_back = Btn(self.game, (self.width - 240, 5, 100, 40), Color.WHITE, 'Карта',
                           self.game.return_to_upper_scene)
         self.objects.append(button_back)

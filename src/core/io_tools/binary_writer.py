@@ -31,7 +31,7 @@ class BinaryWriter(BinaryStream):
         :param data: Int32
         :type data: int
         """
-        bin_ = pack('>I', data)
+        bin_ = pack('>i', data)
         self.base_stream.write(bin_)
 
     def write_uint(self, data: int):
