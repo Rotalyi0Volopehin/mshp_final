@@ -18,8 +18,10 @@ from ws.parcel_manager import ParcelManager
 
 class LoginScene(Scene):
     def init_form(self):
-        self.login_textbox = TextInput(self.game, False, 230, 38, 11)
-        self.password_textbox = PasswordInput(self.game, False, 230, 98, 18)
+        self.login_textbox = TextInput(self.game, False, 170, 20, 11)
+        self.password_textbox = PasswordInput(self.game, False, 180, 80, 18)
+        button_enter = Btn(self.game, (350, 300, 100, 40), Color.WHITE, "Войти", self.on_enter_button_click)
+        button_quest = Btn(self.game, (350, 500, 100, 40), Color.WHITE, "Квесты", self.on_quests_button_click)
         button_register = Btn(self.game, (350, 400, 100, 40), Color.WHITE, 'Регистрация', self.on_reg_button_click)
         trailer = GIFImage(path.join("images", "login_backimage.gif"), self.game)
         login_label = Text(self.game, font_size=36, is_bold=False, is_italic=False,
@@ -33,6 +35,7 @@ class LoginScene(Scene):
             self.login_textbox,
             self.password_textbox,
             button_register,
+            button_quest,
             login_label,
             password_label,
             self.warning_label,
@@ -67,6 +70,18 @@ class LoginScene(Scene):
         pygame.mixer.music.play(-1)
         self.try_connect()
 
+    def set_quests_scene(self):
+        path_1 = path.join("quests", "stats")
+        file = open(path_1, 'r')
+        if file.read() == '':
+            from scenes.language_selection import LanguageScene
+            file.close()
+            self.game.set_origin_scene(LanguageScene)
+        else:
+            from scenes.quest import QuestScene
+            file.close()
+            self.game.set_origin_scene(QuestScene)
+
     def set_map_scene(self):
         from scenes.map import MapScene
         self.game.set_origin_scene(MapScene)
@@ -87,6 +102,9 @@ class LoginScene(Scene):
     def on_enter_button_click(self):
         user_info.online = False
         self.set_map_scene()
+
+    def on_quests_button_click(self):
+        self.set_quests_scene()
 
     def login_response_parcel_handler(self, parcel):
         response_id = parcel[0]
