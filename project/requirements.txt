@@ -21,3 +21,9 @@ pylint-django==2.0.15
 
 # Other
 six==1.14.0
+
+# webserver                                                                                                                            │
+daphne==2.5.0
+
+# Database
+mysqlclient==1.4.6
