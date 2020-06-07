@@ -1,6 +1,5 @@
-import io
-import sys
 import os
+import sys
 import unittest
 import pygame
 
@@ -15,21 +14,16 @@ try:
     import exceptions
 except:
     print("Direct import failed. Patching . . . ", end='')
-    fix_project_roots("core")
+    fix_project_roots("core", "desktop", "web")
     import exceptions
     print("SUCCESS")
 
 
-def init_libs():
-    pygame.mixer.init(22050, -16, 2, 64)
-    pygame.display.init()
-    pygame.font.init()
-
-init_libs()
 from game import Game
-from objects.text_bar import TextBar
-from objects.image_handler import ImageHandler
-from objects.image import Image
+from .text_bar import TextBar
+from .image_handler import ImageHandler
+from run import init_libs
+init_libs()
 
 
 class TextBarTester(unittest.TestCase):
