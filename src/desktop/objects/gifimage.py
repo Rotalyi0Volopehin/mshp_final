@@ -25,7 +25,7 @@ class GIFImage(object):
         pass
 
     def process_draw(self):
-        self.render(self.screen, (125, 70))
+        self.render(self.screen, (-200, -10))
 
     def process_event(self, event):
         pass
