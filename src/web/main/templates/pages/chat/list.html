@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+
+
+{% block content %}
+
+    {% load static %}
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+        <link rel="stylesheet" href="{% static 'chat/styles.css' %}">
+    {% endblock %}
+
+    <main role="main" class="container">
+        {% if chats %}
+            <div class="col mt-4">
+                <div class="card">
+                    <div class="card-header cyberfont">
+                        <h4>Активные диалоги</h4>
+                    </div>
+                    <div class="gaadiex-list">
+                        {% for chat in chats %}
+                            <div class="gaadiex-list-item mt-2"><img class="gaadiex-list-item-img" src="{% static '/profilepic.png' %}" alt="List user">
+                                <div class="gaadiex-list-item-text">
+                                    <h3 class="cyberfont"><a href="/chat/room/{{ chat.room_name }}/">{{ chat.members_username }}</a></h3>
+                                    <h4>{{ chat.text }}</h4>
+                                    <p>{{ chat.time }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="text-center alert alert-primary mt-4 cyberfont" role="alert">
+                Нет начатых диалогов.
+            </div>
+        {% endif %}
+    </main>
+
+{% endblock %}
