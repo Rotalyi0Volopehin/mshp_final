@@ -59,9 +59,9 @@ class ReqHandler:
         stat_data = file.read()
         flag = 2
         for item in self.stats_requirements:
-            if int(stat_data[stat_data.find(item[:5]) + 5:
-                             stat_data.find('|', stat_data.find(item[:5]))
-                             ]) < int(item[5:]):
+            value = int(stat_data[stat_data.find(item[:5]) + 5:
+                             stat_data.find('|', stat_data.find(item[:5]))]) if len(stat_data) > 0 else 0
+            if value < int(item[5:]):
                 flag = 1
             else:
                 flag = 0

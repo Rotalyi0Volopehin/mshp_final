@@ -25,6 +25,8 @@ class Translator:
         file.close()
 
     def translate(self, text="Привет", target_language="en"):
+        if target_language == "ru":
+            return text
         self.translate_data = {
             "folder_id": "b1gb641rullkr99au8k2",
             "texts": [text],

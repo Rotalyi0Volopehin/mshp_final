@@ -312,9 +312,10 @@ class TextBar(DrawObject):
 
     def give_exp(self):
         from ws.parcel_manager import ParcelManager
+        from ws.channel import Channel
         from net_connection.request_ids import RequestID
         ParcelManager.send_parcel([RequestID.GAIN_EXP, 1])
-        ParcelManager.receive_parcel_now()
+        Channel.ignore_next_response()
 
     def search_btns(self, data):
         """

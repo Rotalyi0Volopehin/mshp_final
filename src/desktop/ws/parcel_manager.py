@@ -30,11 +30,6 @@ class ParcelManager:
             return text_data
 
     @staticmethod
-    def receive_parcel_now() -> list:
-        response = Channel.receive_now()
-        return ParcelManager.__convert_response_into_parcel(response)
-
-    @staticmethod
     def receive_parcel_async(parcel_handler):
         if not isinstance(parcel_handler, (FunctionType, MethodType)):
             raise exceptions.ArgumentTypeException()

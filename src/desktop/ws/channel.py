@@ -42,8 +42,8 @@ class Channel:
             Channel.halt_loop()
 
     @staticmethod
-    def receive_now() -> str:
-        return Channel.socket.recv()
+    def ignore_next_response():
+        Channel.__receive_handlers.put(None)
 
     # vvv async tools vvv
 
@@ -56,7 +56,6 @@ class Channel:
             asyncio.ensure_future(Channel.__send_loop())
             asyncio.ensure_future(Channel.__receive_loop())
             Channel.loop.run_forever()
-
         Channel.__channel_thread = Thread(target=channel_loop)
         Channel.__channel_thread.start()
 
@@ -83,10 +82,11 @@ class Channel:
                 await asyncio.sleep(1 / Channel.priority)
             handler = Channel.__receive_handlers.get()
             data = await Channel.socket.recv()
-            handler(data)
+            if handler is not None:
+                handler(data)
 
     @staticmethod
-    def send(data: str):
+    def send(data):
         if not isinstance(data, (str, bytes)):
             raise exceptions.ArgumentTypeException()
         Channel.__data_to_send.put(data)

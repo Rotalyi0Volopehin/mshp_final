@@ -93,7 +93,7 @@ class ProfileFormPage(FormView):
         context["activated"] = user_data.activated
         context["about"] = user_data.extra_info
         context["team"] = ProfileFormPage.team_names[user_data.team]
-        context["exp"] = user_data.exp
+        context["exp_fract"] = int(user_data.exp / user_data.exp_cap * 100)
         context["level"] = user_data.level
         return True, user_data if return_user_data else True
 

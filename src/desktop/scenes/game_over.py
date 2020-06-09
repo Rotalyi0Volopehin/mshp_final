@@ -20,7 +20,7 @@ class GameOverScene(Scene):
             text = "Ваша фракция проиграла"
             color = Color.RED
         else:
-            text = "Ваша фракция выиграла"
+            text = "Ваша фракция выиграла. +опыт"
             color = Color.ORANGE
         game_over_label = Text(self.game, font_size=42, text=text, color=color,
                                x=self.game.width >> 1, y=self.game.height >> 1)

@@ -24,10 +24,10 @@ class WebsocketRequestHandler(WebsocketConsumer):
     def receive(self, text_data=None, bytes_data=None):
         # vvv первоначальная проверка формата request-а vvv
         if text_data is None:
-            okay, parcel = self.try_get_parcel_from_bytes(bytes_data)
+            ok, parcel = self.try_get_parcel_from_bytes(bytes_data)
         else:
-            okay, parcel = self.try_parse_json_into_parcel(text_data)
-        if not (okay and self.check_parcel_format(parcel)):
+            ok, parcel = self.try_parse_json_into_parcel(text_data)
+        if not (ok and self.check_parcel_format(parcel)):
             return
         # vvv делегирование к обработчикам (request parcel handler)
         # request-ов в соответствии с id request-ов vvv

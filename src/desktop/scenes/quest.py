@@ -35,7 +35,7 @@ class QuestScene(Scene):
         self.message_label.update_text(self.translator.translate("Миссия провалена", self.language))
 
     def win_func(self):
-        self.message_label.update_text(self.translator.translate("Миссия выполнена. +1exp", self.language))
+        self.message_label.update_text(self.translator.translate("Миссия выполнена. +опыт", self.language))
 
     def end_func(self):
         self.message_label.update_text(self.translator.translate("Конец", self.language))
