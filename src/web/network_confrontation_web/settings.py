@@ -150,7 +150,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 
-AUTO_USER_ACTIVATION = True  # пользователи регистрируются сразу верифицированными, если True
+AUTO_USER_ACTIVATION = DEBUG  # пользователи регистрируются сразу верифицированными, если True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
