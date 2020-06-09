@@ -4,6 +4,10 @@
 
 {% load static %}
 
+{% block extra_js %}
+<script src="{% static 'registration.js' %}"></script>
+{% endblock %}
+
 <style>
     body {
         background: linear-gradient(to top right, #1560E0, #AFEEEE);
@@ -60,7 +64,8 @@
 
                 <div class="row mt-3">
                     <div class="col" align="center">
-                        <button type="submit" class="btn btn-dark btn-block cyberfont" onclick="check_pw()" id="reg_button">
+                        <button type="submit" class="btn btn-dark btn-block cyberfont" onclick="check_pw()"
+                                id="reg_button">
                             Зарегистрироваться
                         </button>
                     </div>
