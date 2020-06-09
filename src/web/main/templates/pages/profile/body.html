@@ -5,22 +5,24 @@
         {% include 'pages/profile/stats.html' %}
     </div>
 
-    {% if self %}
+
     <div class="form-group row pt-4">
         <div class="col ml-4">
             {% include 'pages/profile/user_credentials.html' %}
         </div>
 
+        {% if self %}
         <div class="col cyberfont">
             {% include 'pages/profile/change.html' %}
         </div>
+        {% endif %}
     </div>
 
     <div class="form-group row cyberfont">
         <div class="col ml-4">
             {% include 'pages/profile/verification.html' %}
         </div>
-
+        {% if self %}
         <div class="col" style="padding-top: 2.8%;">
             <center>
                 <button type="submit" class="save_button btn btn-dark btn-block"
@@ -29,17 +31,6 @@
                 </button>
             </center>
         </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="form-group row pt-4">
-        <span class="cyberfont col-sm-4 align-middle mt-1">
-            Дата регистрации:
-        </span>
-        <div class="form-control col-sm-2" readonly style="font-size: larger">
-            <b>
-                {{ regdate|date:"d.m.Y" }}
-            </b>
-        </div>
-    </div>
-    {% endif %}
 </div>

@@ -68,9 +68,10 @@ def playing_game_session_state(context, game_session, user_data):
     teams = (("Cyber Corp", []), ("Добрая Воля", []), ("Зов Свободы", []))
     participations = game_session.get_participants()
     for participation in participations:
-        name = participation.user_data.user.username
+        name = participation.user.username
         self = participation.user_data == user_data
-        teams[participation.user_data.team][1].append((name, self))
+        uid = participation.user.id
+        teams[participation.user_data.team][1].append((name, self, uid))
     context['teams'] = teams
 
 

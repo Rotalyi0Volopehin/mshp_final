@@ -18,9 +18,10 @@
                         <span class="cyberfont">{{ team.0 }}</span>
                         <div class="align-middle ">
                             {% for player in team.1 %}
-                            <div class="cyberfont ml-5 row {% if player.1 %}text-danger{% endif %}">
+                            <a class="cyberfont ml-5 row {% if player.1 %}text-danger{% endif %}"
+                               href="/profile/{{ player.2 }}/">
                                 {{ player.0 }}
-                            </div>
+                            </a>
                             {% endfor %}
                         </div>
                     </div>

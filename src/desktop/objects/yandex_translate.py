@@ -40,4 +40,4 @@ class Translator:
                                               response_string.find("detectedLanguageCode") - 4]
             return translated_text
         else:
-            return '-1'
+            return str(response.status_code)
