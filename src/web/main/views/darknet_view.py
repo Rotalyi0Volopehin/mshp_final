@@ -13,7 +13,6 @@ from game_eng.market import Market
 
 class DarknetCard:
     """**Карточка товара на стринице даркнета**"""
-
     def __init__(self, name, tag, price, count, availability):
         self.name = name
         self.tag = tag
@@ -23,25 +22,21 @@ class DarknetCard:
 
 
 def get_db_page_data(request):
-    """**Получение данных из базы данных для страницы даркнета**
-
+    """**Получение данных из базы данных для страницы даркнета**\n
     :param request: request на страницу '/chat/'
     :type request: HttpRequest
     :return: набор данных для страницы
     :rtype: tuple
     """
     view_mode = False
-
     user_participation = DBUserParticipationTools.get_user_participation(request.user)
     if user_participation is None:
         view_mode = True
         return view_mode, None, None, None
-
     game_session = user_participation.game_session
     if game_session is None:
         view_mode = True
         return view_mode, None, None, None
-
     game_model, error = DBGameSessionTools.try_load_game_model(game_session)
     if game_session is None:
         view_mode = True
@@ -49,35 +44,29 @@ def get_db_page_data(request):
     if error is not None:
         view_mode = True
         return view_mode, None, None, None
-
     player = DBUserTools.try_get_player_of_user_from_game_model(request.user, game_model)
     if player is None:
         view_mode = True
         return view_mode, None, None, None
-
     market = game_model.market
     if market is None:
         view_mode = True
         return view_mode, None, None, None
-
     team_money = player.team.money
     if team_money is None:
         view_mode = True
         return view_mode, None, None, None
-
     return view_mode, player, game_model, game_session
 
 
 @login_required
 def darknet_page(request):
-    """**View функция даркнета**
-
-    :param request: request на страницу даркнета
+    """**View функция даркнета**\n
+    :param request: request на страницу 'darknet/'
     :type request: HttpRequest
     :return: response
     :rtype: HttpResponse
     """
-
     context = {
         'pagename': 'Darknet',
         'menu': get_menu_context(),
@@ -89,27 +78,9 @@ def darknet_page(request):
     if view_mode:
         market = Market()
     else:
-        team_money = player.team.money
         market = game_model.market
-        context['fraction_money'] = team_money
+        context['fraction_money'] = player.team.money
     assortment = market.assortment
-
-    market_assortment = []
-    for tool_type in Market.tool_types:
-        market_assortment.append(assortment[tool_type])
-    darknet_cards = []
-    for slot in market_assortment:
-        tag = slot.pt_set.__module__.split('.')[-1]
-        if view_mode:
-            availability = False
-            count = '-'
-        else:
-            availability = False
-            if team_money >= slot.price:
-                availability = True
-            count = slot.pt_set.count
-        darknet_cards.append(DarknetCard(slot.pt_set.name, tag, slot.price, count, availability))
-    context['darknet_cards'] = darknet_cards
 
     if request.method == 'POST':
         if not view_mode:
@@ -122,9 +93,21 @@ def darknet_page(request):
                         success = market.try_buy(player, tool_type, 1)
                         if success:
                             DBGameSessionTools.save_game_model(game_session, game_model)
-                            context['fraction_money'] = game_model.current_team.money
+                            context['fraction_money'] = player.team.money
                         else:
-                            context['warning'] = 'У вас недостаточно денег для покупки!'
+                            context['warning'] = 'Покупка невозможна!'
                         break
+
+    darknet_cards = []
+    for slot in market.assortment.values():
+        tag = slot.pt_set.__module__.split('.')[-1]
+        if view_mode:
+            availability = False
+            count = '-'
+        else:
+            count = slot.pt_set.count
+            availability = (player.team.money >= slot.price) and (count > 0)
+        darknet_cards.append(DarknetCard(slot.pt_set.name, tag, slot.price, count, availability))
+    context['darknet_cards'] = darknet_cards
 
     return render(request, 'pages/darknet.html', context)

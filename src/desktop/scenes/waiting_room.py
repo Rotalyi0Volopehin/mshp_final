@@ -28,7 +28,7 @@ class WaitingRoomScene(Scene):
     def __refresh_response_receiver(self, parcel):
         response_id = parcel[0]
         if response_id == ResponseID.FAIL:
-            pass  # TODO: реализовать вывод ошибки
+            self.game.return_to_upper_scene()
         else:
             self.gs_info_plate.update_info_from_parcel(parcel)
 
@@ -39,7 +39,7 @@ class WaitingRoomScene(Scene):
     def __game_model_response_receiver(self, parcel):
         response_id = parcel[0]
         if response_id == ResponseID.FAIL:
-            pass  # TODO: реализовать вывод ошибки
+            self.game.return_to_upper_scene()
         else:
             self.gs = GameModel.read(parcel[1])
             b = self.gs.turn_beginning_time

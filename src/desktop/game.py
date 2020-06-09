@@ -62,6 +62,7 @@ class Game:
             self.clock.tick(self.main_loop_duration)  # это не "sleep(dur)", а "sleep(dur - elapsed)"
 
     @staticmethod
-    def exit():  # TODO: починить exit
-        pygame.quit()
+    def exit():
+        from ws.channel import Channel
+        Channel.halt_loop()
         exit()

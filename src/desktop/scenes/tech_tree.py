@@ -14,13 +14,12 @@ from game_eng.grid_tile_upgrade_tree import GridTileUpgradeTree
 
 class TreeScene(Scene):
     def create_objects(self):
-        self.toolber = self.game.current_scene.toolbar
         self.start_team = None
         self.width = self.game.width
         self.height = self.game.height
         self.types = GridTileUpgradeTree.tile_upgrade_bases
         self.game_vc = self.game.current_scene.game_vc
-        self.click_flag = [False]*8
+        self.click_flag = 8 * [False]
         self.tile_text_1 = Text(self.game, text="", y=self.height-160, x=10, font_size=20,
                                 alignment=TextAlignment.LEFT)
         self.tile_text_2 = Text(self.game, text="", y=self.height - 140, x=10, font_size=20,
@@ -37,13 +36,13 @@ class TreeScene(Scene):
         self.test_button = Btn(self.game, (30, 30, 100, 40), Color.WHITE,
                                "Снять улучшение", self.downgrade())
         self.add_buttons()
-        button_back = Btn(self.game, (self.width - 240, 5, 100, 40), Color.WHITE, 'Карта',
+        button_back = Btn(self.game, (self.width - 120, 5, 100, 40), Color.WHITE, 'Карта',
                           self.game.return_to_upper_scene)
         self.objects.append(button_back)
         grid_tile_info_plate = GridTileInfoPlate(self.game, self.game_vc, self.width - 20, 50, 340)
-        self.end_turn_button = EndTurnButton(self.game, self.width - 100, self.height - 200)
+        self.end_turn_button = EndTurnButton(self.game, self.width - 100, self.height - 100)
         self.objects.append(self.end_turn_button)
-        self.current_player_plate = CurrentPlayerPlate(self.game, self.width - 90, self.height - 183)
+        self.current_player_plate = CurrentPlayerPlate(self.game, self.width - 90, self.height - 83)
         self.objects.append(self.current_player_plate)
         self.info_text = Text(self.game, text="", font_size=25, y=self.height-190,
                               x=10, alignment=TextAlignment.LEFT)
@@ -69,7 +68,7 @@ class TreeScene(Scene):
         vertical_move_count = 1
         tile_centered = True  # GridTile должен быть сверху посередине
         for upgrade_index in self.types:
-            if image_num ==1:
+            if image_num == 1:
                 pass
             else:
                 if self.is_central(upgrade_index) or tile_centered:
