@@ -90,14 +90,12 @@ class LoginScene(Scene):
         user_info.online = False
         self.set_map_scene()
 
-    def on_quests_button_click(self):
-        self.set_quests_scene()
-
     def login_response_parcel_handler(self, parcel):
         response_id = parcel[0]
         if response_id == ResponseID.FAIL:
             self.warning_label.update_text("Пользователя с указанными логином и паролем не существует")
         elif response_id == ResponseID.SUCCESS:
+            print("User :", self.login_textbox.internal_txtinput.get_text())
             user_info.user_id = parcel[1]
             self.set_main_menu_scene()
 

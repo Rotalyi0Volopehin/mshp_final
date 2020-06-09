@@ -15,6 +15,14 @@ class Channel:
     __connecting_failed = False
     __server_uri = None
     socket = None
+    loop = None
+
+    @staticmethod
+    def halt_loop():
+        try:
+            Channel.loop.stop()
+        except:
+            pass
 
     @staticmethod
     def try_connect(ip="127.0.0.1", port=8000) -> bool:
@@ -31,6 +39,7 @@ class Channel:
             Channel.socket = await websockets.connect(uri)
         except:
             Channel.__connecting_failed = True
+            Channel.halt_loop()
 
     @staticmethod
     def receive_now() -> str:
@@ -41,12 +50,12 @@ class Channel:
     @staticmethod
     def __run_channel_async():
         def channel_loop():
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
+            Channel.loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(Channel.loop)
             asyncio.ensure_future(Channel.__connect(Channel.__server_uri))
             asyncio.ensure_future(Channel.__send_loop())
             asyncio.ensure_future(Channel.__receive_loop())
-            loop.run_forever()
+            Channel.loop.run_forever()
 
         Channel.__channel_thread = Thread(target=channel_loop)
         Channel.__channel_thread.start()
