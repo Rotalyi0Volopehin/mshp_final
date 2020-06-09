@@ -98,6 +98,7 @@ class Market:
         # vvv выполнение покупки vvv
         buyer.add_pressure_tools(tool_type, count)
         buyer.team.money -= total_price
+        slot.pt_set.count -= count
         return True
 
     def update(self):
@@ -125,6 +126,7 @@ class MarketSlot:
         pt_set = PressureToolSet.read(stream)
         price = stream.read_uint()
         obj = MarketSlot(pt_set, price)
+        obj.start_count = stream.read_uint()
         return obj
 
     @staticmethod
@@ -133,6 +135,7 @@ class MarketSlot:
             raise exceptions.ArgumentTypeException()
         PressureToolSet.write(stream, obj.pt_set)
         stream.write_uint(obj.price)
+        stream.write_uint(obj.start_count)
 
     def update_price_and_count(self):
         """**Обновление цены и количества ИВ этого типа**\n

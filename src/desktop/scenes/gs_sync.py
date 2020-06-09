@@ -58,5 +58,5 @@ class GSSyncScene(Scene):
             self.defeated_func()
         elif parcel[0] == ResponseID.DATA:
             stream = parcel[1]
-            self.get_changes_func(stream)
             self.game.return_to_upper_scene()
+            self.get_changes_func(stream)

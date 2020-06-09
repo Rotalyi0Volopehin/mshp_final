@@ -106,7 +106,7 @@ class GSParcelHandlers:
         stream = BinaryWriter()
         if game_model.turn_time_left < -1.0:  # post timeout
             GSParcelHandlers.process_game_turn(participation.game_session, game_model)
-        if game_model.prev_player_turn is None:
+        elif game_model.prev_player_turn is None:
             return [ResponseID.FAIL]  # предыдущего хода не было
         PlayerTurn.write(stream, game_model.prev_player_turn)
         stream.write_datetime(game_model.turn_beginning_time)
