@@ -18,7 +18,7 @@ class CoreClasses:
                 module = CoreClasses.__load_module(module_name)
                 module_hash = HashAlgos.hash_str(module_name)
                 if module_hash in CoreClasses.classes:
-                    raise exceptions.CoreModuleHashOverlapException()
+                    raise exceptions.CoreModuleHashOverlapException(f"{HashAlgos.get_current_algo().__name__}")
                 CoreClasses.classes[module_hash] = CoreClasses.__get_classes_of_module(module)
         while True:
             try:

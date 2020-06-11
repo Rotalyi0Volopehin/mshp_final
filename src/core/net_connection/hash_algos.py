@@ -11,6 +11,14 @@ class HashAlgos:
         return HashAlgos.algos[HashAlgos.__current_algo_ind]
 
     @staticmethod
+    def my_algo(string: str) -> int:
+        hash_sum = 0
+        for char in string:
+            hash_sum <<= 1
+            hash_sum += ord(char)
+        return hash_sum & 0xFFFFFFFF
+
+    @staticmethod
     def crc32(string: str) -> int:
         return crc32(string.encode())
 
@@ -39,4 +47,4 @@ class HashAlgos:
         return True
 
 
-HashAlgos.algos = [HashAlgos.crc32, HashAlgos.adler32, HashAlgos.md5, HashAlgos.sha1]
+HashAlgos.algos = [HashAlgos.my_algo, HashAlgos.crc32, HashAlgos.adler32, HashAlgos.md5, HashAlgos.sha1]
