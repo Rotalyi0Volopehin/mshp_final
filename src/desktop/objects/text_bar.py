@@ -315,7 +315,7 @@ class TextBar(DrawObject):
         from ws.channel import Channel
         from net_connection.request_ids import RequestID
         ParcelManager.send_parcel([RequestID.GAIN_EXP, 1])
-        Channel.ignore_next_response()
+        Channel.receive()
 
     def search_btns(self, data):
         """

@@ -57,13 +57,6 @@ class Game:
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
-                    Game.exit()
+                    exit()
             self.current_scene.process_frame(events)
             self.clock.tick(self.main_loop_duration)  # это не "sleep(dur)", а "sleep(dur - elapsed)"
-
-    @staticmethod
-    def exit():
-        from ws.channel import Channel
-        if Channel.socket is not None:
-            Channel.halt_loop()
-        exit()

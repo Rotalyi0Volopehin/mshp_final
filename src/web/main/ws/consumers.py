@@ -6,11 +6,12 @@ from net_connection.json_serialize import CoreJSONEncoder
 from net_connection.json_serialize import CoreJSONDecoder
 from net_connection.response_ids import ResponseID
 from net_connection.request_ids import RequestID
-from net_connection.parcel_check import is_request_parcel_valid,\
+from net_connection.parcel_check import is_request_parcel_valid, \
     is_response_parcel_valid, is_parcel_binary
 from io_tools.binary_reader import BinaryReader
 from io_tools.binary_writer import BinaryWriter
 from .request_parcel_handlers import RequestParcelHandlers
+from .logged_in_sockets import LoggedInSockets
 
 
 class WebsocketRequestHandler(WebsocketConsumer):
@@ -18,8 +19,8 @@ class WebsocketRequestHandler(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, code):  # при отключении происходит logout игрока
-        fake_parcel = [RequestID.LOGOUT]
-        self.receive(text_data=CoreJSONEncoder().encode(fake_parcel))
+        LoggedInSockets.try_logout_socket(self)
+        print(code)
 
     def receive(self, text_data=None, bytes_data=None):
         # vvv первоначальная проверка формата request-а vvv
@@ -27,6 +28,7 @@ class WebsocketRequestHandler(WebsocketConsumer):
             ok, parcel = self.try_get_parcel_from_bytes(bytes_data)
         else:
             ok, parcel = self.try_parse_json_into_parcel(text_data)
+        print("IN ", parcel)
         if not (ok and self.check_parcel_format(parcel)):
             return
         # vvv делегирование к обработчикам (request parcel handler)
@@ -65,6 +67,7 @@ class WebsocketRequestHandler(WebsocketConsumer):
         return True
 
     def send_response(self, exception, response_parcel):
+        print("OUT", response_parcel)
         if is_parcel_binary(response_parcel):
             self.send_binary_response(response_parcel[0], response_parcel[1])
         else:
@@ -88,13 +91,13 @@ class WebsocketRequestHandler(WebsocketConsumer):
     def try_delegate_parcel(self, parcel: list) -> (Exception, list):
         request_id = parcel[0]
         if request_id not in RequestParcelHandlers.handlers:
-            exception = exceptions.\
+            exception = exceptions. \
                 NotImplementedException("Request parcel handler is not implemented!")
             return exception, [ResponseID.FAIL]
         handler = RequestParcelHandlers.handlers[request_id]
         response_parcel = handler(self, parcel)
         if not is_response_parcel_valid(response_parcel):
-            exception = exceptions.\
+            exception = exceptions. \
                 InvalidReturnException("Request parcel handler must return response parcel!")
             return exception, [ResponseID.FAIL]
         return None, response_parcel
