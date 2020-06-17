@@ -64,5 +64,6 @@ class Game:
     @staticmethod
     def exit():
         from ws.channel import Channel
-        Channel.halt_loop()
+        if Channel.socket is not None:
+            Channel.halt_loop()
         exit()

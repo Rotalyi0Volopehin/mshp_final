@@ -52,6 +52,8 @@ class LoginScene(Scene):
         self.objects.append(multiplayer_button)
 
     def try_connect(self):
+        if Channel.socket is not None:
+            Channel.disconnect()
         user_info.online = Channel.try_connect()
         if user_info.online:
             self.objects.pop()

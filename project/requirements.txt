@@ -8,7 +8,7 @@ django-bootstrap4==1.1.1
 django_extensions==2.2.8
 
 # Websockets
-websockets==8.1
+websocket-client
 channels==2.4.0
 
 # Documentation
