@@ -14,14 +14,6 @@ class HashAlgos:
         return hash_sum & 0xFFFFFFFF
 
     @staticmethod
-    def my_algo(string: str) -> int:
-        hash_sum = 0
-        for char in string:
-            hash_sum <<= 1
-            hash_sum += ord(char)
-        return hash_sum & 0xFFFFFFFF
-
-    @staticmethod
     def crc32(string: str) -> int:
         return crc32(string.encode())
 
