@@ -7,11 +7,8 @@ from threading import Thread
 from types import FunctionType
 
 
-# TODO: задокументировать
-
-
 class Channel:
-    priority = 2  # соответствует кол-ву прерываний на async send и receive в секунду
+    priority = 10  # соответствует кол-ву прерываний на async send и receive в секунду
     __connecting_failed = False
     __server_uri = None
     socket = None

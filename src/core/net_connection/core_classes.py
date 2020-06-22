@@ -17,16 +17,15 @@ class CoreClasses:
                 module_name = file_name[:-3].replace(os.path.sep, '.')
                 module = CoreClasses.__load_module(module_name)
                 module_hash = HashAlgos.hash_str(module_name)
-                if module_hash in CoreClasses.classes:
-                    raise exceptions.CoreModuleHashOverlapException()
-                CoreClasses.classes[module_hash] = CoreClasses.__get_classes_of_module(module)
-        while True:
-            try:
-                CoreClasses.__list_files(core_dir_path, file_handler)
-                break
-            except (exceptions.CoreModuleHashOverlapException, exceptions.CoreClassHashOverlapException) as e:
-                if not HashAlgos.try_next_algo():
-                    raise e
+                existing_same_module = CoreClasses.classes.get(module_hash, None)
+                if existing_same_module is not None:
+                    if existing_same_module == module:
+                        print(f"Module '{module.__name__}' is seen twice. Ignoring")
+                    else:
+                        raise exceptions.CoreModuleHashOverlapException()
+                else:
+                    CoreClasses.classes[module_hash] = CoreClasses.__get_classes_of_module(module)
+        CoreClasses.__list_files(core_dir_path, file_handler)
 
     @staticmethod
     def __load_module(name):
