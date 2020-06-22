@@ -86,17 +86,20 @@ def darknet_page(request):
         if not view_mode:
             buy_product = request.POST.get('buy_product', None)
             if buy_product is not None:
-                for tool_type in Market.tool_types:
-                    slot = assortment[tool_type]
-                    tool_tag = slot.pt_set.__module__.split('.')[-1]
-                    if buy_product == tool_tag:
-                        success = market.try_buy(player, tool_type, 1)
-                        if success:
-                            DBGameSessionTools.save_game_model(game_session, game_model)
-                            context['fraction_money'] = player.team.money
-                        else:
-                            context['warning'] = 'Покупка невозможна!'
-                        break
+                if game_model.current_team == player.team:
+                    context["warning"] = "Дождитесь конца хода своей фракции!"
+                else:
+                    for tool_type in Market.tool_types:
+                        slot = assortment[tool_type]
+                        tool_tag = slot.pt_set.__module__.split('.')[-1]
+                        if buy_product == tool_tag:
+                            success = market.try_buy(player, tool_type, 1)
+                            if success:
+                                DBGameSessionTools.save_game_model(game_session, game_model)
+                                context['fraction_money'] = player.team.money
+                            else:
+                                context['warning'] = 'Покупка невозможна!'
+                            break
 
     darknet_cards = []
     for slot in market.assortment.values():

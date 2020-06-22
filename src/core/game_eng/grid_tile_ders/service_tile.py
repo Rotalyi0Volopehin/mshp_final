@@ -20,4 +20,4 @@ class ServiceGridTile(GridTile):
 
     @property
     def name(self) -> str:
-        return "Комерческий Кластер"
+        return "Коммерческий Кластер"

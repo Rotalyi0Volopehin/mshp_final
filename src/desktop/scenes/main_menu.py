@@ -1,7 +1,10 @@
 from scenes.base import Scene
 from objects.button import Btn
 from objects.text import Text
-import os.path as path
+from os import path
+from ws.parcel_manager import ParcelManager
+from request_parcel_helpers.user_logging import send_logout_request
+from net_connection.response_ids import ResponseID
 
 
 class MainMenuScene(Scene):
@@ -22,8 +25,12 @@ class MainMenuScene(Scene):
         ])
 
     def __quit_account(self):
-        from scenes.login import LoginScene
-        self.game.set_origin_scene(LoginScene)
+        def logout_handler(parcel):
+            if parcel[0] == ResponseID.SUCCESS:
+                from scenes.login import LoginScene
+                self.game.set_origin_scene(LoginScene)
+        send_logout_request()
+        ParcelManager.receive_parcel_async(logout_handler)
 
     def __goto_waiting_room(self):
         from scenes.waiting_room import WaitingRoomScene

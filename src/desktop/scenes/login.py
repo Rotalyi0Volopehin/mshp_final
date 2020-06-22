@@ -26,7 +26,7 @@ class LoginScene(Scene):
                            text='Логин:', color=Color.YELLOW, x=225, y=30, alignment=TextAlignment.RIGHT)
         password_label = Text(self.game, font_size=36, is_bold=False, is_italic=False,
                               text='Пароль:', color=Color.YELLOW, x=225, y=90, alignment=TextAlignment.RIGHT)
-        self.warning_label = Text(self.game, font_size=20, color=Color.RED,
+        self.warning_label = Text(self.game, font_size=20, color=Color.RED, text="",
                                   x=self.game.width >> 1, y=(self.game.height >> 1) + 20)
         title = Text(self.game, font_size=72, text="NetWars", x=self.game.width >> 1, y=(self.game.height >> 1) - 50)
         self.objects.extend([
@@ -67,7 +67,8 @@ class LoginScene(Scene):
         self.init_form()
         self.load_sound()
         pygame.mixer.music.play(-1)
-        self.try_connect()
+        if not user_info.online:
+            self.try_connect()
 
     def set_map_scene(self):
         from scenes.map import MapScene
